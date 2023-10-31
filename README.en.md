@@ -1,12 +1,21 @@
-[English](./README.en.md)
-[简体中文](./README.md)
-[Pусский](./README.ru.md)
+[English](./README.en.md) | [简体中文](./README.md) | [Pусский](./README.ru.md)
 
-# Third-Person Perspective with LEAWIND
+[CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/leawinds-third-person-perspective)
+
+
+# LEAWIND's Third-Person Perspective
 
 A much-improved third-person perspective mod.
 
 Compatible with Minecraft Java Edition.
+
+![Switch camera](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/switch_camera.gif?raw=true)
+![Move](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/move.gif?raw=true)
+![Shoot](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/shoot.gif?raw=true)
+![Fight](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/fight.gif?raw=true)
+![](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/fly.gif?raw=true)
+![Destroy and create](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/destroy-create.gif?raw=true)
+![Swim](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/swim.gif?raw=true)
 
 ## Features
 
