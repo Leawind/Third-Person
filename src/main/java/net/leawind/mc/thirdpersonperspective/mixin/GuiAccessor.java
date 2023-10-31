@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  */
 @Mixin(net.minecraft.client.gui.Gui.class)
 public interface GuiAccessor {
-	@Accessor("GUI_ICONS_LOCATION")
+	@Accessor("CROSSHAIR_SPRITE")
 	static ResourceLocation getGuiIconLocation(){
 		throw new AssertionError();
 	}
