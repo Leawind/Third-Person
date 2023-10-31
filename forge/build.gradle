@@ -1,0 +1,78 @@
+plugins {
+	id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+architectury {
+	platformSetupLoomIde()
+	forge()
+}
+loom {
+	accessWidenerPath = project(":common").loom.accessWidenerPath
+	forge {
+		convertAccessWideners = true
+		extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+		mixinConfig "${mod_id}-common.mixins.json"
+		mixinConfig "${mod_id}.mixins.json"
+	}
+}
+configurations {
+	common
+	shadowCommon
+	compileClasspath.extendsFrom common
+	runtimeClasspath.extendsFrom common
+	developmentForge.extendsFrom common
+}
+dependencies {
+	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	modApi "dev.architectury:architectury-forge:${architectury_version}"
+	common(project(path: ":common", configuration: "namedElements")) {
+		transitive false
+	}
+	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
+		transitive = false
+	}
+}
+processResources {
+	inputs.property "version", project.version
+	eachFile {
+		expand rootProject.properties
+	}
+}
+shadowJar {
+	exclude "fabric.mod.json"
+	exclude "architectury.common.json"
+	configurations = [project.configurations.shadowCommon]
+	archiveClassifier = "dev-shadow"
+}
+remapJar {
+	input.set shadowJar.archiveFile
+	dependsOn shadowJar
+}
+sourcesJar {
+	def commonSources = project(":common").sourcesJar
+	dependsOn commonSources
+	from commonSources.archiveFile.map {
+		zipTree(it)
+	}
+}
+base {
+	archivesName = rootProject.archiveFileNameOfPlatform("forge")
+	version = ""
+}
+components.java {
+	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+		skip()
+	}
+}
+publishing {
+	publications {
+		mavenForge(MavenPublication) {
+			artifactId = mod_id + "-" + project.name
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+	}
+}

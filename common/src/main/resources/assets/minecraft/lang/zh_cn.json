@@ -1,0 +1,13 @@
+{
+	"key.categories.third_person_perspective": "第三人称视角",
+	"key.ltpv.toggle_side": "切换相机到另一侧",
+	"key.ltpv.adjust_position": "按住调节相机位置",
+	"key.ltpv.force_aiming": "按住强制瞄准",
+	"key.ltpv.toggle_aiming": "短按切换瞄准状态",
+	"options.ltpv.is_mod_enable": "本模组是否启用",
+	"options.ltpv.available_distance_count": "可选的距离数量",
+	"options.ltpv.distance_min": "距离可调范围的下限",
+	"options.ltpv.distance_max": "距离可调范围的上限",
+	"options.ltpv.camera_ray_trace_length": "相机视线探测距离",
+	"options.ltpv.aiming_offset_max": "瞄准偏移量的可调最大值"
+}
