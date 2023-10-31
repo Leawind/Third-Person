@@ -2,7 +2,7 @@
 [简体中文](./README.md)
 [Pусский](./README.ru.md)
 
-# Third-Person Perspective with LEAWIND
+# LEAWIND's Third-Person Perspective
 
 A much-improved third-person perspective mod.
 
