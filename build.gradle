@@ -3,17 +3,12 @@ buildscript {
 		mavenLocal()
 		maven { url = 'https://maven.minecraftforge.net' }
 		maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-		maven {
-			url = 'https://repo.spongepowered.org/repository/maven-public/'
-			content { includeGroup "org.spongepowered" }
-		}
 		mavenCentral()
 	}
 	dependencies {
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
 	}
 }
-
 
 plugins {
 	id 'eclipse'
@@ -22,6 +17,8 @@ plugins {
 	id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 apply plugin: 'org.spongepowered.mixin'
+def mixin_config_file = "${mod_id}.mixin.json"
+def mixin_refmap_file = "${mod_id}.refmap.json"
 
 base {
 	archivesName = "${mod_id}-${minecraft_version}-forge-${forge_version}-${mod_version}"
@@ -32,8 +29,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
 mixin {
-	add sourceSets.main, "${mod_id}.refmap.json"
-	println "Mixin config file: " + "${mod_id}.mixin.json"
+	add sourceSets.main, "${mixin_refmap_file}"
+	println "Mixin config file: ${mixin_config_file}"
 }
 
 minecraft {
@@ -42,7 +39,7 @@ minecraft {
 	runs {
 		configureEach {
 			workingDirectory project.file('run')
-			arg "-mixin.config=${mod_id}.mixin.json"
+			arg "-mixin.config=${mixin_config_file}"
 			property 'forge.logging.console.level', 'debug'
 			property 'forge.logging.markers', 'REGISTRIES'
 			mods {
@@ -63,7 +60,6 @@ minecraft {
 			property 'forge.enabledGameTestNamespaces', mod_id
 		}
 		data {
-			// Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
 			args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 		}
 	}
@@ -75,7 +71,6 @@ repositories {
 	mavenLocal()
 	maven { url 'https://maven.aliyun.com/repository/public' }
 	maven { url 'https://maven.aliyun.com/repository/google' }
-	maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -96,13 +91,12 @@ processResources {
 		expand replaceProperties
 	}
 
-
 	def buildProps = project.properties.clone()
 	buildProps.put('file', [jarVersion: project.version])
 	filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
 		expand buildProps
 	}
-	filesMatching(["${mod_id}.mixin.json".toString()]) {
+	filesMatching([mixin_config_file.toString()]) {
 		expand buildProps
 	}
 }
@@ -116,7 +110,7 @@ jar {
 					"Implementation-Version"  : project.jar.archiveVersion,
 					"Implementation-Vendor"   : mod_authors,
 					"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-					"MixinConfigs"            : "${mod_id}.mixin.json"])
+					"MixinConfigs"            : mixin_config_file])
 	}
 }
 
