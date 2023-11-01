@@ -1,5 +1,6 @@
 package net.leawind.mc.thirdpersonperspective.mixin;
 
+
 import net.leawind.mc.thirdpersonperspective.agent.CameraAgent;
 import net.leawind.mc.thirdpersonperspective.agent.LocalPlayerAgent;
 import net.minecraft.client.Minecraft;
@@ -17,18 +18,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(net.minecraft.client.player.LocalPlayer.class)
 public class LocalPlayerMixin {
 	@Inject(method="serverAiStep", at=@At(value="TAIL"))
-	public void serverAiStep(CallbackInfo ci){
+	public void serverAiStep (CallbackInfo ci) {
 		LocalPlayer player = (LocalPlayer)(Object)this;
-		if(Minecraft.getInstance().getCameraEntity() != player){
+		if (Minecraft.getInstance().getCameraEntity() != player) {
 			return;
 		}
-		if(!CameraAgent.isAvailable()){
+		if (!CameraAgent.isAvailable()) {
 			return;
 		}
-		if(!LocalPlayerAgent.isAvailable()){
+		if (!LocalPlayerAgent.isAvailable()) {
 			return;
 		}
-		if(!CameraAgent.getInstance().isFreeTpv){
+		if (!CameraAgent.getInstance().isFreeTpv) {
 			return;
 		}
 		LocalPlayerAgent playerAgent = LocalPlayerAgent.getInstance();

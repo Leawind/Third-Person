@@ -1,5 +1,6 @@
 package net.leawind.mc.thirdpersonperspective.mixin;
 
+
 import net.leawind.mc.thirdpersonperspective.agent.CameraAgent;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(net.minecraft.client.MouseHandler.class)
 public abstract class MouseHandlerMixin {
 	@Redirect(method="turnPlayer", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
-	public void inject_turnPlayer(LocalPlayer player, double y, double x){
-		if(CameraAgent.isAvailable() && CameraAgent.getInstance().isFreeTpv){
+	public void inject_turnPlayer (LocalPlayer player, double y, double x) {
+		if (CameraAgent.isAvailable() && CameraAgent.getInstance().isFreeTpv) {
 			CameraAgent.getInstance().onCameraTurn(y, x);
-		}else{
+		} else {
 			player.turn(y, x);
 		}
 	}

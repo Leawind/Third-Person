@@ -2,7 +2,6 @@
 
 [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/leawinds-third-person-perspective)
 
-
 # LEAWIND 的第三人称视角
 
 好得多的第三人称视角MOD。
@@ -16,8 +15,6 @@
 ![](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/fly.gif?raw=true)
 ![Destroy and create](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/destroy-create.gif?raw=true)
 ![Swim](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/swim.gif?raw=true)
-
-
 
 ## 特性
 
@@ -52,11 +49,11 @@
 
 ### 按键
 
-| 译名ID              | 默认 | 按键名称     | 功能                           |
-| ------------------- | ---- | ------------ | ------------------------------ |
-| key.tpv_hold_aim    |      | 按住瞄准     | 按住后可以强制保持瞄准状态     |
-| key.tpv_toggle_aim  | `B`  | 切换瞄准     | 短按可以在瞄准和普通模式间切换 |
-| key.tpv_toggle_side | `Z`  | 切换摄像机位 | 短按左右切换，长按切换至头顶   |
+| 译名ID              | 默认  | 按键名称     | 功能                           |
+| ------------------- |-----| ------------ | ------------------------------ |
+| key.tpv_hold_aim    |     | 按住瞄准     | 按住后可以强制保持瞄准状态     |
+| key.tpv_toggle_aim  |     | 切换瞄准     | 短按可以在瞄准和普通模式间切换 |
+| key.tpv_toggle_side | `Z` | 切换摄像机位 | 短按左右切换，长按切换至头顶   |
 
 ### 其他
 
