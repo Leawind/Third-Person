@@ -1,5 +1,6 @@
 package net.leawind.mc.thirdpersonperspective.mixin;
 
+
 import net.leawind.mc.thirdpersonperspective.agent.CameraAgent;
 import net.leawind.mc.thirdpersonperspective.mixininterface.CameraMixinInterface;
 import net.minecraft.client.Minecraft;
@@ -22,9 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(net.minecraft.client.Camera.class)
 public abstract class CameraMixin implements CameraMixinInterface {
-
 	@Shadow
-	protected void setPosition(Vec3 pos){
+	protected void setPosition (Vec3 pos) {
 	}
 
 	/**
@@ -34,28 +34,26 @@ public abstract class CameraMixin implements CameraMixinInterface {
 	 * @param xRot 俯仰角，俯正仰负 [-90,90]
 	 */
 	@Shadow
-	protected void setRotation(float yRot, float xRot){
+	protected void setRotation (float yRot, float xRot) {
 	}
 
-
 	/**
-	 * 设置相机真实位置
-	 * 不允许出现无穷大或NaN
+	 * 设置相机真实位置 不允许出现无穷大或NaN
 	 */
 	@Override
-	public void third_Person_View$setRealPosition(@NotNull Vec3 pos){
+	public void third_Person_View$setRealPosition (
+		@NotNull
+		Vec3 pos) {
 		setPosition(pos);
 	}
 
 	/**
-	 * 设置相机真实位置
-	 * 不允许出现无穷大或NaN
+	 * 设置相机真实位置 不允许出现无穷大或NaN
 	 */
 	@Override
-	public void third_Person_View$setRealRotation(float yRot, float xRot){
+	public void third_Person_View$setRealRotation (float yRot, float xRot) {
 		setRotation(yRot, xRot);
 	}
-
 
 	@Unique
 	private boolean third_Person_View$wasFirstPerson = true;
@@ -69,7 +67,7 @@ public abstract class CameraMixin implements CameraMixinInterface {
 	 * @return 必须返回 false，这样可以阻止其调用 setRotation 来设置相机朝向
 	 */
 	@ModifyVariable(method="setup", at=@At("HEAD"), ordinal=1, argsOnly=true)
-	private boolean injected(boolean isFartherForReal){
+	private boolean injected (boolean isFartherForReal) {
 		third_Person_View$isFarther = isFartherForReal;
 		return false;
 	}
@@ -83,16 +81,16 @@ public abstract class CameraMixin implements CameraMixinInterface {
 	 * @param isFartherFake 已经被我改成了false
 	 */
 	@Inject(method="setup", at=@At(value="HEAD"))
-	public void setup_head(BlockGetter blockGetter,
-						   Entity entity,
-						   boolean detached,
-						   boolean isFartherFake,
-						   float lerpK,
-						   CallbackInfo ci){
+	public void setup_head (BlockGetter blockGetter,
+							Entity entity,
+							boolean detached,
+							boolean isFartherFake,
+							float lerpK,
+							CallbackInfo ci) {
 		boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
-		if(CameraAgent.isAvailable()){
+		if (CameraAgent.isAvailable()) {
 			CameraAgent.getInstance().isFreeTpv = false;
-			if(third_Person_View$wasFirstPerson && !isFirstPerson){
+			if (third_Person_View$wasFirstPerson && !isFirstPerson) {
 				CameraAgent.getInstance().onEnterThirdPerson(lerpK);
 			}
 		}
@@ -104,14 +102,13 @@ public abstract class CameraMixin implements CameraMixinInterface {
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE),
 			cancellable=true)
-
-	public void setup_inject(BlockGetter level,
-							 Entity entity,
-							 boolean detached,
-							 boolean isFartherFake,
-							 float lerpK,
-							 CallbackInfo ci){
-		if(CameraAgent.isAvailable()){
+	public void setup_inject (BlockGetter level,
+							  Entity entity,
+							  boolean detached,
+							  boolean isFartherFake,
+							  float lerpK,
+							  CallbackInfo ci) {
+		if (CameraAgent.isAvailable()) {
 			CameraAgent cameraAgent = CameraAgent.getInstance();
 			cameraAgent.isFreeTpv = true;
 			cameraAgent.onRenderTick(level, entity, third_Person_View$isFarther, lerpK);

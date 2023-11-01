@@ -1,7 +1,9 @@
 pluginManagement {
 	repositories {
 		mavenLocal()
-		maven { url 'https://maven.aliyun.com/repository/public' }
+		maven {
+			url 'https://maven.aliyun.com/repository/public'
+		}
 		gradlePluginPortal()
 		maven {
 			name = 'MinecraftForge'
@@ -9,7 +11,6 @@ pluginManagement {
 		}
 	}
 }
-
 plugins {
 	id 'org.gradle.toolchains.foojay-resolver-convention' version '0.5.0'
 }

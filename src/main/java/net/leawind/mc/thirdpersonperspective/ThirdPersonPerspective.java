@@ -1,12 +1,13 @@
 package net.leawind.mc.thirdpersonperspective;
 
+
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.logging.LogUtils;
-import net.leawind.mc.thirdpersonperspective.mixin.GuiAccessor;
 import net.leawind.mc.thirdpersonperspective.agent.CameraAgent;
+import net.leawind.mc.thirdpersonperspective.mixin.GuiAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,7 +22,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -31,12 +33,14 @@ public class ThirdPersonPerspective {
 	public static final String MODID  = "leawind_third_person_perspective";
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public ThirdPersonPerspective(){
+	public ThirdPersonPerspective () {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	public static void renderCrosshair(@NotNull GuiGraphics guiGraphics){
+	public static void renderCrosshair (
+		@NotNull
+		GuiGraphics guiGraphics) {
 		final int crosshairSize = 15;
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR,
 									   GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR,
@@ -58,13 +62,11 @@ public class ThirdPersonPerspective {
 	}
 
 	@SubscribeEvent
-	public void onClientTick(TickEvent.ClientTickEvent event){
+	public void onClientTick (TickEvent.ClientTickEvent event) {
 	}
 
 	@Mod.EventBusSubscriber(modid=MODID, bus=Mod.EventBusSubscriber.Bus.MOD, value=Dist.CLIENT)
 	public static class ClientModEvents {
-
-
 		/**
 		 * 第三人称按住瞄准
 		 */
@@ -72,12 +74,12 @@ public class ThirdPersonPerspective {
 																	  InputConstants.UNKNOWN.getValue(),
 																	  "key.categories.misc") {
 			@Override
-			public void setDown(boolean down){
+			public void setDown (boolean down) {
 				final boolean wasDown = isDown();
 				super.setDown(down);
-				if(!wasDown && down){   // on key down
+				if (!wasDown && down) {   // on key down
 					Options.isForceKeepAiming = true;
-				}else if(wasDown && !down){ // on key up
+				} else if (wasDown && !down) { // on key up
 					Options.isForceKeepAiming = false;
 				}
 			}
@@ -89,10 +91,10 @@ public class ThirdPersonPerspective {
 																	  InputConstants.UNKNOWN.getValue(),
 																	  "key.categories.misc") {
 			@Override
-			public void setDown(boolean down){
+			public void setDown (boolean down) {
 				final boolean wasDown = isDown();
 				super.setDown(down);
-				if(!wasDown && down){   // on key down
+				if (!wasDown && down) {   // on key down
 					Options.isToggleToAiming = !Options.isToggleToAiming;
 				}
 			}
@@ -111,42 +113,40 @@ public class ThirdPersonPerspective {
 			private Timer timer = null;
 
 			@Override
-			public void setDown(boolean down){
+			public void setDown (boolean down) {
 				final boolean wasDown = isDown();
 				super.setDown(down);
 				double now = Blaze3D.getTime();
-				if(CameraAgent.isAvailable() && CameraAgent.getInstance().isFreeTpv){
+				if (CameraAgent.isAvailable() && CameraAgent.getInstance().isFreeTpv) {
 					CameraAgent cameraAgent = CameraAgent.getInstance();
-
-					if(!wasDown && down){   // on key down
-						if(cameraAgent.cameraOffsetType.isTop()){
+					if (!wasDown && down) {   // on key down
+						if (cameraAgent.cameraOffsetType.isTop()) {
 							cameraAgent.nextCameraOffsetType();
-						}else{
+						} else {
 							keyDownTimestamp = now;
 							timer            = new Timer();
 							timer.schedule(new TimerTask() {
-								public void run(){
+								public void run () {
 									cameraAgent.setCameraOffsetTypeToTop();
 									timer = null;
 								}
 							}, 300);    // 长按
 						}
-					}else if(wasDown && !down){    // on key up
+					} else if (wasDown && !down) {    // on key up
 						double sinceKeydown = now - keyDownTimestamp;
-						if(sinceKeydown < 0.3){    // 单击
-							if(timer != null){
+						if (sinceKeydown < 0.3) {    // 单击
+							if (timer != null) {
 								timer.cancel();
 								timer = null;
 							}
 							cameraAgent.nextCameraOffsetType();
 						}
-
 					}
 				}
 			}
 		};
 
-		static{
+		static {
 			Minecraft mc = Minecraft.getInstance();
 			mc.options.keyMappings = ArrayUtils.addAll(mc.options.keyMappings, keyKeepAim, keyToggleAim, keyToggleSide);
 		}
