@@ -29,7 +29,6 @@ public class LocalPlayerAgent {
 	 * 玩家移动
 	 * <p>
 	 * 通过修改玩家的 xxa 和 zza 属性来控制玩家的移动方向和速度
-	 * TODO yya!
 	 */
 	@PerformanceSensitive
 	public void onServerAiStep () {

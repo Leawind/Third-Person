@@ -38,21 +38,17 @@ public class ThirdPersonPerspective {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	public static void renderCrosshair (
-		@NotNull
-		GuiGraphics guiGraphics) {
+	public static void renderCrosshair (@NotNull GuiGraphics guiGraphics) {
 		final int crosshairSize = 15;
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR,
 									   GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR,
 									   GlStateManager.SourceFactor.ONE,
 									   GlStateManager.DestFactor.ZERO);
-		guiGraphics.blit(GuiAccessor.getGuiIconLocation(),
-						 (guiGraphics.guiWidth() - crosshairSize) / 2,
-						 (guiGraphics.guiHeight() - crosshairSize) / 2,
-						 0,
-						 0,
-						 crosshairSize,
-						 crosshairSize);
+		guiGraphics.blitSprite(GuiAccessor.getGuiIconLocation(),
+							   (guiGraphics.guiWidth() - crosshairSize) / 2,
+							   (guiGraphics.guiHeight() - crosshairSize) / 2,
+							   15,
+							   15);
 		RenderSystem.defaultBlendFunc();
 	}
 

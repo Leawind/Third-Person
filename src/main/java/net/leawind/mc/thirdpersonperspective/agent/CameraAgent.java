@@ -21,6 +21,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.phys.*;
+import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -116,7 +117,7 @@ public class CameraAgent {
 	 * @param entity      实体
 	 * @param isFarther   是否远距离
 	 */
-	//	@PerformanceSensitive
+	@PerformanceSensitive
 	public void onRenderTick (BlockGetter blockGetter, Entity entity, boolean isFarther, float lerpK) {
 		this.player = (LocalPlayer)entity;
 		this.lerpK  = lerpK;
@@ -464,9 +465,7 @@ public class CameraAgent {
 		return ((Camera)camera).getYRot();
 	}
 
-	public CameraAgent (
-		@NotNull
-		Camera camera) {
+	public CameraAgent (@NotNull Camera camera) {
 		this.camera       = (CameraMixinInterface)camera;
 		this.player       = (LocalPlayer)camera.getEntity();
 		virtualPosition   = player.getEyePosition(lerpK);
