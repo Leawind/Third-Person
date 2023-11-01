@@ -1,5 +1,6 @@
 package net.leawind.mc.thirdpersonperspective.agent;
 
+
 import net.leawind.mc.thirdpersonperspective.ThirdPersonPerspective;
 import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
@@ -11,17 +12,15 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 /**
  * 第三人称自由视角玩家代理
  */
-
 public class LocalPlayerAgent {
 	private CameraAgent cameraAgent;
 	private LocalPlayer player;
-
 	/**
 	 * 玩家此时应有的朝向
 	 */
-	private Vec2 vRot;
+	private Vec2        vRot;
 
-	public LocalPlayerAgent(LocalPlayer player){
+	public LocalPlayerAgent (LocalPlayer player) {
 		this.player = player;
 		this.vRot   = player.getRotationVector();
 	}
@@ -33,22 +32,23 @@ public class LocalPlayerAgent {
 	 * TODO yya!
 	 */
 	@PerformanceSensitive
-	public void onServerAiStep(){
-		if(player.isSwimming()){return;}
+	public void onServerAiStep () {
+		if (player.isSwimming()) {
+			return;
+		}
 		CameraAgent cameraAgent = CameraAgent.getInstance();
-
-		float left    = player.xxa;
-		float forward = player.isFallFlying() ? 0 : player.zza;
-		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
-		if(left != 0 || forward != 0){
+		float       left        = player.xxa;
+		float       forward     = player.isFallFlying() ? 0 : player.zza;
+		float       speed       = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
+		if (left != 0 || forward != 0) {
 			float absoluteRot = (float)(cameraAgent.getRealRotY() + (-Math.atan2(left, forward) * 180 / Math.PI));
-			if(!cameraAgent.cameraOffsetType.isAim()){
+			if (!cameraAgent.cameraOffsetType.isAim()) {
 				// 奔跑时立即转向移动方向
 				// 否则缓慢转向移动方向
 				vRot = new Vec2(0, absoluteRot);
-				if(player.isSprinting()){
+				if (player.isSprinting()) {
 					applyRotationInstantly();
-				}else{
+				} else {
 					applyRotationSmoothly();
 				}
 			}
@@ -60,13 +60,12 @@ public class LocalPlayerAgent {
 	}
 
 	@PerformanceSensitive
-	public void onRenderTick(float lerpK){
+	public void onRenderTick (float lerpK) {
 		cameraAgent = CameraAgent.getInstance();
 		this.player = cameraAgent.player;
-
-		if(shouldTurnToCameraHitResult()){
+		if (shouldTurnToCameraHitResult()) {
 			turnToCameraHitResultInstanly(lerpK);
-		}else if(shouldTurnWithCamera()){
+		} else if (shouldTurnWithCamera()) {
 			turnToCameraInstantly();
 		}
 	}
@@ -74,19 +73,18 @@ public class LocalPlayerAgent {
 	/**
 	 * 是否应当保持注视着相机的 hitResult
 	 */
-	public boolean shouldTurnToCameraHitResult(){
+	public boolean shouldTurnToCameraHitResult () {
 		return CameraAgent.getInstance().isAiming;
 	}
 
-
-	public void turnToCameraHitResultInstanly(float lerpK){
+	public void turnToCameraHitResultInstanly (float lerpK) {
 		Vec2 relativeRotation = cameraAgent.getRelativeRotation();
 		// 计算相机视线的 hitResult 坐标
 		Vec3 cameraHitPosition = cameraAgent.getPickPosition();
-		if(cameraHitPosition == null){
+		if (cameraHitPosition == null) {
 			// 让玩家朝向相机的朝向
 			LocalPlayerAgent.getInstance().turnToInstantly(relativeRotation.y + 180, -relativeRotation.x);
-		}else{
+		} else {
 			// 让玩家朝向该坐标
 			Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(cameraHitPosition);
 			Vec2 playerViewRot    = Vectors.rotationAngleFromDirection(playerViewVector);
@@ -101,27 +99,26 @@ public class LocalPlayerAgent {
 	 * <p>
 	 * 游泳
 	 */
-	public boolean shouldTurnWithCamera(){
+	public boolean shouldTurnWithCamera () {
 		return player.isSwimming() || player.isFallFlying();
 	}
 
-	public void turnToCameraInstantly(){
+	public void turnToCameraInstantly () {
 		Vec2 relativeRotation = cameraAgent.getRelativeRotation();
 		LocalPlayerAgent.getInstance().turnToInstantly(relativeRotation.y + 180, -relativeRotation.x);
 	}
 
-
 	/**
 	 * 立即将朝向与玩家同步
 	 */
-	public void syncRotation(){
+	public void syncRotation () {
 		vRot = player.getRotationVector();
 	}
 
 	/**
 	 * 立即将朝向应用到玩家实体
 	 */
-	public void applyRotationInstantly(){
+	public void applyRotationInstantly () {
 		player.setYRot(vRot.y);
 		player.setXRot(vRot.x);
 	}
@@ -129,22 +126,21 @@ public class LocalPlayerAgent {
 	/**
 	 * 平滑地转动玩家
 	 */
-	public void applyRotationSmoothly(){
+	public void applyRotationSmoothly () {
 		float playerY = player.getYRot();
 		float dy      = ((vRot.y - playerY) % 360 + 360) % 360;
-		if(dy > 180){
+		if (dy > 180) {
 			dy -= 360;
 		}
 		player.turn(dy, vRot.x - player.getXRot());
 	}
 
-
-	public void turnToInstantly(float y, float x){
+	public void turnToInstantly (float y, float x) {
 		vRot = new Vec2(x, y);
 		applyRotationInstantly();
 	}
 
-	public void turnToInstantly(Vec2 rot){
+	public void turnToInstantly (Vec2 rot) {
 		vRot = rot;
 		applyRotationInstantly();
 	}
@@ -154,21 +150,19 @@ public class LocalPlayerAgent {
 	 */
 	private static LocalPlayerAgent instance;
 
-
-	public static boolean isAvailable(){
+	public static boolean isAvailable () {
 		return getInstance() != null && getInstance().player != null;
 	}
 
-	public static LocalPlayerAgent getInstance(){
-		if(instance == null){
+	public static LocalPlayerAgent getInstance () {
+		if (instance == null) {
 			LocalPlayer player = Minecraft.getInstance().player;
-			if(player != null){
+			if (player != null) {
 				ThirdPersonPerspective.LOGGER.info(String.format("Creating LocalPlayerAgent for player at %s",
 																 player.position()));
 				instance = new LocalPlayerAgent(player);
 			}
 		}
-
 		return instance;
 	}
 }

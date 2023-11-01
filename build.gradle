@@ -1,15 +1,18 @@
 buildscript {
 	repositories {
 		mavenLocal()
-		maven { url = 'https://maven.minecraftforge.net' }
-		maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+		maven {
+			url = 'https://maven.minecraftforge.net'
+		}
+		maven {
+			url = 'https://repo.spongepowered.org/repository/maven-public/'
+		}
 		mavenCentral()
 	}
 	dependencies {
 		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
 	}
 }
-
 plugins {
 	id 'eclipse'
 	id 'idea'
@@ -19,20 +22,15 @@ plugins {
 apply plugin: 'org.spongepowered.mixin'
 def mixin_config_file = "${mod_id}.mixin.json"
 def mixin_refmap_file = "${mod_id}.refmap.json"
-
 base {
 	archivesName = "${mod_id}-${minecraft_version}-forge-${forge_version}-${mod_version}"
 }
-
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-
 mixin {
 	add sourceSets.main, "${mixin_refmap_file}"
 	println "Mixin config file: ${mixin_config_file}"
 }
-
 minecraft {
 	mappings channel: mapping_channel, version: mapping_version
 	copyIdeResources = true
@@ -63,22 +61,26 @@ minecraft {
 		}
 	}
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
+sourceSets.main.resources {
+	srcDir 'src/generated/resources'
+}
 repositories {
 	mavenLocal()
-	maven { url 'https://maven.aliyun.com/repository/public' }
-	maven { url 'https://maven.aliyun.com/repository/google' }
-	maven { url 'https://jitpack.io' }
+	maven {
+		url 'https://maven.aliyun.com/repository/public'
+	}
+	maven {
+		url 'https://maven.aliyun.com/repository/google'
+	}
+	maven {
+		url 'https://jitpack.io'
+	}
 	mavenCentral()
 }
-
 dependencies {
 	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
-
 def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
 def replaceProperties = [minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
 						 forge_version       : forge_version, forge_version_range: forge_version_range,
@@ -100,7 +102,6 @@ processResources {
 		expand buildProps
 	}
 }
-
 jar {
 	manifest {
 		attributes(["Specification-Title"     : mod_id,
@@ -113,7 +114,6 @@ jar {
 					"MixinConfigs"            : mixin_config_file])
 	}
 }
-
 jar.finalizedBy('reobfJar')
 publishing {
 	publications {

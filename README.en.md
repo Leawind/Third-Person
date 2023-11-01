@@ -2,7 +2,6 @@
 
 [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/leawinds-third-person-perspective)
 
-
 # LEAWIND's Third-Person Perspective
 
 A much-improved third-person perspective mod.

@@ -1,5 +1,6 @@
 package net.leawind.mc.thirdpersonperspective.mixin;
 
+
 import net.leawind.mc.thirdpersonperspective.Config;
 import net.leawind.mc.thirdpersonperspective.ThirdPersonPerspective;
 import net.leawind.mc.thirdpersonperspective.agent.CameraAgent;
@@ -17,9 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(net.minecraft.client.gui.Gui.class)
 public class GuiMixin {
 	@Inject(method="renderCrosshair", at=@At(value="TAIL"))
-	private void renderCrosshair(GuiGraphics guiGraphics, CallbackInfo ci){
-		if(Config.do_render_crosshair && CameraAgent.isAvailable()){
-			if(CameraAgent.getInstance().isFreeTpv){
+	private void renderCrosshair (GuiGraphics guiGraphics, CallbackInfo ci) {
+		if (Config.do_render_crosshair && CameraAgent.isAvailable()) {
+			if (CameraAgent.getInstance().isFreeTpv) {
 				ThirdPersonPerspective.renderCrosshair(guiGraphics);
 			}
 		}

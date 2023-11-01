@@ -2,7 +2,6 @@
 
 [CurseForge](https://legacy.curseforge.com/minecraft/mc-mods/leawinds-third-person-perspective)
 
-
 # Третье лицо с LEAWIND
 
 Гораздо улучшенная модификация для третьего лица.
