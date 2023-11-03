@@ -2,30 +2,34 @@ package net.leawind.mc.thirdpersonperspective.core;
 
 
 import com.mojang.blaze3d.Blaze3D;
+import com.mojang.logging.LogUtils;
 import net.leawind.mc.util.SmoothVec2;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class CameraAgent {
-	public BlockGetter         level;
-	public LocalPlayer         player;
-	public PlayerAgent         playerAgent;
-	public Camera              camera;
-	public boolean             isThirdPersonEnabled = false;
-	public CameraOffsetProfile profile              = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
-	public SmoothVec2          smoothOffset         = new SmoothVec2().setValue(0, 0);
-	public double              lastTickTime         = 0;
-	public boolean             isAiming             = false;
+	public static final Logger              LOGGER               = LogUtils.getLogger();
+	public              BlockGetter         level;
+	public              LocalPlayer         player;
+	public              PlayerAgent         playerAgent;
+	public              Camera              camera;
+	public              boolean             isThirdPersonEnabled = false;
+	public              CameraOffsetProfile profile              = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
+	public              SmoothVec2          smoothOffset         = new SmoothVec2().setValue(0, 0);
+	public              double              lastTickTime         = 0;
+	public              boolean             isAiming             = false;
 
 	public CameraAgent () {
 		// TODO 读取配置文件，加载两种相机模式
 		init();
+		LOGGER.info("New CameraAgent created");
 	}
 
 	private void init () {//TODO
