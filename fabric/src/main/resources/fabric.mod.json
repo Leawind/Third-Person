@@ -14,7 +14,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "${mod_group_id}.fabric.ExampleModFabric"
+      "${mod_group_id}.fabric.ThirdPersonPerspectiveModFabric"
     ]
   },
   "mixins": [

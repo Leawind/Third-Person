@@ -16,10 +16,9 @@ public class ThirdPersonPerspectiveMod {
 	public static final Supplier<RegistrarManager> REGISTRIES = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
 
 	public static void init () {
-		LOGGER.atLevel(Level.TRACE);
+		// run/config
 		System.out.println(ExampleExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
 		ModKeys.register();
 		ModEvents.register();
-		LOGGER.debug("initalized !!! I am lwd");
 	}
 }

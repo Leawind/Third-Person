@@ -1,6 +1,7 @@
 {
-	"key.categories.third_person_perspective":"第三人称视角",
-	"key.ltpv.toggle_side":"切换相机到另一侧",
-	"key.ltpv.adjust_position":  "按住调整相机位置",
-	"key.ltpv.force_aiming":"按住强制瞄准"
+	"key.categories.third_person_perspective": "第三人称视角",
+	"key.ltpv.toggle_side": "切换相机到另一侧",
+	"key.ltpv.adjust_position": "按住调节相机位置",
+	"key.ltpv.force_aiming": "按住强制瞄准",
+	"key.ltpv.toggle_aiming": "短按切换瞄准状态"
 }

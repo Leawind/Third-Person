@@ -9,6 +9,14 @@ public class PlayerAgent {
 	public         CameraAgent cameraAgent;
 	private static PlayerAgent instance;
 
+	public PlayerAgent () {
+		Minecraft mc = Minecraft.getInstance();
+		player = (LocalPlayer)mc.getCameraEntity();
+		if (mc.getCameraEntity() != mc.player) {
+			throw new Error("This should not happen in release version of my mod");
+		}
+	}
+
 	public static boolean isAvailable () {
 		Minecraft   mc     = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
