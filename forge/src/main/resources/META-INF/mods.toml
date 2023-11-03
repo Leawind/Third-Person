@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
-issueTrackerURL = "${mod_url_issue}"
 license = "${mod_license}"
+issueTrackerURL = "${mod_url_issue}"
 
 [[mods]]
 modId = "${mod_id}"
@@ -11,21 +11,21 @@ authors = "${mod_authors}"
 description = "${mod_description}"
 logoFile = "${mod_icon}"
 
-[[dependencies.${ mod_id }]]
+[[dependencies."${mod_id}"]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${ mod_id }]]
+[[dependencies."${mod_id}"]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${ mod_id }]]
+[[dependencies."${mod_id}"]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.1.12,)"
