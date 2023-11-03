@@ -1,4 +1,4 @@
-package net.examplemod;
+package net.leawind.mc.thirdpersonperspective;
 
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -18,8 +18,7 @@ public class ExampleExpectPlatform {
 	 * net.examplemod.forge.ExampleExpectPlatformImpl#getConfigDirectory()
 	 * <p>
 	 * <a href="https://plugins.jetbrains.com/plugin/16210-architectury">You should also get the IntelliJ plugin to
-	 * help
-	 * with @ExpectPlatform.</a>
+	 * help with @ExpectPlatform.</a>
 	 */
 	@ExpectPlatform
 	public static Path getConfigDirectory () {

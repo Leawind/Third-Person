@@ -11,3 +11,16 @@
 [Github](https://github.com/LEAWIND/Third-Person-Perspective)
 
 ![Fly](https://github.com/LEAWIND/Images/blob/main/repository/Third-Person-Perspective/fly.gif?raw=true)
+
+## TODO
+
+Mutch better third person perspective
+leawind_third_person_perspective
+net.leawind.mc.thirdpersonperspective
+LEAWIND's Third Person Perspective
+
+net.examplemod                                      
+example                                     
+architectury-example-mod                                        
+examplemod-common.mixins.json                                       
+examplemod.mixins.json                                      

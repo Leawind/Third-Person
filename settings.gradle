@@ -22,4 +22,4 @@ pluginManagement {
 include("common")
 include("fabric")
 include("forge")
-rootProject.name = "architectury-example-mod"
+rootProject.name = "LEAWIND's Third Person Perspective"

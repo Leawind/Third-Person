@@ -1,6 +1,6 @@
 {
 	"required"          : true,
-	"package"           : "net.examplemod.mixin",
+	"package"           : "net.leawind.mc.thirdpersonperspective.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"minVersion"        : "0.8",
 	"client"            : [

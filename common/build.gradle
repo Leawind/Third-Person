@@ -2,7 +2,7 @@ architectury {
 	common(rootProject.enabled_platforms.split(","))
 }
 loom {
-	accessWidenerPath = file("src/main/resources/examplemod.accesswidener")
+	accessWidenerPath = file("src/main/resources/leawind_third_person_perspective.accesswidener")
 }
 dependencies {
 	// We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies

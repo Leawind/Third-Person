@@ -1,4 +1,4 @@
-package net.examplemod;
+package net.leawind.mc.thirdpersonperspective;
 
 
 import com.google.common.base.Suppliers;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Supplier;
 
 public class ExampleMod {
-	public static final String                            MOD_ID       = "examplemod";
+	public static final String                            MOD_ID       = "leawind_third_person_perspective";
 	// We can use this if we don't want to use DeferredRegister
 	public static final Supplier<RegistrarManager>        REGISTRIES   = Suppliers.memoize(() -> RegistrarManager.get(
 		MOD_ID));

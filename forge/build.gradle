@@ -10,8 +10,8 @@ loom {
 	forge {
 		convertAccessWideners = true
 		extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-		mixinConfig "examplemod-common.mixins.json"
-		mixinConfig "examplemod.mixins.json"
+		mixinConfig "leawind_third_person_perspective-common.mixins.json"
+		mixinConfig "leawind_third_person_perspective.mixins.json"
 	}
 }
 configurations {

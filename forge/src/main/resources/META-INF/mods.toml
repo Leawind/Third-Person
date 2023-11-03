@@ -4,30 +4,30 @@ loaderVersion = "[47,)"
 license = "Insert License Here"
 
 [[mods]]
-modId = "examplemod"
+modId = "leawind_third_person_perspective"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+displayName = "LEAWIND's Third Person Perspective"
+authors = "LEAWIND"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+	Mutch better third person perspective
 '''
 #logoFile = ""
 
-[[dependencies.examplemod]]
+[[dependencies.leawind_third_person_perspective]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.leawind_third_person_perspective]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.leawind_third_person_perspective]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.1.12,)"

@@ -1,8 +1,8 @@
-package net.examplemod.forge;
+package net.leawind.mc.thirdpersonperspective.fabric;
 
 
-import net.examplemod.ExampleExpectPlatform;
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.fabricmc.loader.api.FabricLoader;
+import net.leawind.mc.thirdpersonperspective.ExampleExpectPlatform;
 
 import java.nio.file.Path;
 
@@ -11,6 +11,6 @@ public class ExampleExpectPlatformImpl {
 	 * This is our actual method to {@link ExampleExpectPlatform#getConfigDirectory()}.
 	 */
 	public static Path getConfigDirectory () {
-		return FMLPaths.CONFIGDIR.get();
+		return FabricLoader.getInstance().getConfigDir();
 	}
 }

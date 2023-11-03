@@ -1,8 +1,8 @@
-package net.examplemod.forge;
+package net.leawind.mc.thirdpersonperspective.forge;
 
 
 import dev.architectury.platform.forge.EventBuses;
-import net.examplemod.ExampleMod;
+import net.leawind.mc.thirdpersonperspective.ExampleMod;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 

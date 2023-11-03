@@ -1,4 +1,4 @@
-package net.examplemod.mixin;
+package net.leawind.mc.thirdpersonperspective.mixin;
 
 
 import net.minecraft.client.gui.screens.TitleScreen;
