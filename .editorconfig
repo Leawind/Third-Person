@@ -1,12 +1,12 @@
 [*]
 charset                     = utf-8
-end_of_line                 = lf
+end_of_line                 = crlf
 indent_size                 = 4
 indent_style                = tab
 insert_final_newline        = true
-max_line_length             = 128
+max_line_length             = 120
 tab_width                   = 4
-ij_continuation_indent_size = 8
+ij_continuation_indent_size = 4
 ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag         = @formatter: on
 ij_formatter_tags_enabled   = true
@@ -258,7 +258,7 @@ ij_java_wrap_first_method_in_call_chain                         = false
 ij_java_wrap_long_lines                                         = true
 
 [*.nbtt]
-max_line_length                     = 150
+max_line_length                     = 120
 ij_continuation_indent_size         = 4
 ij_nbtt_keep_indents_on_empty_lines = false
 ij_nbtt_space_after_colon           = true
