@@ -1,13 +1,13 @@
 {
-	"required"          : true,
-	"package"           : "net.leawind.mc.thirdpersonperspective.mixin.forge",
+	"required": true,
+	"package": "net.leawind.mc.thirdpersonperspective.mixin.forge",
 	"compatibilityLevel": "JAVA_17",
-	"minVersion"        : "0.8",
-	"client"            : [
+	"minVersion": "0.8",
+	"client": [
 	],
-	"mixins"            : [
+	"mixins": [
 	],
-	"injectors"         : {
+	"injectors": {
 		"defaultRequire": 1
 	}
 }

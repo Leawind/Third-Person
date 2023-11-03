@@ -1,33 +1,31 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "${mod_url_issue}"
+license = "${mod_license}"
 
 [[mods]]
-modId = "leawind_third_person_perspective"
-version = "${version}"
-displayName = "LEAWIND's Third Person Perspective"
-authors = "LEAWIND"
-description = '''
-	Mutch better third person perspective
-'''
-#logoFile = ""
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "${mod_authors}"
+description = "${mod_description}"
+logoFile = "${mod_icon}"
 
-[[dependencies.leawind_third_person_perspective]]
+[[dependencies.${ mod_id }]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.leawind_third_person_perspective]]
+[[dependencies.${ mod_id }]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.leawind_third_person_perspective]]
+[[dependencies.${ mod_id }]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.1.12,)"

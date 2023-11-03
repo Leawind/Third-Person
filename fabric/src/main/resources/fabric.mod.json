@@ -1,27 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "leawind_third_person_perspective",
-  "version": "${version}",
-  "name": "LEAWIND's Third Person Perspective",
-  "description": "Mutch better third person perspective",
-  "authors": [
-    "LEAWIND"
-  ],
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["${mod_authors}"],
   "contact": {
-    "homepage": "https://github.com/LEAWIND/Third-Person-Perspective",
-    "sources": "https://github.com/LEAWIND/Third-Person-Perspective"
+    "homepage": "${mod_url_home}",
+    "sources": "${mod_url_issue}"
   },
-  "license": "MIT",
-  "icon": "assets/third_person_perspective/icon.png",
+  "license": "${mod_license}",
+  "icon": "${mod_icon}",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.leawind.mc.thirdpersonperspective.fabric.ExampleModFabric"
+      "${mod_group_id}.fabric.ExampleModFabric"
     ]
   },
   "mixins": [
-    "leawind_third_person_perspective.mixins.json",
-    "leawind_third_person_perspective-common.mixins.json"
+    "${mod_id}.mixins.json",
+    "${mod_id}-common.mixins.json"
   ],
   "depends": {
     "fabric": "*",

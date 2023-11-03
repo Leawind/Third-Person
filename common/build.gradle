@@ -2,19 +2,23 @@ architectury {
 	common(rootProject.enabled_platforms.split(","))
 }
 loom {
-	accessWidenerPath = file("src/main/resources/leawind_third_person_perspective.accesswidener")
+	accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 dependencies {
-	// We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-	// Do NOT use other classes from fabric loader
 	modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 	// Remove the next line if you don't want to depend on the API
 	modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 }
+processResources {
+	inputs.property "version", project.version
+	filesMatching(["*.json", "*.toml"]) {
+		expand project.properties
+	}
+}
 publishing {
 	publications {
 		mavenCommon(MavenPublication) {
-			artifactId = rootProject.archives_base_name
+			artifactId = rootProject.mod_id
 			from components.java
 		}
 	}
