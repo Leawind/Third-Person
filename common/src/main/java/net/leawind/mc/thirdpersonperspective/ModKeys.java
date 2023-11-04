@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdpersonperspective.client;
+package net.leawind.mc.thirdpersonperspective;
 
 
 import com.mojang.blaze3d.platform.InputConstants;

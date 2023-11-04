@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdpersonperspective.core;
 
 
-import net.leawind.mc.thirdpersonperspective.client.ModKeys;
+import net.leawind.mc.thirdpersonperspective.ModKeys;
 
 public class Options {
 	/**

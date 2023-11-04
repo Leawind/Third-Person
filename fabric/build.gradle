@@ -29,8 +29,7 @@ dependencies {
 }
 processResources {
 	inputs.property "version", project.version
-	filesMatching(["**.json", "**.toml", "pack.mcmeta"]) {
-		//		eachFile {
+	eachFile {
 		expand rootProject.properties
 	}
 }

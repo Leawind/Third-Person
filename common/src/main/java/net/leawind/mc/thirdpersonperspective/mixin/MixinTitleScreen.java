@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdpersonperspective.mixin;
 
 
+import net.leawind.mc.thirdpersonperspective.ThirdPersonPerspectiveMod;
 import net.minecraft.client.gui.screens.TitleScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinTitleScreen {
 	@Inject(at=@At("HEAD"), method="init()V")
 	private void init (CallbackInfo info) {
-		System.out.println("Hello from example architectury common mixin!");
+		ThirdPersonPerspectiveMod.LOGGER.info("Hello from example architectury common mixin!");
 	}
 }
