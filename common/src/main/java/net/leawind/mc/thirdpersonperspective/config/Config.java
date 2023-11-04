@@ -8,7 +8,7 @@ public class Config {
 	public static final Logger  LOGGER                     = LogUtils.getLogger();
 	//	Configurations
 	public static       boolean isLoaded                   = false;
-	public static       boolean is_mod_enable              = false;
+	public static       boolean is_mod_enable              = true;
 	public static       boolean is_third_person_by_default = false;
 
 	// Invoked by Forge or Fabric

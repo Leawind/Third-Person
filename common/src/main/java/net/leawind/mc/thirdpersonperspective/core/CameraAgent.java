@@ -22,9 +22,9 @@ public class CameraAgent {
 	public              PlayerAgent         playerAgent;
 	public              Camera              camera;
 	public              boolean             isThirdPersonEnabled = false;
-	public CameraOffsetProfile offsetProfile = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
-	public ExpSmoothVec2       smoothOffset  = new ExpSmoothVec2().setValue(0, 0);
-	public double              lastTickTime  = 0;
+	public              CameraOffsetProfile offsetProfile        = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
+	public              ExpSmoothVec2       smoothOffset         = new ExpSmoothVec2().setValue(0, 0);
+	public              double              lastTickTime         = 0;
 	public              boolean             isAiming             = false;
 
 	public CameraAgent () {

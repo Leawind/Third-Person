@@ -2,15 +2,16 @@ package net.leawind.mc.thirdpersonperspective.core;
 
 
 import com.mojang.logging.LogUtils;
+import net.leawind.mc.thirdpersonperspective.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.slf4j.Logger;
 
 public class PlayerAgent {
 	public static final Logger      LOGGER = LogUtils.getLogger();
+	private static      PlayerAgent instance;
 	public              LocalPlayer player;
 	public              CameraAgent cameraAgent;
-	private static      PlayerAgent instance;
 
 	public PlayerAgent () {
 		Minecraft mc = Minecraft.getInstance();
@@ -22,6 +23,9 @@ public class PlayerAgent {
 	}
 
 	public static boolean isAvailable () {
+		if (!Config.is_mod_enable) {
+			return false;
+		}
 		Minecraft   mc     = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		return player != null;
