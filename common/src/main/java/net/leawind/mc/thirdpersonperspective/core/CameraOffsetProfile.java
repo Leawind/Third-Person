@@ -39,8 +39,9 @@ public class CameraOffsetProfile {
 		}
 	}
 
-	public static final CameraOffsetProfile DEFAULT_MODE_CLOSER  = new CameraOffsetProfile();
-	public static final CameraOffsetProfile DEFAULT_MODE_FARTHER = new CameraOffsetProfile();
+	// TODO
+	public static final CameraOffsetProfile DEFAULT_CLOSER  = new CameraOffsetProfile();
+	public static final CameraOffsetProfile DEFAULT_FARTHER = new CameraOffsetProfile();
 }
 
 

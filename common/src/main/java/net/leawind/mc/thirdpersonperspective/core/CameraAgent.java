@@ -4,6 +4,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.config.Config;
+import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -16,16 +17,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CameraAgent {
-	public static final Logger              LOGGER               = LogUtils.getLogger();
-	public              BlockGetter         level;
-	public              LocalPlayer         player;
-	public              PlayerAgent         playerAgent;
-	public              Camera              camera;
-	public              boolean             isThirdPersonEnabled = false;
-	public              CameraOffsetProfile offsetProfile        = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
-	public              ExpSmoothVec2       smoothOffset         = new ExpSmoothVec2().setValue(0, 0);
-	public              double              lastTickTime         = 0;
-	public              boolean             isAiming             = false;
+	public static final Logger        LOGGER               = LogUtils.getLogger();
+	public              BlockGetter   level;
+	public              LocalPlayer   player;
+	public              PlayerAgent   playerAgent;
+	public              Camera        camera;
+	public              boolean       isThirdPersonEnabled = false;
+	public              ExpSmoothVec2 smoothOffset         = new ExpSmoothVec2().setValue(0, 0);
+	public              double        lastTickTime         = 0;
+	public              boolean       isAiming             = false;
 
 	public CameraAgent () {
 		// TODO 读取配置文件，加载两种相机模式
@@ -42,8 +42,8 @@ public class CameraAgent {
 		assert player != null;
 	}
 
-	private boolean getProfileKey () {
-		return Minecraft.getInstance().options.getCameraType().isMirrored();
+	public CameraOffsetProfile getOffsetProfile () {
+		return UserProfile.getCameraOffsetProfile();
 	}
 
 	/**
