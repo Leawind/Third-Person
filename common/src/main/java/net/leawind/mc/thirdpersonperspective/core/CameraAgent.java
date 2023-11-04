@@ -3,6 +3,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
+import net.leawind.mc.thirdpersonperspective.config.Config;
 import net.leawind.mc.util.SmoothVec2;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -21,7 +22,7 @@ public class CameraAgent {
 	public              PlayerAgent         playerAgent;
 	public              Camera              camera;
 	public              boolean             isThirdPersonEnabled = false;
-	public              CameraOffsetProfile profile              = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
+	public              CameraOffsetProfile offsetProfile        = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
 	public              SmoothVec2          smoothOffset         = new SmoothVec2().setValue(0, 0);
 	public              double              lastTickTime         = 0;
 	public              boolean             isAiming             = false;
@@ -39,6 +40,10 @@ public class CameraAgent {
 		// 将虚拟球心放在实体眼睛处
 		//		eyePositionSmooth = player.getEyePosition(lerpK);
 		assert player != null;
+	}
+
+	private boolean getProfileKey () {
+		return Minecraft.getInstance().options.getCameraType().isMirrored();
 	}
 
 	/**
@@ -61,6 +66,7 @@ public class CameraAgent {
 		isAiming                 = false;
 		Options.isToggleToAiming = false;
 		lastTickTime             = Blaze3D.getTime();
+		LOGGER.info("Enter third person, lerpK={}", lerpK);
 	}
 
 	/**
@@ -84,16 +90,16 @@ public class CameraAgent {
 	 * 判断相机代理实例是否可用
 	 */
 	public static boolean isAvailable () {
+		if (!Config.is_mod_enable) {
+			return false;
+		}
 		Minecraft mc     = Minecraft.getInstance();
 		Camera    camera = mc.gameRenderer.getMainCamera();
 		if (!camera.isInitialized()) {
 			return false;
 		}
 		LocalPlayer player = mc.player;
-		if (player == null) {
-			return false;
-		}
-		return true;
+		return player != null;
 	}
 
 	/**

@@ -3,9 +3,7 @@
 	"package": "net.leawind.mc.thirdpersonperspective.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"minVersion": "0.8",
-	"client": [
-		"MixinTitleScreen"
-	],
+	"client": ["CameraInvoker", "CameraMixin", "MixinTitleScreen"],
 	"mixins": [
 	],
 	"injectors": {
