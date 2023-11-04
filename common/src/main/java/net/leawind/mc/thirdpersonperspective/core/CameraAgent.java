@@ -4,7 +4,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.config.Config;
-import net.leawind.mc.util.SmoothVec2;
+import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,9 +22,9 @@ public class CameraAgent {
 	public              PlayerAgent         playerAgent;
 	public              Camera              camera;
 	public              boolean             isThirdPersonEnabled = false;
-	public              CameraOffsetProfile offsetProfile        = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
-	public              SmoothVec2          smoothOffset         = new SmoothVec2().setValue(0, 0);
-	public              double              lastTickTime         = 0;
+	public CameraOffsetProfile offsetProfile = CameraOffsetProfile.DEFAULT_MODE_CLOSER;
+	public ExpSmoothVec2       smoothOffset  = new ExpSmoothVec2().setValue(0, 0);
+	public double              lastTickTime  = 0;
 	public              boolean             isAiming             = false;
 
 	public CameraAgent () {
