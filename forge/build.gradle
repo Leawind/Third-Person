@@ -22,8 +22,8 @@ configurations {
 	developmentForge.extendsFrom common
 }
 dependencies {
-	forge "net.minecraftforge:forge:${rootProject.forge_version}"
-	modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
+	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+	modApi "dev.architectury:architectury-forge:${architectury_version}"
 	common(project(path: ":common", configuration: "namedElements")) {
 		transitive false
 	}
@@ -54,6 +54,10 @@ sourcesJar {
 		zipTree(it)
 	}
 }
+base {
+	archivesName = rootProject.archiveFileNameOfPlatform("forge")
+	version = ""
+}
 components.java {
 	withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
 		skip()
@@ -62,7 +66,7 @@ components.java {
 publishing {
 	publications {
 		mavenForge(MavenPublication) {
-			artifactId = rootProject.mod_id + "-" + project.name
+			artifactId = mod_id + "-" + project.name
 			from components.java
 		}
 	}
