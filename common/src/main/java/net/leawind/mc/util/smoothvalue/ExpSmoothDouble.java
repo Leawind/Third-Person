@@ -14,26 +14,26 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		return this;
 	}
 
-	public ExpSmoothDouble setDecayRatio (double k, double t) {
-		this.decayRatio = Math.pow(k, 1 / t);
+	public ExpSmoothDouble setSmoothFactor (double k, double t) {
+		this.smoothFactor = Math.pow(k, 1 / t);
 		return this;
 	}
 
 	@Override
-	public ExpSmoothValue<Double> setDecayRatio (double decreaseSpeed) {
-		this.decayRatio = decreaseSpeed;
+	public ExpSmoothValue<Double> setSmoothFactor (double decreaseSpeed) {
+		this.smoothFactor = decreaseSpeed;
 		return this;
 	}
 
 	@Override
-	public ExpSmoothDouble setDecayRatio (Double k, Double t) {
-		this.decayRatio = Math.pow(k, 1 / t);
+	public ExpSmoothDouble setSmoothFactor (Double k, Double t) {
+		this.smoothFactor = Math.pow(k, 1 / t);
 		return this;
 	}
 
 	@Override
 	public ExpSmoothDouble update (double tickTime) {
-		value = Mth.lerp(1 - Math.pow(decayRatio, tickTime), value, target);
+		value = Mth.lerp(1 - Math.pow(smoothFactor, tickTime), value, target);
 		return this;
 	}
 }

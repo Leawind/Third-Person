@@ -26,6 +26,12 @@ public class PlayerAgent {
 		LOGGER.info("Reset PlayerAgent");
 	}
 
+	public static void updateUserProfile () {
+		// TODO
+		// smoothEyePosition.setSmoothFactor()
+		LOGGER.info("PlayerAgent: updateUserProfile");
+	}
+
 	@PerformanceSensitive
 	public static void onServerAiStep () {
 		if (player.isSwimming()) {

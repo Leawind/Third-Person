@@ -64,6 +64,8 @@ public class ThirdPersonPerspectiveMod {
 		public static void onClientStarted (Minecraft minecraft) {
 			UserProfile.loadDefault();
 			UserProfile.load();
+			CameraAgent.updateUserProfile();
+			PlayerAgent.updateUserProfile();
 		}
 	}
 }

@@ -5,7 +5,7 @@ package net.leawind.mc.util.smoothvalue;
 public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	public    T value;
 	protected T target;
-	public    T decayRatio;
+	public    T smoothFactor;
 
 	final public T getValue () {
 		return value;
@@ -21,17 +21,17 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
-	final public ExpSmoothValue<T> setDecayRatio (T decreaseSpeed) {
-		this.decayRatio = decreaseSpeed;
+	final public ExpSmoothValue<T> setSmoothFactor (T decreaseSpeed) {
+		this.smoothFactor = decreaseSpeed;
 		return this;
 	}
 
-	abstract ExpSmoothValue<T> setDecayRatio (double decreaseSpeed);
+	abstract ExpSmoothValue<T> setSmoothFactor (double decreaseSpeed);
 
 	/**
 	 * 每隔 deltaTime 秒，value 变为原来的 multiplier 倍
 	 */
-	abstract ExpSmoothValue<T> setDecayRatio (T multiplier, T deltaTime);
+	abstract ExpSmoothValue<T> setSmoothFactor (T multiplier, T deltaTime);
 
 	/**
 	 * @param tickTime 经过的时间（s）

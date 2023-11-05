@@ -15,26 +15,26 @@ public class ExpSmoothVec2 extends ExpSmoothValue<Vec2> {
 		return this;
 	}
 
-	public ExpSmoothVec2 setDecayRatio (float x, float y) {
-		this.decayRatio = new Vec2(x, y);
+	public ExpSmoothVec2 setSmoothFactor (float x, float y) {
+		this.smoothFactor = new Vec2(x, y);
 		return this;
 	}
 
 	@Override
-	public ExpSmoothVec2 setDecayRatio (double decreaseSpeed) {
-		return setDecayRatio((float)decreaseSpeed, (float)decreaseSpeed);
+	public ExpSmoothVec2 setSmoothFactor (double decreaseSpeed) {
+		return setSmoothFactor((float)decreaseSpeed, (float)decreaseSpeed);
 	}
 
 	@Override
-	public ExpSmoothVec2 setDecayRatio (Vec2 multiplier, Vec2 deltaTime) {
-		this.decayRatio = new Vec2((float)Math.pow(multiplier.x, 1 / deltaTime.x),
-								   (float)Math.pow(multiplier.y, 1 / deltaTime.y));
+	public ExpSmoothVec2 setSmoothFactor (Vec2 multiplier, Vec2 deltaTime) {
+		this.smoothFactor = new Vec2((float)Math.pow(multiplier.x, 1 / deltaTime.x),
+									 (float)Math.pow(multiplier.y, 1 / deltaTime.y));
 		return this;
 	}
 
 	@Override
 	public ExpSmoothVec2 update (double tickTime) {
-		value = Vectors.lerp(value, target, Vectors.pow(decayRatio, tickTime).negated().add(1f));
+		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, tickTime).negated().add(1f));
 		return this;
 	}
 }

@@ -14,6 +14,11 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 	protected T                        startValue;
 	protected T                        targetValue;
 
+	public FuncSmoothValue<T> setFunc (Function<Double, Double> func) {
+		this.func = func;
+		return this;
+	}
+
 	final public T getValue () {
 		return value;
 	}

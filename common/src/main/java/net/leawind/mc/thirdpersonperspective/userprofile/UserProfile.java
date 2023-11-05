@@ -3,6 +3,7 @@ package net.leawind.mc.thirdpersonperspective.userprofile;
 
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.ExpectPlatform;
+import net.leawind.mc.thirdpersonperspective.ThirdPersonPerspectiveMod;
 import net.leawind.mc.thirdpersonperspective.core.CameraOffsetProfile;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,8 @@ public class UserProfile {
 	private static final Map<Object, CameraOffsetProfile> cameraOffsetProfiles = new HashMap<>();
 
 	private static Path getProfilePath () {
-		return ExpectPlatform.getConfigDirectory().resolve(String.format("%s.profile.json5"));
+		return ExpectPlatform.getConfigDirectory().resolve(String.format("%s.profile.json5",
+																		 ThirdPersonPerspectiveMod.MOD_ID));
 	}
 
 	private static CameraType getProfileKey () {

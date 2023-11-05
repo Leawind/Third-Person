@@ -57,8 +57,9 @@ public class CameraAgent {
 
 	public static void updateUserProfile () {
 		//TODO
-		//		smoothOffset
-		//		relativeDistance
+		// smoothOffset.setSmoothFactor()
+		// smoothDistance.setSmoothFactor()
+		LOGGER.info("CameraAgent: updateUserProfile");
 	}
 
 	/**
