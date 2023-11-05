@@ -6,14 +6,14 @@ import net.leawind.mc.util.monolist.MonoList;
 import org.slf4j.Logger;
 
 public class Config {
-	public static final Logger  LOGGER                     = LogUtils.getLogger();
+	public static final Logger  LOGGER                   = LogUtils.getLogger();
 	//	Configurations
-	public static       boolean isLoaded                   = false;
-	public static       boolean is_mod_enable              = true;
-	public static       boolean is_third_person_by_default = false;
-	public static       int     available_distance_count   = 32;
-	public static       double  distance_min               = 0.5;
-	public static       double  distance_max               = 128;
+	public static       boolean isLoaded                 = false;
+	public static       boolean is_mod_enable            = true;
+	public static       boolean is_3rd_person_by_default = false;
+	public static       int     available_distance_count = 32;
+	public static       double  distance_min             = 0.5;
+	public static       double  distance_max             = 128;
 
 	// Invoked by Forge or Fabric
 	public static void onLoad (final Object event) {

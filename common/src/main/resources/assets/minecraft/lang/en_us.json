@@ -1,1 +1,12 @@
-{}
+{
+	"key.categories.third_person_perspective": "Third-Person Perspective",
+	"key.ltpv.toggle_side": "Toggle Camera to the Other Side",
+	"key.ltpv.adjust_position": "Hold to Adjust Camera Position",
+	"key.ltpv.force_aiming": "Hold to Force Aim",
+	"key.ltpv.toggle_aiming": "Toggle Aiming",
+	"options.ltpv.is_mod_enable": "Is this mod enabled",
+	"options.ltpv.is_3rd_person_by_default": "Is third-person mode by default",
+	"options.ltpv.available_distance_count": "Number of Available Distances",
+	"options.ltpv.distance_min": "Minimum Adjustable Distance Range",
+	"options.ltpv.distance_max": "Maximum Adjustable Distance Range"
+}
