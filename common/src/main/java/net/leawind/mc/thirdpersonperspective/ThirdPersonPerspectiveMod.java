@@ -8,6 +8,7 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
 import net.leawind.mc.thirdpersonperspective.core.CrosshairRenderer;
+import net.leawind.mc.thirdpersonperspective.core.PlayerAgent;
 import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,21 +37,26 @@ public class ThirdPersonPerspectiveMod {
 			ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
 		}
 
+		public static void onPlayerReset (LocalPlayer player) {
+			CameraAgent.reset();
+			PlayerAgent.reset();
+		}
+
 		/**
 		 * 当玩家死亡后重生或加入新的维度时触发
 		 */
 		public static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
-			CameraAgent.getInstance().player = newPlayer;
-			// TODO
+			onPlayerReset(newPlayer);
 			LOGGER.info("on Client player respawn");
 		}
 
 		public static void onClientPlayerJoin (LocalPlayer player) {
+			onPlayerReset(player);
 			LOGGER.info("on Client player join");
 		}
 
 		public static void onRenderHud (GuiGraphics graphics, float tickDelta) {
-			if (CameraAgent.isAvailable() && CameraAgent.getInstance().isThirdPersonEnabled) {
+			if (CameraAgent.isAvailable() && CameraAgent.isThirdPersonEnabled) {
 				CrosshairRenderer.render(graphics);
 			}
 		}

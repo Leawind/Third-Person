@@ -22,5 +22,4 @@ public class CrosshairRenderer {
 					  crosshairSize);
 		RenderSystem.defaultBlendFunc();
 	}
-
 }

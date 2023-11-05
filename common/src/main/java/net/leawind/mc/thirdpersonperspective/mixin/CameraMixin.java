@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdpersonperspective.mixin;
 
 
-import net.leawind.mc.thirdpersonperspective.config.Config;
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.client.Camera.class)
@@ -35,9 +33,9 @@ public class CameraMixin {
 							CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
-			CameraAgent.getInstance().isThirdPersonEnabled = false;
+			CameraAgent.isThirdPersonEnabled = false;
 			if (ltpv$wasFirstPerson && !isFirstPerson) {
-				CameraAgent.getInstance().onEnterThirdPerson(lerpK);
+				CameraAgent.onEnterThirdPerson(lerpK);
 			}
 			ltpv$wasFirstPerson = isFirstPerson;
 		}
@@ -55,9 +53,8 @@ public class CameraMixin {
 							  float lerpK,
 							  CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
-			CameraAgent cameraAgent = CameraAgent.getInstance();
-			cameraAgent.isThirdPersonEnabled = true;
-			cameraAgent.onRenderTick(level, entity, isMirrored, lerpK);
+			CameraAgent.isThirdPersonEnabled = true;
+			CameraAgent.onRenderTick(level, entity, isMirrored, lerpK);
 			ci.cancel();
 		}
 	}
