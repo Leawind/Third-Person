@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
  * <p>
  * 第三人称下，相机会根据其当前所处的模式来确定相机的行为。例如如何跟随玩家、如何旋转、与玩家的相对位置如何确定等。
  */
-public class CameraOffsetProfile {
+public class CameraOffsetProfile implements Cloneable {
 	// TODO
 	public static final CameraOffsetProfile DEFAULT_CLOSER  = new CameraOffsetProfile(new OffsetModeNormal(1.6,
 																										   new Vec2(-0.372f,
@@ -29,6 +29,18 @@ public class CameraOffsetProfile {
 	public CameraOffsetProfile (OffsetModeNormal offsetNormal, OffsetModeAiming offsetAiming) {
 		this.offsetNormal = offsetNormal;
 		this.offsetAiming = offsetAiming;
+	}
+
+	@Override
+	public CameraOffsetProfile clone () {
+		try {
+			CameraOffsetProfile clone = (CameraOffsetProfile)super.clone();
+			clone.offsetAiming = (OffsetModeAiming)this.offsetAiming.clone();
+			clone.offsetNormal = (OffsetModeNormal)this.offsetNormal.clone();
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError("CameraOffsetProfile Clone error");
+		}
 	}
 
 	public static class OffsetModeNormal extends OffsetMode {
@@ -63,7 +75,7 @@ public class CameraOffsetProfile {
 		}
 	}
 
-	public abstract static class OffsetMode {
+	public abstract static class OffsetMode implements Cloneable {
 		/**
 		 * 眼睛位置的平滑系数
 		 */
@@ -114,6 +126,15 @@ public class CameraOffsetProfile {
 		 * 根据距离计算实相机偏移量
 		 */
 		abstract public Vec2 getOffsetRatio (double distance);
+
+		@Override
+		public OffsetMode clone () {
+			try {
+				return (OffsetMode)super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new AssertionError();
+			}
+		}
 	}
 }
 
