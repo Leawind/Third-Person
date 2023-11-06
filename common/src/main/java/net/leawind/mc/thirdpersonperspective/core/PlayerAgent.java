@@ -61,6 +61,19 @@ public class PlayerAgent {
 	public static void onRenderTick (float lerpK, double sinceLastTick) {
 		// 平滑更新眼睛位置
 		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
+		if (isAiming()) {
+			// 计算相机视线落点
+			Vec3 cameraHitPosition = CameraAgent.getPickPosition();
+			if (cameraHitPosition == null) {
+				// 让玩家朝向相机的朝向
+				PlayerAgent.turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
+			} else {
+				// 让玩家朝向该坐标
+				Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(cameraHitPosition);
+				Vec2 playerViewRot    = Vectors.rotationAngleFromDirection(playerViewVector);
+				PlayerAgent.turnTo(playerViewRot, true);
+			}
+		}
 	}
 
 	/**
@@ -70,16 +83,27 @@ public class PlayerAgent {
 	 * @param isInstantly 是否瞬间转动
 	 */
 	public static void turnTo (Vec2 rot, boolean isInstantly) {
+		turnTo(rot.y, rot.x, isInstantly);
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param ry          偏航角
+	 * @param rx          俯仰角
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnTo (float ry, float rx, boolean isInstantly) {
 		if (isInstantly) {
-			player.setYRot(rot.y);
-			player.setXRot(rot.x);
+			player.setYRot(ry);
+			player.setXRot(rx);
 		} else {
 			float playerY = player.getYRot();
-			float dy      = ((rot.y - playerY) % 360 + 360) % 360;
+			float dy      = ((ry - playerY) % 360 + 360) % 360;
 			if (dy > 180) {
 				dy -= 360;
 			}
-			player.turn(dy, rot.x - player.getXRot());
+			player.turn(dy, rx - player.getXRot());
 		}
 	}
 

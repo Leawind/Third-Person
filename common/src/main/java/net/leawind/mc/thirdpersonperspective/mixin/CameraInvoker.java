@@ -13,7 +13,7 @@ public interface CameraInvoker {
 	/**
 	 * 单位：角度制
 	 *
-	 * @param yRot 水平方向旋转角度，z轴正向是0，顺时针为正向
+	 * @param yRot 偏航角，z轴正向是0，顺时针为正向
 	 * @param xRot 俯仰角，俯正仰负 [-90,90]
 	 */
 	@Invoker("setRotation")

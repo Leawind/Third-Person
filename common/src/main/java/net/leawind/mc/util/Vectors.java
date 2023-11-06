@@ -11,7 +11,7 @@ public class Vectors {
 	 * 弧度制
 	 *
 	 * @param d 方向
-	 * @return [x=俯仰角, y=水平角]
+	 * @return [x=俯仰角, y=偏航角]
 	 */
 	public static Vec2 rotationRadianFromDirection (Vec3 d) {
 		d = d.normalize();
@@ -22,7 +22,7 @@ public class Vectors {
 	 * 角度制
 	 *
 	 * @param d 方向
-	 * @return [x=俯仰角, y=水平角]
+	 * @return [x=俯仰角, y=偏航角]
 	 */
 	public static Vec2 rotationAngleFromDirection (Vec3 d) {
 		d = d.normalize();
@@ -43,7 +43,7 @@ public class Vectors {
 	 * 将一个向量相对原本方向旋转一定弧度
 	 *
 	 * @param vec 原向量
-	 * @param dy  水平角变化量（弧度制）
+	 * @param dy  偏航角变化量（弧度制）
 	 * @param dx  俯仰角变化量（弧度制）
 	 */
 	public static Vec3 rotateRadian (Vec3 vec, float dy, float dx) {
@@ -64,7 +64,7 @@ public class Vectors {
 	 * 将一个向量相对原本方向旋转一定角度
 	 *
 	 * @param vec 原向量
-	 * @param dy  水平角变化量（角度制）
+	 * @param dy  偏航角变化量（角度制）
 	 * @param dx  俯仰角变化量（角度制）
 	 */
 	public static Vec3 rotateAngle (Vec3 vec, float dy, float dx) {

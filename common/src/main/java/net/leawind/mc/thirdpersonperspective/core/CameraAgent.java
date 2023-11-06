@@ -13,10 +13,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class CameraAgent {
@@ -77,7 +80,7 @@ public class CameraAgent {
 	/**
 	 * 鼠标移动导致的相机旋转
 	 *
-	 * @param turnY 水平角变化量
+	 * @param turnY 偏航角变化量
 	 * @param turnX 俯仰角变化量
 	 */
 	public static void onCameraTurn (double turnY, double turnX) {
@@ -155,5 +158,52 @@ public class CameraAgent {
 		double upOffset        = smoothDistance.getValue() * Math.tan(smoothOffsetRatio.getValue().y * halfH / 2);
 		((CameraInvoker)camera).invokeSetPosition(virtualPosition);
 		((CameraInvoker)camera).invokeMove(0, upOffset, leftOffset);
+	}
+
+	/**
+	 * 获取相机视线落点坐标
+	 */
+	public static @Nullable Vec3 getPickPosition () {
+		// TODO pick range
+		return getPickPosition((camera.getPosition().distanceTo(PlayerAgent.smoothEyePosition.getValue()) + 512));
+	}
+
+	/**
+	 * 获取相机视线落点坐标
+	 *
+	 * @param pickRange 最大探测距离
+	 */
+	public static @Nullable Vec3 getPickPosition (double pickRange) {
+		HitResult hitResult = pick(pickRange);
+		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
+	}
+
+	public static @NotNull HitResult pick (double pickRange) {
+		EntityHitResult ehr = pickEntity(pickRange);
+		return ehr != null ? ehr: pickBlock(pickRange);
+	}
+
+	private static @Nullable EntityHitResult pickEntity (double pickRange) {
+		Vec3 viewStart  = camera.getPosition();
+		Vec3 viewVector = new Vec3(camera.getLookVector());
+		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
+		AABB aabb       = player.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
+		return ProjectileUtil.getEntityHitResult(player,
+												 viewStart,
+												 viewEnd,
+												 aabb,
+												 (Entity target) -> !target.isSpectator() && target.isPickable(),
+												 pickRange);
+	}
+
+	private static @NotNull BlockHitResult pickBlock (double pickRange) {
+		Vec3 viewStart  = camera.getPosition();
+		Vec3 viewVector = new Vec3(camera.getLookVector());
+		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
+		return player.level().clip(new ClipContext(viewStart,
+												   viewEnd,
+												   ClipContext.Block.OUTLINE,
+												   ClipContext.Fluid.NONE,
+												   player));
 	}
 }
