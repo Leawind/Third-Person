@@ -3,11 +3,7 @@ package net.leawind.mc.thirdpersonperspective.mixin;
 
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
 import net.minecraft.client.Minecraft;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * 当玩家尝试转动视角时，
@@ -16,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  * <p>
  * 如果是第一人称，则调用默认的方法，即直接转动玩家实体
  */
-@Mixin(net.minecraft.client.MouseHandler.class)
-public abstract class MouseHandlerMixin {
-	@Inject(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"),
-			locals=LocalCapture.CAPTURE_FAILHARD, cancellable=true)
+//@Mixin(net.minecraft.client.MouseHandler.class)
+public abstract class MouseHandlerMixin_common {
+	//	@Inject(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"),
+	//			locals=LocalCapture.CAPTURE_FAILHARD, cancellable=true)
 	private void getLocalX (CallbackInfo ci,
 							double d1,
 							double d2,
