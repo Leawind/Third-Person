@@ -65,10 +65,11 @@ public class CameraAgent {
 	/**
 	 * 鼠标移动导致的相机旋转
 	 *
-	 * @param dy 水平角变化量
-	 * @param dx 俯仰角变化量
+	 * @param turnY 水平角变化量
+	 * @param turnX 俯仰角变化量
 	 */
-	public static void onCameraTurn (double dy, double dx) {
+	public static void onCameraTurn (double turnY, double turnX) {
+		System.out.printf("\r TurnPlayer: y=%.4f, x=%.4f", turnY, turnX);
 	}
 
 	/**
