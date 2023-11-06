@@ -4,6 +4,12 @@ package net.leawind.mc.util.smoothvalue;
 import net.minecraft.util.Mth;
 
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
+	public ExpSmoothDouble () {
+		value        = 0d;
+		target       = 0d;
+		smoothFactor = 0d;
+	}
+
 	public ExpSmoothDouble setValue (double value) {
 		this.value = value;
 		return this;

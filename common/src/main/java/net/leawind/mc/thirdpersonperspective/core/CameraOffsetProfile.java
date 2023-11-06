@@ -19,6 +19,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 	public              OffsetModeAiming    offsetAiming;
 	public              OffsetModeNormal    offsetNormal;
 	public              boolean             isTop           = false;
+	private transient   boolean             isAiming        = false;
 
 	private CameraOffsetProfile () {
 	}
@@ -35,12 +36,12 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		return profile;
 	}
 
-	public Vec2 getOffsetRatio (boolean isAiming, double distance) {
-		if (isAiming) {
-			return this.offsetAiming.getOffsetRatio(distance);
-		} else {
-			return this.offsetNormal.getOffsetRatio();
-		}
+	public OffsetMode getMode () {
+		return isAiming ? offsetAiming: offsetNormal;
+	}
+
+	public void setAiming (boolean isAiming) {
+		this.isAiming = isAiming;
 	}
 
 	@Override

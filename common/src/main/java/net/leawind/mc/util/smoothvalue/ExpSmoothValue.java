@@ -3,7 +3,7 @@ package net.leawind.mc.util.smoothvalue;
 
 @SuppressWarnings("unused")
 public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
-	public    T value;
+	protected T value;
 	protected T target;
 	public    T smoothFactor;
 

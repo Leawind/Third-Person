@@ -8,9 +8,9 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 	public    T                        value;
-	public    double                   duration;
-	public    Function<Double, Double> func = t -> Math.sqrt(t * (2 - t));
-	protected double                   startTime;
+	public    double                   duration  = 0;
+	public    Function<Double, Double> func      = t -> Math.sqrt(t * (2 - t));
+	protected double                   startTime = 0;
 	protected T                        startValue;
 	protected T                        targetValue;
 

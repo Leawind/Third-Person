@@ -25,13 +25,13 @@ public class PlayerAgent {
 		Minecraft mc = Minecraft.getInstance();
 		player = mc.player;
 		assert player != null;
+		// 将虚拟球心放在实体眼睛处
 		smoothEyePosition.setTarget(player.getEyePosition()).setValue(player.getEyePosition());
 		LOGGER.info("Reset PlayerAgent");
 	}
 
-	public static void updateUserProfile () {
-		// TODO
-		// smoothEyePosition.setSmoothFactor()
+	public static void updateUserProfile (CameraOffsetProfile profile) {
+		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
 		LOGGER.info("PlayerAgent: updateUserProfile");
 	}
 
@@ -43,8 +43,9 @@ public class PlayerAgent {
 	}
 
 	@PerformanceSensitive
-	public static void onRenderTick (float lerpK) {
-		//TODO
+	public static void onRenderTick (float lerpK, double sinceLastTick) {
+		// 平滑更新眼睛位置
+		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
 	}
 
 	/**

@@ -7,6 +7,7 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
+import net.leawind.mc.thirdpersonperspective.core.CameraOffsetProfile;
 import net.leawind.mc.thirdpersonperspective.core.CrosshairRenderer;
 import net.leawind.mc.thirdpersonperspective.core.PlayerAgent;
 import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
@@ -64,8 +65,9 @@ public class ThirdPersonPerspectiveMod {
 		public static void onClientStarted (Minecraft minecraft) {
 			UserProfile.loadDefault();
 			UserProfile.load();
-			CameraAgent.updateUserProfile();
-			PlayerAgent.updateUserProfile();
+			CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
+			CameraAgent.updateUserProfile(profile);
+			PlayerAgent.updateUserProfile(profile);
 		}
 	}
 }

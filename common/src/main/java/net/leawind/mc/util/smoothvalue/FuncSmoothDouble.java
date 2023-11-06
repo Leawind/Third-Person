@@ -5,6 +5,12 @@ import com.mojang.blaze3d.Blaze3D;
 
 @SuppressWarnings("unused")
 public class FuncSmoothDouble extends FuncSmoothValue<Double> {
+	public FuncSmoothDouble () {
+		value       = 0d;
+		startValue  = 0d;
+		targetValue = 0d;
+	}
+
 	public FuncSmoothDouble setStartValue (double startValue) {
 		this.startValue = startValue;
 		return this;

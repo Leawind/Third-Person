@@ -5,6 +5,12 @@ import net.leawind.mc.util.Vectors;
 import net.minecraft.world.phys.Vec2;
 
 public class ExpSmoothVec2 extends ExpSmoothValue<Vec2> {
+	public ExpSmoothVec2 () {
+		value        = Vec2.ZERO;
+		target       = Vec2.ZERO;
+		smoothFactor = Vec2.ZERO;
+	}
+
 	public ExpSmoothVec2 setTarget (float x, float y) {
 		this.target = new Vec2(x, y);
 		return this;
