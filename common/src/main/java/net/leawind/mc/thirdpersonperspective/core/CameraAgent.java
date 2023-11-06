@@ -102,6 +102,15 @@ public class CameraAgent {
 	}
 
 	/**
+	 * 退出第三人称视角
+	 */
+	public static void onLeaveThirdPerson (float lerpK) {
+		isThirdPerson = false;
+		PlayerAgent.turnToCamera(1);
+		LOGGER.info("Leave third person, lerpK={}", lerpK);
+	}
+
+	/**
 	 * 计算并更新相机的朝向和坐标
 	 *
 	 * @param level  维度

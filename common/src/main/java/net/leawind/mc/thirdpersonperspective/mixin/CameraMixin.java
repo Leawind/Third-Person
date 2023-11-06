@@ -37,6 +37,8 @@ public abstract class CameraMixin {
 			CameraAgent.isThirdPerson = false;
 			if (ltpv$wasFirstPerson && !isFirstPerson) {
 				CameraAgent.onEnterThirdPerson(lerpK);
+			} else if (!ltpv$wasFirstPerson && isFirstPerson) {
+				CameraAgent.onLeaveThirdPerson(lerpK);
 			}
 			ltpv$wasFirstPerson = isFirstPerson;
 		}
