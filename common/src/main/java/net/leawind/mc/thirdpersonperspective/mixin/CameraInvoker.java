@@ -18,4 +18,10 @@ public interface CameraInvoker {
 	 */
 	@Invoker("setRotation")
 	void invokeSetRotation (float yRot, float xRot);
+
+	/**
+	 * 相对于当前位置移动相机
+	 */
+	@Invoker("move")
+	void invokeMove (double forward, double up, double left);
 }

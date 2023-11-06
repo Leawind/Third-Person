@@ -68,7 +68,7 @@ public class CameraAgent {
 	/**
 	 * 根据 相对朝向 和距离 计算真正的位置
 	 */
-	public static Vec3 relativesToAbsolutePosition () {
+	private static Vec3 relativesToAbsolutePosition () {
 		return Vec3.directionFromRotation(relativeRotation)
 				   .scale(smoothDistance.getValue())
 				   .add(PlayerAgent.smoothEyePosition.getValue());
@@ -84,8 +84,7 @@ public class CameraAgent {
 		turnY *= 0.15;
 		turnX *= -0.15;
 		if (turnY != 0 || turnX != 0) {
-			lastTurnTime = Blaze3D.getTime();
-			System.out.printf("\r TurnPlayer: y=%.4f, x=%.4f", turnY, turnX);
+			lastTurnTime     = Blaze3D.getTime();
 			relativeRotation = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),
 										(float)(relativeRotation.y + turnY) % 360f);
 		}
@@ -120,21 +119,41 @@ public class CameraAgent {
 		double sinceLastTick = now - lastTickTime;
 		lastTickTime = now;
 		PlayerAgent.onRenderTick(lerpK, sinceLastTick);
+		// TODO public static CameraOffsetProfile profile;
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		profile.setAiming(PlayerAgent.isAiming());
 		if (isThirdPersonEnabled) {
 			// 平滑更新距离
 			smoothDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
-			// 如果距离过远则强行放回去
-			smoothDistance.setValue(Math.min(profile.getMode().maxDistance, smoothDistance.getValue()));
+			// 如果是非瞄准模式下，且距离过远则强行放回去
+			if (!profile.isAiming) {
+				smoothDistance.setValue(Math.min(profile.getMode().maxDistance, smoothDistance.getValue()));
+			}
 			// 平滑更新相机偏移量
 			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothDistance.getValue())).update(sinceLastTick);
-			// 计算实相机朝向
-			((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
-			// TODO 根据偏移量计算相机位置
-			Vec3 virtualPosition = relativesToAbsolutePosition();
-			((CameraInvoker)camera).invokeSetPosition(virtualPosition);
+			// 设置相机朝向和位置
+			calculateCameraRotationPosition();
 			// TODO 防止穿墙
 		}
+	}
+
+	/**
+	 * 根据偏移量计算相机实际位置
+	 */
+	private static void calculateCameraRotationPosition () {
+		Minecraft mc = Minecraft.getInstance();
+		// 设置相机朝向
+		((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
+		// 平滑眼睛到虚相机的向量
+		Vec3 eyeToVirtualCamera = Vec3.directionFromRotation(relativeRotation).scale(smoothDistance.getValue());
+		// 没有偏移的情况下相机位置
+		Vec3   virtualPosition = eyeToVirtualCamera.add(PlayerAgent.smoothEyePosition.getValue());
+		double aspectRatio     = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
+		double halfV           = mc.options.fov().get() * Math.PI / 180;              // 垂直视野角度(弧度制）
+		double halfH           = 2 * Math.atan(aspectRatio * Math.tan(halfV / 2));    // 水平视野角度(弧度制）
+		double leftOffset      = smoothDistance.getValue() * Math.tan(smoothOffsetRatio.getValue().x * halfV / 2);
+		double upOffset        = smoothDistance.getValue() * Math.tan(smoothOffsetRatio.getValue().y * halfH / 2);
+		((CameraInvoker)camera).invokeSetPosition(virtualPosition);
+		((CameraInvoker)camera).invokeMove(0, upOffset, leftOffset);
 	}
 }

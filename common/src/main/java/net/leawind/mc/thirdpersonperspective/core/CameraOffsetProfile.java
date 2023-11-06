@@ -14,12 +14,12 @@ import java.io.Serializable;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetProfile implements Cloneable, Serializable {
-	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.25f, 0.8, -0.7f, 0f);
-	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.372f, 0.25f, 1.8, -0.7f, 0f);
-	public              OffsetModeAiming    offsetAiming;
-	public              OffsetModeNormal    offsetNormal;
+	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.2f, 0.8, -0.7f, 0f);
+	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.372f, 0.2f, 1.8, -0.7f, 0f);
+	public              OffsetModeAiming    aimingMode;
+	public              OffsetModeNormal    normalMode;
 	public              boolean             isTop           = false;
-	private transient   boolean             isAiming        = false;
+	public transient    boolean             isAiming        = false;
 
 	private CameraOffsetProfile () {
 	}
@@ -31,13 +31,13 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 											  double aimingOffsetX,
 											  double aimingOffsetY) {
 		final CameraOffsetProfile profile = new CameraOffsetProfile();
-		profile.offsetNormal = new OffsetModeNormal(profile, normalMaxDist, (float)normalOffsetX, (float)normalOffsetY);
-		profile.offsetAiming = new OffsetModeAiming(profile, aimingMaxDist, (float)aimingOffsetX, (float)aimingOffsetY);
+		profile.normalMode = new OffsetModeNormal(profile, normalMaxDist, (float)normalOffsetX, (float)normalOffsetY);
+		profile.aimingMode = new OffsetModeAiming(profile, aimingMaxDist, (float)aimingOffsetX, (float)aimingOffsetY);
 		return profile;
 	}
 
 	public OffsetMode getMode () {
-		return isAiming ? offsetAiming: offsetNormal;
+		return isAiming ? aimingMode: normalMode;
 	}
 
 	public void setAiming (boolean isAiming) {
@@ -48,8 +48,8 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 	public CameraOffsetProfile clone () {
 		try {
 			CameraOffsetProfile clone = (CameraOffsetProfile)super.clone();
-			clone.offsetAiming = (OffsetModeAiming)this.offsetAiming.clone();
-			clone.offsetNormal = (OffsetModeNormal)this.offsetNormal.clone();
+			clone.aimingMode = (OffsetModeAiming)this.aimingMode.clone();
+			clone.normalMode = (OffsetModeNormal)this.normalMode.clone();
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new AssertionError("CameraOffsetProfile Clone error");
@@ -93,7 +93,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 			//TODO
 			return cameraOffsetProfile.isTop
 				   ? new Vec2(0, (float)Math.atan2(topOffsetValue, distance))
-				   : new Vec2((float)-Math.atan2(offsetValue.x, distance), (float)-Math.atan2(offsetValue.y, distance));
+				   : new Vec2((float)Math.atan2(offsetValue.x, distance), (float)Math.atan2(offsetValue.y, distance));
 		}
 	}
 

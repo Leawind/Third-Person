@@ -24,6 +24,7 @@ public class ModKeys {
 			super.setDown(down);
 			if (!wasDown && down) {// on key down
 				LOGGER.error("Toggle side key down");
+//				UserProfile.toggleSide();
 			}
 		}
 	};
