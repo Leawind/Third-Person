@@ -7,6 +7,9 @@ import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
@@ -82,5 +85,37 @@ public class PlayerAgent {
 		Minecraft   mc     = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		return player != null;
+	}
+
+	/**
+	 * 判断当前是否在瞄准<br/>
+	 * <p>
+	 * 如果正在使用弓或三叉戟瞄准，返回true
+	 * <p>
+	 * 如果正在手持上了弦的弩，返回true
+	 * <p>
+	 * 如果按住了相应按键，返回true
+	 * <p>
+	 * 如果通过按相应按键切换到了持续瞄准状态，返回true
+	 */
+	public static boolean isAiming () {
+		if (player == null) {
+			return false;
+		}
+		if (player.isUsingItem()) {
+			ItemStack itemStack = player.getUseItem();
+			if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
+				return true;// 正在使用弓或三叉戟瞄准
+			}
+		}
+		ItemStack mainHandItem = player.getMainHandItem();
+		if (mainHandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(mainHandItem)) {
+			return true;// 主手拿着上了弦的弩
+		}
+		ItemStack offhandItem = player.getOffhandItem();
+		if (offhandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(offhandItem)) {
+			return true;// 副手拿着上了弦的弩
+		}
+		return Options.doesPlayerWantToAim();
 	}
 }

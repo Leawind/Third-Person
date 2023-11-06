@@ -25,6 +25,8 @@ public class CameraAgent {
 	public static       ExpSmoothVec2   smoothOffset         = new ExpSmoothVec2().setValue(0, 0);
 	public static       double          lastTickTime         = 0;
 	public static       boolean         isAiming             = false;
+	// 上次转动视角的时间
+	public static       double          lastTurnTime         = 0;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
@@ -70,6 +72,7 @@ public class CameraAgent {
 	 */
 	public static void onCameraTurn (double turnY, double turnX) {
 		System.out.printf("\r TurnPlayer: y=%.4f, x=%.4f", turnY, turnX);
+		lastTurnTime = Blaze3D.getTime();
 	}
 
 	/**
@@ -94,6 +97,11 @@ public class CameraAgent {
 	public static void onRenderTick (BlockGetter level, Entity entity, boolean isMirrored, float lerpK) {
 		CameraAgent.level = level;
 		player            = (LocalPlayer)entity;
+		// 时间
+		double now           = Blaze3D.getTime();
+		double sinceLastTurn = now - lastTurnTime;
+		double sinceLastTick = now - lastTickTime;
+		lastTickTime = now;
 		PlayerAgent.onRenderTick(lerpK);
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		//TODO
