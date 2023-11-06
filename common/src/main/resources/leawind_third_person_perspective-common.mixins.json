@@ -5,6 +5,7 @@
 	"minVersion": "0.8",
 	"client": ["CameraInvoker", "CameraMixin", "GuiAccessor", "LocalPlayerMixin", "MixinTitleScreen", "MouseHandlerMixin"],
 	"mixins": [
+		"MixinSerializable$Vec2Serializable", "MixinSerializable$Vec3Serializable"
 	],
 	"injectors": {
 		"defaultRequire": 1

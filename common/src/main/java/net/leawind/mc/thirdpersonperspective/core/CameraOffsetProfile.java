@@ -4,6 +4,8 @@ package net.leawind.mc.thirdpersonperspective.core;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
+import java.io.Serializable;
+
 /**
  * 第三人称相机的偏移模式
  * <p>
@@ -11,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
  * <p>
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
-public class CameraOffsetProfile implements Cloneable {
+public class CameraOffsetProfile implements Cloneable, Serializable {
 	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.25f, 0.8, -0.7f, 0f);
 	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.372f, 0.25f, 1.8, -0.7f, 0f);
 	public              OffsetModeAiming    offsetAiming;
@@ -94,7 +96,7 @@ public class CameraOffsetProfile implements Cloneable {
 		}
 	}
 
-	public abstract static class OffsetMode implements Cloneable {
+	public abstract static class OffsetMode implements Cloneable, Serializable {
 		/**
 		 * 眼睛位置的平滑系数
 		 */
@@ -112,7 +114,11 @@ public class CameraOffsetProfile implements Cloneable {
 		 */
 		public    double              maxDistance          = 4.0;
 		/**
-		 * 实相机偏移值，对于不同子类，可能表示不同含义
+		 * 相机偏移值
+		 * <p>
+		 * 对于 OffsetModeNormal，这个值表示玩家眼睛在屏幕上的位置
+		 * <p>
+		 * 对于 OffsetModeAiming，这个值表示相机视线到玩家眼睛的距离
 		 */
 		public    Vec2                offsetValue          = Vec2.ZERO;
 		/**
