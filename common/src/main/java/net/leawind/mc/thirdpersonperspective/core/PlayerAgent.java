@@ -40,6 +40,21 @@ public class PlayerAgent {
 		if (player.isSwimming()) {
 			return;
 		}
+		float left    = player.xxa;
+		float forward = player.isFallFlying() ? 0: player.zza;
+		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
+		if (left != 0 || forward != 0) {
+			float absoluteRot = (float)(CameraAgent.camera.getYRot() + (-Math.atan2(left, forward) * 180 / Math.PI));
+			if (!isAiming()) {
+				// 奔跑时立即转向移动方向
+				// 否则缓慢转向移动方向
+				turnTo(new Vec2(0, absoluteRot), player.isSprinting());
+			}
+			float relativeRot       = absoluteRot - player.getYRot();
+			float relativeRotRadian = (float)(relativeRot * Math.PI / 180);
+			player.xxa = (float)-Math.sin(relativeRotRadian) * speed;
+			player.zza = (float)Math.cos(relativeRotRadian) * speed;
+		}
 	}
 
 	@PerformanceSensitive
