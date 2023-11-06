@@ -13,8 +13,15 @@ public class Config {
 	public static       int     available_distance_count = 32;
 	public static       double  distance_min             = 0.5;
 	public static       double  distance_max             = 128;
+	public static       double  camera_ray_trace_length  = 128;
 
-	// Invoked by Forge or Fabric
+	/**
+	 * Invoked by Forge or Fabric
+	 * <p>
+	 * [Forge] Lnet/leawind/mc/thirdpersonperspective/forge/config/ConfigForge
+	 *
+	 * @param event forge:ModConfigEvent, fabric:?
+	 */
 	public static void onLoad (final Object event) {
 		distanceMonoList = new MonoList(available_distance_count, i -> {
 			double b = Math.log(distance_min);

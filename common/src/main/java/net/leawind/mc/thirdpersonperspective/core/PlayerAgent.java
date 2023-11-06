@@ -32,7 +32,6 @@ public class PlayerAgent {
 
 	public static void updateUserProfile (CameraOffsetProfile profile) {
 		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
-		LOGGER.info("PlayerAgent: updateUserProfile");
 	}
 
 	/**
@@ -87,13 +86,10 @@ public class PlayerAgent {
 		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
 			// 让玩家朝向与相机相同
-			PlayerAgent.turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
-			//				PlayerAgent.turnTo(0, 89.8f, true);
+			turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
 		} else {
 			// 让玩家朝向该坐标
-			Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(cameraHitPosition);
-			Vec2 playerViewRot    = Vectors.rotationAngleFromDirection(playerViewVector);
-			PlayerAgent.turnTo(playerViewRot, true);
+			turnTo(cameraHitPosition, lerpK);
 		}
 	}
 

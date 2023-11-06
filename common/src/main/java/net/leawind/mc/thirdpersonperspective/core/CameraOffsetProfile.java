@@ -14,8 +14,8 @@ import java.io.Serializable;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetProfile implements Cloneable, Serializable {
-	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.2f, 0.8, -0.7f, 0f);
-	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.372f, 0.2f, 1.8, -0.7f, 0f);
+	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.2f, 0.8, -0.8f, 0f);
+	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.372f, 0.2f, 1.8, -0.8f, 0f);
 	public              OffsetModeAiming    aimingMode;
 	public              OffsetModeNormal    normalMode;
 	public              boolean             isTop           = false;

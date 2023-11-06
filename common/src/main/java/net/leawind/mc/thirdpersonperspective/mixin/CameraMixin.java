@@ -2,6 +2,7 @@ package net.leawind.mc.thirdpersonperspective.mixin;
 
 
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.client.Camera.class)
-public class CameraMixin {
+public abstract class CameraMixin {
 	@Unique
 	private boolean ltpv$wasFirstPerson = true;
 
@@ -52,6 +53,10 @@ public class CameraMixin {
 							  boolean isMirrored,
 							  float lerpK,
 							  CallbackInfo ci) {
+		Camera camera = (Camera)(Object)this;
+		if (isMirrored) {//TODO
+			((CameraInvoker)this).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());
+		}
 		if (CameraAgent.isAvailable()) {
 			CameraAgent.isThirdPerson = true;
 			CameraAgent.onRenderTick(level, entity, isMirrored, lerpK);

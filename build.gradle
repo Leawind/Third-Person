@@ -38,11 +38,6 @@ allprojects {
 		archivesName = rootProject.mod_id
 	}
 
-	//	ext {
-	//		// TODO
-	//		forge_archive_file = "$mod_id-v$mod_version-mc-$minecraft_version-forge-$forge_version"
-	//		fabric_archive_file =  "$mod_id-v$mod_version-mc-$minecraft_version-fabric-$forge_version"
-	//	}
 	version = rootProject.mod_version
 	group = rootProject.mod_group_id
 	repositories {

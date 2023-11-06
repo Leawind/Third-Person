@@ -23,6 +23,8 @@ public class ConfigForge {
 		"options.ltpv" + ".distance_min").defineInRange("distance_min", 0.5d, 0, 2);
 	public static final  ForgeConfigSpec.DoubleValue  DISTANCE_MAX             = BUILDER.translation(
 		"options.ltpv" + ".distance_max").defineInRange("distance_max", 8d, 2, 32);
+	public static final  ForgeConfigSpec.DoubleValue  CAMERA_RAY_TRACE_LENGTH  = BUILDER.translation(
+		"options.ltpv" + ".camera_ray_trace_length").defineInRange("camera_ray_trace_length", 128d, 10, 1024);
 	public static final  ForgeConfigSpec              SPEC                     = BUILDER.build();
 
 	@SubscribeEvent
@@ -31,6 +33,7 @@ public class ConfigForge {
 		Config.available_distance_count = AVAILABLE_DISTANCE_COUNT.get();
 		Config.distance_min             = DISTANCE_MIN.get();
 		Config.distance_max             = DISTANCE_MAX.get();
+		Config.camera_ray_trace_length  = CAMERA_RAY_TRACE_LENGTH.get();
 		Config.onLoad(event);
 	}
 }

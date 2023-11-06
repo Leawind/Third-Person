@@ -7,5 +7,6 @@
 	"options.ltpv.is_mod_enable": "Is this mod enabled",
 	"options.ltpv.available_distance_count": "Number of Available Distances",
 	"options.ltpv.distance_min": "Minimum Adjustable Distance Range",
-	"options.ltpv.distance_max": "Maximum Adjustable Distance Range"
+	"options.ltpv.distance_max": "Maximum Adjustable Distance Range",
+	"options.ltpv.camera_ray_trace_length": "Camera ray trace length"
 }

@@ -7,5 +7,6 @@
 	"options.ltpv.is_mod_enable": "本模组是否启用",
 	"options.ltpv.available_distance_count": "可选的距离数量",
 	"options.ltpv.distance_min": "距离可调范围的下限",
-	"options.ltpv.distance_max": "距离可调范围的上限"
+	"options.ltpv.distance_max": "距离可调范围的上限",
+	"options.ltpv.camera_ray_trace_length": "相机视线探测距离"
 }

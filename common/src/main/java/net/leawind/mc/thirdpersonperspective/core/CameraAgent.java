@@ -63,13 +63,13 @@ public class CameraAgent {
 		camera = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistance.setValue(0);
+		relativeRotation = new Vec2(-player.getXRot(), player.getYRot() - 180);
 		LOGGER.info("Reset CameraAgent");
 	}
 
 	public static void updateUserProfile (CameraOffsetProfile profile) {
 		smoothOffsetRatio.setSmoothFactor(profile.getMode().offsetSmoothFactor);
 		smoothDistance.setSmoothFactor(profile.getMode().distanceSmoothFactor);
-		LOGGER.info("CameraAgent: updateUserProfile");
 	}
 
 	/**
@@ -160,8 +160,7 @@ public class CameraAgent {
 	 * 获取相机视线落点坐标
 	 */
 	public static @Nullable Vec3 getPickPosition () {
-		// TODO pick range
-		return getPickPosition(smoothDistance.getValue() + 64);
+		return getPickPosition(smoothDistance.getValue() + Config.camera_ray_trace_length);
 	}
 
 	/**
@@ -171,7 +170,6 @@ public class CameraAgent {
 	 */
 	public static @Nullable Vec3 getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
-		System.out.printf("\rhitResult is block? %b", hitResult.getType() == HitResult.Type.BLOCK);
 		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
 	}
 
