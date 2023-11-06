@@ -35,6 +35,19 @@ public class PlayerAgent {
 		LOGGER.info("PlayerAgent: updateUserProfile");
 	}
 
+	/**
+	 * 插入到 Minecraft.handleKeybinds 方法头部
+	 */
+	public static void onBeforeHandleKeybinds () {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown()) {
+			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+				turnToCamera(1);
+				mc.gameRenderer.pick(1.0f);
+			}
+		}
+	}
+
 	@PerformanceSensitive
 	public static void onServerAiStep () {
 		if (player.isSwimming()) {
@@ -45,7 +58,7 @@ public class PlayerAgent {
 		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
 		if (left != 0 || forward != 0) {
 			float absoluteRot = (float)(CameraAgent.camera.getYRot() + (-Math.atan2(left, forward) * 180 / Math.PI));
-			if (!isAiming()) {
+			if (!CameraAgent.isAiming) {
 				// 奔跑时立即转向移动方向
 				// 否则缓慢转向移动方向
 				turnTo(new Vec2(0, absoluteRot), player.isSprinting());
@@ -61,18 +74,26 @@ public class PlayerAgent {
 	public static void onRenderTick (float lerpK, double sinceLastTick) {
 		// 平滑更新眼睛位置
 		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
-		if (isAiming()) {
-			// 计算相机视线落点
-			Vec3 cameraHitPosition = CameraAgent.getPickPosition();
-			if (cameraHitPosition == null) {
-				// 让玩家朝向相机的朝向
-				PlayerAgent.turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
-			} else {
-				// 让玩家朝向该坐标
-				Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(cameraHitPosition);
-				Vec2 playerViewRot    = Vectors.rotationAngleFromDirection(playerViewVector);
-				PlayerAgent.turnTo(playerViewRot, true);
-			}
+		if (CameraAgent.isAiming) {
+			turnToCamera(lerpK);
+		}
+	}
+
+	/**
+	 * 跟随相机旋转
+	 */
+	public static void turnToCamera (float lerpK) {
+		// 计算相机视线落点
+		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
+		if (cameraHitPosition == null) {
+			// 让玩家朝向与相机相同
+			PlayerAgent.turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
+			//				PlayerAgent.turnTo(0, 89.8f, true);
+		} else {
+			// 让玩家朝向该坐标
+			Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(cameraHitPosition);
+			Vec2 playerViewRot    = Vectors.rotationAngleFromDirection(playerViewVector);
+			PlayerAgent.turnTo(playerViewRot, true);
 		}
 	}
 

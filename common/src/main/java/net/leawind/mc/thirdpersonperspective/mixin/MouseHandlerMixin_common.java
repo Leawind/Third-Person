@@ -26,7 +26,7 @@ public abstract class MouseHandlerMixin_common {
 							double d7,
 							int m) {
 		//		System.out.printf("\r TurnPlayer: %.4f, %.4f, %.4f, %.4f, %.4f, %.4f, %.4f", d1, d2, d3, d4, d5, d6, d7);
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPersonEnabled) {
+		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
 			double dx = d6, dy = d7;
 			if (Minecraft.getInstance().options.invertYMouse().get()) {
 				dy = -dy;

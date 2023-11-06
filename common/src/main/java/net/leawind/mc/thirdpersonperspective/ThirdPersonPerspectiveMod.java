@@ -57,7 +57,7 @@ public class ThirdPersonPerspectiveMod {
 		}
 
 		public static void onRenderHud (GuiGraphics graphics, float tickDelta) {
-			if (CameraAgent.isAvailable() && CameraAgent.isThirdPersonEnabled) {
+			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
 				CrosshairRenderer.render(graphics);
 			}
 		}

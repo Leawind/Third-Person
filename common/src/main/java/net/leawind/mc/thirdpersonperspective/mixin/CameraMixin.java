@@ -33,7 +33,7 @@ public class CameraMixin {
 							CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
-			CameraAgent.isThirdPersonEnabled = false;
+			CameraAgent.isThirdPerson = false;
 			if (ltpv$wasFirstPerson && !isFirstPerson) {
 				CameraAgent.onEnterThirdPerson(lerpK);
 			}
@@ -53,7 +53,7 @@ public class CameraMixin {
 							  float lerpK,
 							  CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
-			CameraAgent.isThirdPersonEnabled = true;
+			CameraAgent.isThirdPerson = true;
 			CameraAgent.onRenderTick(level, entity, isMirrored, lerpK);
 			ci.cancel();
 		}

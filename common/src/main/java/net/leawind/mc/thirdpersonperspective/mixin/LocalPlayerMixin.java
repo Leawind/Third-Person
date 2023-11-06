@@ -20,7 +20,7 @@ public class LocalPlayerMixin {
 		if (!CameraAgent.isAvailable() || !PlayerAgent.isAvailable()) {
 			return;
 		}
-		if (!CameraAgent.isThirdPersonEnabled) {
+		if (!CameraAgent.isThirdPerson) {
 			return;
 		}
 		PlayerAgent.onServerAiStep();

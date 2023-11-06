@@ -23,21 +23,25 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class CameraAgent {
-	public static final Logger          LOGGER               = LogUtils.getLogger();
+	public static final Logger          LOGGER            = LogUtils.getLogger();
 	public static       BlockGetter     level;
 	public static       Camera          camera;
 	public static       LocalPlayer     player;
-	public static       boolean         isThirdPersonEnabled = false;
-	public static       ExpSmoothVec2   smoothOffsetRatio    = new ExpSmoothVec2().setValue(0, 0);
-	public static       double          lastTickTime         = 0;
-	public static       boolean         isAiming             = false;
+	public static       boolean         isThirdPerson     = false;
+	public static       ExpSmoothVec2   smoothOffsetRatio = new ExpSmoothVec2().setValue(0, 0);
+	public static       double          lastTickTime      = 0;
+	public static       boolean         isAiming          = false;
 	// 上次转动视角的时间
-	public static       double          lastTurnTime         = 0;
+	public static       double          lastTurnTime      = 0;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static       ExpSmoothDouble smoothDistance       = new ExpSmoothDouble().setValue(0).setTarget(0);
-	public static       Vec2            relativeRotation     = Vec2.ZERO;
+	public static       ExpSmoothDouble smoothDistance    = new ExpSmoothDouble().setValue(0).setTarget(0);
+	public static       Vec2            relativeRotation  = Vec2.ZERO;
+
+	public static boolean isThirdPerson () {
+		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
+	}
 
 	public static boolean isAvailable () {
 		if (!Config.is_mod_enable) {
@@ -69,15 +73,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 根据 相对朝向 和距离 计算真正的位置
-	 */
-	private static Vec3 relativesToAbsolutePosition () {
-		return Vec3.directionFromRotation(relativeRotation)
-				   .scale(smoothDistance.getValue())
-				   .add(PlayerAgent.smoothEyePosition.getValue());
-	}
-
-	/**
 	 * 鼠标移动导致的相机旋转
 	 *
 	 * @param turnY 偏航角变化量
@@ -99,7 +94,7 @@ public class CameraAgent {
 	public static void onEnterThirdPerson (float lerpK) {
 		reset();
 		PlayerAgent.reset();
-		isThirdPersonEnabled     = true;
+		isThirdPerson            = true;
 		isAiming                 = false;
 		Options.isToggleToAiming = false;
 		lastTickTime             = Blaze3D.getTime();
@@ -116,6 +111,7 @@ public class CameraAgent {
 	public static void onRenderTick (BlockGetter level, Entity entity, boolean isMirrored, float lerpK) {
 		CameraAgent.level = level;
 		player            = (LocalPlayer)entity;
+		isAiming          = PlayerAgent.isAiming();
 		// 时间
 		double now           = Blaze3D.getTime();
 		double sinceLastTurn = now - lastTurnTime;
@@ -124,8 +120,8 @@ public class CameraAgent {
 		PlayerAgent.onRenderTick(lerpK, sinceLastTick);
 		// TODO public static CameraOffsetProfile profile;
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
-		profile.setAiming(PlayerAgent.isAiming());
-		if (isThirdPersonEnabled) {
+		profile.setAiming(isAiming);
+		if (isThirdPerson) {
 			// 平滑更新距离
 			smoothDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
@@ -165,7 +161,7 @@ public class CameraAgent {
 	 */
 	public static @Nullable Vec3 getPickPosition () {
 		// TODO pick range
-		return getPickPosition((camera.getPosition().distanceTo(PlayerAgent.smoothEyePosition.getValue()) + 512));
+		return getPickPosition(smoothDistance.getValue() + 64);
 	}
 
 	/**
@@ -175,12 +171,13 @@ public class CameraAgent {
 	 */
 	public static @Nullable Vec3 getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
+		System.out.printf("\rhitResult is block? %b", hitResult.getType() == HitResult.Type.BLOCK);
 		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
 	}
 
 	public static @NotNull HitResult pick (double pickRange) {
 		EntityHitResult ehr = pickEntity(pickRange);
-		return ehr != null ? ehr: pickBlock(pickRange);
+		return ehr == null ? pickBlock(pickRange): ehr;
 	}
 
 	private static @Nullable EntityHitResult pickEntity (double pickRange) {
