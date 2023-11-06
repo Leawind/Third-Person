@@ -6,7 +6,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
+import net.leawind.mc.thirdpersonperspective.core.CameraOffsetProfile;
 import net.leawind.mc.thirdpersonperspective.core.Options;
+import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
@@ -32,21 +34,30 @@ public class ModKeys {
 			super.setDown(down);
 			double now = Blaze3D.getTime();
 			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+				CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 				if (!wasDown && down) {   // on key down
-					keyDownTime = now;
-					timer       = new Timer();
-					timer.schedule(new TimerTask() {
-						public void run () {
-							timer = null;
-						}
-					}, 300);    // 长按
+					if (profile.isTop) {
+						profile.nextSide();
+					} else {
+						keyDownTime = now;
+						timer       = new Timer();
+						timer.schedule(new TimerTask() {
+							public void run () {
+								// 长按
+								profile.setToTop();
+								timer = null;
+							}
+						}, 300);
+					}
 				} else if (wasDown && !down) {    // on key up
 					double sinceKeydown = now - keyDownTime;
-					if (sinceKeydown < 0.3) {    // 单击
+					if (sinceKeydown < 0.3) {
+						// 单击
 						if (timer != null) {
 							timer.cancel();
 							timer = null;
 						}
+						profile.nextSide();
 					}
 				}
 			}

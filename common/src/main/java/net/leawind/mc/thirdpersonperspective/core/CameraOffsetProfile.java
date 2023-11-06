@@ -1,8 +1,10 @@
 package net.leawind.mc.thirdpersonperspective.core;
 
 
+import com.mojang.logging.LogUtils;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
 
 import java.io.Serializable;
 
@@ -14,8 +16,9 @@ import java.io.Serializable;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetProfile implements Cloneable, Serializable {
-	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.2f, 0.8, -0.8f, 0f);
-	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.372f, 0.2f, 1.8, -0.8f, 0f);
+	public static final Logger              LOGGER          = LogUtils.getLogger();
+	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.4f, 0.1f, 0.8, -0.7f, 0f);
+	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.4f, 0.1f, 1.8, -0.7f, 0f);
 	public              OffsetModeAiming    aimingMode;
 	public              OffsetModeNormal    normalMode;
 	public              boolean             isTop           = false;
@@ -40,6 +43,19 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		return isAiming ? aimingMode: normalMode;
 	}
 
+	public void nextSide () {
+		if (isTop) {
+			isTop = false;
+		} else {
+			aimingMode.offsetValue = new Vec2(-aimingMode.offsetValue.x, aimingMode.offsetValue.y);
+			normalMode.offsetValue = new Vec2(-normalMode.offsetValue.x, normalMode.offsetValue.y);
+		}
+	}
+
+	public void setToTop () {
+		isTop = true;
+	}
+
 	public void setAiming (boolean isAiming) {
 		this.isAiming = isAiming;
 	}
@@ -48,8 +64,11 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 	public CameraOffsetProfile clone () {
 		try {
 			CameraOffsetProfile clone = (CameraOffsetProfile)super.clone();
-			clone.aimingMode = (OffsetModeAiming)this.aimingMode.clone();
-			clone.normalMode = (OffsetModeNormal)this.normalMode.clone();
+			clone.aimingMode                     = (OffsetModeAiming)this.aimingMode.clone();
+			clone.normalMode                     = (OffsetModeNormal)this.normalMode.clone();
+			clone.aimingMode.cameraOffsetProfile = clone;
+			clone.normalMode.cameraOffsetProfile = clone;
+			LOGGER.info("Cloning CameraOffsetProfile {} --> {}", this, clone);
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			throw new AssertionError("CameraOffsetProfile Clone error");
@@ -60,9 +79,11 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		public OffsetModeNormal (CameraOffsetProfile profile, double maxDist, float x, float y) {
 			super(profile);
 			setEyeSmoothFactor(new Vec3(8e-4, 1e-2, 8e-4));
-			setDistanceSmoothFactor(0.5);
-			setOffsetSmoothFactor(new Vec2(2e-3f, 2e-3f));
-			setMaxDistance(maxDist).setOffsetValue(new Vec2(x, y));
+			setDistanceSmoothFactor(5e-1);
+			setOffsetSmoothFactor(new Vec2(1e-4f, 1e-4f));
+			setMaxDistance(maxDist);
+			setOffsetValue(new Vec2(x, y));
+			setTopOffsetValue(0.2);
 		}
 
 		public Vec2 getOffsetRatio () {
@@ -84,13 +105,14 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 			super(profile);
 			setEyeSmoothFactor(new Vec3(8e-7, 1e-5, 8e-7));
 			setDistanceSmoothFactor(5e-2);
-			setOffsetSmoothFactor(new Vec2(2e-6f, 2e-6f));
-			setMaxDistance(maxDist).setOffsetValue(offset);
+			setOffsetSmoothFactor(new Vec2(1e-7f, 1e-7f));
+			setMaxDistance(maxDist);
+			setOffsetValue(offset);
+			setTopOffsetValue(0.6);
 		}
 
 		@Override
 		public Vec2 getOffsetRatio (double distance) {
-			//TODO
 			return cameraOffsetProfile.isTop
 				   ? new Vec2(0, (float)Math.atan2(topOffsetValue, distance))
 				   : new Vec2((float)Math.atan2(offsetValue.x, distance), (float)Math.atan2(offsetValue.y, distance));

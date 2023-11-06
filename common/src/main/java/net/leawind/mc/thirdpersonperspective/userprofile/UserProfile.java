@@ -13,11 +13,11 @@ import java.io.*;
 import java.nio.file.Path;
 
 public class UserProfile {
-	public static final  Logger                LOGGER                      = LogUtils.getLogger();
-	private static final CameraOffsetProfile[] cameraOffsetProfilesDefault = new CameraOffsetProfile[]{
+	public static final Logger                LOGGER                      = LogUtils.getLogger();
+	public static final CameraOffsetProfile[] cameraOffsetProfilesDefault = new CameraOffsetProfile[]{
 		CameraOffsetProfile.DEFAULT_CLOSER, CameraOffsetProfile.DEFAULT_FARTHER};
 	@NotNull
-	private static       CameraOffsetProfile[] cameraOffsetProfiles;
+	public static       CameraOffsetProfile[] cameraOffsetProfiles;
 
 	private static Path getProfilePath () {
 		return ExpectPlatform.getConfigDirectory().resolve(String.format("%s.profile.ser", ThirdPersonPerspectiveMod.MOD_ID));
