@@ -24,13 +24,10 @@ public class EntityMixin {
 											"Lnet/minecraft/world/entity/Entity;" + ")" + "V"), index=1)
 	private Vec3 clipContextConstructor (Vec3 viewEndFake) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
-			Vec3   eye               = PlayerAgent.player.getEyePosition();
-			double pickRange         = eye.distanceTo(viewEndFake);
-			Vec3   cameraHitPosition = CameraAgent.getPickPosition();
-			if (cameraHitPosition != null) {
-				Vec3 viewVectorToCameraHit = eye.vectorTo(cameraHitPosition);
-				return eye.add(viewVectorToCameraHit.normalize().scale(pickRange));
-			}
+			Vec3   eye                   = PlayerAgent.player.getEyePosition();
+			double pickRange             = eye.distanceTo(viewEndFake);
+			Vec3   viewVectorToCameraHit = eye.vectorTo(CameraAgent.pick().getLocation());
+			return eye.add(viewVectorToCameraHit.normalize().scale(pickRange));
 		}
 		return viewEndFake;
 	}

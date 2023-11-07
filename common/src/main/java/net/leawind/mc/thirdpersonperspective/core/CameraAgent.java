@@ -38,6 +38,11 @@ public class CameraAgent {
 	 */
 	public static       ExpSmoothDouble smoothDistance    = new ExpSmoothDouble().setValue(0).setTarget(0);
 	public static       Vec2            relativeRotation  = Vec2.ZERO;
+	/**
+	 * 相机上次的朝向和位置
+	 */
+	public static       Vec3            lastPosition      = Vec3.ZERO;
+	public static       Vec2            lastRotation      = Vec2.ZERO;
 
 	public static boolean isThirdPerson () {
 		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
@@ -126,7 +131,6 @@ public class CameraAgent {
 		double sinceLastTurn = now - lastTurnTime;
 		double sinceLastTick = now - lastTickTime;
 		lastTickTime = now;
-		PlayerAgent.onRenderTick(lerpK, sinceLastTick);
 		// TODO public static CameraOffsetProfile profile;
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		profile.setAiming(isAiming);
@@ -141,18 +145,19 @@ public class CameraAgent {
 			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothDistance.getValue()));
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
-			calculateCameraRotationPosition();
+			updateCameraRotationPosition();
 			// TODO 防止穿墙
 		}
+		PlayerAgent.onRenderTick(lerpK, sinceLastTick);
+		lastPosition = camera.getPosition();
+		lastRotation = new Vec2(camera.getXRot(), camera.getYRot());
 	}
 
 	/**
 	 * 根据偏移量计算相机实际位置
 	 */
-	private static void calculateCameraRotationPosition () {
+	private static void updateCameraRotationPosition () {
 		Minecraft mc = Minecraft.getInstance();
-		// 设置相机朝向
-		((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		// 平滑眼睛到虚相机的向量
 		Vec3 eyeToVirtualCamera = Vec3.directionFromRotation(relativeRotation).scale(smoothDistance.getValue());
 		// 宽高比
@@ -170,6 +175,7 @@ public class CameraAgent {
 		// 没有偏移的情况下相机位置
 		Vec3 virtualPosition = PlayerAgent.smoothEyePosition.getValue().add(eyeToVirtualCamera);
 		// 应用
+		((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		((CameraInvoker)camera).invokeSetPosition(virtualPosition);
 		((CameraInvoker)camera).invokeMove(0, upOffset, leftOffset);
 	}
@@ -189,6 +195,10 @@ public class CameraAgent {
 	public static @Nullable Vec3 getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
 		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
+	}
+
+	public static @NotNull HitResult pick () {
+		return pick(smoothDistance.getValue() + Config.camera_ray_trace_length);
 	}
 
 	public static @NotNull HitResult pick (double pickRange) {
