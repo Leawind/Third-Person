@@ -24,12 +24,12 @@ public class ConfigForge {
 																								true);
 	public static final  ForgeConfigSpec.IntValue     AVAILABLE_DISTANCE_COUNT = BUILDER.translation(KEY(
 		"available_distance_count")).defineInRange("available_distance_count", 32, 2, 128);
-	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MIN      = BUILDER.translation(KEY(".distance_min"))
+	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MIN      = BUILDER.translation(KEY("distance_min"))
 																						.defineInRange("camera_distance_min",
 																									   0.1d,
 																									   0,
 																									   2);
-	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MAX      = BUILDER.translation(".distance_max")
+	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MAX      = BUILDER.translation(KEY("distance_max"))
 																						.defineInRange(KEY(
 																							"camera_distance_max"),
 																									   8d,

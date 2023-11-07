@@ -23,7 +23,7 @@ public class MouseHandlerMixin {
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
 		if (Options.isAdjustingCameraOffset()) {
-			ThirdPersonPerspectiveMod.ModEvents.onAdjustingCameraOffset(accumulatedDX, accumulatedDY);
+			ThirdPersonPerspectiveMod.ModEvents.onAdjustingCamera(accumulatedDX, accumulatedDY);
 			accumulatedDX = 0;
 			accumulatedDY = 0;
 			ci.cancel();

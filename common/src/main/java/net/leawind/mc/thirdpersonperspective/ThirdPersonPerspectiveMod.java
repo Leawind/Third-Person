@@ -41,6 +41,7 @@ public class ThirdPersonPerspectiveMod {
 		}
 
 		public static void onStopAdjustingCameraOffset () {
+			UserProfile.save();
 		}
 
 		/**
@@ -49,14 +50,13 @@ public class ThirdPersonPerspectiveMod {
 		 * @param xMove 水平移动的像素
 		 * @param yMove 垂直移动的像素
 		 */
-		public static void onAdjustingCameraOffset (double xMove, double yMove) {
+		public static void onAdjustingCamera (double xMove, double yMove) {
 			System.out.printf("\rAdj %.5f, %.5f", xMove, yMove);
 			if (xMove == 0 && yMove == 0) {
 				return;
 			}
 			Minecraft           mc          = Minecraft.getInstance();
 			double              sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
-			double              dx          = xMove * sensitivity * 0.15;
 			double              dy          = yMove * sensitivity * 0.15;
 			CameraOffsetProfile profile     = UserProfile.getCameraOffsetProfile();
 			if (profile.isTop) {
@@ -135,7 +135,11 @@ public class ThirdPersonPerspectiveMod {
 
 		public static void onClientStarted (Minecraft minecraft) {
 			UserProfile.loadDefault();
-			UserProfile.load();
+			try {
+				UserProfile.load();
+			} catch (RuntimeException e) {
+				LOGGER.warn("UserProfile load failed");
+			}
 		}
 	}
 }

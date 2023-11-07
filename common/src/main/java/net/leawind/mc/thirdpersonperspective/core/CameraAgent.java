@@ -147,7 +147,6 @@ public class CameraAgent {
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
 			updateCameraRotationPosition();
-			// TODO 防止穿墙
 		}
 		PlayerAgent.onRenderTick(lerpK, sinceLastTick);
 		lastPosition = camera.getPosition();
@@ -179,6 +178,7 @@ public class CameraAgent {
 		((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		((CameraInvoker)camera).invokeSetPosition(virtualPosition);
 		((CameraInvoker)camera).invokeMove(0, upOffset, leftOffset);
+		// TODO 防止穿墙
 	}
 
 	/**

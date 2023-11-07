@@ -77,12 +77,14 @@ public class ModKeys {
 		public void setDown (boolean down) {
 			boolean wasDown = isDown();
 			super.setDown(down);
-			if (!wasDown && down) {
-				// key down
-				ThirdPersonPerspectiveMod.ModEvents.onStartAdjustingCameraOffset();
-			} else if (wasDown && !down) {
-				// key up
-				ThirdPersonPerspectiveMod.ModEvents.onStopAdjustingCameraOffset();
+			if (CameraAgent.isAvailable()) {
+				if (!wasDown && down) {
+					// key down
+					ThirdPersonPerspectiveMod.ModEvents.onStartAdjustingCameraOffset();
+				} else if (wasDown && !down) {
+					// key up
+					ThirdPersonPerspectiveMod.ModEvents.onStopAdjustingCameraOffset();
+				}
 			}
 		}
 	};
@@ -96,7 +98,7 @@ public class ModKeys {
 		public void setDown (boolean down) {
 			final boolean wasDown = isDown();
 			super.setDown(down);
-			if (!wasDown && down) {// on key down
+			if (CameraAgent.isAvailable() && !wasDown && down) {// on key down
 				Options.isToggleToAiming = !Options.isToggleToAiming;
 			}
 		}

@@ -2,6 +2,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 
 
 import net.leawind.mc.thirdpersonperspective.ModKeys;
+import net.leawind.mc.thirdpersonperspective.config.Config;
 
 public class Options {
 	/**
@@ -13,7 +14,8 @@ public class Options {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return CameraAgent.isThirdPerson && ModKeys.ADJUST_POSITION.isDown() && CameraAgent.isAvailable();
+		return Config.is_mod_enable && CameraAgent.isThirdPerson && ModKeys.ADJUST_POSITION.isDown() &&
+			   CameraAgent.isAvailable();
 	}
 
 	/**

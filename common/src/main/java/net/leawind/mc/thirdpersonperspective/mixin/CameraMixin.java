@@ -55,8 +55,8 @@ public abstract class CameraMixin {
 							  boolean isMirrored,
 							  float lerpK,
 							  CallbackInfo ci) {
-		Camera camera = (Camera)(Object)this;
 		if (isMirrored) {//TODO
+			Camera camera = (Camera)(Object)this;
 			((CameraInvoker)this).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());
 		}
 		if (CameraAgent.isAvailable()) {
