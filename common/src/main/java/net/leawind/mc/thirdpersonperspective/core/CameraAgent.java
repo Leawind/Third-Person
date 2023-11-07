@@ -84,12 +84,16 @@ public class CameraAgent {
 	 * @param turnX 俯仰角变化量
 	 */
 	public static void onCameraTurn (double turnY, double turnX) {
-		turnY *= 0.15;
-		turnX *= -0.15;
-		if (turnY != 0 || turnX != 0) {
-			lastTurnTime     = Blaze3D.getTime();
-			relativeRotation = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),
-										(float)(relativeRotation.y + turnY) % 360f);
+		if (Options.isAdjustingCameraOffset()) {
+			CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
+		} else {
+			turnY *= 0.15;
+			turnX *= -0.15;
+			if (turnY != 0 || turnX != 0) {
+				lastTurnTime     = Blaze3D.getTime();
+				relativeRotation = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),
+											(float)(relativeRotation.y + turnY) % 360f);
+			}
 		}
 	}
 
@@ -131,18 +135,19 @@ public class CameraAgent {
 		double sinceLastTurn = now - lastTurnTime;
 		double sinceLastTick = now - lastTickTime;
 		lastTickTime = now;
-		// TODO public static CameraOffsetProfile profile;
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		profile.setAiming(isAiming);
 		if (isThirdPerson) {
-			smoothDistance.setSmoothFactor(Options.isAdjustingCameraOffset() ? 1e-5: profile.getMode().distanceSmoothFactor);
+			boolean isAdjusting = Options.isAdjustingCameraOffset();
 			// 平滑更新距离
+			smoothDistance.setSmoothFactor(isAdjusting ? 1e-5: profile.getMode().distanceSmoothFactor);
 			smoothDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
 			if (!profile.isAiming && !Options.isAdjustingCameraOffset()) {
 				smoothDistance.setValue(Math.min(profile.getMode().maxDistance, smoothDistance.getValue()));
 			}
 			// 平滑更新相机偏移量
+			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-8F, 1e-8F): profile.getMode().offsetSmoothFactor);
 			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothDistance.getValue()));
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置

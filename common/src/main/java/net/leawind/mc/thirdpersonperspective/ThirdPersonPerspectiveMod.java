@@ -10,6 +10,8 @@ import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec2;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
@@ -25,7 +27,7 @@ public class ThirdPersonPerspectiveMod {
 		LOGGER.debug("Debug message oziaosfdp");
 	}
 
-	private static class ModEvents {
+	public static class ModEvents {
 		public static void register () {
 			ClientLifecycleEvent.CLIENT_STARTED.register(ModEvents::onClientStarted);
 			ClientGuiEvent.RENDER_HUD.register(ModEvents::onRenderHud);
@@ -35,6 +37,59 @@ public class ThirdPersonPerspectiveMod {
 			ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
 		}
 
+		public static void onStartAdjustingCameraOffset () {
+		}
+
+		public static void onStopAdjustingCameraOffset () {
+		}
+
+		/**
+		 * 移动鼠标调整相机偏移
+		 *
+		 * @param xMove 水平移动的像素
+		 * @param yMove 垂直移动的像素
+		 */
+		public static void onAdjustingCameraOffset (double xMove, double yMove) {
+			System.out.printf("\rAdj %.5f, %.5f", xMove, yMove);
+			if (xMove == 0 && yMove == 0) {
+				return;
+			}
+			Minecraft           mc          = Minecraft.getInstance();
+			double              sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
+			double              dx          = xMove * sensitivity * 0.15;
+			double              dy          = yMove * sensitivity * 0.15;
+			CameraOffsetProfile profile     = UserProfile.getCameraOffsetProfile();
+			if (profile.isTop) {
+				// 头顶，只能上下调整
+				double topOffset = profile.getMode().topOffsetValue;
+				if (profile.isAiming) {
+					topOffset -= Math.exp(topOffset) * dy * 1e-2;
+					topOffset = Mth.clamp(topOffset, 0, Config.aiming_offset_max);
+				} else {
+				}
+				profile.getMode().setTopOffsetValue(topOffset);
+			} else {
+				// 非头顶，可以上下左右调整
+				double xsgn    = Math.signum(profile.getMode().offsetValue.x);
+				double offsetX = profile.getMode().offsetValue.x;
+				double offsetY = profile.getMode().offsetValue.y;
+				if (profile.isAiming) {
+					offsetX += -xMove / mc.getWindow().getScreenWidth();
+					offsetY += -yMove / mc.getWindow().getScreenHeight();
+					offsetX = Mth.clamp(offsetX, -Config.aiming_offset_max, Config.aiming_offset_max);
+					offsetY = Mth.clamp(offsetY, -Config.aiming_offset_max, Config.aiming_offset_max);
+				} else {
+				}
+				profile.getMode().setOffsetValue(new Vec2((float)offsetX, (float)offsetY));
+			}
+		}
+
+		/**
+		 * 使用滚轮调整距离
+		 *
+		 * @param minecraft mc
+		 * @param amount    向前滚是+1，向后滚是-1
+		 */
 		private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
 			System.out.printf("\rMouse Scroll: %f", amount);
 			if (Options.isAdjustingCameraOffset()) {

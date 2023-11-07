@@ -72,7 +72,20 @@ public class ModKeys {
 	 */
 	public static final KeyMapping ADJUST_POSITION = new KeyMapping("key.ltpv.adjust_position",
 																	InputConstants.KEY_Z,
-																	CATEGORY_KEY);
+																	CATEGORY_KEY) {
+		@Override
+		public void setDown (boolean down) {
+			boolean wasDown = isDown();
+			super.setDown(down);
+			if (!wasDown && down) {
+				// key down
+				ThirdPersonPerspectiveMod.ModEvents.onStartAdjustingCameraOffset();
+			} else if (wasDown && !down) {
+				// key up
+				ThirdPersonPerspectiveMod.ModEvents.onStopAdjustingCameraOffset();
+			}
+		}
+	};
 	/**
 	 * 切换瞄准状态
 	 */

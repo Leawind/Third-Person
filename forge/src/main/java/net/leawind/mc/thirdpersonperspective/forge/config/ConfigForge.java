@@ -26,7 +26,7 @@ public class ConfigForge {
 		"available_distance_count")).defineInRange("available_distance_count", 32, 2, 128);
 	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MIN      = BUILDER.translation(KEY(".distance_min"))
 																						.defineInRange("camera_distance_min",
-																									   0.5d,
+																									   0.1d,
 																									   0,
 																									   2);
 	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MAX      = BUILDER.translation(".distance_max")
@@ -37,6 +37,8 @@ public class ConfigForge {
 																									   16);
 	public static final  ForgeConfigSpec.DoubleValue  CAMERA_RAY_TRACE_LENGTH  = BUILDER.translation(KEY(
 		"camera_ray_trace_length")).defineInRange("camera_ray_trace_length", 256d, 10, 1024);
+	public static final  ForgeConfigSpec.DoubleValue  AIMING_OFFSET_MAX        = BUILDER.translation(KEY(
+		"camera_ray_trace_length")).defineInRange("aiming_offset_max", 2d, 0.5, 5);
 	public static final  ForgeConfigSpec              SPEC                     = BUILDER.build();
 
 	@SubscribeEvent
@@ -46,6 +48,7 @@ public class ConfigForge {
 		Config.camera_distance_min      = CAMERA_DISTANCE_MIN.get();
 		Config.camera_distance_max      = CAMERA_DISTANCE_MAX.get();
 		Config.camera_ray_trace_length  = CAMERA_RAY_TRACE_LENGTH.get();
+		Config.aiming_offset_max        = AIMING_OFFSET_MAX.get();
 		Config.onLoad(event);
 	}
 }

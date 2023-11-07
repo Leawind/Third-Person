@@ -11,9 +11,10 @@ public class Config {
 	public static       boolean isLoaded                 = false;
 	public static       boolean is_mod_enable            = true;
 	public static       int     available_distance_count = 32;
-	public static       double  camera_distance_min      = 0.5;
+	public static       double  camera_distance_min      = 0.1;
 	public static       double  camera_distance_max      = 32;
 	public static       double  camera_ray_trace_length  = 256;
+	public static       double  aiming_offset_max        = 2.0;
 
 	/**
 	 * 加载配置完成时调用
