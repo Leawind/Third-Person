@@ -76,7 +76,7 @@ public class ModKeys {
 	/**
 	 * 切换瞄准状态
 	 */
-	public static final KeyMapping TOGGLE_AIMING   = new KeyMapping("key.ltpv.force_aiming",
+	public static final KeyMapping TOGGLE_AIMING   = new KeyMapping("key.ltpv.toggle_aiming",
 																	InputConstants.UNKNOWN.getValue(),
 																	CATEGORY_KEY) {
 		@Override
@@ -91,7 +91,7 @@ public class ModKeys {
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final KeyMapping FORCE_AIMING    = new KeyMapping("key.ltpv.toggle_aiming",
+	public static final KeyMapping FORCE_AIMING    = new KeyMapping("key.ltpv.force_aiming",
 																	InputConstants.UNKNOWN.getValue(),
 																	CATEGORY_KEY);
 
