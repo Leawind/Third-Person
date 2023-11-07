@@ -10,6 +10,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
@@ -20,6 +21,7 @@ public class PlayerAgent {
 	public static final Logger        LOGGER            = LogUtils.getLogger();
 	public static       LocalPlayer   player;
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
+	public static       boolean       wasInterecting    = false;
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
@@ -38,11 +40,10 @@ public class PlayerAgent {
 	 * 插入到 Minecraft.handleKeybinds 方法头部
 	 */
 	public static void onBeforeHandleKeybinds () {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown()) {
+		if (wasInterecting) {
 			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
 				turnToCamera(1);
-				mc.gameRenderer.pick(1.0f);
+				Minecraft.getInstance().gameRenderer.pick(1.0f);
 			}
 		}
 	}
@@ -57,9 +58,7 @@ public class PlayerAgent {
 		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
 		if (left != 0 || forward != 0) {
 			float absoluteRot = (float)(CameraAgent.camera.getYRot() + (-Math.atan2(left, forward) * 180 / Math.PI));
-			if (!CameraAgent.isAiming) {
-				// 奔跑时立即转向移动方向
-				// 否则缓慢转向移动方向
+			if (!(CameraAgent.isAiming || wasInterecting)) {
 				turnTo(new Vec2(0, absoluteRot), player.isSprinting());
 			}
 			float relativeRot       = absoluteRot - player.getYRot();
@@ -71,9 +70,11 @@ public class PlayerAgent {
 
 	@PerformanceSensitive
 	public static void onRenderTick (float lerpK, double sinceLastTick) {
+		Minecraft mc = Minecraft.getInstance();
+		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		// 平滑更新眼睛位置
 		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
-		if (CameraAgent.isAiming) {
+		if (CameraAgent.isAiming || wasInterecting) {
 			turnToCamera(lerpK);
 		}
 	}
@@ -83,7 +84,9 @@ public class PlayerAgent {
 	 */
 	public static void turnToCamera (float lerpK) {
 		// 计算相机视线落点
-		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
+		HitResult hitResult         = Minecraft.getInstance().hitResult;
+		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
+		System.out.printf("\rCHP: %s", cameraHitPosition);//TODO
 		if (cameraHitPosition == null) {
 			// 让玩家朝向与相机相同
 			turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);

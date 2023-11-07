@@ -2,6 +2,7 @@ package net.leawind.mc.thirdpersonperspective.mixin;
 
 
 import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
+import net.leawind.mc.thirdpersonperspective.core.PlayerAgent;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,18 +23,13 @@ public class EntityMixin {
 											"Lnet/minecraft/world/level/ClipContext$Fluid;" +
 											"Lnet/minecraft/world/entity/Entity;" + ")" + "V"), index=1)
 	private Vec3 clipContextConstructor (Vec3 viewEndFake) {
-		if (CameraAgent.isAvailable()) {
-			if (!CameraAgent.isThirdPerson) {
-				return viewEndFake;
-			}
-			Vec3   eye               = CameraAgent.player.getEyePosition();
+		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+			Vec3   eye               = PlayerAgent.player.getEyePosition();
 			double pickRange         = eye.distanceTo(viewEndFake);
 			Vec3   cameraHitPosition = CameraAgent.getPickPosition();
 			if (cameraHitPosition != null) {
 				Vec3 viewVectorToCameraHit = eye.vectorTo(cameraHitPosition);
-				return eye.add(viewVectorToCameraHit.x * pickRange,
-							   viewVectorToCameraHit.y * pickRange,
-							   viewVectorToCameraHit.z * pickRange);
+				return eye.add(viewVectorToCameraHit.normalize().scale(pickRange));
 			}
 		}
 		return viewEndFake;
