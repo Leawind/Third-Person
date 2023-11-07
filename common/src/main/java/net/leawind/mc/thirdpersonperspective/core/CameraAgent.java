@@ -72,11 +72,6 @@ public class CameraAgent {
 		LOGGER.info("Reset CameraAgent");
 	}
 
-	public static void updateUserProfile (CameraOffsetProfile profile) {
-		smoothOffsetRatio.setSmoothFactor(profile.getMode().offsetSmoothFactor);
-		smoothDistance.setSmoothFactor(profile.getMode().distanceSmoothFactor);
-	}
-
 	/**
 	 * 鼠标移动导致的相机旋转
 	 *

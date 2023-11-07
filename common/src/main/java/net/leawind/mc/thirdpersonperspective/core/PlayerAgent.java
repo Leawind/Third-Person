@@ -3,6 +3,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.config.Config;
+import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
 import net.minecraft.client.Minecraft;
@@ -30,10 +31,6 @@ public class PlayerAgent {
 		// 将虚拟球心放在实体眼睛处
 		smoothEyePosition.setTarget(player.getEyePosition()).setValue(player.getEyePosition());
 		LOGGER.info("Reset PlayerAgent");
-	}
-
-	public static void updateUserProfile (CameraOffsetProfile profile) {
-		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
 	}
 
 	/**
@@ -70,9 +67,12 @@ public class PlayerAgent {
 
 	@PerformanceSensitive
 	public static void onRenderTick (float lerpK, double sinceLastTick) {
-		Minecraft mc = Minecraft.getInstance();
+		Minecraft           mc      = Minecraft.getInstance();
+		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
+		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		// 平滑更新眼睛位置
+		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
 		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
 		if (CameraAgent.isAiming || wasInterecting) {
 			turnToCamera(lerpK);

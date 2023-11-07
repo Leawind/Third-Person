@@ -74,8 +74,8 @@ public class ThirdPersonPerspectiveMod {
 				double offsetX = profile.getMode().offsetValue.x;
 				double offsetY = profile.getMode().offsetValue.y;
 				if (profile.isAiming) {
-					offsetX += -xMove / mc.getWindow().getScreenWidth();
-					offsetY += -yMove / mc.getWindow().getScreenHeight();
+					offsetX += Math.exp(Math.abs(offsetX)) * -xMove / mc.getWindow().getScreenWidth();
+					offsetY += Math.exp(Math.abs(offsetY)) * -yMove / mc.getWindow().getScreenHeight();
 					offsetX = Mth.clamp(offsetX, -Config.aiming_offset_max, Config.aiming_offset_max);
 					offsetY = Mth.clamp(offsetY, -Config.aiming_offset_max, Config.aiming_offset_max);
 				} else {
@@ -129,9 +129,6 @@ public class ThirdPersonPerspectiveMod {
 		public static void onClientStarted (Minecraft minecraft) {
 			UserProfile.loadDefault();
 			UserProfile.load();
-			CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
-			CameraAgent.updateUserProfile(profile);
-			PlayerAgent.updateUserProfile(profile);
 		}
 	}
 }

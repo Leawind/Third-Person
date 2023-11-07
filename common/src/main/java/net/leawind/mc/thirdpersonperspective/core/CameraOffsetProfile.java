@@ -103,7 +103,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 
 		public OffsetModeAiming (CameraOffsetProfile profile, double maxDist, Vec2 offset) {
 			super(profile);
-			setEyeSmoothFactor(new Vec3(8e-7, 1e-5, 8e-7));
+			setEyeSmoothFactor(new Vec3(1e-11, 1e-8, 1e-11));
 			setDistanceSmoothFactor(1e-3);
 			setOffsetSmoothFactor(new Vec2(2e-8f, 2e-8f));
 			setMaxDistance(maxDist);
