@@ -17,8 +17,8 @@ import java.io.Serializable;
  */
 public class CameraOffsetProfile implements Cloneable, Serializable {
 	public static final Logger              LOGGER          = LogUtils.getLogger();
-	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.4f, 0.1f, 0.8, -0.7f, 0f);
-	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.4f, 0.1f, 1.8, -0.7f, 0f);
+	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.2f, 0.8, -0.6f, 0f);
+	public static final CameraOffsetProfile DEFAULT_FARTHER = CameraOffsetProfile.create(3.6, -0.3f, 0.2f, 1.8, -0.6f, 0f);
 	public              OffsetModeAiming    aimingMode;
 	public              OffsetModeNormal    normalMode;
 	public              boolean             isTop           = false;
@@ -80,7 +80,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 			super(profile);
 			setEyeSmoothFactor(new Vec3(8e-4, 1e-2, 8e-4));
 			setDistanceSmoothFactor(5e-1);
-			setOffsetSmoothFactor(new Vec2(1e-4f, 1e-4f));
+			setOffsetSmoothFactor(new Vec2(4e-5f, 4e-5f));
 			setMaxDistance(maxDist);
 			setOffsetValue(new Vec2(x, y));
 			setTopOffsetValue(0.2);
@@ -105,7 +105,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 			super(profile);
 			setEyeSmoothFactor(new Vec3(8e-7, 1e-5, 8e-7));
 			setDistanceSmoothFactor(5e-2);
-			setOffsetSmoothFactor(new Vec2(1e-7f, 1e-7f));
+			setOffsetSmoothFactor(new Vec2(2e-8f, 2e-8f));
 			setMaxDistance(maxDist);
 			setOffsetValue(offset);
 			setTopOffsetValue(0.6);

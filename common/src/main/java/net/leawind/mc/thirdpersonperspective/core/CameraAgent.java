@@ -138,7 +138,8 @@ public class CameraAgent {
 				smoothDistance.setValue(Math.min(profile.getMode().maxDistance, smoothDistance.getValue()));
 			}
 			// 平滑更新相机偏移量
-			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothDistance.getValue())).update(sinceLastTick);
+			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothDistance.getValue()));
+			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
 			calculateCameraRotationPosition();
 			// TODO 防止穿墙
@@ -154,13 +155,21 @@ public class CameraAgent {
 		((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		// 平滑眼睛到虚相机的向量
 		Vec3 eyeToVirtualCamera = Vec3.directionFromRotation(relativeRotation).scale(smoothDistance.getValue());
+		// 宽高比
+		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
+		// 垂直视野角度一半(弧度制）
+		double verticalRadianHalf = mc.options.fov().get() * Math.PI / 180 / 2;
+		// 成像平面宽高
+		double heightHalf = Math.tan(verticalRadianHalf) * 0.05;
+		double widthHalf  = aspectRatio * heightHalf;
+		// 水平视野角度一半(弧度制）
+		double horizonalRadianHalf = Math.atan(widthHalf / 0.05);
+		// 偏移
+		double leftOffset = smoothOffsetRatio.getValue().x * smoothDistance.getValue() * widthHalf / 0.05;
+		double upOffset   = smoothOffsetRatio.getValue().y * smoothDistance.getValue() * Math.tan(verticalRadianHalf);
 		// 没有偏移的情况下相机位置
-		Vec3   virtualPosition = eyeToVirtualCamera.add(PlayerAgent.smoothEyePosition.getValue());
-		double aspectRatio     = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
-		double halfV           = mc.options.fov().get() * Math.PI / 180;              // 垂直视野角度(弧度制）
-		double halfH           = 2 * Math.atan(aspectRatio * Math.tan(halfV / 2));    // 水平视野角度(弧度制）
-		double leftOffset      = smoothDistance.getValue() * Math.tan(smoothOffsetRatio.getValue().x * halfV / 2);
-		double upOffset        = smoothDistance.getValue() * Math.tan(smoothOffsetRatio.getValue().y * halfH / 2);
+		Vec3 virtualPosition = PlayerAgent.smoothEyePosition.getValue().add(eyeToVirtualCamera);
+		// 应用
 		((CameraInvoker)camera).invokeSetPosition(virtualPosition);
 		((CameraInvoker)camera).invokeMove(0, upOffset, leftOffset);
 	}
