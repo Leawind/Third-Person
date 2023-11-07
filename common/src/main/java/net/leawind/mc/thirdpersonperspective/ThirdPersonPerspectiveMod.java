@@ -66,6 +66,8 @@ public class ThirdPersonPerspectiveMod {
 					topOffset -= Math.exp(topOffset) * dy * 1e-2;
 					topOffset = Mth.clamp(topOffset, 0, Config.aiming_offset_max);
 				} else {
+					topOffset += -yMove / mc.getWindow().getScreenHeight();
+					topOffset = Mth.clamp(topOffset, -1, 1);
 				}
 				profile.getMode().setTopOffsetValue(topOffset);
 			} else {
@@ -78,6 +80,10 @@ public class ThirdPersonPerspectiveMod {
 					offsetX = Mth.clamp(offsetX, -Config.aiming_offset_max, Config.aiming_offset_max);
 					offsetY = Mth.clamp(offsetY, -Config.aiming_offset_max, Config.aiming_offset_max);
 				} else {
+					offsetX += -xMove / mc.getWindow().getScreenWidth();
+					offsetY += -yMove / mc.getWindow().getScreenHeight();
+					offsetX = Mth.clamp(offsetX, -1, 1);
+					offsetY = Mth.clamp(offsetY, -1, 1);
 				}
 				double newXsgn = Math.signum(offsetX);
 				profile.setSide(newXsgn);
