@@ -39,8 +39,33 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		return profile;
 	}
 
+	/**
+	 * 获取当前模式
+	 */
 	public OffsetMode getMode () {
 		return isAiming ? aimingMode: normalMode;
+	}
+
+	/**
+	 * 获取当前未启用的模式
+	 */
+	public OffsetMode getAnotherMode () {
+		return isAiming ? normalMode: aimingMode;
+	}
+
+	/**
+	 * 设置相机相对于玩家的方向
+	 * <p>
+	 *
+	 * @param isLeft true 表示相机在玩家左侧
+	 */
+	public void setSide (boolean isLeft) {
+		aimingMode.setSide(isLeft);
+		normalMode.setSide(isLeft);
+	}
+
+	public void setSide (double side) {
+		setSide(side > 0);
 	}
 
 	public void nextSide () {
@@ -181,6 +206,15 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 
 		public OffsetMode setTopOffsetValue (double offset) {
 			topOffsetValue = offset;
+			return this;
+		}
+
+		public OffsetMode setSide (boolean isLeft) {
+			if (isLeft && offsetValue.x < 0) {
+				offsetValue = new Vec2(-offsetValue.x, offsetValue.y);
+			} else if (!isLeft && offsetValue.x > 0) {
+				offsetValue = new Vec2(-offsetValue.x, offsetValue.y);
+			}
 			return this;
 		}
 

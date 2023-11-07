@@ -70,7 +70,6 @@ public class ThirdPersonPerspectiveMod {
 				profile.getMode().setTopOffsetValue(topOffset);
 			} else {
 				// 非头顶，可以上下左右调整
-				double xsgn    = Math.signum(profile.getMode().offsetValue.x);
 				double offsetX = profile.getMode().offsetValue.x;
 				double offsetY = profile.getMode().offsetValue.y;
 				if (profile.isAiming) {
@@ -80,6 +79,8 @@ public class ThirdPersonPerspectiveMod {
 					offsetY = Mth.clamp(offsetY, -Config.aiming_offset_max, Config.aiming_offset_max);
 				} else {
 				}
+				double newXsgn = Math.signum(offsetX);
+				profile.setSide(newXsgn);
 				profile.getMode().setOffsetValue(new Vec2((float)offsetX, (float)offsetY));
 			}
 		}
