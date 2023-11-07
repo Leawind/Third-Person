@@ -2,14 +2,10 @@ package net.leawind.mc.thirdpersonperspective;
 
 
 import com.mojang.logging.LogUtils;
-import dev.architectury.event.events.client.ClientGuiEvent;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
-import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
-import net.leawind.mc.thirdpersonperspective.core.CameraOffsetProfile;
-import net.leawind.mc.thirdpersonperspective.core.CrosshairRenderer;
-import net.leawind.mc.thirdpersonperspective.core.PlayerAgent;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.*;
+import net.leawind.mc.thirdpersonperspective.config.Config;
+import net.leawind.mc.thirdpersonperspective.core.*;
 import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,6 +32,19 @@ public class ThirdPersonPerspectiveMod {
 			ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 			ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 			ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
+			ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
+		}
+
+		private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
+			System.out.printf("\rMouse Scroll: %f", amount);
+			if (Options.isAdjustingCameraOffset()) {
+				double dist = UserProfile.getCameraOffsetProfile().getMode().maxDistance;
+				dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
+				UserProfile.getCameraOffsetProfile().getMode().setMaxDistance(dist);
+				return EventResult.interruptFalse();
+			} else {
+				return EventResult.pass();
+			}
 		}
 
 		public static void onPlayerReset (LocalPlayer player) {

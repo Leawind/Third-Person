@@ -36,6 +36,12 @@ public class MonoList {
 		return new MonoList(length, i -> (double)(i * i));
 	}
 
+	public static MonoList of (int length, double min, double max, Function<Double, Double> f, Function<Double, Double> fInv) {
+		double xmin   = fInv.apply(min);
+		double xrange = fInv.apply(max) - xmin;
+		return new MonoList(length, i -> f.apply(i * xrange / length + xmin));
+	}
+
 	public double get (int i) {
 		return list[i];
 	}

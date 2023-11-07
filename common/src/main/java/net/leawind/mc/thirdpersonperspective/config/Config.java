@@ -11,27 +11,27 @@ public class Config {
 	public static       boolean isLoaded                 = false;
 	public static       boolean is_mod_enable            = true;
 	public static       int     available_distance_count = 32;
-	public static       double  distance_min             = 0.5;
-	public static       double  distance_max             = 128;
-	public static       double  camera_ray_trace_length  = 128;
+	public static       double  camera_distance_min      = 0.5;
+	public static       double  camera_distance_max      = 32;
+	public static       double  camera_ray_trace_length  = 256;
 
 	/**
-	 * Invoked by Forge or Fabric
+	 * 加载配置完成时调用
 	 * <p>
 	 * [Forge] Lnet/leawind/mc/thirdpersonperspective/forge/config/ConfigForge
 	 *
 	 * @param event forge:ModConfigEvent, fabric:?
 	 */
 	public static void onLoad (final Object event) {
-		distanceMonoList = new MonoList(available_distance_count, i -> {
-			double b = Math.log(distance_min);
-			double a = Math.log(distance_max) - b;
-			return Math.exp(a * i / available_distance_count + b);
-		});
+		distanceMonoList = MonoList.of(available_distance_count,
+									   camera_distance_min,
+									   camera_distance_max,
+									   i -> i * i,
+									   Math::sqrt);
 		isLoaded         = true;
 		LOGGER.info("Config is loaded, event: {}", event);
 	}
 
-	// Generated configurations
+	// 根据上面的配置选项生成的配置
 	public static MonoList distanceMonoList;
 }

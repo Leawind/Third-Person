@@ -135,10 +135,11 @@ public class CameraAgent {
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		profile.setAiming(isAiming);
 		if (isThirdPerson) {
+			smoothDistance.setSmoothFactor(Options.isAdjustingCameraOffset() ? 1e-5: profile.getMode().distanceSmoothFactor);
 			// 平滑更新距离
 			smoothDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
-			if (!profile.isAiming) {
+			if (!profile.isAiming && !Options.isAdjustingCameraOffset()) {
 				smoothDistance.setValue(Math.min(profile.getMode().maxDistance, smoothDistance.getValue()));
 			}
 			// 平滑更新相机偏移量

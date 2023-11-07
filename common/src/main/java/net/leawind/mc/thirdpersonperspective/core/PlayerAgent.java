@@ -86,7 +86,6 @@ public class PlayerAgent {
 		// 计算相机视线落点
 		HitResult hitResult         = Minecraft.getInstance().hitResult;
 		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
-		System.out.printf("\rCHP: %s", cameraHitPosition);//TODO
 		if (cameraHitPosition == null) {
 			// 让玩家朝向与相机相同
 			turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
