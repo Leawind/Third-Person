@@ -24,9 +24,9 @@ public class Vectors {
 	 * @param d 方向
 	 * @return [x=俯仰角, y=偏航角]
 	 */
-	public static Vec2 rotationAngleFromDirection (Vec3 d) {
+	public static Vec2 rotationDegreeFromDirection (Vec3 d) {
 		d = d.normalize();
-		return new Vec2((float)(-Math.asin(d.y) * 180 / Math.PI), (float)(Math.atan2(-d.x, d.z) * 180 / Math.PI));
+		return new Vec2((float)(-Math.toDegrees(Math.asin(d.y))), (float)Math.toDegrees(Math.atan2(-d.x, d.z)));
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class Vectors {
 	 * @param dy  偏航角变化量（角度制）
 	 * @param dx  俯仰角变化量（角度制）
 	 */
-	public static Vec3 rotateAngle (Vec3 vec, float dy, float dx) {
-		return Vec3.directionFromRotation(rotationAngleFromDirection(vec).add(new Vec2(dx, dy))).scale(vec.length());
+	public static Vec3 rotateDegree (Vec3 vec, float dy, float dx) {
+		return Vec3.directionFromRotation(rotationDegreeFromDirection(vec).add(new Vec2(dx, dy))).scale(vec.length());
 	}
 
 	/**
@@ -77,16 +77,16 @@ public class Vectors {
 	 * @param vec           原向量
 	 * @param rotationAngle 角度变化量（角度制）
 	 */
-	public static Vec3 rotateAngle (Vec3 vec, Vec2 rotationAngle) {
-		return Vec3.directionFromRotation(rotationAngleFromDirection(vec).add(rotationAngle)).scale(vec.length());
+	public static Vec3 rotateDegree (Vec3 vec, Vec2 rotationAngle) {
+		return Vec3.directionFromRotation(rotationDegreeFromDirection(vec).add(rotationAngle)).scale(vec.length());
 	}
 
 	public static double rotationRadianFromDirection (Vec2 d) {
 		return -Math.atan2(d.x, d.y);
 	}
 
-	public static double rotationAngleFromDirection (Vec2 d) {
-		return -Math.atan2(d.x, d.y) * 180 / Math.PI;
+	public static double rotationDegreeFromDirection (Vec2 d) {
+		return -Math.toDegrees(Math.atan2(d.x, d.y));
 	}
 
 	/**

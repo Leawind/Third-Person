@@ -54,12 +54,12 @@ public class PlayerAgent {
 		float forward = player.isFallFlying() ? 0: player.zza;
 		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
 		if (left != 0 || forward != 0) {
-			float absoluteRot = (float)(CameraAgent.camera.getYRot() + (-Math.atan2(left, forward) * 180 / Math.PI));
+			float absoluteRotDegree = (float)(CameraAgent.camera.getYRot() - Math.toDegrees(Math.atan2(left, forward)));
 			if (!(CameraAgent.isAiming || wasInterecting)) {
-				turnTo(new Vec2(0, absoluteRot), player.isSprinting());
+				turnTo(new Vec2(0, absoluteRotDegree), player.isSprinting());
 			}
-			float relativeRot       = absoluteRot - player.getYRot();
-			float relativeRotRadian = (float)(relativeRot * Math.PI / 180);
+			float relativeRotDegree = absoluteRotDegree - player.getYRot();
+			float relativeRotRadian = (float)Math.toRadians(relativeRotDegree);
 			player.xxa = (float)-Math.sin(relativeRotRadian) * speed;
 			player.zza = (float)Math.cos(relativeRotRadian) * speed;
 		}
@@ -133,7 +133,7 @@ public class PlayerAgent {
 	 */
 	public static void turnTo (@NotNull Vec3 target, float lerpK) {
 		Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(target);
-		Vec2 playerViewRot    = Vectors.rotationAngleFromDirection(playerViewVector);
+		Vec2 playerViewRot    = Vectors.rotationDegreeFromDirection(playerViewVector);
 		turnTo(playerViewRot, true);
 	}
 

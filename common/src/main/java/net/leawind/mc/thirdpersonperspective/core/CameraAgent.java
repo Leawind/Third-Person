@@ -163,7 +163,7 @@ public class CameraAgent {
 		// 宽高比
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
-		double verticalRadianHalf = mc.options.fov().get() * Math.PI / 180 / 2;
+		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
 		// 成像平面宽高
 		double heightHalf = Math.tan(verticalRadianHalf) * 0.05;
 		double widthHalf  = aspectRatio * heightHalf;
