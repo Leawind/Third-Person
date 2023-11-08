@@ -110,7 +110,7 @@ public class CameraAgent {
 	 */
 	public static void onLeaveThirdPerson (float lerpK) {
 		isThirdPerson = false;
-		PlayerAgent.turnToCamera(1);
+		PlayerAgent.turnToCameraHitResult(1);
 		LOGGER.info("Leave third person, lerpK={}", lerpK);
 	}
 

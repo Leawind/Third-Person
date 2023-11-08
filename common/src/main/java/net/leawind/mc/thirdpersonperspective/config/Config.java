@@ -5,6 +5,11 @@ import com.mojang.logging.LogUtils;
 import net.leawind.mc.util.monolist.MonoList;
 import org.slf4j.Logger;
 
+/**
+ * 配置项
+ * <p>
+ * 玩家可以通过修改配置文件或在配置屏幕中修改这些配置项。修改完成后会触发 onLoad 事件处理函数
+ */
 public class Config {
 	public static final Logger  LOGGER                   = LogUtils.getLogger();
 	//	Configurations

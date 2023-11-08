@@ -4,11 +4,15 @@ package net.leawind.mc.thirdpersonperspective.core;
 import net.leawind.mc.thirdpersonperspective.ModKeys;
 import net.leawind.mc.thirdpersonperspective.config.Config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Options {
+	public static Map<Object, Object> debug_map        = new HashMap<>();
 	/**
 	 * 是否通过按键切换到了瞄准模式
 	 */
-	public static boolean isToggleToAiming = false;
+	public static boolean             isToggleToAiming = false;
 
 	/**
 	 * 是否正在调整摄像机偏移量

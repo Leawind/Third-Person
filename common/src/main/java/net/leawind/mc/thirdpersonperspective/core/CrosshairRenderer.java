@@ -6,6 +6,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.leawind.mc.thirdpersonperspective.mixin.GuiAccessor;
 import net.minecraft.client.gui.GuiGraphics;
 
+/**
+ * 绘制准星
+ */
 public class CrosshairRenderer {
 	public static void render (GuiGraphics graphics) {
 		final int crosshairSize = 15;

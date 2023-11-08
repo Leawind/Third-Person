@@ -35,16 +35,21 @@ public class PlayerAgent {
 
 	/**
 	 * 插入到 Minecraft.handleKeybinds 方法头部
+	 * <p>
+	 * net.leawind.mc.thirdpersonperspective.mixin.MinecraftMixin#handleKeybinds
 	 */
 	public static void onBeforeHandleKeybinds () {
 		if (wasInterecting) {
 			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
-				turnToCamera(1);
+				turnToCameraHitResult(1);
 				Minecraft.getInstance().gameRenderer.pick(1.0f);
 			}
 		}
 	}
 
+	/**
+	 * 玩家移动
+	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
 		if (player.isSwimming()) {
@@ -75,24 +80,32 @@ public class PlayerAgent {
 		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
 		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
 		if (CameraAgent.isAiming || wasInterecting) {
-			turnToCamera(lerpK);
+			turnToCameraHitResult(lerpK);
+		} else if (player.isSwimming() || player.isFallFlying()) {
+			turnWithCamera(true);
 		}
 	}
 
 	/**
-	 * 跟随相机旋转
+	 * 让玩家朝向相机的落点
 	 */
-	public static void turnToCamera (float lerpK) {
+	public static void turnToCameraHitResult (float lerpK) {
 		// 计算相机视线落点
 		HitResult hitResult         = Minecraft.getInstance().hitResult;
 		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
-			// 让玩家朝向与相机相同
-			turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, true);
+			turnWithCamera(true);
 		} else {
 			// 让玩家朝向该坐标
 			turnTo(cameraHitPosition, lerpK);
 		}
+	}
+
+	/**
+	 * 让玩家朝向与相机相同
+	 */
+	public static void turnWithCamera (boolean isInstantly) {
+		turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
 	}
 
 	/**
