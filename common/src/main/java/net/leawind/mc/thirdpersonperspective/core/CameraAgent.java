@@ -9,6 +9,7 @@ import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
 import net.minecraft.client.Camera;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -126,6 +127,13 @@ public class CameraAgent {
 		CameraAgent.level = level;
 		player            = (LocalPlayer)entity;
 		isAiming          = PlayerAgent.isAiming();
+		if (Config.is_only_one_third_person_mode) {
+			Minecraft mc = Minecraft.getInstance();
+			if (mc.options.getCameraType().isMirrored()) {
+				mc.options.setCameraType(CameraType.FIRST_PERSON);
+			}
+			//			mc.options.setCameraType(CameraType.FIRST_PERSON);
+		}
 		// 时间
 		double now           = Blaze3D.getTime();
 		double sinceLastTurn = now - lastTurnTime;
@@ -136,10 +144,8 @@ public class CameraAgent {
 		if (isThirdPerson) {
 			boolean isAdjusting = Options.isAdjustingCameraOffset();
 			// 平滑更新距离
-			if (true) {
-				smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: profile.getMode().distanceSmoothFactor);
-				smoothVirtualDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
-			}
+			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: profile.getMode().distanceSmoothFactor);
+			smoothVirtualDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
 			if (!profile.isAiming && !Options.isAdjustingCameraOffset()) {
 				smoothVirtualDistance.setValue(Math.min(profile.getMode().maxDistance, smoothVirtualDistance.getValue()));

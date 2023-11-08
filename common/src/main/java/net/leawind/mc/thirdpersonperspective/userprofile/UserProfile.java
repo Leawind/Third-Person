@@ -4,6 +4,7 @@ package net.leawind.mc.thirdpersonperspective.userprofile;
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.ExpectPlatform;
 import net.leawind.mc.thirdpersonperspective.ThirdPersonPerspectiveMod;
+import net.leawind.mc.thirdpersonperspective.config.Config;
 import net.leawind.mc.thirdpersonperspective.core.CameraOffsetProfile;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ public class UserProfile {
 	}
 
 	private static int getProfileIndex () {
-		return Minecraft.getInstance().options.getCameraType().isMirrored() ? 1: 0;
+		return Config.is_only_one_third_person_mode && Minecraft.getInstance().options.getCameraType().isMirrored() ? 1: 0;
 	}
 
 	@NotNull
