@@ -23,26 +23,27 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class CameraAgent {
-	public static final Logger          LOGGER            = LogUtils.getLogger();
+	public static final Logger          LOGGER                = LogUtils.getLogger();
 	public static       BlockGetter     level;
 	public static       Camera          camera;
 	public static       LocalPlayer     player;
-	public static       boolean         isThirdPerson     = false;
-	public static       ExpSmoothVec2   smoothOffsetRatio = new ExpSmoothVec2().setValue(0, 0);
-	public static       double          lastTickTime      = 0;
-	public static       boolean         isAiming          = false;
+	public static       boolean         isThirdPerson         = false;
+	public static       ExpSmoothVec2   smoothOffsetRatio     = new ExpSmoothVec2().setValue(0, 0);
+	public static       double          lastTickTime          = 0;
+	public static       boolean         isAiming              = false;
 	// 上次转动视角的时间
-	public static       double          lastTurnTime      = 0;
+	public static       double          lastTurnTime          = 0;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static       ExpSmoothDouble smoothDistance    = new ExpSmoothDouble().setValue(0).setTarget(0);
-	public static       Vec2            relativeRotation  = Vec2.ZERO;
+	public static       ExpSmoothDouble smoothVirtualDistance = new ExpSmoothDouble().setValue(0).setTarget(0);
+	public static       Vec2            relativeRotation      = Vec2.ZERO;
 	/**
 	 * 相机上次的朝向和位置
 	 */
-	public static       Vec3            lastPosition      = Vec3.ZERO;
-	public static       Vec2            lastRotation      = Vec2.ZERO;
+	public static       Vec3            lastPosition          = Vec3.ZERO;
+	public static       Vec2            lastRotation          = Vec2.ZERO;
+	public static       boolean         wasAtWall             = false;
 
 	public static boolean isThirdPerson () {
 		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
@@ -67,7 +68,7 @@ public class CameraAgent {
 		assert player != null;
 		camera = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
-		smoothDistance.setValue(0);
+		smoothVirtualDistance.setValue(0);
 		relativeRotation = new Vec2(-player.getXRot(), player.getYRot() - 180);
 		LOGGER.info("Reset CameraAgent");
 	}
@@ -135,15 +136,17 @@ public class CameraAgent {
 		if (isThirdPerson) {
 			boolean isAdjusting = Options.isAdjustingCameraOffset();
 			// 平滑更新距离
-			smoothDistance.setSmoothFactor(isAdjusting ? 1e-5: profile.getMode().distanceSmoothFactor);
-			smoothDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
+			if (true) {
+				smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: profile.getMode().distanceSmoothFactor);
+				smoothVirtualDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
+			}
 			// 如果是非瞄准模式下，且距离过远则强行放回去
 			if (!profile.isAiming && !Options.isAdjustingCameraOffset()) {
-				smoothDistance.setValue(Math.min(profile.getMode().maxDistance, smoothDistance.getValue()));
+				smoothVirtualDistance.setValue(Math.min(profile.getMode().maxDistance, smoothVirtualDistance.getValue()));
 			}
 			// 平滑更新相机偏移量
 			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-8F, 1e-8F): profile.getMode().offsetSmoothFactor);
-			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothDistance.getValue()));
+			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothVirtualDistance.getValue()));
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
 			updateCameraRotationPosition();
@@ -159,7 +162,7 @@ public class CameraAgent {
 	private static void updateCameraRotationPosition () {
 		Minecraft mc = Minecraft.getInstance();
 		// 平滑眼睛到虚相机的向量
-		Vec3 eyeToVirtualCamera = Vec3.directionFromRotation(relativeRotation).scale(smoothDistance.getValue());
+		Vec3 eyeToVirtualCamera = Vec3.directionFromRotation(relativeRotation).scale(smoothVirtualDistance.getValue());
 		// 宽高比
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
@@ -170,22 +173,48 @@ public class CameraAgent {
 		// 水平视野角度一半(弧度制）
 		double horizonalRadianHalf = Math.atan(widthHalf / 0.05);
 		// 偏移
-		double leftOffset = smoothOffsetRatio.getValue().x * smoothDistance.getValue() * widthHalf / 0.05;
-		double upOffset   = smoothOffsetRatio.getValue().y * smoothDistance.getValue() * Math.tan(verticalRadianHalf);
+		double leftOffset = smoothOffsetRatio.getValue().x * smoothVirtualDistance.getValue() * widthHalf / 0.05;
+		double upOffset   = smoothOffsetRatio.getValue().y * smoothVirtualDistance.getValue() * Math.tan(verticalRadianHalf);
 		// 没有偏移的情况下相机位置
 		Vec3 virtualPosition = PlayerAgent.smoothEyePosition.getValue().add(eyeToVirtualCamera);
 		// 应用
 		((CameraInvoker)camera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		((CameraInvoker)camera).invokeSetPosition(virtualPosition);
 		((CameraInvoker)camera).invokeMove(0, upOffset, leftOffset);
-		// TODO 防止穿墙
+		{
+			// 防止穿墙
+			Vec3   cameraPosition = camera.getPosition();
+			Vec3   eyePosition    = PlayerAgent.smoothEyePosition.getValue();
+			Vec3   eyeToCamera    = eyePosition.vectorTo(cameraPosition);
+			double initDistance   = eyeToCamera.length();
+			double minDistance    = initDistance;
+			for (int i = 0; i < 8; ++i) {
+				double offsetX = (i & 1) * 2 - 1;
+				double offsetY = (i >> 1 & 1) * 2 - 1;
+				double offsetZ = (i >> 2 & 1) * 2 - 1;
+				offsetX *= 0.15;
+				offsetY *= 0.18;
+				offsetZ *= 0.15;
+				Vec3 pickStart = eyePosition.add(offsetX, offsetY, offsetZ);
+				HitResult hitresult = level.clip(new ClipContext(pickStart,
+																 pickStart.add(eyeToCamera),
+																 ClipContext.Block.VISUAL,
+																 ClipContext.Fluid.NONE,
+																 player));
+				if (hitresult.getType() != HitResult.Type.MISS) {
+					minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
+				}
+			}
+			smoothVirtualDistance.setValue(smoothVirtualDistance.getValue() * minDistance / initDistance);
+			wasAtWall = minDistance != initDistance;
+		}
 	}
 
 	/**
 	 * 获取相机视线落点坐标
 	 */
 	public static @Nullable Vec3 getPickPosition () {
-		return getPickPosition(smoothDistance.getValue() + Config.camera_ray_trace_length);
+		return getPickPosition(smoothVirtualDistance.getValue() + Config.camera_ray_trace_length);
 	}
 
 	/**
@@ -199,7 +228,7 @@ public class CameraAgent {
 	}
 
 	public static @NotNull HitResult pick () {
-		return pick(smoothDistance.getValue() + Config.camera_ray_trace_length);
+		return pick(smoothVirtualDistance.getValue() + Config.camera_ray_trace_length);
 	}
 
 	public static @NotNull HitResult pick (double pickRange) {
