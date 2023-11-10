@@ -7,7 +7,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	protected T target;
 	public    T smoothFactor;
 
-	final public T getValue () {
+	final public T get () {
 		return value;
 	}
 

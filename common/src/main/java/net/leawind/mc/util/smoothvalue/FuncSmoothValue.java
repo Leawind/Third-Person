@@ -19,7 +19,7 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
-	final public T getValue () {
+	final public T get () {
 		return value;
 	}
 

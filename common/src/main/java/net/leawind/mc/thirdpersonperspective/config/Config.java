@@ -33,7 +33,7 @@ public class Config {
 		distanceMonoList = MonoList.of(available_distance_count,
 									   camera_distance_min,
 									   camera_distance_max,
-									   i -> i * i,
+										  i -> i * i,
 									   Math::sqrt);
 		isLoaded         = true;
 		LOGGER.info("Config is loaded, event: {}", event);

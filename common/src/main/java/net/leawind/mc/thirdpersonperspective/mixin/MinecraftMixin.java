@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(net.minecraft.client.Minecraft.class)
 public class MinecraftMixin {
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
-	private void handleKeybinds (CallbackInfo ci) {
+	private void handleKeybinds_inject_head (CallbackInfo ci) {
 		if (PlayerAgent.isAvailable()) {
 			PlayerAgent.onBeforeHandleKeybinds();
 		}

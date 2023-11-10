@@ -26,12 +26,12 @@ public abstract class CameraMixin {
 	 * @param isMirrored  已经被我改成了false
 	 */
 	@Inject(method="setup", at=@At(value="HEAD"))
-	public void setup_head (BlockGetter blockGetter,
-							Entity entity,
-							boolean detached,
-							boolean isMirrored,
-							float lerpK,
-							CallbackInfo ci) {
+	public void setup_inject_head (BlockGetter blockGetter,
+								   Entity entity,
+								   boolean detached,
+								   boolean isMirrored,
+								   float lerpK,
+								   CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
 			CameraAgent.isThirdPerson = false;
@@ -49,12 +49,12 @@ public abstract class CameraMixin {
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE),
 			cancellable=true)
-	public void setup_inject (BlockGetter level,
-							  Entity entity,
-							  boolean detached,
-							  boolean isMirrored,
-							  float lerpK,
-							  CallbackInfo ci) {
+	public void setup_inject_invoke (BlockGetter level,
+									 Entity entity,
+									 boolean detached,
+									 boolean isMirrored,
+									 float lerpK,
+									 CallbackInfo ci) {
 		if (isMirrored) {
 			Camera camera = (Camera)(Object)this;
 			((CameraInvoker)this).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());

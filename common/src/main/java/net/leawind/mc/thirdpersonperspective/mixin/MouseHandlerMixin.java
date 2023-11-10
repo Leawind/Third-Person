@@ -9,12 +9,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * 玩家操控鼠标转动玩家时
+ */
 @Mixin(net.minecraft.client.MouseHandler.class)
 public class MouseHandlerMixin {
-	//	@Inject(method="onMove", at=@At("HEAD"), cancellable=true)
-	//	private void onMove (long windowHandler, double dx, double dy, CallbackInfo ci) {
-	//		ThirdPersonPerspectiveMod.ModEvents.onMoseMove(dx, dy, ci);
-	//	}
 	@Shadow
 	private double accumulatedDX;
 	@Shadow

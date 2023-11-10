@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(net.minecraft.client.player.LocalPlayer.class)
 public class LocalPlayerMixin {
 	@Inject(method="serverAiStep", at=@At(value="TAIL"))
-	public void serverAiStep (CallbackInfo ci) {
+	public void serverAiStep_inject_tail (CallbackInfo ci) {
 		if (!CameraAgent.isAvailable() || !PlayerAgent.isAvailable()) {
 			return;
 		}
