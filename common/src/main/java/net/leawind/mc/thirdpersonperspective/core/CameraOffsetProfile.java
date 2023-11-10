@@ -104,7 +104,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		public OffsetModeNormal (CameraOffsetProfile profile, double maxDist, float x, float y) {
 			super(profile);
 			setEyeSmoothFactor(new Vec3(8e-4, 1e-2, 8e-4));
-			setDistanceSmoothFactor(5e-1);
+			setDistanceSmoothFactor(1e-3);
 			setOffsetSmoothFactor(new Vec2(4e-5f, 4e-5f));
 			setMaxDistance(maxDist);
 			setOffsetValue(new Vec2(x, y));
@@ -129,7 +129,7 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		public OffsetModeAiming (CameraOffsetProfile profile, double maxDist, Vec2 offset) {
 			super(profile);
 			setEyeSmoothFactor(new Vec3(1e-11, 1e-8, 1e-11));
-			setDistanceSmoothFactor(1e-3);
+			setDistanceSmoothFactor(1e-5);
 			setOffsetSmoothFactor(new Vec2(2e-8f, 2e-8f));
 			setMaxDistance(maxDist);
 			setOffsetValue(offset);
@@ -233,4 +233,3 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		}
 	}
 }
-
