@@ -4,6 +4,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.config.Config;
+import net.leawind.mc.thirdpersonperspective.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdpersonperspective.mixin.CameraInvoker;
 import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
@@ -264,7 +265,6 @@ public class CameraAgent {
 										 (targetPlaneDist / nearPlaneDistance * width)),
 						   (float)(0.5 - fakeCamera.getUpVector().dot(toTarget.toVector3f()) /
 										 (targetPlaneDist / nearPlaneDistance * height)));
-		System.out.printf("\r sc=(%.5f, %.5f)", sc.x, sc.y);
 		return sc;
 		//		Vec2 direction = Vectors.rotationRadianFromDirection(toTarget).add(calculateRotation().negated());
 		//		return new Vec2((float)(Math.tan(direction.y) * nearPlaneDistance / width + 0.5),

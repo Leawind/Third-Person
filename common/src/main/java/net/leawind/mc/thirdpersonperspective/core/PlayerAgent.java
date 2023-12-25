@@ -3,6 +3,7 @@ package net.leawind.mc.thirdpersonperspective.core;
 
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.config.Config;
+import net.leawind.mc.thirdpersonperspective.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;

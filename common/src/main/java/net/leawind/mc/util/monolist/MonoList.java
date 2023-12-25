@@ -7,12 +7,12 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 /**
- * TODO
  * <p>
  * 单调递增列表
  * <p>
- * 数列中每一项的值会在实例化时被创建。
+ * 列表中每一项的值会在列表对象被实例化时创建。
  */
+@SuppressWarnings("unused")
 public class MonoList {
 	protected double[] list;
 	public    boolean  isReversed = false;
@@ -21,42 +21,44 @@ public class MonoList {
 	 * @param length 列表长度
 	 * @param getter 值与下标的对应关系
 	 */
-	private MonoList (int length, Function<Integer, Double> getter, boolean needToSort) {
+	private MonoList (int length, Function<Integer, Double> getter) {
 		this.list = new double[length];
 		for (int i = 0; i < length; i++) {
 			list[i] = getter.apply(i);
 		}
-		if (needToSort) {
-			sort();
-		}
+		sort();
 	}
 
-	private MonoList (double[] list, boolean needToSort) {
+	/**
+	 * 根据列表直接创建
+	 *
+	 * @param list 列表
+	 */
+	private MonoList (double[] list) {
 		this.list = list;
-		if (needToSort) {
-			sort();
-		}
-	}
-
-	private MonoList () {
+		sort();
 	}
 
 	public static MonoList exp (int length) {
-		return new MonoList(length, Math::exp, true);
+		return new MonoList(length, Math::exp);
 	}
 
 	public static MonoList squared (int length) {
-		return new MonoList(length, i -> (double)(i * i), true);
+		return new MonoList(length, i -> (double)(i * i));
+	}
+
+	public static MonoList of (int length, Function<Integer, Double> getter) {
+		return new MonoList(length, getter);
+	}
+
+	public static MonoList of (double[] list) {
+		return new MonoList(list);
 	}
 
 	public static MonoList of (int length, double min, double max, Function<Double, Double> f, Function<Double, Double> fInv) {
 		double xmin   = fInv.apply(min);
 		double xrange = fInv.apply(max) - xmin;
-		return new MonoList(length, i -> f.apply(i * xrange / length + xmin), true);
-	}
-
-	public static MonoList of (double[] list) {//TODO
-		return new MonoList(list, true);
+		return new MonoList(length, i -> f.apply(i * xrange / length + xmin));
 	}
 
 	public boolean isSorted () {

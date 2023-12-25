@@ -5,7 +5,7 @@ import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdpersonperspective.ExpectPlatform;
 import net.leawind.mc.thirdpersonperspective.ThirdPersonPerspectiveMod;
 import net.leawind.mc.thirdpersonperspective.config.Config;
-import net.leawind.mc.thirdpersonperspective.core.CameraOffsetProfile;
+import net.leawind.mc.thirdpersonperspective.core.cameraoffset.CameraOffsetProfile;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

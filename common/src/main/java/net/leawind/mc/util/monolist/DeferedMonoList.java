@@ -12,6 +12,7 @@ import java.util.function.Function;
  * <p>
  * 数列中每一项的值会在 使用时 而非 实例化时 计算
  */
+@SuppressWarnings("unused")
 public class DeferedMonoList {
 	public    int                       length;
 	protected Function<Integer, Double> getter;
@@ -20,7 +21,7 @@ public class DeferedMonoList {
 	 * @param length 列表长度
 	 * @param getter 值与下标的对应关系
 	 */
-	public DeferedMonoList (int length, Function<Integer, Double> getter) {
+	private DeferedMonoList (int length, Function<Integer, Double> getter) {
 		this.length = length;
 		this.getter = getter;
 	}
@@ -31,6 +32,10 @@ public class DeferedMonoList {
 
 	public static DeferedMonoList squared (int length) {
 		return new DeferedMonoList(length, i -> (double)(i * i));
+	}
+
+	public static DeferedMonoList of (int length, Function<Integer, Double> getter) {
+		return new DeferedMonoList(length, getter);
 	}
 
 	public double get (int i) {

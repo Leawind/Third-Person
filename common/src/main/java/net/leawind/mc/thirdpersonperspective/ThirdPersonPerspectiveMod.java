@@ -5,7 +5,11 @@ import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.*;
 import net.leawind.mc.thirdpersonperspective.config.Config;
-import net.leawind.mc.thirdpersonperspective.core.*;
+import net.leawind.mc.thirdpersonperspective.core.CameraAgent;
+import net.leawind.mc.thirdpersonperspective.core.CrosshairRenderer;
+import net.leawind.mc.thirdpersonperspective.core.Options;
+import net.leawind.mc.thirdpersonperspective.core.PlayerAgent;
+import net.leawind.mc.thirdpersonperspective.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdpersonperspective.userprofile.UserProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,10 +25,8 @@ public class ThirdPersonPerspectiveMod {
 
 	public static void init () {
 		LOGGER.atLevel(Level.TRACE);
-		System.out.println(ExpectPlatform.getConfigDirectory().toAbsolutePath().normalize().toString());
 		ModKeys.register();
 		ModEvents.register();
-		LOGGER.debug("Debug message oziaosfdp");
 	}
 
 	public static class ModEvents {
@@ -51,16 +53,15 @@ public class ThirdPersonPerspectiveMod {
 		 * @param yMove 垂直移动的像素
 		 */
 		public static void onAdjustingCamera (double xMove, double yMove) {
-			System.out.printf("\rAdj %.5f, %.5f", xMove, yMove);
 			if (xMove == 0 && yMove == 0) {
 				return;
 			}
-			Minecraft           mc          = Minecraft.getInstance();
-			double              sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
-			double              dy          = yMove * sensitivity * 0.15;
-			CameraOffsetProfile profile     = UserProfile.getCameraOffsetProfile();
+			Minecraft           mc      = Minecraft.getInstance();
+			CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 			if (profile.isTop) {
-				// 头顶，只能上下调整
+				double sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
+				double dy          = yMove * sensitivity * 0.15;
+				// 相机在头顶，只能上下调整
 				double topOffset = profile.getMode().topOffsetValue;
 				if (profile.isAiming) {
 					topOffset -= Math.exp(topOffset) * dy * 1e-2;
@@ -71,7 +72,7 @@ public class ThirdPersonPerspectiveMod {
 				}
 				profile.getMode().setTopOffsetValue(topOffset);
 			} else {
-				// 非头顶，可以上下左右调整
+				// 相机没固定在头顶，可以上下左右调整
 				double offsetX = profile.getMode().offsetValue.x;
 				double offsetY = profile.getMode().offsetValue.y;
 				if (profile.isAiming) {
@@ -98,7 +99,6 @@ public class ThirdPersonPerspectiveMod {
 		 * @param amount    向前滚是+1，向后滚是-1
 		 */
 		private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
-			System.out.printf("\rMouse Scroll: %f", amount);
 			if (Options.isAdjustingCameraOffset()) {
 				double dist = UserProfile.getCameraOffsetProfile().getMode().maxDistance;
 				dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
