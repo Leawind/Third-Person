@@ -18,13 +18,13 @@ subprojects {
 		// mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
 	}
 }
-// Define output file name
+// 生成文件名格式
 def archiveFileNameOfPlatform(String platform) {
 	switch (platform) {
 		case "forge":
-			return "$mod_name-v$mod_version-$minecraft_version-forge-${forge_version}";
+			return "$mod_name-v$mod_version-mc$minecraft_version-forge";
 		case "fabric":
-			return "$mod_name-v$mod_version-$minecraft_version-fabric-${fabric_loader_version}";
+			return "$mod_name-v$mod_version-mc$minecraft_version-fabric";
 		default:
 			throw new IllegalArgumentException("Unknown platform: $platform");
 	}
@@ -37,7 +37,6 @@ allprojects {
 	base {
 		archivesName = rootProject.mod_id
 	}
-
 	version = rootProject.mod_version
 	group = rootProject.mod_group_id
 	repositories {
