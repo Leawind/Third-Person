@@ -12,18 +12,15 @@ import org.slf4j.Logger;
 
 @Mod.EventBusSubscriber(modid=ThirdPersonPerspectiveMod.MOD_ID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class ConfigForge {
-	public static final  Logger                  LOGGER  = LogUtils.getLogger();
-	private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-
-	private static String KEY (String name) {
-		return "options.ltpv." + name;
-	}
-
-	private static final ForgeConfigSpec.BooleanValue IS_MOD_ENABLE                 = BUILDER.translation(KEY("is_mod_enable"))
-																							 .define("is_mod_enable",
-																									 true);
+	public static final  Logger                       LOGGER                        = LogUtils.getLogger();
+	private static final ForgeConfigSpec.Builder      BUILDER                       = new ForgeConfigSpec.Builder();
 	public static final  ForgeConfigSpec.IntValue     AVAILABLE_DISTANCE_COUNT      = BUILDER.translation(KEY(
-		"available_distance_count")).defineInRange("available_distance_count", 32, 2, 128);
+																								 "available_distance_count"))
+																							 .defineInRange(
+																								 "available_distance_count",
+																								 16,
+																								 2,
+																								 128);
 	public static final  ForgeConfigSpec.DoubleValue  CAMERA_DISTANCE_MIN           = BUILDER.translation(KEY("distance_min"))
 																							 .defineInRange(
 																								 "camera_distance_min",
@@ -42,6 +39,15 @@ public class ConfigForge {
 		"camera_ray_trace_length")).defineInRange("aiming_offset_max", 2d, 0.5, 5);
 	public static final  ForgeConfigSpec.BooleanValue IS_ONLY_ONE_THIRD_PERSON_MODE = BUILDER.translation(KEY(
 		"is_only_one_third_person_mode")).define("is_only_one_third_person_mode", true);
+	private static final ForgeConfigSpec.BooleanValue IS_MOD_ENABLE                 = BUILDER.translation(KEY("is_mod_enable"))
+																							 .define("is_mod_enable", true);
+
+
+	public static final  ForgeConfigSpec              SPEC                          = BUILDER.build();
+
+	private static String KEY (String name) {
+		return "options.ltpv." + name;
+	}
 
 	@SubscribeEvent
 	public static void onLoad (final ModConfigEvent event) {
@@ -54,6 +60,4 @@ public class ConfigForge {
 		Config.is_only_one_third_person_mode = IS_ONLY_ONE_THIRD_PERSON_MODE.get();
 		Config.onLoad(event);
 	}
-
-	public static final ForgeConfigSpec SPEC = BUILDER.build();
 }
