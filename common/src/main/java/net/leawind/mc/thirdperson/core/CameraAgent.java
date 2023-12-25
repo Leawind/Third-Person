@@ -27,13 +27,25 @@ import org.slf4j.Logger;
 public class CameraAgent {
 	public static final Logger          LOGGER                = LogUtils.getLogger();
 	/**
-	 * 成像平面到相机的距离
+	 * 成像平面到相机的距离，这是一个固定值，硬编码在Minecraft源码中。
+	 * <p>
+	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
 	 */
-	public static final double          nearPlaneDistance     = 0.05000000074505806;
+	public static final double          nearPlaneDistance     = 0.05;
 	public static       BlockGetter     level;
 	public static       Camera          camera;
 	public static       Camera          fakeCamera            = new Camera();
-	public static       LocalPlayer     player;
+	/**
+	 * 当前玩家实体
+	 */
+	public static       LocalPlayer     playerEntity;
+	/**
+	 * 当前相机附着的实体，当以旁观者模式附着其他实体时，此实体不同于当前玩家实体
+	 */
+	public static       Entity          attachedEntity;
+	/**
+	 * 当前是否为第三人称视角
+	 */
 	public static       boolean         isThirdPerson         = false;
 	/**
 	 * 相机偏移量
@@ -79,14 +91,14 @@ public class CameraAgent {
 	/**
 	 * 重置玩家对象，重置相机的位置、角度等参数
 	 */
-	public static void reset () {//TODO
+	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		player = mc.player;
-		assert player != null;
-		camera = mc.gameRenderer.getMainCamera();
+		assert mc.player != null;
+		attachedEntity = playerEntity = mc.player;
+		camera         = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothVirtualDistance.setValue(0);
-		relativeRotation = new Vec2(-player.getXRot(), player.getYRot() - 180);
+		relativeRotation = new Vec2(-attachedEntity.getXRot(), attachedEntity.getYRot() - 180);
 		LOGGER.info("Reset CameraAgent");
 	}
 
@@ -116,36 +128,36 @@ public class CameraAgent {
 	/**
 	 * 进入第三人称视角时触发
 	 */
-	public static void onEnterThirdPerson (float lerpK) {
+	public static void onEnterThirdPerson (float partialTick) {
 		reset();
 		PlayerAgent.reset();
 		isThirdPerson            = true;
 		isAiming                 = false;
 		Options.isToggleToAiming = false;
 		lastTickTime             = Blaze3D.getTime();
-		LOGGER.info("Enter third person, lerpK={}", lerpK);
+		LOGGER.info("Enter third person, partialTick={}", partialTick);
 	}
 
 	/**
 	 * 退出第三人称视角
 	 */
-	public static void onLeaveThirdPerson (float lerpK) {
+	public static void onLeaveThirdPerson (float partialTick) {
 		isThirdPerson = false;
 		PlayerAgent.turnToCameraHitResult(1);
-		LOGGER.info("Leave third person, lerpK={}", lerpK);
+		LOGGER.info("Leave third person, partialTick={}", partialTick);
 	}
 
 	/**
 	 * 计算并更新相机的朝向和坐标
 	 *
-	 * @param level  维度
-	 * @param entity 实体
+	 * @param level          维度
+	 * @param attachedEntity 附着的实体
 	 */
 	@PerformanceSensitive
-	public static void onRenderTick (BlockGetter level, Entity entity, boolean isMirrored, float lerpK) {
-		CameraAgent.level = level;
-		player            = (LocalPlayer)entity;
-		isAiming          = PlayerAgent.isAiming();
+	public static void onRenderTick (BlockGetter level, Entity attachedEntity, boolean isMirrored, float partialTick) {
+		CameraAgent.attachedEntity = attachedEntity;
+		CameraAgent.level          = level;
+		isAiming                   = PlayerAgent.isAiming();
 		if (Config.is_only_one_third_person_mode) {
 			Minecraft mc = Minecraft.getInstance();
 			if (mc.options.getCameraType().isMirrored()) {
@@ -178,7 +190,7 @@ public class CameraAgent {
 			updateFakeCameraRotationPosition();
 			applyCamera();
 		}
-		PlayerAgent.onRenderTick(lerpK, sinceLastTick);
+		PlayerAgent.onRenderTick(partialTick, sinceLastTick);
 		lastPosition = camera.getPosition();
 		lastRotation = new Vec2(camera.getXRot(), camera.getYRot());
 	}
@@ -240,7 +252,7 @@ public class CameraAgent {
 															 pickStart.add(eyeToCamera),
 															 ClipContext.Block.VISUAL,
 															 ClipContext.Fluid.NONE,
-															 player));
+															 attachedEntity));
 			if (hitresult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
 			}
@@ -254,7 +266,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * TODO
 	 * <p>
 	 * 世界坐标点 pos 在画面中的坐标
 	 * <p>
@@ -315,8 +326,8 @@ public class CameraAgent {
 		Vec3 viewStart  = camera.getPosition();
 		Vec3 viewVector = new Vec3(camera.getLookVector());
 		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
-		AABB aabb       = player.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-		return ProjectileUtil.getEntityHitResult(player,
+		AABB aabb       = attachedEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
+		return ProjectileUtil.getEntityHitResult(attachedEntity,
 												 viewStart,
 												 viewEnd,
 												 aabb,
@@ -328,10 +339,10 @@ public class CameraAgent {
 		Vec3 viewStart  = camera.getPosition();
 		Vec3 viewVector = new Vec3(camera.getLookVector());
 		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
-		return player.level().clip(new ClipContext(viewStart,
-												   viewEnd,
-												   ClipContext.Block.OUTLINE,
-												   ClipContext.Fluid.NONE,
-												   player));
+		return attachedEntity.level().clip(new ClipContext(viewStart,
+														   viewEnd,
+														   ClipContext.Block.OUTLINE,
+														   ClipContext.Fluid.NONE,
+														   attachedEntity));
 	}
 }

@@ -2,13 +2,12 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.logging.LogUtils;
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdperson.userprofile.UserProfile;
 import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,16 +20,14 @@ import org.slf4j.Logger;
 
 public class PlayerAgent {
 	public static final Logger        LOGGER            = LogUtils.getLogger();
-	public static       LocalPlayer   player;
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
 	public static       boolean       wasInterecting    = false;
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		player = mc.player;
-		assert player != null;
 		// 将虚拟球心放在实体眼睛处
-		smoothEyePosition.setTarget(player.getEyePosition()).setValue(player.getEyePosition());
+		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition())
+						 .setValue(CameraAgent.attachedEntity.getEyePosition());
 		LOGGER.info("Reset PlayerAgent");
 	}
 
@@ -51,36 +48,37 @@ public class PlayerAgent {
 	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
-		if (player.isSwimming()) {
+		if (CameraAgent.attachedEntity.isSwimming()) {
 			return;
 		}
-		float left    = player.xxa;
-		float forward = player.isFallFlying() ? 0: player.zza;
+		float left    = CameraAgent.playerEntity.xxa;
+		float forward = CameraAgent.playerEntity.isFallFlying() ? 0: CameraAgent.playerEntity.zza;
 		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
 		if (left != 0 || forward != 0) {
 			float absoluteRotDegree = (float)(CameraAgent.camera.getYRot() - Math.toDegrees(Math.atan2(left, forward)));
 			if (!(CameraAgent.isAiming || wasInterecting)) {
-				turnTo(new Vec2(0, absoluteRotDegree), player.isSprinting());
+				turnTo(new Vec2(0, absoluteRotDegree), CameraAgent.playerEntity.isSprinting());
 			}
-			float relativeRotDegree = absoluteRotDegree - player.getYRot();
+			float relativeRotDegree = absoluteRotDegree - CameraAgent.playerEntity.getYRot();
 			float relativeRotRadian = (float)Math.toRadians(relativeRotDegree);
-			player.xxa = (float)-Math.sin(relativeRotRadian) * speed;
-			player.zza = (float)Math.cos(relativeRotRadian) * speed;
+			CameraAgent.playerEntity.xxa = (float)-Math.sin(relativeRotRadian) * speed;
+			CameraAgent.playerEntity.zza = (float)Math.cos(relativeRotRadian) * speed;
 		}
 	}
 
 	@PerformanceSensitive
-	public static void onRenderTick (float lerpK, double sinceLastTick) {
+	public static void onRenderTick (float partialTick, double sinceLastTick) {
 		Minecraft           mc      = Minecraft.getInstance();
 		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		// 平滑更新眼睛位置
 		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
-		smoothEyePosition.setTarget(player.getEyePosition(lerpK)).update(sinceLastTick);
+		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
 		if (CameraAgent.isAiming || wasInterecting) {
-			turnToCameraHitResult(lerpK);
-		} else if (player.isSwimming() || player.isFallFlying()) {
+			turnToCameraHitResult(partialTick);
+		} else if (CameraAgent.attachedEntity.isSwimming() || (CameraAgent.attachedEntity instanceof LivingEntity &&
+															   ((LivingEntity)CameraAgent.attachedEntity).isFallFlying())) {
 			turnWithCamera(true);
 		}
 	}
@@ -88,7 +86,7 @@ public class PlayerAgent {
 	/**
 	 * 让玩家朝向相机的落点
 	 */
-	public static void turnToCameraHitResult (float lerpK) {
+	public static void turnToCameraHitResult (float partialTick) {
 		// 计算相机视线落点
 		HitResult hitResult         = Minecraft.getInstance().hitResult;
 		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
@@ -96,7 +94,7 @@ public class PlayerAgent {
 			turnWithCamera(true);
 		} else {
 			// 让玩家朝向该坐标
-			turnTo(cameraHitPosition, lerpK);
+			turnTo(cameraHitPosition, partialTick);
 		}
 	}
 
@@ -126,15 +124,15 @@ public class PlayerAgent {
 	 */
 	public static void turnTo (float ry, float rx, boolean isInstantly) {
 		if (isInstantly) {
-			player.setYRot(ry);
-			player.setXRot(rx);
+			CameraAgent.playerEntity.setYRot(ry);
+			CameraAgent.playerEntity.setXRot(rx);
 		} else {
-			float playerY = player.getYRot();
+			float playerY = CameraAgent.playerEntity.getYRot();
 			float dy      = ((ry - playerY) % 360 + 360) % 360;
 			if (dy > 180) {
 				dy -= 360;
 			}
-			player.turn(dy, rx - player.getXRot());
+			CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getXRot());
 		}
 	}
 
@@ -143,22 +141,14 @@ public class PlayerAgent {
 	 *
 	 * @param target 目标位置
 	 */
-	public static void turnTo (@NotNull Vec3 target, float lerpK) {
-		Vec3 playerViewVector = player.getEyePosition(lerpK).vectorTo(target);
+	public static void turnTo (@NotNull Vec3 target, float partialTick) {
+		Vec3 playerViewVector = CameraAgent.playerEntity.getEyePosition(partialTick).vectorTo(target);
 		Vec2 playerViewRot    = Vectors.rotationDegreeFromDirection(playerViewVector);
 		turnTo(playerViewRot, true);
 	}
 
-	/**
-	 * 判断：模组已启用且玩家已初始化
-	 */
 	public static boolean isAvailable () {
-		if (!Config.is_mod_enable) {
-			return false;
-		}
-		Minecraft   mc     = Minecraft.getInstance();
-		LocalPlayer player = mc.player;
-		return player != null;
+		return CameraAgent.isAvailable();
 	}
 
 	/**
@@ -173,22 +163,26 @@ public class PlayerAgent {
 	 * 如果通过按相应按键切换到了持续瞄准状态，返回true
 	 */
 	public static boolean isAiming () {
-		if (player == null) {
+		if (CameraAgent.attachedEntity == null) {
 			return false;
 		}
-		if (player.isUsingItem()) {
-			ItemStack itemStack = player.getUseItem();
-			if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
-				return true;// 正在使用弓或三叉戟瞄准
+		// 只有 LivingEntity 才有可能手持物品瞄准
+		if (CameraAgent.attachedEntity instanceof LivingEntity) {
+			LivingEntity livingEntity = (LivingEntity)CameraAgent.attachedEntity;
+			if (livingEntity.isUsingItem()) {
+				ItemStack itemStack = livingEntity.getUseItem();
+				if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
+					return true;// 正在使用弓或三叉戟瞄准
+				}
 			}
-		}
-		ItemStack mainHandItem = player.getMainHandItem();
-		if (mainHandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(mainHandItem)) {
-			return true;// 主手拿着上了弦的弩
-		}
-		ItemStack offhandItem = player.getOffhandItem();
-		if (offhandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(offhandItem)) {
-			return true;// 副手拿着上了弦的弩
+			ItemStack mainHandItem = livingEntity.getMainHandItem();
+			if (mainHandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(mainHandItem)) {
+				return true;// 主手拿着上了弦的弩
+			}
+			ItemStack offhandItem = livingEntity.getOffhandItem();
+			if (offhandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(offhandItem)) {
+				return true;// 副手拿着上了弦的弩
+			}
 		}
 		return Options.doesPlayerWantToAim();
 	}
