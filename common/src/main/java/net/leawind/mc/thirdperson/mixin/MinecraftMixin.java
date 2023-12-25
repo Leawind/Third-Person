@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,9 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(net.minecraft.client.Minecraft.class)
 public class MinecraftMixin {
+	/**
+	 * 注入到 handleKeybinds 头部，触发相应事件
+	 */
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
 	private void handleKeybinds_inject_head (CallbackInfo ci) {
-		if (PlayerAgent.isAvailable()) {
+		if (CameraAgent.isAvailable() && PlayerAgent.isAvailable()) {
 			PlayerAgent.onBeforeHandleKeybinds();
 		}
 	}

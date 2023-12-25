@@ -39,5 +39,7 @@ public class Config {
 									   Math::sqrt);
 		isLoaded         = true;
 		LOGGER.info("Config is loaded, event: {}", event);
+		//TODO Force set config
+		//		is_mod_enable = false;
 	}
 }
