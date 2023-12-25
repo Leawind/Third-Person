@@ -1,5 +1,5 @@
 {
-	"key.categories.third_person_perspective": "Third-Person Perspective",
+	"key.categories.third_person": "Leawind's Third Person",
 	"key.ltpv.toggle_side": "Toggle Camera to the Other Side",
 	"key.ltpv.adjust_position": "Hold to Adjust Camera Position",
 	"key.ltpv.force_aiming": "Hold to Force Aim",
@@ -10,5 +10,4 @@
 	"options.ltpv.distance_max": "Maximum Adjustable Distance Range",
 	"options.ltpv.camera_ray_trace_length": "Camera ray trace length",
 	"options.ltpv.aiming_offset_max": "Aiming offset max"
-
 }
