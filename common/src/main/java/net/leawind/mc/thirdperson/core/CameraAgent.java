@@ -60,6 +60,9 @@ public class CameraAgent {
 		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 
+	/**
+	 * 判断：模组功能已启用，且相机和玩家都已经初始化
+	 */
 	public static boolean isAvailable () {
 		if (!Config.is_mod_enable) {
 			return false;
@@ -73,6 +76,9 @@ public class CameraAgent {
 		return player != null;
 	}
 
+	/**
+	 * 重置玩家对象，重置相机的位置、角度等参数
+	 */
 	public static void reset () {//TODO
 		Minecraft mc = Minecraft.getInstance();
 		player = mc.player;
@@ -91,6 +97,9 @@ public class CameraAgent {
 	 * @param turnX 俯仰角变化量
 	 */
 	public static void onCameraTurn (double turnY, double turnX) {
+		if (!Config.is_mod_enable) {
+			return;
+		}
 		if (Options.isAdjustingCameraOffset()) {
 			CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		} else {

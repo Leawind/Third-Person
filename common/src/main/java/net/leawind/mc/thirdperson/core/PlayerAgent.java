@@ -35,13 +35,11 @@ public class PlayerAgent {
 	}
 
 	/**
-	 * 插入到 Minecraft.handleKeybinds 方法头部
-	 * <p>
-	 * net.leawind.mc.thirdperson.mixin.MinecraftMixin#handleKeybinds
+	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
 	public static void onBeforeHandleKeybinds () {
 		if (wasInterecting) {
-			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+			if (CameraAgent.isThirdPerson) {
 				turnToCameraHitResult(1);
 				Minecraft.getInstance().gameRenderer.pick(1.0f);
 			}
@@ -151,6 +149,9 @@ public class PlayerAgent {
 		turnTo(playerViewRot, true);
 	}
 
+	/**
+	 * 判断：模组已启用且玩家已初始化
+	 */
 	public static boolean isAvailable () {
 		if (!Config.is_mod_enable) {
 			return false;
