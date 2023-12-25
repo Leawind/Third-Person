@@ -30,15 +30,15 @@ public abstract class CameraMixin {
 								   Entity entity,
 								   boolean detached,
 								   boolean reversedView,
-								   float lerpK,
+								   float partialTick,
 								   CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
 			CameraAgent.isThirdPerson = false;
 			if (l3p$wasFirstPerson && !isFirstPerson) {
-				CameraAgent.onEnterThirdPerson(lerpK);
+				CameraAgent.onEnterThirdPerson(partialTick);
 			} else if (!l3p$wasFirstPerson && isFirstPerson) {
-				CameraAgent.onLeaveThirdPerson(lerpK);
+				CameraAgent.onLeaveThirdPerson(partialTick);
 			}
 			l3p$wasFirstPerson = isFirstPerson;
 		}
@@ -48,6 +48,8 @@ public abstract class CameraMixin {
 	 * 插入到 setup 方法中的第一个 move(DDD)V 调用之前
 	 * <p>
 	 * 调用咱相机代理的 tick 方法，更新相机的朝向、位置等信息
+	 *
+	 * @param entity 相机附着的实体，即玩家正在操控的实体或旁观者正在观察的实体
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE),
 			cancellable=true)
@@ -55,7 +57,7 @@ public abstract class CameraMixin {
 									 Entity entity,
 									 boolean detached,
 									 boolean reversedView,
-									 float lerpK,
+									 float partialTick,
 									 CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			if (reversedView) {
@@ -64,7 +66,7 @@ public abstract class CameraMixin {
 				((CameraInvoker)camera).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());
 			}
 			CameraAgent.isThirdPerson = true;
-			CameraAgent.onRenderTick(level, entity, reversedView, lerpK);
+			CameraAgent.onRenderTick(level, entity, reversedView, partialTick);
 			ci.cancel();
 		}
 	}
