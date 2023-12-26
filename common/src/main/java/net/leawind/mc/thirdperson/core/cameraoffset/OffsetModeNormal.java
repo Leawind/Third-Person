@@ -1,12 +1,9 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-@Environment(EnvType.CLIENT)
 public class OffsetModeNormal extends CameraOffsetMode {
 	public OffsetModeNormal (CameraOffsetProfile profile, double maxDist, float x, float y) {
 		super(profile);
@@ -18,12 +15,12 @@ public class OffsetModeNormal extends CameraOffsetMode {
 		setTopOffsetValue(0.2);
 	}
 
-	public Vec2 getOffsetRatio () {
-		return cameraOffsetProfile.isTop ? new Vec2(0, (float)topOffsetValue): offsetValue;
-	}
-
 	@Override
 	public Vec2 getOffsetRatio (double distance) {
 		return getOffsetRatio();
+	}
+
+	public Vec2 getOffsetRatio () {
+		return cameraOffsetProfile.isTop ? new Vec2(0, (float)topOffsetValue): offsetValue;
 	}
 }

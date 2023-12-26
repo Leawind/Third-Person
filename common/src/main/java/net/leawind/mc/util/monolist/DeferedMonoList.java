@@ -38,21 +38,10 @@ public class DeferedMonoList {
 		return new DeferedMonoList(length, getter);
 	}
 
-	public double get (int i) {
-		return getter.apply(i);
-	}
-
 	public double offset (double value, int offset) {
 		int i = iadsorption(value) + offset;
 		i = Mth.clamp(i, 0, length - 1);
 		return get(i);
-	}
-
-	/**
-	 * 找最近的一个值
-	 */
-	public double adsorption (double value) {
-		return get(iadsorption(value));
 	}
 
 	/**
@@ -83,5 +72,16 @@ public class DeferedMonoList {
 		} else {
 			return iright;
 		}
+	}
+
+	public double get (int i) {
+		return getter.apply(i);
+	}
+
+	/**
+	 * 找最近的一个值
+	 */
+	public double adsorption (double value) {
+		return get(iadsorption(value));
 	}
 }

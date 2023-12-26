@@ -4,8 +4,6 @@ package net.leawind.mc.thirdperson;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.CrosshairRenderer;
@@ -21,7 +19,6 @@ import net.minecraft.world.phys.Vec2;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
-@Environment(EnvType.CLIENT)
 public class ThirdPersonMod {
 	public static final String MOD_ID = "leawind_third_person";
 	public static final Logger LOGGER = LogUtils.getLogger();
@@ -30,7 +27,6 @@ public class ThirdPersonMod {
 		LOGGER.atLevel(Level.TRACE);
 		ModKeys.register();
 		ModEvents.register();
-		//		LOGGER.warn("Mod {} is Client-Side-Only.", MOD_ID);
 	}
 
 	public static class ModEvents {
@@ -41,6 +37,56 @@ public class ThirdPersonMod {
 			ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 			ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
 			ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
+		}
+
+		public static void onClientStarted (Minecraft minecraft) {
+			UserProfile.loadDefault();
+			try {
+				UserProfile.load();
+			} catch (RuntimeException e) {
+				LOGGER.warn("UserProfile load failed");
+			}
+		}
+
+		public static void onRenderHud (GuiGraphics graphics, float tickDelta) {
+			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+				CrosshairRenderer.render(graphics);
+			}
+		}
+
+		/**
+		 * 当玩家死亡后重生或加入新的维度时触发
+		 */
+		public static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
+			onPlayerReset(newPlayer);
+			LOGGER.info("on Client player respawn");
+		}
+
+		public static void onClientPlayerJoin (LocalPlayer player) {
+			onPlayerReset(player);
+			LOGGER.info("on Client player join");
+		}
+
+		/**
+		 * 使用滚轮调整距离
+		 *
+		 * @param minecraft mc
+		 * @param amount    向前滚是+1，向后滚是-1
+		 */
+		private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
+			if (Options.isAdjustingCameraOffset()) {
+				double dist = UserProfile.getCameraOffsetProfile().getMode().maxDistance;
+				dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
+				UserProfile.getCameraOffsetProfile().getMode().setMaxDistance(dist);
+				return EventResult.interruptFalse();
+			} else {
+				return EventResult.pass();
+			}
+		}
+
+		public static void onPlayerReset (LocalPlayer player) {
+			CameraAgent.reset();
+			PlayerAgent.reset();
 		}
 
 		public static void onStartAdjustingCameraOffset () {
@@ -93,56 +139,6 @@ public class ThirdPersonMod {
 				double newXsgn = Math.signum(offsetX);
 				profile.setSide(newXsgn);
 				profile.getMode().setOffsetValue(new Vec2((float)offsetX, (float)offsetY));
-			}
-		}
-
-		/**
-		 * 使用滚轮调整距离
-		 *
-		 * @param minecraft mc
-		 * @param amount    向前滚是+1，向后滚是-1
-		 */
-		private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
-			if (Options.isAdjustingCameraOffset()) {
-				double dist = UserProfile.getCameraOffsetProfile().getMode().maxDistance;
-				dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
-				UserProfile.getCameraOffsetProfile().getMode().setMaxDistance(dist);
-				return EventResult.interruptFalse();
-			} else {
-				return EventResult.pass();
-			}
-		}
-
-		public static void onPlayerReset (LocalPlayer player) {
-			CameraAgent.reset();
-			PlayerAgent.reset();
-		}
-
-		/**
-		 * 当玩家死亡后重生或加入新的维度时触发
-		 */
-		public static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
-			onPlayerReset(newPlayer);
-			LOGGER.info("on Client player respawn");
-		}
-
-		public static void onClientPlayerJoin (LocalPlayer player) {
-			onPlayerReset(player);
-			LOGGER.info("on Client player join");
-		}
-
-		public static void onRenderHud (GuiGraphics graphics, float tickDelta) {
-			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
-				CrosshairRenderer.render(graphics);
-			}
-		}
-
-		public static void onClientStarted (Minecraft minecraft) {
-			UserProfile.loadDefault();
-			try {
-				UserProfile.load();
-			} catch (RuntimeException e) {
-				LOGGER.warn("UserProfile load failed");
 			}
 		}
 	}

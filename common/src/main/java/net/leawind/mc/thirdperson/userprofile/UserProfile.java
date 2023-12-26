@@ -20,17 +20,13 @@ public class UserProfile {
 	@NotNull
 	public static       CameraOffsetProfile[] cameraOffsetProfiles;
 
-	private static Path getProfilePath () {
-		return ExpectPlatform.getConfigDirectory().resolve(String.format("%s.profile.ser", ThirdPersonMod.MOD_ID));
+	@NotNull
+	public static CameraOffsetProfile getCameraOffsetProfile () {
+		return cameraOffsetProfiles[getProfileIndex()];
 	}
 
 	private static int getProfileIndex () {
 		return Config.is_only_one_third_person_mode && Minecraft.getInstance().options.getCameraType().isMirrored() ? 1: 0;
-	}
-
-	@NotNull
-	public static CameraOffsetProfile getCameraOffsetProfile () {
-		return cameraOffsetProfiles[getProfileIndex()];
 	}
 
 	public static void loadDefault () {
@@ -58,6 +54,10 @@ public class UserProfile {
 		} else {
 			LOGGER.info("User Profile is not found at {}", profilePath.toAbsolutePath());
 		}
+	}
+
+	private static Path getProfilePath () {
+		return ExpectPlatform.getConfigDirectory().resolve(String.format("%s.profile.ser", ThirdPersonMod.MOD_ID));
 	}
 
 	/**

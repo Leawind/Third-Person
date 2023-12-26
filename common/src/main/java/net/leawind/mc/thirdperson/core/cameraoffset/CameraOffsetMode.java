@@ -1,14 +1,11 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 import java.io.Serializable;
 
-@Environment(EnvType.CLIENT)
 public abstract class CameraOffsetMode implements Cloneable, Serializable {
 	/**
 	 * 眼睛位置的平滑系数

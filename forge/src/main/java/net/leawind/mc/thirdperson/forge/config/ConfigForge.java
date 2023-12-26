@@ -39,9 +39,9 @@ public class ConfigForge {
 		"camera_ray_trace_length")).defineInRange("aiming_offset_max", 2d, 0.5, 5);
 	public static final  ForgeConfigSpec.BooleanValue IS_ONLY_ONE_THIRD_PERSON_MODE = BUILDER.translation(KEY(
 		"is_only_one_third_person_mode")).define("is_only_one_third_person_mode", true);
+	public static final  ForgeConfigSpec              SPEC                          = BUILDER.build();
 	private static final ForgeConfigSpec.BooleanValue IS_MOD_ENABLE                 = BUILDER.translation(KEY("is_mod_enable"))
 																							 .define("is_mod_enable", true);
-	public static final  ForgeConfigSpec              SPEC                          = BUILDER.build();
 
 	private static String KEY (String name) {
 		return "options.l3p." + name;

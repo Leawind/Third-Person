@@ -14,8 +14,8 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unused")
 public class MonoList {
-	protected double[] list;
 	public    boolean  isReversed = false;
+	protected double[] list;
 
 	/**
 	 * @param length 列表长度
@@ -27,6 +27,11 @@ public class MonoList {
 			list[i] = getter.apply(i);
 		}
 		sort();
+	}
+
+	public MonoList sort () {
+		Arrays.sort(list);
+		return this;
 	}
 
 	/**
@@ -71,15 +76,6 @@ public class MonoList {
 		return true;
 	}
 
-	public MonoList sort () {
-		Arrays.sort(list);
-		return this;
-	}
-
-	protected int sgn () {
-		return isReversed ? -1: 1;
-	}
-
 	/**
 	 * 插入一个值到列表中
 	 */
@@ -91,10 +87,6 @@ public class MonoList {
 		return this;
 	}
 
-	public int length () {
-		return list.length;
-	}
-
 	public double get (int i) {
 		return list[i];
 	}
@@ -103,21 +95,10 @@ public class MonoList {
 		return offset(value, 1);
 	}
 
-	public double getLast (double value) {
-		return offset(value, -1);
-	}
-
 	public double offset (double value, int offset) {
 		int i = iadsorption(value) + offset * sgn();
 		i = Mth.clamp(i, 0, length() - 1);
 		return list[i];
-	}
-
-	/**
-	 * 找最近的一个值
-	 */
-	public double adsorption (double value) {
-		return list[iadsorption(value)];
 	}
 
 	/**
@@ -146,5 +127,24 @@ public class MonoList {
 		} else {
 			return iright;
 		}
+	}
+
+	protected int sgn () {
+		return isReversed ? -1: 1;
+	}
+
+	public int length () {
+		return list.length;
+	}
+
+	public double getLast (double value) {
+		return offset(value, -1);
+	}
+
+	/**
+	 * 找最近的一个值
+	 */
+	public double adsorption (double value) {
+		return list[iadsorption(value)];
 	}
 }

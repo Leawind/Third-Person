@@ -8,28 +8,6 @@ import net.minecraft.world.phys.Vec3;
 @SuppressWarnings("unused")
 public class Vectors {
 	/**
-	 * 弧度制
-	 *
-	 * @param d 方向
-	 * @return [x=俯仰角, y=偏航角]
-	 */
-	public static Vec2 rotationRadianFromDirection (Vec3 d) {
-		d = d.normalize();
-		return new Vec2((float)-Math.asin(d.y), (float)Math.atan2(-d.x, d.z));
-	}
-
-	/**
-	 * 角度制
-	 *
-	 * @param d 方向
-	 * @return [x=俯仰角, y=偏航角]
-	 */
-	public static Vec2 rotationDegreeFromDirection (Vec3 d) {
-		d = d.normalize();
-		return new Vec2((float)(-Math.toDegrees(Math.asin(d.y))), (float)Math.toDegrees(Math.atan2(-d.x, d.z)));
-	}
-
-	/**
 	 * 将一个向量旋转到另一个向量的方向上
 	 *
 	 * @param vec       原向量
@@ -51,6 +29,17 @@ public class Vectors {
 	}
 
 	/**
+	 * 弧度制
+	 *
+	 * @param d 方向
+	 * @return [x=俯仰角, y=偏航角]
+	 */
+	public static Vec2 rotationRadianFromDirection (Vec3 d) {
+		d = d.normalize();
+		return new Vec2((float)-Math.asin(d.y), (float)Math.atan2(-d.x, d.z));
+	}
+
+	/**
 	 * 将一个向量相对原本方向旋转一定弧度
 	 *
 	 * @param vec      原向量
@@ -69,6 +58,17 @@ public class Vectors {
 	 */
 	public static Vec3 rotateDegree (Vec3 vec, float dy, float dx) {
 		return Vec3.directionFromRotation(rotationDegreeFromDirection(vec).add(new Vec2(dx, dy))).scale(vec.length());
+	}
+
+	/**
+	 * 角度制
+	 *
+	 * @param d 方向
+	 * @return [x=俯仰角, y=偏航角]
+	 */
+	public static Vec2 rotationDegreeFromDirection (Vec3 d) {
+		d = d.normalize();
+		return new Vec2((float)(-Math.toDegrees(Math.asin(d.y))), (float)Math.toDegrees(Math.atan2(-d.x, d.z)));
 	}
 
 	/**
