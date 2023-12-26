@@ -1,9 +1,12 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
+@Environment(EnvType.CLIENT)
 public class OffsetModeAiming extends CameraOffsetMode {
 	public OffsetModeAiming (CameraOffsetProfile profile, double maxDist, float x, float y) {
 		this(profile, maxDist, new Vec2(x, y));

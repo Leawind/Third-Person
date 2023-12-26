@@ -1,6 +1,8 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
  * 为了在第三人称视角中能够随时选取准星所指的方块，在这里直接将终点信息更改为相机准星落点。
  */
 @Mixin(net.minecraft.world.entity.Entity.class)
+@Environment(EnvType.CLIENT)
 public class EntityMixin {
 	/**
 	 * 更改 ClipContext 构造函数的第二个实参

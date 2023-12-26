@@ -1,11 +1,14 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(net.minecraft.client.Camera.class)
+@Environment(EnvType.CLIENT)
 public interface CameraInvoker {
 	@Invoker("setPosition")
 	void invokeSetPosition (Vec3 pos);

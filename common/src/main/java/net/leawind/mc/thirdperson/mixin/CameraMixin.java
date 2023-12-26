@@ -1,6 +1,8 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.client.Camera.class)
+@Environment(EnvType.CLIENT)
 public abstract class CameraMixin {
 	@Unique
 	private boolean l3p$wasFirstPerson = true;

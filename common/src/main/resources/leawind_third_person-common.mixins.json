@@ -10,9 +10,12 @@
 		"GuiAccessor",
 		"LocalPlayerMixin",
 		"MinecraftMixin",
-		"MouseHandlerMixin"
+		"MouseHandlerMixin",
+		"EntityMixin",
+		"MixinSerializable$Vec2Serializable",
+		"MixinSerializable$Vec3Serializable"
 	],
-	"mixins": ["EntityMixin", "MixinSerializable$Vec2Serializable", "MixinSerializable$Vec3Serializable"],
+	"mixins": [],
 	"injectors": {
 		"defaultRequire": 1
 	}

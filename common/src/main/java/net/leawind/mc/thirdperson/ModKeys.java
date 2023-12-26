@@ -5,6 +5,8 @@ import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.Options;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
@@ -16,13 +18,14 @@ import org.slf4j.Logger;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@Environment(EnvType.CLIENT)
 public class ModKeys {
 	public static final Logger     LOGGER          = LogUtils.getLogger();
 	public static final String     CATEGORY_KEY    = "key.categories.third_person";
 	/**
 	 * 切换左右
 	 */
-	public static final KeyMapping TOGGLE_SIDE     = new KeyMapping("key.ltpv.toggle_side",
+	public static final KeyMapping TOGGLE_SIDE     = new KeyMapping("key.l3p.toggle_side",
 																	InputConstants.KEY_CAPSLOCK,
 																	CATEGORY_KEY) {
 		private Timer timer = null;
@@ -70,7 +73,7 @@ public class ModKeys {
 	 * <p>
 	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
 	 */
-	public static final KeyMapping ADJUST_POSITION = new KeyMapping("key.ltpv.adjust_position",
+	public static final KeyMapping ADJUST_POSITION = new KeyMapping("key.l3p.adjust_position",
 																	InputConstants.KEY_Z,
 																	CATEGORY_KEY) {
 		@Override
@@ -91,7 +94,7 @@ public class ModKeys {
 	/**
 	 * 切换瞄准状态
 	 */
-	public static final KeyMapping TOGGLE_AIMING   = new KeyMapping("key.ltpv.toggle_aiming",
+	public static final KeyMapping TOGGLE_AIMING   = new KeyMapping("key.l3p.toggle_aiming",
 																	InputConstants.UNKNOWN.getValue(),
 																	CATEGORY_KEY) {
 		@Override
@@ -106,7 +109,7 @@ public class ModKeys {
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final KeyMapping FORCE_AIMING    = new KeyMapping("key.ltpv.force_aiming",
+	public static final KeyMapping FORCE_AIMING    = new KeyMapping("key.l3p.force_aiming",
 																	InputConstants.UNKNOWN.getValue(),
 																	CATEGORY_KEY);
 

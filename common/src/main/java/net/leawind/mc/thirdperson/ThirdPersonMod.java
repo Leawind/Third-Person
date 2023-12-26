@@ -4,6 +4,8 @@ package net.leawind.mc.thirdperson;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.CrosshairRenderer;
@@ -19,6 +21,7 @@ import net.minecraft.world.phys.Vec2;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
+@Environment(EnvType.CLIENT)
 public class ThirdPersonMod {
 	public static final String MOD_ID = "leawind_third_person";
 	public static final Logger LOGGER = LogUtils.getLogger();
@@ -27,6 +30,7 @@ public class ThirdPersonMod {
 		LOGGER.atLevel(Level.TRACE);
 		ModKeys.register();
 		ModEvents.register();
+		//		LOGGER.warn("Mod {} is Client-Side-Only.", MOD_ID);
 	}
 
 	public static class ModEvents {

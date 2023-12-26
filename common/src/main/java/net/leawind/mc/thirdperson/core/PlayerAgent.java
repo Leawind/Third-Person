@@ -2,6 +2,8 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.logging.LogUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdperson.userprofile.UserProfile;
 import net.leawind.mc.util.Vectors;
@@ -18,6 +20,7 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+@Environment(EnvType.CLIENT)
 public class PlayerAgent {
 	public static final Logger        LOGGER            = LogUtils.getLogger();
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();

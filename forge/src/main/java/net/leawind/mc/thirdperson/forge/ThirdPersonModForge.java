@@ -5,6 +5,8 @@ import com.mojang.logging.LogUtils;
 import dev.architectury.platform.forge.EventBuses;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.forge.config.ConfigForge;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -16,9 +18,10 @@ public class ThirdPersonModForge {
 	public static final Logger LOGGER = LogUtils.getLogger();
 
 	public ThirdPersonModForge () {
-		EventBuses.registerModEventBus(ThirdPersonMod.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-		// Submit our event bus to let architectury register our content on the right time
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigForge.SPEC);
-		ThirdPersonMod.init();
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			EventBuses.registerModEventBus(ThirdPersonMod.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
+			ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigForge.SPEC);
+			ThirdPersonMod.init();
+		});
 	}
 }

@@ -3,12 +3,15 @@ package net.leawind.mc.thirdperson.core;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.mixin.GuiAccessor;
 import net.minecraft.client.gui.GuiGraphics;
 
 /**
  * 绘制准星
  */
+@Environment(EnvType.CLIENT)
 public class CrosshairRenderer {
 	public static void render (GuiGraphics graphics) {
 		final int crosshairSize = 15;

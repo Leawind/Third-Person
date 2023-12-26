@@ -11,9 +11,9 @@
   },
   "license": "${mod_license}",
   "icon": "${mod_icon}",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "${mod_group_id}.fabric.ThirdPersonModFabric"
     ]
   },
