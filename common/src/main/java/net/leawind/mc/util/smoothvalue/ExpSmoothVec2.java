@@ -21,14 +21,14 @@ public class ExpSmoothVec2 extends ExpSmoothValue<Vec2> {
 		return this;
 	}
 
-	public ExpSmoothVec2 setSmoothFactor (float x, float y) {
-		this.smoothFactor = new Vec2(x, y);
-		return this;
-	}
-
 	@Override
 	public ExpSmoothVec2 setSmoothFactor (double decreaseSpeed) {
 		return setSmoothFactor((float)decreaseSpeed, (float)decreaseSpeed);
+	}
+
+	public ExpSmoothVec2 setSmoothFactor (float x, float y) {
+		this.smoothFactor = new Vec2(x, y);
+		return this;
 	}
 
 	@Override

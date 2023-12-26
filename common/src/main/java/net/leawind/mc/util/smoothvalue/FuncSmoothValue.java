@@ -19,10 +19,6 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
-	final public T get () {
-		return value;
-	}
-
 	final public FuncSmoothValue<T> setStartValue (T startValue) {
 		this.startValue = startValue;
 		return this;
@@ -33,14 +29,14 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
+	final public FuncSmoothValue<T> start (T startValue) {
+		return start(startValue, Blaze3D.getTime());
+	}
+
 	final public FuncSmoothValue<T> start (T startValue, double startTime) {
 		this.startValue = startValue;
 		this.startTime  = startTime;
 		return this;
-	}
-
-	final public FuncSmoothValue<T> start (T startValue) {
-		return start(startValue, Blaze3D.getTime());
 	}
 
 	final public FuncSmoothValue<T> setTarget (T target) {
@@ -48,9 +44,13 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
+	abstract public FuncSmoothValue<T> update (double now);
+
+	final public T get () {
+		return value;
+	}
+
 	final public FuncSmoothValue<T> update () {
 		return update(Blaze3D.getTime());
 	}
-
-	abstract public FuncSmoothValue<T> update (double now);
 }

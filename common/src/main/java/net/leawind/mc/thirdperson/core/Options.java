@@ -1,14 +1,11 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.ModKeys;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Environment(EnvType.CLIENT)
 public class Options {
 	public static Map<Object, Object> debug_map        = new HashMap<>();
 	/**

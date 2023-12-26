@@ -2,8 +2,6 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.logging.LogUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdperson.userprofile.UserProfile;
 import net.leawind.mc.util.Vectors;
@@ -20,7 +18,6 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-@Environment(EnvType.CLIENT)
 public class PlayerAgent {
 	public static final Logger        LOGGER            = LogUtils.getLogger();
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
@@ -44,6 +41,70 @@ public class PlayerAgent {
 				Minecraft.getInstance().gameRenderer.pick(1.0f);
 			}
 		}
+	}
+
+	/**
+	 * 让玩家朝向相机的落点
+	 */
+	public static void turnToCameraHitResult (float partialTick) {
+		// 计算相机视线落点
+		HitResult hitResult         = Minecraft.getInstance().hitResult;
+		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
+		if (cameraHitPosition == null) {
+			turnWithCamera(true);
+		} else {
+			// 让玩家朝向该坐标
+			turnTo(cameraHitPosition, partialTick);
+		}
+	}
+
+	/**
+	 * 让玩家朝向与相机相同
+	 */
+	public static void turnWithCamera (boolean isInstantly) {
+		turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
+	}
+
+	/**
+	 * 让玩家朝向世界中的特定点
+	 *
+	 * @param target 目标位置
+	 */
+	public static void turnTo (@NotNull Vec3 target, float partialTick) {
+		Vec3 playerViewVector = CameraAgent.playerEntity.getEyePosition(partialTick).vectorTo(target);
+		Vec2 playerViewRot    = Vectors.rotationDegreeFromDirection(playerViewVector);
+		turnTo(playerViewRot, true);
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param ry          偏航角
+	 * @param rx          俯仰角
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnTo (float ry, float rx, boolean isInstantly) {
+		if (isInstantly) {
+			CameraAgent.playerEntity.setYRot(ry);
+			CameraAgent.playerEntity.setXRot(rx);
+		} else {
+			float playerY = CameraAgent.playerEntity.getYRot();
+			float dy      = ((ry - playerY) % 360 + 360) % 360;
+			if (dy > 180) {
+				dy -= 360;
+			}
+			CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getXRot());
+		}
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param rot         朝向
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnTo (Vec2 rot, boolean isInstantly) {
+		turnTo(rot.y, rot.x, isInstantly);
 	}
 
 	/**
@@ -84,70 +145,6 @@ public class PlayerAgent {
 															   ((LivingEntity)CameraAgent.attachedEntity).isFallFlying())) {
 			turnWithCamera(true);
 		}
-	}
-
-	/**
-	 * 让玩家朝向相机的落点
-	 */
-	public static void turnToCameraHitResult (float partialTick) {
-		// 计算相机视线落点
-		HitResult hitResult         = Minecraft.getInstance().hitResult;
-		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
-		if (cameraHitPosition == null) {
-			turnWithCamera(true);
-		} else {
-			// 让玩家朝向该坐标
-			turnTo(cameraHitPosition, partialTick);
-		}
-	}
-
-	/**
-	 * 让玩家朝向与相机相同
-	 */
-	public static void turnWithCamera (boolean isInstantly) {
-		turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
-	}
-
-	/**
-	 * 设置玩家朝向
-	 *
-	 * @param rot         朝向
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnTo (Vec2 rot, boolean isInstantly) {
-		turnTo(rot.y, rot.x, isInstantly);
-	}
-
-	/**
-	 * 设置玩家朝向
-	 *
-	 * @param ry          偏航角
-	 * @param rx          俯仰角
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnTo (float ry, float rx, boolean isInstantly) {
-		if (isInstantly) {
-			CameraAgent.playerEntity.setYRot(ry);
-			CameraAgent.playerEntity.setXRot(rx);
-		} else {
-			float playerY = CameraAgent.playerEntity.getYRot();
-			float dy      = ((ry - playerY) % 360 + 360) % 360;
-			if (dy > 180) {
-				dy -= 360;
-			}
-			CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getXRot());
-		}
-	}
-
-	/**
-	 * 让玩家朝向世界中的特定点
-	 *
-	 * @param target 目标位置
-	 */
-	public static void turnTo (@NotNull Vec3 target, float partialTick) {
-		Vec3 playerViewVector = CameraAgent.playerEntity.getEyePosition(partialTick).vectorTo(target);
-		Vec2 playerViewRot    = Vectors.rotationDegreeFromDirection(playerViewVector);
-		turnTo(playerViewRot, true);
 	}
 
 	public static boolean isAvailable () {

@@ -5,8 +5,6 @@ import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.Options;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
@@ -18,7 +16,6 @@ import org.slf4j.Logger;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Environment(EnvType.CLIENT)
 public class ModKeys {
 	public static final Logger     LOGGER          = LogUtils.getLogger();
 	public static final String     CATEGORY_KEY    = "key.categories.third_person";

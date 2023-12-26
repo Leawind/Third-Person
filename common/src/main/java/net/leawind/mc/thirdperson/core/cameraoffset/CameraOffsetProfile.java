@@ -2,8 +2,6 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
 import com.mojang.logging.LogUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.world.phys.Vec2;
 import org.slf4j.Logger;
 
@@ -16,7 +14,6 @@ import java.io.Serializable;
  * <p>
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
-@Environment(EnvType.CLIENT)
 public class CameraOffsetProfile implements Cloneable, Serializable {
 	public static final Logger              LOGGER          = LogUtils.getLogger();
 	public static final CameraOffsetProfile DEFAULT_CLOSER  = CameraOffsetProfile.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
@@ -55,6 +52,10 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 		return isAiming ? normalMode: aimingMode;
 	}
 
+	public void setSide (double side) {
+		setSide(side > 0);
+	}
+
 	/**
 	 * 设置相机相对于玩家的方向
 	 * <p>
@@ -64,10 +65,6 @@ public class CameraOffsetProfile implements Cloneable, Serializable {
 	public void setSide (boolean isLeft) {
 		aimingMode.setSide(isLeft);
 		normalMode.setSide(isLeft);
-	}
-
-	public void setSide (double side) {
-		setSide(side > 0);
 	}
 
 	public void nextSide () {

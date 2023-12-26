@@ -11,14 +11,14 @@ public class ExpSmoothVec3 extends ExpSmoothValue<Vec3> {
 		smoothFactor = Vec3.ZERO;
 	}
 
-	private ExpSmoothVec3 setSmoothFactor (double x, double y, double z) {
-		this.smoothFactor = new Vec3(x, y, z);
-		return this;
-	}
-
 	@Override
 	public ExpSmoothVec3 setSmoothFactor (double decrease) {
 		return setSmoothFactor(decrease, decrease, decrease);
+	}
+
+	private ExpSmoothVec3 setSmoothFactor (double x, double y, double z) {
+		this.smoothFactor = new Vec3(x, y, z);
+		return this;
 	}
 
 	@Override

@@ -16,14 +16,14 @@ public class FuncSmoothDouble extends FuncSmoothValue<Double> {
 		return this;
 	}
 
+	public FuncSmoothDouble start (double startValue) {
+		return start(startValue, Blaze3D.getTime());
+	}
+
 	public FuncSmoothDouble start (double startValue, double startTime) {
 		this.startValue = startValue;
 		this.startTime  = startTime;
 		return this;
-	}
-
-	public FuncSmoothDouble start (double startValue) {
-		return start(startValue, Blaze3D.getTime());
 	}
 
 	public FuncSmoothDouble setTarget (double target) {

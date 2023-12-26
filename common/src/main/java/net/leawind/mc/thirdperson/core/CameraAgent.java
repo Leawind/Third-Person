@@ -3,8 +3,6 @@ package net.leawind.mc.thirdperson.core;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
@@ -26,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-@Environment(EnvType.CLIENT)
 public class CameraAgent {
 	public static final Logger          LOGGER                = LogUtils.getLogger();
 	/**
@@ -92,20 +89,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 重置玩家对象，重置相机的位置、角度等参数
-	 */
-	public static void reset () {
-		Minecraft mc = Minecraft.getInstance();
-		assert mc.player != null;
-		attachedEntity = playerEntity = mc.player;
-		camera         = mc.gameRenderer.getMainCamera();
-		smoothOffsetRatio.setValue(0, 0);
-		smoothVirtualDistance.setValue(0);
-		relativeRotation = new Vec2(-attachedEntity.getXRot(), attachedEntity.getYRot() - 180);
-		LOGGER.info("Reset CameraAgent");
-	}
-
-	/**
 	 * 鼠标移动导致的相机旋转
 	 *
 	 * @param turnY 偏航角变化量
@@ -139,6 +122,20 @@ public class CameraAgent {
 		Options.isToggleToAiming = false;
 		lastTickTime             = Blaze3D.getTime();
 		LOGGER.info("Enter third person, partialTick={}", partialTick);
+	}
+
+	/**
+	 * 重置玩家对象，重置相机的位置、角度等参数
+	 */
+	public static void reset () {
+		Minecraft mc = Minecraft.getInstance();
+		assert mc.player != null;
+		attachedEntity = playerEntity = mc.player;
+		camera         = mc.gameRenderer.getMainCamera();
+		smoothOffsetRatio.setValue(0, 0);
+		smoothVirtualDistance.setValue(0);
+		relativeRotation = new Vec2(-attachedEntity.getXRot(), attachedEntity.getYRot() - 180);
+		LOGGER.info("Reset CameraAgent");
 	}
 
 	/**
@@ -224,15 +221,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 将假相机的朝向和位置应用到真相机上
-	 */
-	private static void applyCamera () {
-		// 应用到真相机
-		((CameraInvoker)camera).invokeSetRotation(fakeCamera.getYRot(), fakeCamera.getXRot());
-		((CameraInvoker)camera).invokeSetPosition(fakeCamera.getPosition());
-	}
-
-	/**
 	 * 为防止穿墙，重新计算 smoothVirtualDistance 的值
 	 */
 	public static void preventThroughWall () {
@@ -262,6 +250,20 @@ public class CameraAgent {
 		}
 		smoothVirtualDistance.setValue(smoothVirtualDistance.get() * minDistance / initDistance);
 		smoothVirtualDistance.setTarget(smoothVirtualDistance.get() * minDistance / initDistance);
+	}
+
+	/**
+	 * 将假相机的朝向和位置应用到真相机上
+	 */
+	private static void applyCamera () {
+		// 应用到真相机
+		((CameraInvoker)camera).invokeSetRotation(fakeCamera.getYRot(), fakeCamera.getXRot());
+		((CameraInvoker)camera).invokeSetPosition(fakeCamera.getPosition());
+	}
+
+	public static Vec3 getVirtualPosition () {
+		return PlayerAgent.smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation)
+														   .scale(smoothVirtualDistance.get()));
 	}
 
 	public static Vec2 calculateRotation () {
@@ -294,11 +296,6 @@ public class CameraAgent {
 		//						(float)(Math.tan(direction.x) * nearPlaneDistance / height + 0.5));
 	}
 
-	public static Vec3 getVirtualPosition () {
-		return PlayerAgent.smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation)
-														   .scale(smoothVirtualDistance.get()));
-	}
-
 	/**
 	 * 获取相机视线落点坐标
 	 */
@@ -314,10 +311,6 @@ public class CameraAgent {
 	public static @Nullable Vec3 getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
 		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
-	}
-
-	public static @NotNull HitResult pick () {
-		return pick(smoothVirtualDistance.get() + Config.camera_ray_trace_length);
 	}
 
 	public static @NotNull HitResult pick (double pickRange) {
@@ -347,5 +340,9 @@ public class CameraAgent {
 														   ClipContext.Block.OUTLINE,
 														   ClipContext.Fluid.NONE,
 														   attachedEntity));
+	}
+
+	public static @NotNull HitResult pick () {
+		return pick(smoothVirtualDistance.get() + Config.camera_ray_trace_length);
 	}
 }

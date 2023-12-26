@@ -19,8 +19,8 @@ subprojects {
 	}
 }
 // 生成文件名格式
-def archiveFileNameOfPlatform(String platform) {
-	switch (platform) {
+def archiveFileNameOfPlatform(String platform){
+	switch(platform) {
 		case "forge":
 			return "$mod_name-v$mod_version-mc$minecraft_version-forge";
 		case "fabric":
@@ -54,5 +54,9 @@ allprojects {
 	}
 	java {
 		withSourcesJar()
+	}
+	tasks.withType(Jar).configureEach {
+		setDuplicatesStrategy DuplicatesStrategy.INCLUDE
+		from rootProject.file("LICENSE.txt")
 	}
 }
