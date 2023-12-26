@@ -26,6 +26,8 @@ dependencies {
 	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
 		transitive false
 	}
+	// YACL
+	modImplementation "dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}"
 }
 processResources {
 	inputs.property "version", project.version

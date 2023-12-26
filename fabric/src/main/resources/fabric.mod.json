@@ -24,6 +24,7 @@
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.20.1",
-    "architectury": ">=9.1.12"
+    "architectury": ">=9.1.12",
+    "yet_another_config_lib_v3": ">=${yacl_version}"
   }
 }
