@@ -6,8 +6,7 @@
 	"client": [
 		"MouseHandlerMixin"
 	],
-	"mixins": [
-	],
+	"mixins": [],
 	"injectors": {
 		"defaultRequire": 1
 	}

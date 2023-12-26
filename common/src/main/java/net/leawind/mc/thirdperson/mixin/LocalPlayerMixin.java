@@ -1,6 +1,8 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * 第三人称视角下，按下方向键时，玩家的移动方向可能需要和默认行为不一样。
  */
 @Mixin(net.minecraft.client.player.LocalPlayer.class)
+@Environment(EnvType.CLIENT)
 public class LocalPlayerMixin {
 	@Inject(method="serverAiStep", at=@At(value="TAIL"))
 	public void serverAiStep_inject_tail (CallbackInfo ci) {

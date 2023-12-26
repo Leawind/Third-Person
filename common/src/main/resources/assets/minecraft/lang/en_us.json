@@ -1,13 +1,13 @@
 {
 	"key.categories.third_person": "Leawind's Third Person",
-	"key.ltpv.toggle_side": "Toggle Camera to the Other Side",
-	"key.ltpv.adjust_position": "Hold to Adjust Camera Position",
-	"key.ltpv.force_aiming": "Hold to Force Aim",
-	"key.ltpv.toggle_aiming": "Toggle Aiming",
-	"options.ltpv.is_mod_enable": "Is this mod enabled",
-	"options.ltpv.available_distance_count": "Number of Available Distances",
-	"options.ltpv.distance_min": "Minimum Adjustable Distance Range",
-	"options.ltpv.distance_max": "Maximum Adjustable Distance Range",
-	"options.ltpv.camera_ray_trace_length": "Camera ray trace length",
-	"options.ltpv.aiming_offset_max": "Aiming offset max"
+	"key.l3p.toggle_side": "Toggle Camera to the Other Side",
+	"key.l3p.adjust_position": "Hold to Adjust Camera Position",
+	"key.l3p.force_aiming": "Hold to Force Aim",
+	"key.l3p.toggle_aiming": "Toggle Aiming",
+	"options.l3p.is_mod_enable": "Is this mod enabled",
+	"options.l3p.available_distance_count": "Number of Available Distances",
+	"options.l3p.distance_min": "Minimum Adjustable Distance Range",
+	"options.l3p.distance_max": "Maximum Adjustable Distance Range",
+	"options.l3p.camera_ray_trace_length": "Camera ray trace length",
+	"options.l3p.aiming_offset_max": "Aiming offset max"
 }

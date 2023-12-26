@@ -1,6 +1,8 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.Options;
@@ -11,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.client.MouseHandler.class)
+@Environment(EnvType.CLIENT)
 public class MouseHandlerMixin {
 	@Shadow
 	private double accumulatedDX;

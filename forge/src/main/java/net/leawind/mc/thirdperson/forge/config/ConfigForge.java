@@ -41,12 +41,10 @@ public class ConfigForge {
 		"is_only_one_third_person_mode")).define("is_only_one_third_person_mode", true);
 	private static final ForgeConfigSpec.BooleanValue IS_MOD_ENABLE                 = BUILDER.translation(KEY("is_mod_enable"))
 																							 .define("is_mod_enable", true);
-
-
 	public static final  ForgeConfigSpec              SPEC                          = BUILDER.build();
 
 	private static String KEY (String name) {
-		return "options.ltpv." + name;
+		return "options.l3p." + name;
 	}
 
 	@SubscribeEvent

@@ -3,6 +3,8 @@ package net.leawind.mc.thirdperson.core;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+@Environment(EnvType.CLIENT)
 public class CameraAgent {
 	public static final Logger          LOGGER                = LogUtils.getLogger();
 	/**
