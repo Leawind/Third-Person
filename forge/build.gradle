@@ -30,6 +30,8 @@ dependencies {
 	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
 		transitive = false
 	}
+	// YACL
+	modImplementation "dev.isxander.yacl:yet-another-config-lib-forge:${yacl_mc_version}"
 }
 processResources {
 	inputs.property "version", project.version
