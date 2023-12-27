@@ -9,5 +9,7 @@
 	"options.l3p.distance_min": "距离可调范围的下限",
 	"options.l3p.distance_max": "距离可调范围的上限",
 	"options.l3p.camera_ray_trace_length": "相机视线探测距离",
-	"options.l3p.aiming_offset_max": "瞄准偏移量的可调最大值"
+	"options.l3p.aiming_offset_max": "瞄准偏移量的可调最大值",
+	"options.l3p.projectile_auto_aim": "射击弹射物时自动瞄准",
+	"l3p.placeholder": ""
 }

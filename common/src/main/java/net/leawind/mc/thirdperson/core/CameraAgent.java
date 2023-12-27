@@ -271,32 +271,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * <p>
-	 * 世界坐标点 pos 在画面中的坐标
-	 * <p>
-	 * x, y \in [0,1]
-	 *
-	 * @param pos (x,y)
-	 */
-	public static Vec2 toScreenCoord (Vec3 pos) {
-		Minecraft mc                 = Minecraft.getInstance();
-		double    aspectRatio        = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
-		double    verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
-		double    height             = Math.tan(verticalRadianHalf) * nearPlaneDistance * 2;
-		double    width              = aspectRatio * height * 2;
-		Vec3      toTarget           = fakeCamera.getPosition().vectorTo(pos);
-		double    targetPlaneDist    = fakeCamera.getLookVector().dot(toTarget.toVector3f());
-		Vec2 sc = new Vec2((float)(0.5 - fakeCamera.getLeftVector().dot(toTarget.toVector3f()) /
-										 (targetPlaneDist / nearPlaneDistance * width)),
-						   (float)(0.5 - fakeCamera.getUpVector().dot(toTarget.toVector3f()) /
-										 (targetPlaneDist / nearPlaneDistance * height)));
-		return sc;
-		//		Vec2 direction = Vectors.rotationRadianFromDirection(toTarget).add(calculateRotation().negated());
-		//		return new Vec2((float)(Math.tan(direction.y) * nearPlaneDistance / width + 0.5),
-		//						(float)(Math.tan(direction.x) * nearPlaneDistance / height + 0.5));
-	}
-
-	/**
 	 * 获取相机视线落点坐标
 	 */
 	public static @Nullable Vec3 getPickPosition () {
