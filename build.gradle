@@ -18,17 +18,6 @@ subprojects {
 		// mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
 	}
 }
-// 生成文件名格式
-def archiveFileNameOfPlatform(String platform){
-	switch(platform) {
-		case "forge":
-			return "$mod_name-v$mod_version-mc$minecraft_version-forge";
-		case "fabric":
-			return "$mod_name-v$mod_version-mc$minecraft_version-fabric";
-		default:
-			throw new IllegalArgumentException("Unknown platform: $platform");
-	}
-}
 
 allprojects {
 	apply plugin: "java"
@@ -64,5 +53,17 @@ allprojects {
 	tasks.withType(Jar).configureEach {
 		setDuplicatesStrategy DuplicatesStrategy.INCLUDE
 		from rootProject.file("LICENSE.txt")
+	}
+}
+
+// 生成文件名格式
+def archiveFileNameOfPlatform(String platform){
+	switch(platform) {
+		case "forge":
+			return "$mod_name-v$mod_version-mc$minecraft_version-forge";
+		case "fabric":
+			return "$mod_name-v$mod_version-mc$minecraft_version-fabric";
+		default:
+			throw new IllegalArgumentException("Unknown platform: $platform");
 	}
 }

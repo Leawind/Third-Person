@@ -80,10 +80,10 @@ public class ModKeys {
 			if (CameraAgent.isAvailable()) {
 				if (!wasDown && down) {
 					// key down
-					ThirdPersonMod.ModEvents.onStartAdjustingCameraOffset();
+					ModEvents.onStartAdjustingCameraOffset();
 				} else if (wasDown && !down) {
 					// key up
-					ThirdPersonMod.ModEvents.onStopAdjustingCameraOffset();
+					ModEvents.onStopAdjustingCameraOffset();
 				}
 			}
 		}

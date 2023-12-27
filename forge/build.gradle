@@ -32,6 +32,7 @@ dependencies {
 	}
 	// YACL
 	modImplementation "dev.isxander.yacl:yet-another-config-lib-forge:${yacl_mc_version}"
+	modLocalRuntime "dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}"
 }
 processResources {
 	inputs.property "version", project.version

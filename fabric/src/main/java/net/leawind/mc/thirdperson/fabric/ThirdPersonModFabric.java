@@ -12,8 +12,6 @@ public class ThirdPersonModFabric implements ClientModInitializer {
 
 	public void onInitializeClient () {
 		ThirdPersonMod.init();
-		// TODO
-		LOGGER.warn("Fabric config not implemented yet!");
 		Config.onLoad(null);
 	}
 }

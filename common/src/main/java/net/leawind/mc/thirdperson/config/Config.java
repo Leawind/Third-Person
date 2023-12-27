@@ -2,8 +2,12 @@ package net.leawind.mc.thirdperson.config;
 
 
 import com.mojang.logging.LogUtils;
+import net.leawind.mc.thirdperson.ExpectPlatform;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.util.monolist.MonoList;
 import org.slf4j.Logger;
+
+import java.nio.file.Path;
 
 /**
  * 配置项
@@ -12,7 +16,10 @@ import org.slf4j.Logger;
  */
 public class Config {
 	public static final Logger   LOGGER                        = LogUtils.getLogger();
-	//	Configurations
+	//	配置文件路径
+	public static final Path     CONFIG_FILE_PATH              = ExpectPlatform.getConfigDirectory().resolve(
+		ThirdPersonMod.MOD_ID + ".json5");
+	//	配置项们
 	public static       boolean  isLoaded                      = false;
 	public static       boolean  is_mod_enable                 = true;
 	public static       int      available_distance_count      = 16;
@@ -23,6 +30,13 @@ public class Config {
 	public static       boolean  is_only_one_third_person_mode = true;
 	// 根据上面的配置选项生成的配置（在onLoad中更新）
 	public static       MonoList distanceMonoList;
+
+	/**
+	 * 初始化配置
+	 */
+	public static void init () {
+		onLoad("No event");
+	}
 
 	/**
 	 * 加载配置完成时调用
@@ -39,7 +53,12 @@ public class Config {
 									   Math::sqrt);
 		isLoaded         = true;
 		LOGGER.info("Config is loaded, event: {}", event);
-		//TODO Force set config
-		//		is_mod_enable = false;
+	}
+
+	/**
+	 * 根据配置项的名称获取配置键
+	 */
+	private static String getKey (String name) {
+		return "options." + ThirdPersonMod.MOD_ID + "." + name;
 	}
 }

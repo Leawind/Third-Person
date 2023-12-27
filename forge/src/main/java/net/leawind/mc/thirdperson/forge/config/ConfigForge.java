@@ -2,15 +2,18 @@ package net.leawind.mc.thirdperson.forge.config;
 
 
 import com.mojang.logging.LogUtils;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.slf4j.Logger;
 
-@Mod.EventBusSubscriber(modid=ThirdPersonMod.MOD_ID, bus=Mod.EventBusSubscriber.Bus.MOD)
+/**
+ * TODO
+ * <p>
+ * Since I'm using YACL, this forge config is disabled.
+ */
+//@Mod.EventBusSubscriber(modid=ThirdPersonMod.MOD_ID, bus=Mod.EventBusSubscriber.Bus.MOD)
+@Deprecated
 public class ConfigForge {
 	public static final  Logger                       LOGGER                        = LogUtils.getLogger();
 	private static final ForgeConfigSpec.Builder      BUILDER                       = new ForgeConfigSpec.Builder();
@@ -47,7 +50,7 @@ public class ConfigForge {
 		return "options.l3p." + name;
 	}
 
-	@SubscribeEvent
+	//	@SubscribeEvent
 	public static void onLoad (final ModConfigEvent event) {
 		Config.is_mod_enable                 = IS_MOD_ENABLE.get();
 		Config.available_distance_count      = AVAILABLE_DISTANCE_COUNT.get();
