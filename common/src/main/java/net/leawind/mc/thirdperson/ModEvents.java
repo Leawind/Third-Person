@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.*;
 import net.leawind.mc.thirdperson.config.Config;
@@ -11,7 +12,6 @@ import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
 import net.leawind.mc.thirdperson.userprofile.UserProfile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
@@ -35,9 +35,9 @@ public class ModEvents {
 		}
 	}
 
-	public static void onRenderHud (GuiGraphics graphics, float tickDelta) {
+	public static void onRenderHud (PoseStack matrices, float tickDelta) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
-			CrosshairRenderer.render(graphics);
+			CrosshairRenderer.render(matrices);
 		}
 	}
 
