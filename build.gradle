@@ -58,9 +58,9 @@ allprojects {
 def archiveFileNameOfPlatform(String platform){
 	switch(platform) {
 		case "forge":
-			return "$mod_name-v$mod_version-mc$minecraft_version-forge";
+			return "${mod_id}-v${mod_version}-mc${minecraft_version}-forge";
 		case "fabric":
-			return "$mod_name-v$mod_version-mc$minecraft_version-fabric";
+			return "${mod_id}-v${mod_version}-mc${minecraft_version}-fabric";
 		default:
 			throw new IllegalArgumentException("Unknown platform: $platform");
 	}
