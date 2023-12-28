@@ -307,11 +307,11 @@ public class CameraAgent {
 		Vec3 viewStart  = camera.getPosition();
 		Vec3 viewVector = new Vec3(camera.getLookVector());
 		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
-		return attachedEntity.level().clip(new ClipContext(viewStart,
-														   viewEnd,
-														   ClipContext.Block.OUTLINE,
-														   ClipContext.Fluid.NONE,
-														   attachedEntity));
+		return attachedEntity.level.clip(new ClipContext(viewStart,
+														 viewEnd,
+														 ClipContext.Block.OUTLINE,
+														 ClipContext.Fluid.NONE,
+														 attachedEntity));
 	}
 
 	public static @NotNull HitResult pick () {
