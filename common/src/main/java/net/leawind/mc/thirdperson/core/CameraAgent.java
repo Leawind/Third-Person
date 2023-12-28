@@ -158,11 +158,9 @@ public class CameraAgent {
 		CameraAgent.attachedEntity = attachedEntity;
 		CameraAgent.level          = level;
 		isAiming                   = PlayerAgent.isAiming();
-		if (Config.is_only_one_third_person_mode) {
-			Minecraft mc = Minecraft.getInstance();
-			if (mc.options.getCameraType().isMirrored()) {
-				mc.options.setCameraType(CameraType.FIRST_PERSON);
-			}
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.options.getCameraType().isMirrored()) {
+			mc.options.setCameraType(CameraType.FIRST_PERSON);
 		}
 		// 时间
 		double now           = Blaze3D.getTime();

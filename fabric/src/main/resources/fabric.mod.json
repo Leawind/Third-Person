@@ -1,30 +1,46 @@
 {
-  "schemaVersion": 1,
-  "id": "${mod_id}",
-  "version": "${mod_version}",
-  "name": "${mod_name}",
-  "description": "${mod_description}",
-  "authors": ["${mod_authors}"],
-  "contact": {
-    "homepage": "${mod_url_home}",
-    "sources": "${mod_url_issue}"
-  },
-  "license": "${mod_license}",
-  "icon": "${mod_icon}",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "${mod_group_id}.fabric.ThirdPersonModFabric"
-    ]
-  },
-  "mixins": [
-    "${mod_id}.mixins.json",
-    "${mod_id}-common.mixins.json"
-  ],
-  "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.20.1",
-    "architectury": ">=9.1.12",
-    "yet_another_config_lib_v3": ">=${yacl_version}"
-  }
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${mod_version}",
+	"name": "${mod_name}",
+	"description": "${mod_description}",
+	"authors": [
+		"${mod_authors}"
+	],
+	"contact": {
+		"homepage": "${mod_url_home}",
+		"issues": "${mod_url_issue}",
+		"sources": "${mod_url_home}"
+	},
+	"license": "${mod_license}",
+	"icon": "${mod_icon}",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"${mod_group_id}.fabric.ThirdPersonModFabric"
+		],
+		"modmenu": [
+			"${mod_group_id}.fabric.config.ModmenuEntry"
+		]
+	},
+	"mixins": [
+		"${mod_id}.mixins.json",
+		"${mod_id}-common.mixins.json"
+	],
+	"depends": {
+		"fabric": "*",
+		"minecraft": ">=1.20.1",
+		"architectury": ">=9.1.12",
+		"yet_another_config_lib_v3": ">=${yacl_version}"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"CurseForge": "https://www.curseforge.com/minecraft/mc-mods/leawind-third-person",
+				"Bilibili": "https://www.bilibili.com/video/BV1Fg4y1R7ow",
+				"爱发电": "https://afdian.net/a/Leawind"
+			}
+		},
+		"modmenu:clientsideOnly": true
+	}
 }

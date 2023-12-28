@@ -26,7 +26,7 @@ public class UserProfile {
 	}
 
 	private static int getProfileIndex () {
-		return Config.is_only_one_third_person_mode && Minecraft.getInstance().options.getCameraType().isMirrored() ? 1: 0;
+		return Minecraft.getInstance().options.getCameraType().isMirrored() ? 1: 0;
 	}
 
 	public static void loadDefault () {
