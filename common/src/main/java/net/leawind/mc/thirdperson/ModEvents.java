@@ -1,12 +1,13 @@
 package net.leawind.mc.thirdperson;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.EventResult;
-import dev.architectury.event.events.client.*;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
+import dev.architectury.event.events.client.ClientPlayerEvent;
+import dev.architectury.event.events.client.ClientRawInputEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.CrosshairRenderer;
 import net.leawind.mc.thirdperson.core.Options;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
@@ -19,7 +20,6 @@ import net.minecraft.world.phys.Vec2;
 public class ModEvents {
 	public static void register () {
 		ClientLifecycleEvent.CLIENT_STARTED.register(ModEvents::onClientStarted);
-		ClientGuiEvent.RENDER_HUD.register(ModEvents::onRenderHud);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 		ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
@@ -32,12 +32,6 @@ public class ModEvents {
 			UserProfile.load();
 		} catch (RuntimeException e) {
 			ThirdPersonMod.LOGGER.warn("UserProfile load failed");
-		}
-	}
-
-	public static void onRenderHud (PoseStack matrices, float tickDelta) {
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
-			CrosshairRenderer.render(matrices);
 		}
 	}
 
