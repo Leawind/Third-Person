@@ -17,14 +17,32 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ModKeys {
-	public static final Logger     LOGGER          = LogUtils.getLogger();
-	public static final String     CATEGORY_KEY    = "key.categories.third_person";
+	public static final Logger     LOGGER           = LogUtils.getLogger();
+	public static final String     CATEGORY_KEY     = "key.categories.leawind_third_person";
+	/**
+	 * 按下打开配置菜单
+	 */
+	public static final KeyMapping OPEN_CONFIG_MENU = new KeyMapping("key.l3p.open_config_menu",
+																	 InputConstants.UNKNOWN.getValue(),
+																	 CATEGORY_KEY) {
+		@Override
+		public void setDown (boolean down) {
+			boolean wasDown = isDown();
+			super.setDown(down);
+			if (CameraAgent.isAvailable()) {
+				if (!wasDown && down) {
+					// key down
+					LOGGER.debug("Open config menu");//TODO
+				}
+			}
+		}
+	};
 	/**
 	 * 切换左右
 	 */
-	public static final KeyMapping TOGGLE_SIDE     = new KeyMapping("key.l3p.toggle_side",
-																	InputConstants.KEY_CAPSLOCK,
-																	CATEGORY_KEY) {
+	public static final KeyMapping TOGGLE_SIDE      = new KeyMapping("key.l3p.toggle_side",
+																	 InputConstants.KEY_CAPSLOCK,
+																	 CATEGORY_KEY) {
 		private Timer timer = null;
 		private double keyDownTime = 0;
 
@@ -70,9 +88,9 @@ public class ModKeys {
 	 * <p>
 	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
 	 */
-	public static final KeyMapping ADJUST_POSITION = new KeyMapping("key.l3p.adjust_position",
-																	InputConstants.KEY_Z,
-																	CATEGORY_KEY) {
+	public static final KeyMapping ADJUST_POSITION  = new KeyMapping("key.l3p.adjust_position",
+																	 InputConstants.KEY_Z,
+																	 CATEGORY_KEY) {
 		@Override
 		public void setDown (boolean down) {
 			boolean wasDown = isDown();
@@ -91,9 +109,9 @@ public class ModKeys {
 	/**
 	 * 切换瞄准状态
 	 */
-	public static final KeyMapping TOGGLE_AIMING   = new KeyMapping("key.l3p.toggle_aiming",
-																	InputConstants.UNKNOWN.getValue(),
-																	CATEGORY_KEY) {
+	public static final KeyMapping TOGGLE_AIMING    = new KeyMapping("key.l3p.toggle_aiming",
+																	 InputConstants.UNKNOWN.getValue(),
+																	 CATEGORY_KEY) {
 		@Override
 		public void setDown (boolean down) {
 			final boolean wasDown = isDown();
@@ -106,11 +124,12 @@ public class ModKeys {
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final KeyMapping FORCE_AIMING    = new KeyMapping("key.l3p.force_aiming",
-																	InputConstants.UNKNOWN.getValue(),
-																	CATEGORY_KEY);
+	public static final KeyMapping FORCE_AIMING     = new KeyMapping("key.l3p.force_aiming",
+																	 InputConstants.UNKNOWN.getValue(),
+																	 CATEGORY_KEY);
 
 	public static void register () {
+		KeyMappingRegistry.register(OPEN_CONFIG_MENU);
 		KeyMappingRegistry.register(TOGGLE_SIDE);
 		KeyMappingRegistry.register(ADJUST_POSITION);
 		KeyMappingRegistry.register(TOGGLE_AIMING);
