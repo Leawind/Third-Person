@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.config;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
@@ -121,6 +122,13 @@ public class Config {
 	}
 
 	/**
+	 * 获取可翻译文本
+	 */
+	private static Component getText (String name) {
+		return Component.translatable(ThirdPersonMod.MOD_ID + "." + name);
+	}
+
+	/**
 	 * //TODO simplify
 	 * <p>
 	 * 获取配置屏幕
@@ -232,21 +240,21 @@ public class Config {
 					.name(getText("option_group.normal_mode"))
 					.description(OptionDescription.of(getText("option_group.normal_mode.desc")))
 					.option(Config.<Double>option("max_distance")
-						.binding(3.6D, () -> normal_max_distance, v -> normal_max_distance = v)
+						.binding(2.50D, () -> normal_max_distance, v -> normal_max_distance = v)
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 							.range(1d, 32d)
-							.step(0.25d))
+							.step(0.2d))
 						.build())
 					.option(Config.<Double>option("offset_x")
-						.binding(0D, () -> normal_offset_x, v -> normal_offset_x = v)
+						.binding(-0.197D, () -> normal_offset_x, v -> normal_offset_x = v)
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_y")
-						.binding(0D, () -> normal_offset_y, v -> normal_offset_y = v)
+						.binding(0.117D, () -> normal_offset_y, v -> normal_offset_y = v)
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_middle")
-						.binding(0D, () -> normal_offset_middle, v -> {normal_offset_middle = v; updateCameraOffsetScheme();})
+						.binding(0.221D, () -> normal_offset_middle, v -> {normal_offset_middle = v; updateCameraOffsetScheme();})
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.build())
@@ -254,10 +262,10 @@ public class Config {
 					.name(getText("option_group.aiming_mode"))
 					.description(OptionDescription.of(getText("option_group.aiming_mode.desc")))
 					.option(Config.<Double>option("max_distance")
-						.binding(3.6D, () -> aiming_max_distance, v -> {aiming_max_distance = v; updateCameraOffsetScheme();})
+						.binding(0.6D, () -> aiming_max_distance, v -> {aiming_max_distance = v; updateCameraOffsetScheme();})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 							.range(1d, 32d)
-							.step(0.25d))
+							.step(0.2d))
 						.build())
 					.option(Config.<Double>option("offset_x")
 						.binding(0D, () -> aiming_offset_x, v -> {aiming_offset_x = v; updateCameraOffsetScheme();})
@@ -276,10 +284,6 @@ public class Config {
 			.build(); return config.generateScreen(parent);
 	}
 
-	private static Component getText (String name) {
-		return Component.translatable(ThirdPersonMod.MOD_ID + "." + name);
-	}
-
 	/**
 	 * 加载模组时初始化
 	 * <p>
@@ -295,16 +299,29 @@ public class Config {
 		}
 	}
 
-	public static void load () {
+	/**
+	 * 加载配置文件
+	 *
+	 * @throws JsonSyntaxException 如果配置文件格式不正确则抛出错误
+	 */
+	public static void load () throws JsonSyntaxException {
 		GSON.load(); onLoad();
 	}
 
-	public static void save () {
-		GSON.save();
-	}
-
+	/**
+	 * 加载完成时调用
+	 * <p>
+	 * 更新次生配置
+	 */
 	public static void onLoad () {
 		updateCameraDistances(); updateCameraOffsetScheme();
+	}
+
+	/**
+	 * 保存配置文件
+	 */
+	public static void save () {
+		GSON.save();
 	}
 
 	/**
@@ -317,7 +334,6 @@ public class Config {
 	/**
 	 * 更新相机偏移方案
 	 */
-	@Deprecated
 	public static void updateCameraOffsetScheme () {
 		// maxDist, offsetValue
 		CameraOffsetScheme scheme = CameraOffsetScheme.create(normal_max_distance, normal_offset_x, normal_offset_y, aiming_max_distance, aiming_offset_x, aiming_offset_y);
@@ -335,7 +351,13 @@ public class Config {
 		cameraOffsetScheme = scheme;
 	}
 
-	@Deprecated
+	/**
+	 * 从相机偏移方案对象加载配置项
+	 * <p>
+	 * 当玩家调整偏移量等选项时，会直接修改 CameraOffsetScheme 对象，而不是直接修改 Config
+	 * <p>
+	 * 所以修改完后需要立即将改动应用到 Config
+	 */
 	public static void loadFromCameraOffsetScheme () {
 		// Normal mode //
 		normal_max_distance                = cameraOffsetScheme.normalMode.getMaxDistance(); normal_offset_x = cameraOffsetScheme.normalMode.getOffsetValue().x; normal_offset_y = cameraOffsetScheme.normalMode.getOffsetValue().y;
@@ -350,7 +372,7 @@ public class Config {
 	}
 
 	@SuppressWarnings("unused")
-	public static Option.Builder<Boolean> HIDDEN_OPTION = Option.<Boolean>createBuilder()
+	public static Option.Builder<Boolean> HIDDEN_OPTION_496 = Option.<Boolean>createBuilder()
 		.name(getText("option.projectile_auto_aim"))
 		.description(OptionDescription.of(getText("option.projectile_auto_aim.desc")))
 		.binding(true, () -> false, v -> {})

@@ -1,10 +1,11 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import com.mojang.logging.LogUtils;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.minecraft.world.phys.Vec2;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 第三人称相机的偏移方案
@@ -14,7 +15,7 @@ import org.slf4j.Logger;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetScheme {
-	public static final Logger             LOGGER          = LogUtils.getLogger();
+	public static final Logger             LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static final CameraOffsetScheme DEFAULT_CLOSER  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
 	public static final CameraOffsetScheme DEFAULT_FARTHER = CameraOffsetScheme.create(3.6, -0.3f, 0.2f, 1.5, -0.5f, 0f);
 	public              OffsetModeAiming   aimingMode;

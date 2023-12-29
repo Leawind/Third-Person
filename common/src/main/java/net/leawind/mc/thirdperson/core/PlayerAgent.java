@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import com.mojang.logging.LogUtils;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.Vectors;
@@ -17,9 +17,10 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
-	public static final Logger        LOGGER            = LogUtils.getLogger();
+	public static final Logger        LOGGER            = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
 	public static       boolean       wasInterecting    = false;
 

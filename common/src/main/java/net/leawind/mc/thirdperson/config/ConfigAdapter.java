@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 /**
- *
+ * 由于我的配置项使用的是静态字段，此版本的 YACL 无法正确识别，所以我得自己写 Adapter
  */
 public class ConfigAdapter extends TypeAdapter<Config> {
 	@Override
@@ -70,6 +70,6 @@ public class ConfigAdapter extends TypeAdapter<Config> {
 		} catch (NoSuchFieldException | IllegalAccessException | IOException e) {
 			throw new RuntimeException(e);
 		}
-		return new Config();
+		return null;
 	}
 }

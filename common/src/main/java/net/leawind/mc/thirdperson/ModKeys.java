@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson;
 
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.logging.LogUtils;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
@@ -12,17 +11,23 @@ import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ModKeys {
-	public static final Logger     LOGGER           = LogUtils.getLogger();
-	public static final String     CATEGORY_KEY     = "key.categories.leawind_third_person";
+	public static final  Logger LOGGER       = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	private static final String CATEGORY_KEY = "key.categories." + ThirdPersonMod.MOD_ID;
+
+	private static String getText (String name) {
+		return "key." + ThirdPersonMod.MOD_ID + "." + name;
+	}
+
 	/**
 	 * 按下打开配置菜单
 	 */
-	public static final KeyMapping OPEN_CONFIG_MENU = new KeyMapping("key.leawind_third_person.open_config_menu",
+	public static final KeyMapping OPEN_CONFIG_MENU = new KeyMapping(getText("open_config_menu"),
 																	 InputConstants.UNKNOWN.getValue(),
 																	 CATEGORY_KEY) {
 		@Override
@@ -40,7 +45,7 @@ public class ModKeys {
 	/**
 	 * 切换左右
 	 */
-	public static final KeyMapping TOGGLE_SIDE      = new KeyMapping("key.leawind_third_person.toggle_side",
+	public static final KeyMapping TOGGLE_SIDE      = new KeyMapping(getText("toggle_side"),
 																	 InputConstants.KEY_CAPSLOCK,
 																	 CATEGORY_KEY) {
 		private Timer timer = null;
@@ -88,7 +93,7 @@ public class ModKeys {
 	 * <p>
 	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
 	 */
-	public static final KeyMapping ADJUST_POSITION  = new KeyMapping("key.leawind_third_person.adjust_position",
+	public static final KeyMapping ADJUST_POSITION  = new KeyMapping(getText("adjust_position"),
 																	 InputConstants.KEY_Z,
 																	 CATEGORY_KEY) {
 		@Override
@@ -109,7 +114,7 @@ public class ModKeys {
 	/**
 	 * 切换瞄准状态
 	 */
-	public static final KeyMapping TOGGLE_AIMING    = new KeyMapping("key.leawind_third_person.toggle_aiming",
+	public static final KeyMapping TOGGLE_AIMING    = new KeyMapping(getText("toggle_aiming"),
 																	 InputConstants.UNKNOWN.getValue(),
 																	 CATEGORY_KEY) {
 		@Override
@@ -124,7 +129,7 @@ public class ModKeys {
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final KeyMapping FORCE_AIMING     = new KeyMapping("key.leawind_third_person.force_aiming",
+	public static final KeyMapping FORCE_AIMING     = new KeyMapping(getText("force_aiming"),
 																	 InputConstants.UNKNOWN.getValue(),
 																	 CATEGORY_KEY);
 
