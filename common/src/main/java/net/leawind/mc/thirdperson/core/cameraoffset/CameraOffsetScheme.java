@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 public class CameraOffsetScheme {
 	public static final Logger             LOGGER   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static final CameraOffsetScheme DEFAULT  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
-	public              OffsetModeAiming   aimingMode;
-	public              OffsetModeNormal   normalMode;
+	public              CameraOffsetMode   aimingMode;
+	public              CameraOffsetMode   normalMode;
 	public transient    boolean            isAiming = false;
 	protected           boolean            isCenter = false;
 
@@ -32,8 +32,8 @@ public class CameraOffsetScheme {
 											 double aimingOffsetX,
 											 double aimingOffsetY) {
 		final CameraOffsetScheme scheme = new CameraOffsetScheme();
-		scheme.normalMode = new OffsetModeNormal(scheme, normalMaxDist, (float)normalOffsetX, (float)normalOffsetY);
-		scheme.aimingMode = new OffsetModeAiming(scheme, aimingMaxDist, (float)aimingOffsetX, (float)aimingOffsetY);
+		scheme.normalMode = new CameraOffsetMode(scheme, normalMaxDist, (float)normalOffsetX, (float)normalOffsetY);
+		scheme.aimingMode = new CameraOffsetMode(scheme, aimingMaxDist, (float)aimingOffsetX, (float)aimingOffsetY);
 		return scheme;
 	}
 
