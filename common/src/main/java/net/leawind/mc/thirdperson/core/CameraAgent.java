@@ -4,9 +4,8 @@ package net.leawind.mc.thirdperson.core;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.logging.LogUtils;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
+import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
-import net.leawind.mc.thirdperson.userprofile.UserProfile;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
 import net.minecraft.client.Camera;
@@ -99,7 +98,6 @@ public class CameraAgent {
 			return;
 		}
 		if (Options.isAdjustingCameraOffset()) {
-			CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
 		} else {
 			turnY *= 0.15;
 			turnX *= -0.15;
@@ -167,20 +165,20 @@ public class CameraAgent {
 		double sinceLastTurn = now - lastTurnTime;
 		double sinceLastTick = now - lastTickTime;
 		lastTickTime = now;
-		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
-		profile.setAiming(isAiming);
+		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
+		scheme.setAiming(isAiming);
 		if (isThirdPerson) {
 			boolean isAdjusting = Options.isAdjustingCameraOffset();
 			// 平滑更新距离
-			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: profile.getMode().distanceSmoothFactor);
-			smoothVirtualDistance.setTarget(profile.getMode().maxDistance).update(sinceLastTick);
+			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: scheme.getMode().getDistanceSmoothFactor());
+			smoothVirtualDistance.setTarget(scheme.getMode().getMaxDistance()).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
-			if (!profile.isAiming && !Options.isAdjustingCameraOffset()) {
-				smoothVirtualDistance.setValue(Math.min(profile.getMode().maxDistance, smoothVirtualDistance.get()));
+			if (!scheme.isAiming && !Options.isAdjustingCameraOffset()) {
+				smoothVirtualDistance.setValue(Math.min(scheme.getMode().getMaxDistance(), smoothVirtualDistance.get()));
 			}
 			// 平滑更新相机偏移量
-			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-7F, 1e-7F): profile.getMode().offsetSmoothFactor);
-			smoothOffsetRatio.setTarget(profile.getMode().getOffsetRatio(smoothVirtualDistance.get()));
+			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-7F, 1e-7F): scheme.getMode().getOffsetSmoothFactor());
+			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio(smoothVirtualDistance.get()));
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
 			updateFakeCameraRotationPosition();

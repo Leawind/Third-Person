@@ -4,25 +4,24 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-import java.io.Serializable;
-
-public abstract class CameraOffsetMode implements Cloneable, Serializable {
+public abstract class CameraOffsetMode {
+	public  CameraOffsetScheme cameraOffsetScheme;
 	/**
 	 * 眼睛位置的平滑系数
 	 */
-	public Vec3                eyeSmoothFactor      = Vec3.ZERO;
+	private Vec3               eyeSmoothFactor      = Vec3.ZERO;
 	/**
 	 * 距离的平滑系数
 	 */
-	public double              distanceSmoothFactor = 0;
+	private double             distanceSmoothFactor = 0;
 	/**
 	 * 相机偏移量的平滑系数
 	 */
-	public Vec2                offsetSmoothFactor   = Vec2.ZERO;
+	private Vec2               offsetSmoothFactor   = Vec2.ZERO;
 	/**
 	 * 到平滑眼睛的最大距离
 	 */
-	public double              maxDistance          = 4.0;
+	private double             maxDistance          = 4.0;
 	/**
 	 * 相机偏移值
 	 * <p>
@@ -30,44 +29,73 @@ public abstract class CameraOffsetMode implements Cloneable, Serializable {
 	 * <p>
 	 * 对于 OffsetModeAiming，这个值表示相机视线到玩家眼睛的距离
 	 */
-	public Vec2                offsetValue          = Vec2.ZERO;
+	private Vec2               offsetValue          = Vec2.ZERO;
 	/**
 	 * 当切换到头顶视角时的y偏移量（x偏移固定为0）
 	 */
-	public double              topOffsetValue       = 0.25;
-	public CameraOffsetProfile cameraOffsetProfile;
+	private double             middleOffsetValue    = 0.25;
 
-	public CameraOffsetMode (CameraOffsetProfile profile) {
-		this.cameraOffsetProfile = profile;
+	public CameraOffsetMode (CameraOffsetScheme scheme) {
+		this.cameraOffsetScheme = scheme;
+	}
+
+	public Vec3 getEyeSmoothFactor () {
+		return eyeSmoothFactor;
+	}
+
+	public double getDistanceSmoothFactor () {
+		return distanceSmoothFactor;
+	}
+
+	public Vec2 getOffsetSmoothFactor () {
+		return offsetSmoothFactor;
+	}
+
+	public double getMaxDistance () {
+		return maxDistance;
+	}
+
+	public Vec2 getOffsetValue () {
+		return offsetValue;
+	}
+
+	public double getMiddleOffsetValue () {
+		return middleOffsetValue;
 	}
 
 	public CameraOffsetMode setEyeSmoothFactor (Vec3 smoothFactor) {
 		eyeSmoothFactor = smoothFactor;
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
 	public CameraOffsetMode setDistanceSmoothFactor (double smoothFactor) {
 		distanceSmoothFactor = smoothFactor;
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
 	public CameraOffsetMode setOffsetSmoothFactor (Vec2 smoothFactor) {
 		offsetSmoothFactor = smoothFactor;
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
 	public CameraOffsetMode setMaxDistance (double distance) {
 		maxDistance = distance;
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
 	public CameraOffsetMode setOffsetValue (Vec2 offset) {
 		offsetValue = offset;
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
-	public CameraOffsetMode setTopOffsetValue (double offset) {
-		topOffsetValue = offset;
+	public CameraOffsetMode setMiddleOffsetValue (double offset) {
+		middleOffsetValue = offset;
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
@@ -77,6 +105,7 @@ public abstract class CameraOffsetMode implements Cloneable, Serializable {
 		} else if (!isLeft && offsetValue.x > 0) {
 			offsetValue = new Vec2(-offsetValue.x, offsetValue.y);
 		}
+		cameraOffsetScheme.onModify();
 		return this;
 	}
 
@@ -84,13 +113,4 @@ public abstract class CameraOffsetMode implements Cloneable, Serializable {
 	 * 根据距离计算实相机偏移量
 	 */
 	abstract public Vec2 getOffsetRatio (double distance);
-
-	@Override
-	public CameraOffsetMode clone () {
-		try {
-			return (CameraOffsetMode)super.clone();
-		} catch (CloneNotSupportedException e) {
-			throw new AssertionError();
-		}
-	}
 }

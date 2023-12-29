@@ -11,9 +11,7 @@
 		"LocalPlayerMixin",
 		"MinecraftMixin",
 		"MouseHandlerMixin",
-		"EntityMixin",
-		"MixinSerializable$Vec2Serializable",
-		"MixinSerializable$Vec3Serializable"
+		"EntityMixin"
 	],
 	"mixins": [],
 	"injectors": {

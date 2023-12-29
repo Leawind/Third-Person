@@ -10,8 +10,7 @@ import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.Options;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
-import net.leawind.mc.thirdperson.userprofile.UserProfile;
+import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -27,12 +26,6 @@ public class ModEvents {
 	}
 
 	public static void onClientStarted (Minecraft minecraft) {
-		UserProfile.loadDefault();
-		try {
-			UserProfile.load();
-		} catch (RuntimeException e) {
-			ThirdPersonMod.LOGGER.warn("UserProfile load failed");
-		}
 	}
 
 	/**
@@ -56,9 +49,9 @@ public class ModEvents {
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
 		if (Options.isAdjustingCameraOffset()) {
-			double dist = UserProfile.getCameraOffsetProfile().getMode().maxDistance;
+			double dist = Config.cameraOffsetScheme.getMode().getMaxDistance();
 			dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
-			UserProfile.getCameraOffsetProfile().getMode().setMaxDistance(dist);
+			Config.cameraOffsetScheme.getMode().setMaxDistance(dist);
 			return EventResult.interruptFalse();
 		} else {
 			return EventResult.pass();
@@ -74,7 +67,8 @@ public class ModEvents {
 	}
 
 	public static void onStopAdjustingCameraOffset () {
-		UserProfile.save();
+		Config.loadFromCameraOffsetScheme();
+		Config.save();
 	}
 
 	/**
@@ -83,30 +77,30 @@ public class ModEvents {
 	 * @param xMove 水平移动的像素
 	 * @param yMove 垂直移动的像素
 	 */
-	public static void onAdjustingCamera (double xMove, double yMove) {
+	public static void onAdjustingCameraOffset (double xMove, double yMove) {
 		if (xMove == 0 && yMove == 0) {
 			return;
 		}
-		Minecraft           mc      = Minecraft.getInstance();
-		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
-		if (profile.isTop) {
+		Minecraft          mc     = Minecraft.getInstance();
+		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
+		if (scheme.isMiddle()) {
 			double sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
 			double dy          = yMove * sensitivity * 0.15;
 			// 相机在头顶，只能上下调整
-			double topOffset = profile.getMode().topOffsetValue;
-			if (profile.isAiming) {
+			double topOffset = scheme.getMode().getMiddleOffsetValue();
+			if (scheme.isAiming) {
 				topOffset -= Math.exp(topOffset) * dy * 1e-2;
 				topOffset = Mth.clamp(topOffset, 0, Config.aiming_offset_max);
 			} else {
 				topOffset += -yMove / mc.getWindow().getScreenHeight();
 				topOffset = Mth.clamp(topOffset, -1, 1);
 			}
-			profile.getMode().setTopOffsetValue(topOffset);
+			scheme.getMode().setMiddleOffsetValue(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
-			double offsetX = profile.getMode().offsetValue.x;
-			double offsetY = profile.getMode().offsetValue.y;
-			if (profile.isAiming) {
+			double offsetX = scheme.getMode().getOffsetValue().x;
+			double offsetY = scheme.getMode().getOffsetValue().y;
+			if (scheme.isAiming) {
 				offsetX += Math.exp(Math.abs(offsetX)) * -xMove / mc.getWindow().getScreenWidth();
 				offsetY += Math.exp(Math.abs(offsetY)) * -yMove / mc.getWindow().getScreenHeight();
 				offsetX = Mth.clamp(offsetX, -Config.aiming_offset_max, Config.aiming_offset_max);
@@ -118,8 +112,8 @@ public class ModEvents {
 				offsetY = Mth.clamp(offsetY, -1, 1);
 			}
 			double newXsgn = Math.signum(offsetX);
-			profile.setSide(newXsgn);
-			profile.getMode().setOffsetValue(new Vec2((float)offsetX, (float)offsetY));
+			scheme.setSide(newXsgn);
+			scheme.getMode().setOffsetValue(new Vec2((float)offsetX, (float)offsetY));
 		}
 	}
 }

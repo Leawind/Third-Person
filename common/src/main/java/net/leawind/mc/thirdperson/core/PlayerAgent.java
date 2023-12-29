@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.logging.LogUtils;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetProfile;
-import net.leawind.mc.thirdperson.userprofile.UserProfile;
+import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
 import net.minecraft.client.Minecraft;
@@ -132,12 +132,12 @@ public class PlayerAgent {
 
 	@PerformanceSensitive
 	public static void onRenderTick (float partialTick, double sinceLastTick) {
-		Minecraft           mc      = Minecraft.getInstance();
-		CameraOffsetProfile profile = UserProfile.getCameraOffsetProfile();
+		Minecraft          mc     = Minecraft.getInstance();
+		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		// 平滑更新眼睛位置
-		smoothEyePosition.setSmoothFactor(profile.getMode().eyeSmoothFactor);
+		smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
 		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
 		if (CameraAgent.isAiming || wasInterecting) {
 			turnToCameraHitResult(partialTick);
