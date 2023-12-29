@@ -23,8 +23,6 @@
 	"leawind_third_person.option.camera_distance_min.desc": "使用滚轮调整时相机到玩家的最小距离",
 	"leawind_third_person.option.camera_distance_max": "距离上限",
 	"leawind_third_person.option.camera_distance_max.desc": "使用滚轮调整时相机到玩家的最大距离",
-	"leawind_third_person.option.aiming_offset_max": "瞄准偏移量上限",
-	"leawind_third_person.option.aiming_offset_max.desc": "瞄准时相机视线与玩家视线间距离的可调整的最大值",
 	"leawind_third_person.option.flying_smooth_factor": "飞行时相机跟随玩家的平滑系数",
 	"leawind_third_person.option.flying_smooth_factor.desc": "",
 	"leawind_third_person.option.smooth_factor_horizon": "水平平滑系数",

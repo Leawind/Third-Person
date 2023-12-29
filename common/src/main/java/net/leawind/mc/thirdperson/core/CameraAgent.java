@@ -193,7 +193,7 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 根据角度、距离、偏移量计算相机实际位置
+	 * 根据角度、距离、偏移量计算相机实际朝向和位置
 	 */
 	private static void updateFakeCameraRotationPosition () {
 		Minecraft mc = Minecraft.getInstance();
