@@ -1,6 +1,8 @@
 package net.leawind.mc.thirdperson.config;
+//import com.google.gson.*;
 
-
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
@@ -15,11 +17,13 @@ import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.monolist.MonoList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.nio.file.Path;
 
 /**
@@ -41,10 +45,7 @@ public class Config {
 	public static final Logger                 LOGGER                             = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);//TODO loggers
 	// 配置文件路径
 	public static final Path                   CONFIG_FILE_PATH                   = ExpectPlatform.getConfigDirectory()
-		.resolve(ThirdPersonMod.MOD_ID + ".json5");
-	public static final ConfigInstance<Config> GSON                               = GsonConfigInstance.createBuilder(Config.class)
-		.setPath(CONFIG_FILE_PATH)
-		.build();
+		.resolve(ThirdPersonMod.MOD_ID + ".json");
 	// ============================================================//
 	@ConfigEntry
 	public static       boolean                is_mod_enable                      = true;
@@ -100,6 +101,16 @@ public class Config {
 	public static       MonoList               distanceMonoList;
 	public static       CameraOffsetScheme     cameraOffsetScheme                 = CameraOffsetScheme.DEFAULT_CLOSER;
 	// ============================================================//
+	public static final ConfigInstance<Config> GSON                               = GsonConfigInstance.createBuilder(Config.class)
+		.setPath(CONFIG_FILE_PATH)
+		.overrideGsonBuilder(new GsonBuilder().setPrettyPrinting()
+			.serializeNulls()
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
+			.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
+			.registerTypeHierarchyAdapter(Color.class, new GsonConfigInstance.ColorTypeAdapter())
+			.registerTypeHierarchyAdapter(Config.class, new ConfigAdapter()))
+		.build();
 
 	/**
 	 * 生成 option 的 name 和 description
@@ -271,10 +282,30 @@ public class Config {
 	}
 
 	/**
-	 * 保存配置文件
+	 * 加载模组时初始化
+	 * <p>
+	 * 尝试加载配置文件，如果出错则记录错误信息
 	 */
+	public static void init () {
+		try {
+			load();
+		} catch (Exception e) {
+			LOGGER.error("Error loading config", e);
+			// 保存配置
+			save();
+		}
+	}
+
+	public static void load () {
+		GSON.load(); onLoad();
+	}
+
 	public static void save () {
 		GSON.save();
+	}
+
+	public static void onLoad () {
+		updateCameraDistances(); updateCameraOffsetScheme();
 	}
 
 	/**
@@ -282,20 +313,6 @@ public class Config {
 	 */
 	public static void updateCameraDistances () {
 		distanceMonoList = MonoList.of(available_distance_count, camera_distance_min, camera_distance_max, i -> i * i, Math::sqrt);
-	}
-
-	/**
-	 * 加载模组时初始化
-	 */
-	public static void init () {
-		load();
-	}
-
-	/**
-	 * 加载配置文件
-	 */
-	public static void load () {
-		GSON.load(); updateCameraDistances(); updateCameraOffsetScheme();
 	}
 
 	/**
@@ -352,6 +369,7 @@ public class Config {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static Option.Builder<Boolean> HIDDEN_OPTION = Option.<Boolean>createBuilder()
 		.name(getText("option.projectile_auto_aim"))
 		.description(OptionDescription.of(getText("option.projectile_auto_aim.desc")))
