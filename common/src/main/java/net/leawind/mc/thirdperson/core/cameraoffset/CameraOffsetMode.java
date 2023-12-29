@@ -4,7 +4,7 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class CameraOffsetMode {
+public class CameraOffsetMode {
 	public  CameraOffsetScheme cameraOffsetScheme;
 	/**
 	 * 眼睛位置的平滑系数
@@ -25,15 +25,13 @@ public abstract class CameraOffsetMode {
 	/**
 	 * 相机偏移值
 	 * <p>
-	 * 对于 OffsetModeNormal，这个值表示玩家眼睛在屏幕上的位置
-	 * <p>
-	 * 对于 OffsetModeAiming，这个值表示相机视线到玩家眼睛的距离
+	 * 表示玩家眼睛在屏幕上的位置，x 和 y 的范围都是 [-1, 1]
 	 */
-	private Vec2               offsetValue          = Vec2.ZERO;
+	private Vec2               offsetRatio          = Vec2.ZERO;
 	/**
 	 * 当切换到头顶视角时的y偏移量（x偏移固定为0）
 	 */
-	private double             middleOffsetValue    = 0.25;
+	private double             centerOffsetRatio    = 0.25;
 
 	public CameraOffsetMode (CameraOffsetScheme scheme) {
 		this.cameraOffsetScheme = scheme;
@@ -43,30 +41,14 @@ public abstract class CameraOffsetMode {
 		return eyeSmoothFactor;
 	}
 
-	public double getDistanceSmoothFactor () {
-		return distanceSmoothFactor;
-	}
-
-	public Vec2 getOffsetSmoothFactor () {
-		return offsetSmoothFactor;
-	}
-
-	public double getMaxDistance () {
-		return maxDistance;
-	}
-
-	public Vec2 getOffsetValue () {
-		return offsetValue;
-	}
-
-	public double getMiddleOffsetValue () {
-		return middleOffsetValue;
-	}
-
 	public CameraOffsetMode setEyeSmoothFactor (Vec3 smoothFactor) {
 		eyeSmoothFactor = smoothFactor;
 		cameraOffsetScheme.onModify();
 		return this;
+	}
+
+	public double getDistanceSmoothFactor () {
+		return distanceSmoothFactor;
 	}
 
 	public CameraOffsetMode setDistanceSmoothFactor (double smoothFactor) {
@@ -75,10 +57,18 @@ public abstract class CameraOffsetMode {
 		return this;
 	}
 
+	public Vec2 getOffsetSmoothFactor () {
+		return offsetSmoothFactor;
+	}
+
 	public CameraOffsetMode setOffsetSmoothFactor (Vec2 smoothFactor) {
 		offsetSmoothFactor = smoothFactor;
 		cameraOffsetScheme.onModify();
 		return this;
+	}
+
+	public double getMaxDistance () {
+		return maxDistance;
 	}
 
 	public CameraOffsetMode setMaxDistance (double distance) {
@@ -87,23 +77,31 @@ public abstract class CameraOffsetMode {
 		return this;
 	}
 
-	public CameraOffsetMode setOffsetValue (Vec2 offset) {
-		offsetValue = offset;
+	public Vec2 getOffsetValue () {
+		return offsetRatio;
+	}
+
+	public CameraOffsetMode setOffsetRatio (Vec2 offset) {
+		offsetRatio = offset;
 		cameraOffsetScheme.onModify();
 		return this;
 	}
 
-	public CameraOffsetMode setMiddleOffsetValue (double offset) {
-		middleOffsetValue = offset;
+	public double getCenterOffsetRatio () {
+		return centerOffsetRatio;
+	}
+
+	public CameraOffsetMode setCenterOffsetRatio (double offset) {
+		centerOffsetRatio = offset;
 		cameraOffsetScheme.onModify();
 		return this;
 	}
 
 	public CameraOffsetMode setSide (boolean isLeft) {
-		if (isLeft && offsetValue.x < 0) {
-			offsetValue = new Vec2(-offsetValue.x, offsetValue.y);
-		} else if (!isLeft && offsetValue.x > 0) {
-			offsetValue = new Vec2(-offsetValue.x, offsetValue.y);
+		if (isLeft && offsetRatio.x < 0) {
+			offsetRatio = new Vec2(-offsetRatio.x, offsetRatio.y);
+		} else if (!isLeft && offsetRatio.x > 0) {
+			offsetRatio = new Vec2(-offsetRatio.x, offsetRatio.y);
 		}
 		cameraOffsetScheme.onModify();
 		return this;
@@ -112,5 +110,7 @@ public abstract class CameraOffsetMode {
 	/**
 	 * 根据距离计算实相机偏移量
 	 */
-	abstract public Vec2 getOffsetRatio (double distance);
+	public Vec2 getOffsetRatio () {
+		return cameraOffsetScheme.isCenter ? new Vec2(0, (float)getCenterOffsetRatio()): getOffsetValue();
+	}
 }

@@ -83,11 +83,11 @@ public class ModEvents {
 		}
 		Minecraft          mc     = Minecraft.getInstance();
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
-		if (scheme.isMiddle()) {
+		if (scheme.isCenter()) {
 			double sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
 			double dy          = yMove * sensitivity * 0.15;
 			// 相机在头顶，只能上下调整
-			double topOffset = scheme.getMode().getMiddleOffsetValue();
+			double topOffset = scheme.getMode().getCenterOffsetRatio();
 			if (scheme.isAiming) {
 				topOffset -= Math.exp(topOffset) * dy * 1e-2;
 				topOffset = Mth.clamp(topOffset, 0, Config.aiming_offset_max);
@@ -95,7 +95,7 @@ public class ModEvents {
 				topOffset += -yMove / mc.getWindow().getScreenHeight();
 				topOffset = Mth.clamp(topOffset, -1, 1);
 			}
-			scheme.getMode().setMiddleOffsetValue(topOffset);
+			scheme.getMode().setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
 			double offsetX = scheme.getMode().getOffsetValue().x;
@@ -113,7 +113,7 @@ public class ModEvents {
 			}
 			double newXsgn = Math.signum(offsetX);
 			scheme.setSide(newXsgn);
-			scheme.getMode().setOffsetValue(new Vec2((float)offsetX, (float)offsetY));
+			scheme.getMode().setOffsetRatio(new Vec2((float)offsetX, (float)offsetY));
 		}
 	}
 }

@@ -15,13 +15,12 @@ import org.slf4j.LoggerFactory;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetScheme {
-	public static final Logger             LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static final CameraOffsetScheme DEFAULT_CLOSER  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
-	public static final CameraOffsetScheme DEFAULT_FARTHER = CameraOffsetScheme.create(3.6, -0.3f, 0.2f, 1.5, -0.5f, 0f);
+	public static final Logger             LOGGER   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static final CameraOffsetScheme DEFAULT  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
 	public              OffsetModeAiming   aimingMode;
 	public              OffsetModeNormal   normalMode;
-	protected           boolean            isMiddle        = false;
-	public transient    boolean            isAiming        = false;
+	public transient    boolean            isAiming = false;
+	protected           boolean            isCenter = false;
 
 	private CameraOffsetScheme () {
 	}
@@ -68,38 +67,38 @@ public class CameraOffsetScheme {
 		onModify();
 	}
 
+	public void onModify () {
+		if (Config.cameraOffsetScheme == this) {
+			Config.loadFromCameraOffsetScheme();
+		}
+	}
+
 	/**
 	 * 切换到另一边
 	 */
 	public void nextSide () {
-		if (isMiddle) {
-			isMiddle = false;
+		if (isCenter) {
+			isCenter = false;
 		} else {
-			aimingMode.setOffsetValue(new Vec2(-aimingMode.getOffsetValue().x, aimingMode.getOffsetValue().y));
-			normalMode.setOffsetValue(new Vec2(-normalMode.getOffsetValue().x, normalMode.getOffsetValue().y));
+			aimingMode.setOffsetRatio(new Vec2(-aimingMode.getOffsetValue().x, aimingMode.getOffsetValue().y));
+			normalMode.setOffsetRatio(new Vec2(-normalMode.getOffsetValue().x, normalMode.getOffsetValue().y));
 		}
 		onModify();
 	}
 
-	public boolean isMiddle () {
-		return isMiddle;
+	public boolean isCenter () {
+		return isCenter;
 	}
 
 	/**
 	 * 切换到中间
 	 */
-	public void setToMiddle () {
-		isMiddle = true;
+	public void setToCenter () {
+		isCenter = true;
 		onModify();
 	}
 
 	public void setAiming (boolean isAiming) {
 		this.isAiming = isAiming;
-	}
-
-	public void onModify () {
-		if (Config.cameraOffsetScheme == this) {
-			Config.loadFromCameraOffsetScheme();
-		}
 	}
 }

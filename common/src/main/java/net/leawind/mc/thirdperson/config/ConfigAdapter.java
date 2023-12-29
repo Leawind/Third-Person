@@ -70,6 +70,6 @@ public class ConfigAdapter extends TypeAdapter<Config> {
 		} catch (NoSuchFieldException | IllegalAccessException | IOException e) {
 			throw new RuntimeException(e);
 		}
-		return null;
+		return new Config();
 	}
 }
