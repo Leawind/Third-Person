@@ -33,8 +33,18 @@ public class CameraOffsetMode {
 	 */
 	private double             centerOffsetRatio    = 0.25;
 
-	public CameraOffsetMode (CameraOffsetScheme scheme) {
+	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, float x, float y) {
+		this(scheme, maxDist, new Vec2(x, y));
+	}
+
+	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, Vec2 offset) {
 		this.cameraOffsetScheme = scheme;
+		setEyeSmoothFactor(new Vec3(1e-11, 1e-8, 1e-11));
+		setDistanceSmoothFactor(1e-5);
+		setOffsetSmoothFactor(new Vec2(2e-8f, 2e-8f));
+		setMaxDistance(maxDist);
+		setOffsetRatio(offset);
+		setCenterOffsetRatio(0.6);
 	}
 
 	public Vec3 getEyeSmoothFactor () {
@@ -107,9 +117,6 @@ public class CameraOffsetMode {
 		return this;
 	}
 
-	/**
-	 * 根据距离计算实相机偏移量
-	 */
 	public Vec2 getOffsetRatio () {
 		return cameraOffsetScheme.isCenter ? new Vec2(0, (float)getCenterOffsetRatio()): getOffsetValue();
 	}
