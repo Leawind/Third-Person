@@ -179,7 +179,7 @@ public class CameraAgent {
 			}
 			// 平滑更新相机偏移量
 			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-7F, 1e-7F): scheme.getMode().getOffsetSmoothFactor());
-			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio(smoothVirtualDistance.get()));
+			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio());
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
 			updateFakeCameraRotationPosition();

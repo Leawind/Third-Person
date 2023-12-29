@@ -19,11 +19,6 @@ import java.util.TimerTask;
 public class ModKeys {
 	public static final  Logger LOGGER       = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	private static final String CATEGORY_KEY = "key.categories." + ThirdPersonMod.MOD_ID;
-
-	private static String getText (String name) {
-		return "key." + ThirdPersonMod.MOD_ID + "." + name;
-	}
-
 	/**
 	 * 按下打开配置菜单
 	 */
@@ -59,7 +54,7 @@ public class ModKeys {
 			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
 				CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 				if (!wasDown && down) {   // on key down
-					if (scheme.isMiddle()) {
+					if (scheme.isCenter()) {
 						scheme.nextSide();
 					} else {
 						keyDownTime = now;
@@ -67,7 +62,7 @@ public class ModKeys {
 						timer.schedule(new TimerTask() {
 							public void run () {
 								// 长按
-								scheme.setToMiddle();
+								scheme.setToCenter();
 								timer = null;
 							}
 						}, 300);
@@ -132,6 +127,10 @@ public class ModKeys {
 	public static final KeyMapping FORCE_AIMING     = new KeyMapping(getText("force_aiming"),
 																	 InputConstants.UNKNOWN.getValue(),
 																	 CATEGORY_KEY);
+
+	private static String getText (String name) {
+		return "key." + ThirdPersonMod.MOD_ID + "." + name;
+	}
 
 	public static void register () {
 		KeyMappingRegistry.register(OPEN_CONFIG_MENU);

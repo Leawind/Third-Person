@@ -15,14 +15,7 @@ public class OffsetModeAiming extends CameraOffsetMode {
 		setDistanceSmoothFactor(1e-5);
 		setOffsetSmoothFactor(new Vec2(2e-8f, 2e-8f));
 		setMaxDistance(maxDist);
-		setOffsetValue(offset);
-		setMiddleOffsetValue(0.6);
-	}
-
-	@Override
-	public Vec2 getOffsetRatio (double distance) {
-		return cameraOffsetScheme.isMiddle
-			   ? new Vec2(0, (float)Math.atan2(getMaxDistance(), distance))
-			   : new Vec2((float)Math.atan2(getOffsetValue().x, distance), (float)Math.atan2(getOffsetValue().y, distance));
+		setOffsetRatio(offset);
+		setCenterOffsetRatio(0.6);
 	}
 }
