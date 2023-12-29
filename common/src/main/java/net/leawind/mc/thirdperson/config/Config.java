@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.config;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import dev.isxander.yacl3.api.*;
-import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
@@ -348,25 +347,6 @@ public class Config {
 		aiming_smooth_factor_horizon       = cameraOffsetScheme.aimingMode.getEyeSmoothFactor().x; aiming_smooth_factor_vertical = cameraOffsetScheme.aimingMode.getEyeSmoothFactor().y;
 		aiming_camera_offset_smooth_factor = cameraOffsetScheme.aimingMode.getOffsetSmoothFactor().x; aiming_distance_smooth_factor = cameraOffsetScheme.aimingMode.getDistanceSmoothFactor();
 		aiming_offset_middle               = cameraOffsetScheme.aimingMode.getMiddleOffsetValue();
-	}
-
-	/**
-	 * Config 控制器
-	 */
-	private static class ConfigControllers {
-		public static ControllerBuilder<Double> SMOOTH_FACTOR (Option<Double> opt) {
-			return DoubleSliderControllerBuilder.create(opt)
-				.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-				.range(0D, 20D)
-				.step(0.25d);
-		}
-
-		public static ControllerBuilder<Double> OFFSET (Option<Double> opt) {
-			return DoubleSliderControllerBuilder.create(opt)
-				.valueFormatter(v -> Component.literal(String.format("%+1.3f", v)))
-				.range(-1D, 1D)
-				.step(0.001d);
-		}
 	}
 
 	@SuppressWarnings("unused")
