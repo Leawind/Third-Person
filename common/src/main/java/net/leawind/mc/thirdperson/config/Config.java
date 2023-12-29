@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.config;
 
 
 import dev.isxander.yacl3.api.*;
+import dev.isxander.yacl3.api.controller.ControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
@@ -97,7 +98,7 @@ public class Config {
 	// ============================================================//
 	// 根据上面的配置选项生成的配置
 	public static       MonoList               distanceMonoList;
-	public static       CameraOffsetScheme     cameraOffsetScheme;
+	public static       CameraOffsetScheme     cameraOffsetScheme                 = CameraOffsetScheme.DEFAULT_CLOSER;
 	// ============================================================//
 
 	/**
@@ -117,7 +118,6 @@ public class Config {
 	 * 提供给 ModMenu
 	 */
 	public static Screen getConfigScreen (Screen parent) {
-		//
 		YetAnotherConfigLib config = YetAnotherConfigLib.createBuilder()
 			.title(getText("text.title"))
 			.save(Config::save)
@@ -156,41 +156,26 @@ public class Config {
 				.tooltip(getText("option_category.smooth_factors.desc"))
 				.option(Config.<Double>option("flying_smooth_factor")
 					.binding(10D, () -> -Math.log10(flying_smooth_factor), v -> flying_smooth_factor = Math.pow(10, -v))
-					.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-						.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-						.range(0D, 20D)
-						.step(0.25d))
+					.controller(ConfigControllers::SMOOTH_FACTOR)
 					.build())
 				.group(OptionGroup.createBuilder()    // 普通模式
 					.name(getText("option_group.normal_mode"))
 					.description(OptionDescription.of(getText("option_group.normal_mode.desc")))
 					.option(Config.<Double>option("smooth_factor_horizon")
 						.binding(10D, () -> -Math.log10(normal_smooth_factor_horizon), v -> {normal_smooth_factor_horizon = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("smooth_factor_vertical")
 						.binding(10D, () -> -Math.log10(normal_smooth_factor_vertical), v -> {normal_smooth_factor_vertical = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("camera_offset_smooth_factor")
 						.binding(10D, () -> -Math.log10(normal_camera_offset_smooth_factor), v -> {normal_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("normal_distance_smooth_factor")
 						.binding(10D, () -> -Math.log10(normal_distance_smooth_factor), v -> {normal_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.build())
 				.group(OptionGroup.createBuilder()    // 瞄准模式
@@ -198,31 +183,19 @@ public class Config {
 					.description(OptionDescription.of(getText("option_group.aiming_mode.desc")))
 					.option(Config.<Double>option("smooth_factor_horizon")
 						.binding(10D, () -> -Math.log10(aiming_smooth_factor_horizon), v -> {aiming_smooth_factor_horizon = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("smooth_factor_vertical")
 						.binding(10D, () -> -Math.log10(aiming_smooth_factor_vertical), v -> {aiming_smooth_factor_vertical = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("camera_offset_smooth_factor")
 						.binding(10D, () -> -Math.log10(aiming_camera_offset_smooth_factor), v -> {aiming_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("aiming_distance_smooth_factor")
 						.binding(10D, () -> -Math.log10(aiming_distance_smooth_factor), v -> {aiming_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-							.range(0D, 20D)
-							.step(0.25d))
+						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.build())
 				.build())
@@ -262,21 +235,15 @@ public class Config {
 						.build())
 					.option(Config.<Double>option("offset_x")
 						.binding(0D, () -> normal_offset_x, v -> normal_offset_x = v)
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(-1d, 1d)
-							.step(0.01d))
+						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_y")
 						.binding(0D, () -> normal_offset_y, v -> normal_offset_y = v)
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(-1d, 1d)
-							.step(0.01d))
+						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_middle")
 						.binding(0D, () -> normal_offset_middle, v -> {normal_offset_middle = v; updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(-1d, 1d)
-							.step(0.01d))
+						.controller(ConfigControllers::OFFSET)
 						.build())
 					.build())
 				.group(OptionGroup.createBuilder()    // 瞄准模式
@@ -290,21 +257,15 @@ public class Config {
 						.build())
 					.option(Config.<Double>option("offset_x")
 						.binding(0D, () -> aiming_offset_x, v -> {aiming_offset_x = v; updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(-1d, 1d)
-							.step(0.01d))
+						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_y")
 						.binding(0D, () -> aiming_offset_y, v -> {aiming_offset_y = v; updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(-1d, 1d)
-							.step(0.01d))
+						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_middle")
 						.binding(0D, () -> aiming_offset_middle, v -> {aiming_offset_middle = v; updateCameraOffsetScheme();})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(-1d, 1d)
-							.step(0.01d))
+						.controller(ConfigControllers::OFFSET)
 						.build())
 					.build())
 				.build())
@@ -346,6 +307,7 @@ public class Config {
 	/**
 	 * 更新相机偏移方案
 	 */
+	@Deprecated
 	public static void updateCameraOffsetScheme () {
 		// maxDist, offsetValue
 		CameraOffsetScheme scheme = CameraOffsetScheme.create(normal_max_distance, normal_offset_x, normal_offset_y, aiming_max_distance, aiming_offset_x, aiming_offset_y);
@@ -363,6 +325,7 @@ public class Config {
 		cameraOffsetScheme = scheme;
 	}
 
+	@Deprecated
 	public static void loadFromCameraOffsetScheme () {
 		// Normal mode //
 		normal_max_distance                = cameraOffsetScheme.normalMode.getMaxDistance(); normal_offset_x = cameraOffsetScheme.normalMode.getOffsetValue().x; normal_offset_y = cameraOffsetScheme.normalMode.getOffsetValue().y;
@@ -374,5 +337,21 @@ public class Config {
 		aiming_smooth_factor_horizon       = cameraOffsetScheme.aimingMode.getEyeSmoothFactor().x; aiming_smooth_factor_vertical = cameraOffsetScheme.aimingMode.getEyeSmoothFactor().y;
 		aiming_camera_offset_smooth_factor = cameraOffsetScheme.aimingMode.getOffsetSmoothFactor().x; aiming_distance_smooth_factor = cameraOffsetScheme.aimingMode.getDistanceSmoothFactor();
 		aiming_offset_middle               = cameraOffsetScheme.aimingMode.getMiddleOffsetValue();
+	}
+}
+
+class ConfigControllers {
+	public static ControllerBuilder<Double> SMOOTH_FACTOR (Option<Double> opt) {
+		return DoubleSliderControllerBuilder.create(opt)
+			.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
+			.range(0D, 20D)
+			.step(0.25d);
+	}
+
+	public static ControllerBuilder<Double> OFFSET (Option<Double> opt) {
+		return DoubleSliderControllerBuilder.create(opt)
+			.valueFormatter(v -> Component.literal(String.format("%+.4f", v)))
+			.range(-1D, 1D)
+			.step(0.01d);
 	}
 }
