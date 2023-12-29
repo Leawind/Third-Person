@@ -1,3 +1,5 @@
+root = true
+
 [*]
 charset                     = utf-8
 end_of_line                 = crlf
@@ -6,9 +8,9 @@ indent_style                = tab
 insert_final_newline        = true
 max_line_length             = 128
 tab_width                   = 4
-ij_continuation_indent_size = 8
+ij_continuation_indent_size = 4
 ij_formatter_off_tag        = @formatter:off
-ij_formatter_on_tag         = @formatter:on
+ij_formatter_on_tag         = @formatter : on
 ij_formatter_tags_enabled   = true
 ij_smart_tabs               = true
 ij_visual_guides            = none
@@ -264,6 +266,44 @@ ij_java_while_on_new_line                                       = false
 ij_java_wrap_comments                                           = true
 ij_java_wrap_first_method_in_call_chain                         = false
 ij_java_wrap_long_lines                                         = true
+
+[Config.java]
+max_line_length                                         = 256
+ij_java_use_relative_indents                            = false
+ij_java_wrap_first_method_in_call_chain                 = false
+ij_java_align_multiline_chained_methods                 = false
+ij_java_align_multiline_method_parentheses              = false
+ij_java_align_multiline_parameters_in_calls             = false
+ij_java_keep_control_statement_in_one_line              = true
+ij_java_keep_multiple_expressions_in_one_line           = true
+ij_java_keep_simple_blocks_in_one_line                  = true
+ij_java_keep_simple_classes_in_one_line                 = true
+ij_java_keep_simple_lambdas_in_one_line                 = true
+ij_java_keep_simple_methods_in_one_line                 = true
+ij_java_method_call_chain_wrap                          = split_into_lines
+ij_java_keep_builder_methods_indents                    = false
+ij_java_wrap_long_lines                                 = false
+ij_java_builder_methods                                 = none
+ij_java_align_multiline_parameters                      = true
+ij_java_call_parameters_new_line_after_left_paren       = false
+ij_java_call_parameters_right_paren_on_new_line         = false
+ij_java_call_parameters_wrap                            = on_every_item
+ij_java_layout_static_imports_separately                = true
+ij_java_method_parameters_new_line_after_left_paren     = false
+ij_java_method_parameters_right_paren_on_new_line       = false
+ij_java_method_parameters_wrap                          = on_every_item
+ij_java_names_count_to_use_import_on_demand             = 3
+ij_java_new_line_after_lparen_in_deconstruction_pattern = true
+ij_java_new_line_after_lparen_in_record_header          = false
+ij_java_place_assignment_sign_on_next_line              = false
+ij_java_prefer_longer_names                             = true
+ij_java_prefer_parameters_wrap                          = true
+ij_java_rparen_on_new_line_in_deconstruction_pattern    = true
+ij_java_rparen_on_new_line_in_record_header             = false
+ij_java_special_else_if_treatment                       = true
+ij_java_ternary_operation_signs_on_next_line            = true
+ij_java_ternary_operation_wrap                          = on_every_item
+ij_java_use_fq_class_names                              = false
 
 [*.nbtt]
 max_line_length                     = 150

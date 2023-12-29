@@ -20,7 +20,7 @@ public class MouseHandlerMixin {
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && Options.isAdjustingCameraOffset()) {
-			ModEvents.onAdjustingCamera(accumulatedDX, accumulatedDY);
+			ModEvents.onAdjustingCameraOffset(accumulatedDX, accumulatedDY);
 			accumulatedDX = 0;
 			accumulatedDY = 0;
 			ci.cancel();
