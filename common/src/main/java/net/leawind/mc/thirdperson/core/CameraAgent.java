@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.blaze3d.Blaze3D;
-import com.mojang.logging.LogUtils;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
@@ -22,9 +22,10 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CameraAgent {
-	public static final Logger          LOGGER                = LogUtils.getLogger();
+	public static final Logger          LOGGER                = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	/**
 	 * 成像平面到相机的距离，这是一个固定值，硬编码在Minecraft源码中。
 	 * <p>
