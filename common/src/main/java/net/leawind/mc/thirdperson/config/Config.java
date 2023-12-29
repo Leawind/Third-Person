@@ -129,8 +129,8 @@ public class Config {
 					.controller(TickBoxControllerBuilder::create)
 					.build())
 				.group(OptionGroup.createBuilder()
-					.name(getText("optiongroup.camera_distance_adjustment"))
-					.description(OptionDescription.of(getText("optiongroup.camera_distance_adjustment.desc")))
+					.name(getText("option_group.camera_distance_adjustment"))
+					.description(OptionDescription.of(getText("option_group.camera_distance_adjustment.desc")))
 					.option(Config.<Integer>option("available_distance_count")
 						.binding(16, () -> available_distance_count, v -> {available_distance_count = v; updateCameraDistances();})
 						.controller(opt -> IntegerSliderControllerBuilder.create(opt)
@@ -173,7 +173,7 @@ public class Config {
 						.binding(10D, () -> -Math.log10(normal_camera_offset_smooth_factor), v -> {normal_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
-					.option(Config.<Double>option("normal_distance_smooth_factor")
+					.option(Config.<Double>option("distance_smooth_factor")
 						.binding(10D, () -> -Math.log10(normal_distance_smooth_factor), v -> {normal_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
@@ -193,7 +193,7 @@ public class Config {
 						.binding(10D, () -> -Math.log10(aiming_camera_offset_smooth_factor), v -> {aiming_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
-					.option(Config.<Double>option("aiming_distance_smooth_factor")
+					.option(Config.<Double>option("distance_smooth_factor")
 						.binding(10D, () -> -Math.log10(aiming_distance_smooth_factor), v -> {aiming_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
@@ -202,12 +202,6 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(getText("option_category.misc"))
 				.tooltip(getText("option_category.misc.desc"))
-				// .option(Option.<Boolean>createBuilder()
-				// 	.name(getText("option.projectile_auto_aim"))
-				// 	.description(OptionDescription.of(getText("option.projectile_auto_aim.desc")))
-				// 	.binding(true, () -> false, v -> {})
-				// 	.controller(TickBoxControllerBuilder::create)
-				// 	.build())
 				.option(Config.<Double>option("camera_ray_trace_length")
 					.binding(256d, () -> camera_ray_trace_length, v -> camera_ray_trace_length = v)
 					.controller(opt -> DoubleSliderControllerBuilder.create(opt)
@@ -218,7 +212,7 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(getText("option_category.camera_offset"))
 				.tooltip(getText("option_category.camera_offset.desc"))
-				.option(Config.<Double>option("aiming_offset_max")
+				.option(Config.<Double>option("aiming_offset_max")//TODO deprecated
 					.binding(2d, () -> aiming_offset_max, v -> aiming_offset_max = v)
 					.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 						.range(0.5d, 5d)
@@ -338,20 +332,29 @@ public class Config {
 		aiming_camera_offset_smooth_factor = cameraOffsetScheme.aimingMode.getOffsetSmoothFactor().x; aiming_distance_smooth_factor = cameraOffsetScheme.aimingMode.getDistanceSmoothFactor();
 		aiming_offset_middle               = cameraOffsetScheme.aimingMode.getMiddleOffsetValue();
 	}
-}
 
-class ConfigControllers {
-	public static ControllerBuilder<Double> SMOOTH_FACTOR (Option<Double> opt) {
-		return DoubleSliderControllerBuilder.create(opt)
-			.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
-			.range(0D, 20D)
-			.step(0.25d);
+	/**
+	 * Config 控制器
+	 */
+	private static class ConfigControllers {
+		public static ControllerBuilder<Double> SMOOTH_FACTOR (Option<Double> opt) {
+			return DoubleSliderControllerBuilder.create(opt)
+				.valueFormatter(v -> Component.literal(String.format("1E-%2.2f", v)))
+				.range(0D, 20D)
+				.step(0.25d);
+		}
+
+		public static ControllerBuilder<Double> OFFSET (Option<Double> opt) {
+			return DoubleSliderControllerBuilder.create(opt)
+				.valueFormatter(v -> Component.literal(String.format("%+1.3f", v)))
+				.range(-1D, 1D)
+				.step(0.001d);
+		}
 	}
 
-	public static ControllerBuilder<Double> OFFSET (Option<Double> opt) {
-		return DoubleSliderControllerBuilder.create(opt)
-			.valueFormatter(v -> Component.literal(String.format("%+.4f", v)))
-			.range(-1D, 1D)
-			.step(0.01d);
-	}
+	public static Option.Builder<Boolean> HIDDEN_OPTION = Option.<Boolean>createBuilder()
+		.name(getText("option.projectile_auto_aim"))
+		.description(OptionDescription.of(getText("option.projectile_auto_aim.desc")))
+		.binding(true, () -> false, v -> {})
+		.controller(TickBoxControllerBuilder::create);
 }
