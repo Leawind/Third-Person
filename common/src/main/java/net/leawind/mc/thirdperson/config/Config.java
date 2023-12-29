@@ -63,9 +63,7 @@ public class Config {
 	@ConfigEntry
 	public static       double                  camera_ray_trace_length            = 256;
 	@ConfigEntry
-	public static       double                  aiming_offset_max                  = 2.0;
-	@ConfigEntry
-	public static       double                  flying_smooth_factor               = 0D;//TODO
+	public static       double                  flying_smooth_factor               = 1E-3;
 	@ConfigEntry
 	private static      int                     available_distance_count           = 16;
 	@ConfigEntry
@@ -237,12 +235,6 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(getText("option_category.camera_offset"))
 				.tooltip(getText("option_category.camera_offset.desc"))
-				.option(Config.<Double>option("aiming_offset_max")//TODO deprecated
-					.binding(2d, () -> aiming_offset_max, v -> aiming_offset_max = v)
-					.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-						.range(0.5d, 5d)
-						.step(0.1d))
-					.build())
 				.group(OptionGroup.createBuilder()    // 普通模式
 					.name(getText("option_group.normal_mode"))
 					.description(OptionDescription.of(getText("option_group.normal_mode.desc")))

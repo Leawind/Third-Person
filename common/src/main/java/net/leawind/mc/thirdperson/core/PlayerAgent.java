@@ -137,8 +137,12 @@ public class PlayerAgent {
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
-		// 平滑更新眼睛位置
-		smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+		// 平滑更新眼睛位置，飞行时使用专用的平滑系数
+		if (CameraAgent.playerEntity.isFallFlying()) {
+			smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
+		} else {
+			smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+		}
 		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
 		if (CameraAgent.isAiming || wasInterecting) {
 			turnToCameraHitResult(partialTick);

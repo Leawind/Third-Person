@@ -88,29 +88,17 @@ public class ModEvents {
 			double dy          = yMove * sensitivity * 0.15;
 			// 相机在头顶，只能上下调整
 			double topOffset = scheme.getMode().getCenterOffsetRatio();
-			if (scheme.isAiming) {
-				topOffset -= Math.exp(topOffset) * dy * 1e-2;
-				topOffset = Mth.clamp(topOffset, 0, Config.aiming_offset_max);
-			} else {
-				topOffset += -yMove / mc.getWindow().getScreenHeight();
-				topOffset = Mth.clamp(topOffset, -1, 1);
-			}
+			topOffset += -yMove / mc.getWindow().getScreenHeight();
+			topOffset = Mth.clamp(topOffset, -1, 1);
 			scheme.getMode().setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
 			double offsetX = scheme.getMode().getOffsetValue().x;
 			double offsetY = scheme.getMode().getOffsetValue().y;
-			if (scheme.isAiming) {
-				offsetX += Math.exp(Math.abs(offsetX)) * -xMove / mc.getWindow().getScreenWidth();
-				offsetY += Math.exp(Math.abs(offsetY)) * -yMove / mc.getWindow().getScreenHeight();
-				offsetX = Mth.clamp(offsetX, -Config.aiming_offset_max, Config.aiming_offset_max);
-				offsetY = Mth.clamp(offsetY, -Config.aiming_offset_max, Config.aiming_offset_max);
-			} else {
-				offsetX += -xMove / mc.getWindow().getScreenWidth();
-				offsetY += -yMove / mc.getWindow().getScreenHeight();
-				offsetX = Mth.clamp(offsetX, -1, 1);
-				offsetY = Mth.clamp(offsetY, -1, 1);
-			}
+			offsetX += -xMove / mc.getWindow().getScreenWidth();
+			offsetY += -yMove / mc.getWindow().getScreenHeight();
+			offsetX = Mth.clamp(offsetX, -1, 1);
+			offsetY = Mth.clamp(offsetY, -1, 1);
 			double newXsgn = Math.signum(offsetX);
 			scheme.setSide(newXsgn);
 			scheme.getMode().setOffsetRatio(new Vec2((float)offsetX, (float)offsetY));
