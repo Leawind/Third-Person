@@ -32,22 +32,22 @@ public class CameraAgent {
 	 * <p>
 	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
 	 */
-	public static final double          nearPlaneDistance     = 0.05;
+	public static final double          NEAR_PLANE_DISTANCE   = 0.05;
+	@Nullable
 	public static       BlockGetter     level;
+	@Nullable
 	public static       Camera          camera;
 	public static       Camera          fakeCamera            = new Camera();
 	/**
 	 * 当前玩家实体
 	 */
+	@Nullable
 	public static       LocalPlayer     playerEntity;
 	/**
 	 * 当前相机附着的实体，当以旁观者模式附着其他实体时，此实体不同于当前玩家实体
 	 */
+	@Nullable
 	public static       Entity          attachedEntity;
-	/**
-	 * 当前是否为第三人称视角
-	 */
-	public static       boolean         isThirdPerson         = false;
 	/**
 	 * 相机偏移量
 	 */
@@ -96,7 +96,7 @@ public class CameraAgent {
 	 * 如果当前玩家处于旁观者模式，附着在其他实体上，则返回false
 	 */
 	public static boolean isControlledCamera () {
-		return ((LocalPlayerInvoker)playerEntity).invokeIsControlledCamera();
+		return (playerEntity != null) && ((LocalPlayerInvoker)playerEntity).invokeIsControlledCamera();
 	}
 
 	/**
@@ -123,7 +123,6 @@ public class CameraAgent {
 	public static void onEnterThirdPerson (float partialTick) {
 		reset();
 		PlayerAgent.reset();
-		isThirdPerson               = true;
 		isAiming                    = false;
 		ModOptions.isToggleToAiming = false;
 		lastTickTime                = Blaze3D.getTime();
@@ -149,7 +148,6 @@ public class CameraAgent {
 	 * 退出第三人称视角
 	 */
 	public static void onLeaveThirdPerson (float partialTick) {
-		isThirdPerson = false;
 		PlayerAgent.turnToCameraHitResult(1);
 		LOGGER.info("Leave third person, partialTick={}", partialTick);
 	}
@@ -175,7 +173,7 @@ public class CameraAgent {
 		lastTickTime = now;
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		scheme.setAiming(isAiming);
-		if (isThirdPerson) {
+		if (isThirdPerson()) {
 			boolean isAdjusting = ModOptions.isAdjustingCameraOffset();
 			// 平滑更新距离
 			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: scheme.getMode().getDistanceSmoothFactor());
@@ -209,12 +207,12 @@ public class CameraAgent {
 		// 垂直视野角度一半(弧度制）
 		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
 		// 成像平面宽高
-		double heightHalf = Math.tan(verticalRadianHalf) * nearPlaneDistance;
+		double heightHalf = Math.tan(verticalRadianHalf) * NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
 		// 水平视野角度一半(弧度制）
-		double horizonalRadianHalf = Math.atan(widthHalf / nearPlaneDistance);
+		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
 		// 偏移
-		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / nearPlaneDistance;
+		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / NEAR_PLANE_DISTANCE;
 		double upOffset   = smoothOffsetRatio.get().y * smoothVirtualDistance.get() * Math.tan(verticalRadianHalf);
 		// 没有偏移的情况下相机位置
 		Vec3 positionWithoutOffset = getVirtualPosition();

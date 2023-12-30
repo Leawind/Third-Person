@@ -34,7 +34,6 @@ public abstract class CameraMixin {
 								   CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
-			CameraAgent.isThirdPerson = false;
 			if (l3p$wasFirstPerson && !isFirstPerson) {
 				CameraAgent.onEnterThirdPerson(partialTick);
 			} else if (!l3p$wasFirstPerson && isFirstPerson) {
@@ -65,7 +64,6 @@ public abstract class CameraMixin {
 				Camera camera = (Camera)(Object)this;
 				((CameraInvoker)camera).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());
 			}
-			CameraAgent.isThirdPerson = true;
 			CameraAgent.onRenderTick(level, entity, reversedView, partialTick);
 			ci.cancel();
 		}
