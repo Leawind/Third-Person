@@ -6,6 +6,7 @@ import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
+import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
 import net.minecraft.client.Camera;
@@ -108,6 +109,15 @@ public class CameraAgent {
 											(float)(relativeRotation.y + turnY) % 360f);
 			}
 		}
+	}
+
+	/**
+	 * 当前是否在控制玩家
+	 * <p>
+	 * 如果当前玩家处于旁观者模式，附着在其他实体上，则返回false
+	 */
+	public static boolean isControlledCamera () {
+		return ((LocalPlayerInvoker)playerEntity).invokeIsControlledCamera();
 	}
 
 	/**
