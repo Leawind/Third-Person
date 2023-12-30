@@ -26,22 +26,22 @@ public class PlayerAgent {
 	public static       Vector2f      absoluteImpulse   = new Vector2f(0, 0);
 
 	public static void reset () {
-		// 将虚拟球心放在实体眼睛处
-		float pt = Minecraft.getInstance().getFrameTime();
-		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(pt))
-						 .setValue(CameraAgent.attachedEntity.getEyePosition(pt));
-		LOGGER.info("Reset PlayerAgent");
+		if (CameraAgent.attachedEntity != null) {
+			// 将虚拟球心放在实体眼睛处
+			float pt = Minecraft.getInstance().getFrameTime();
+			smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(pt))
+							 .setValue(CameraAgent.attachedEntity.getEyePosition(pt));
+			LOGGER.info("Reset PlayerAgent");
+		}
 	}
 
 	/**
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
 	public static void onBeforeHandleKeybinds () {
-		if (wasInterecting) {
-			if (CameraAgent.isThirdPerson) {
-				turnToCameraHitResult(1);
-				Minecraft.getInstance().gameRenderer.pick(1.0f);
-			}
+		if (wasInterecting && CameraAgent.isThirdPerson()) {
+			turnToCameraHitResult(1);
+			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
 	}
 

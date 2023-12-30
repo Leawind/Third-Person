@@ -51,7 +51,7 @@ public class ModKeys {
 		public void setDown (boolean down) {
 			final boolean wasDown = isDown();
 			super.setDown(down);
-			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
 				double             now    = Blaze3D.getTime();
 				CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 				if (!wasDown && down) {   // on key down

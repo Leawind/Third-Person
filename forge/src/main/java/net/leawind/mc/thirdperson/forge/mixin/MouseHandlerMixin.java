@@ -22,7 +22,7 @@ public class MouseHandlerMixin {
 								   double dx,
 								   double dy,
 								   int m) {
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
 			if (Minecraft.getInstance().options.invertYMouse().get()) {
 				dy = -dy;
 			}
