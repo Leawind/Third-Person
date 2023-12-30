@@ -121,7 +121,7 @@ public class PlayerAgent {
 		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
 		if (left != 0 || forward != 0) {
 			float absoluteRotDegree = (float)(CameraAgent.camera.getYRot() - Math.toDegrees(Math.atan2(left, forward)));
-			if (!(CameraAgent.isAiming || wasInterecting)) {
+			if (Config.rotate_to_moving_direction && !(CameraAgent.isAiming || wasInterecting)) {
 				turnTo(new Vec2(0, absoluteRotDegree), CameraAgent.playerEntity.isSprinting());
 			}
 			float relativeRotDegree = absoluteRotDegree - CameraAgent.playerEntity.getYRot();
