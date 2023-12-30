@@ -17,22 +17,23 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ModKeys {
-	public static final  Logger LOGGER       = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	private static final String CATEGORY_KEY = "key.categories." + ThirdPersonMod.MOD_ID;
+	public static final  Logger     LOGGER           = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	private static final String     CATEGORY_KEY     = "key.categories." + ThirdPersonMod.MOD_ID;
 	/**
 	 * 按下打开配置菜单
 	 */
-	public static final KeyMapping OPEN_CONFIG_MENU = new KeyMapping(getText("open_config_menu"),
-																	 InputConstants.UNKNOWN.getValue(),
-																	 CATEGORY_KEY) {
+	private static final KeyMapping OPEN_CONFIG_MENU = new KeyMapping(getText("open_config_menu"),
+																	  InputConstants.UNKNOWN.getValue(),
+																	  CATEGORY_KEY) {
 		@Override
 		public void setDown (boolean down) {
 			boolean wasDown = isDown();
 			super.setDown(down);
-			if (CameraAgent.isAvailable()) {
-				if (!wasDown && down) {
-					// key down
-					LOGGER.debug("Open config menu");//TODO
+			if (!wasDown && down) {
+				// key down
+				Minecraft mc = Minecraft.getInstance();
+				if (mc.screen == null) {
+					mc.setScreen(Config.getConfigScreen(null));
 				}
 			}
 		}
@@ -40,9 +41,9 @@ public class ModKeys {
 	/**
 	 * 切换左右
 	 */
-	public static final KeyMapping TOGGLE_SIDE      = new KeyMapping(getText("toggle_side"),
-																	 InputConstants.KEY_CAPSLOCK,
-																	 CATEGORY_KEY) {
+	private static final KeyMapping TOGGLE_SIDE      = new KeyMapping(getText("toggle_side"),
+																	  InputConstants.KEY_CAPSLOCK,
+																	  CATEGORY_KEY) {
 		private Timer timer = null;
 		private double keyDownTime = 0;
 
@@ -50,8 +51,8 @@ public class ModKeys {
 		public void setDown (boolean down) {
 			final boolean wasDown = isDown();
 			super.setDown(down);
-			double now = Blaze3D.getTime();
 			if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
+				double             now    = Blaze3D.getTime();
 				CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 				if (!wasDown && down) {   // on key down
 					if (scheme.isCenter()) {
@@ -88,9 +89,9 @@ public class ModKeys {
 	 * <p>
 	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
 	 */
-	public static final KeyMapping ADJUST_POSITION  = new KeyMapping(getText("adjust_position"),
-																	 InputConstants.KEY_Z,
-																	 CATEGORY_KEY) {
+	public static final  KeyMapping ADJUST_POSITION  = new KeyMapping(getText("adjust_position"),
+																	  InputConstants.KEY_Z,
+																	  CATEGORY_KEY) {
 		@Override
 		public void setDown (boolean down) {
 			boolean wasDown = isDown();
@@ -109,9 +110,9 @@ public class ModKeys {
 	/**
 	 * 切换瞄准状态
 	 */
-	public static final KeyMapping TOGGLE_AIMING    = new KeyMapping(getText("toggle_aiming"),
-																	 InputConstants.UNKNOWN.getValue(),
-																	 CATEGORY_KEY) {
+	private static final KeyMapping TOGGLE_AIMING    = new KeyMapping(getText("toggle_aiming"),
+																	  InputConstants.UNKNOWN.getValue(),
+																	  CATEGORY_KEY) {
 		@Override
 		public void setDown (boolean down) {
 			final boolean wasDown = isDown();
@@ -124,9 +125,9 @@ public class ModKeys {
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final KeyMapping FORCE_AIMING     = new KeyMapping(getText("force_aiming"),
-																	 InputConstants.UNKNOWN.getValue(),
-																	 CATEGORY_KEY);
+	public static final  KeyMapping FORCE_AIMING     = new KeyMapping(getText("force_aiming"),
+																	  InputConstants.UNKNOWN.getValue(),
+																	  CATEGORY_KEY);
 
 	private static String getText (String name) {
 		return "key." + ThirdPersonMod.MOD_ID + "." + name;

@@ -16,7 +16,7 @@
 	"leawind_third_person.option_group.aiming_mode": "Aiming Mode",
 	"leawind_third_person.option_group.aiming_mode.desc": "When aiming with bows, crossbows, spears, etc.",
 	"leawind_third_person.option.is_mod_enable": "Is the mod enabled",
-	"leawind_third_person.option.is_mod_enable.desc": "Disabling will display the original third-person view.",
+	"leawind_third_person.option.is_mod_enable.desc": "Disabling will display the original third-person view. But you can still open config menu by pressing specified key.",
 	"leawind_third_person.option.available_distance_count": "Available Distance Count",
 	"leawind_third_person.option.available_distance_count.desc": "Use the mouse scroll wheel to adjust the camera-to-player distance. The value of this option is the number of distance levels.",
 	"leawind_third_person.option.camera_distance_min": "Minimum Distance",

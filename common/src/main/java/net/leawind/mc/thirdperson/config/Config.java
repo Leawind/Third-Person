@@ -119,7 +119,7 @@ public class Config {
 	 * 提供给 ModMenu
 	 */
 	public static Screen getConfigScreen (Screen parent) {
-		YetAnotherConfigLib config = YetAnotherConfigLib.createBuilder()
+		return YetAnotherConfigLib.createBuilder()
 			.title(getText("text.title"))
 			.save(Config::save)
 			.category(ConfigCategory.createBuilder()
@@ -133,25 +133,19 @@ public class Config {
 					.name(getText("option_group.camera_distance_adjustment"))
 					.description(OptionDescription.of(getText("option_group.camera_distance_adjustment.desc")))
 					.option(Config.<Integer>option("available_distance_count")
-						.binding(16, () -> available_distance_count, v -> {
-							available_distance_count = v; updateCameraDistances();
-						})
+						.binding(16, () -> available_distance_count, v -> {available_distance_count = v; updateCameraDistances();})
 						.controller(opt -> IntegerSliderControllerBuilder.create(opt)
 							.range(2, 64)
 							.step(1))
 						.build())
 					.option(Config.<Double>option("camera_distance_min")
-						.binding(0.1d, () -> camera_distance_min, v -> {
-							camera_distance_min = v; updateCameraDistances();
-						})
+						.binding(0.1d, () -> camera_distance_min, v -> {camera_distance_min = v; updateCameraDistances();})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 							.range(0d, 2d)
 							.step(0.1d))
 						.build())
 					.option(Config.<Double>option("camera_distance_max")
-						.binding(8d, () -> camera_distance_max, v -> {
-							camera_distance_max = v; updateCameraDistances();
-						})
+						.binding(8d, () -> camera_distance_max, v -> {camera_distance_max = v; updateCameraDistances();})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 							.range(2d, 16d)
 							.step(0.1d))
@@ -169,27 +163,19 @@ public class Config {
 					.name(getText("option_group.normal_mode"))
 					.description(OptionDescription.of(getText("option_group.normal_mode.desc")))
 					.option(Config.<Double>option("smooth_factor_horizon")
-						.binding(10D, () -> -Math.log10(normal_smooth_factor_horizon), v -> {
-							normal_smooth_factor_horizon = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(normal_smooth_factor_horizon), v -> {normal_smooth_factor_horizon = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("smooth_factor_vertical")
-						.binding(10D, () -> -Math.log10(normal_smooth_factor_vertical), v -> {
-							normal_smooth_factor_vertical = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(normal_smooth_factor_vertical), v -> {normal_smooth_factor_vertical = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("camera_offset_smooth_factor")
-						.binding(10D, () -> -Math.log10(normal_camera_offset_smooth_factor), v -> {
-							normal_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(normal_camera_offset_smooth_factor), v -> {normal_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("distance_smooth_factor")
-						.binding(10D, () -> -Math.log10(normal_distance_smooth_factor), v -> {
-							normal_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(normal_distance_smooth_factor), v -> {normal_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.build())
@@ -197,27 +183,19 @@ public class Config {
 					.name(getText("option_group.aiming_mode"))
 					.description(OptionDescription.of(getText("option_group.aiming_mode.desc")))
 					.option(Config.<Double>option("smooth_factor_horizon")
-						.binding(10D, () -> -Math.log10(aiming_smooth_factor_horizon), v -> {
-							aiming_smooth_factor_horizon = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(aiming_smooth_factor_horizon), v -> {aiming_smooth_factor_horizon = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("smooth_factor_vertical")
-						.binding(10D, () -> -Math.log10(aiming_smooth_factor_vertical), v -> {
-							aiming_smooth_factor_vertical = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(aiming_smooth_factor_vertical), v -> {aiming_smooth_factor_vertical = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("camera_offset_smooth_factor")
-						.binding(10D, () -> -Math.log10(aiming_camera_offset_smooth_factor), v -> {
-							aiming_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(aiming_camera_offset_smooth_factor), v -> {aiming_camera_offset_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.option(Config.<Double>option("distance_smooth_factor")
-						.binding(10D, () -> -Math.log10(aiming_distance_smooth_factor), v -> {
-							aiming_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();
-						})
+						.binding(10D, () -> -Math.log10(aiming_distance_smooth_factor), v -> {aiming_distance_smooth_factor = Math.pow(10, -v); updateCameraOffsetScheme();})
 						.controller(ConfigControllers::SMOOTH_FACTOR)
 						.build())
 					.build())
@@ -253,9 +231,7 @@ public class Config {
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_center")
-						.binding(0.221D, () -> normal_offset_center, v -> {
-							normal_offset_center = v; updateCameraOffsetScheme();
-						})
+						.binding(0.221D, () -> normal_offset_center, v -> {normal_offset_center = v; updateCameraOffsetScheme();})
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.build())
@@ -263,34 +239,27 @@ public class Config {
 					.name(getText("option_group.aiming_mode"))
 					.description(OptionDescription.of(getText("option_group.aiming_mode.desc")))
 					.option(Config.<Double>option("max_distance")
-						.binding(0.6D, () -> aiming_max_distance, v -> {
-							aiming_max_distance = v; updateCameraOffsetScheme();
-						})
+						.binding(0.6D, () -> aiming_max_distance, v -> {aiming_max_distance = v; updateCameraOffsetScheme();})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 							.range(1d, 32d)
 							.step(0.2d))
 						.build())
 					.option(Config.<Double>option("offset_x")
-						.binding(0D, () -> aiming_offset_x, v -> {
-							aiming_offset_x = v; updateCameraOffsetScheme();
-						})
+						.binding(0D, () -> aiming_offset_x, v -> {aiming_offset_x = v; updateCameraOffsetScheme();})
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_y")
-						.binding(0D, () -> aiming_offset_y, v -> {
-							aiming_offset_y = v; updateCameraOffsetScheme();
-						})
+						.binding(0D, () -> aiming_offset_y, v -> {aiming_offset_y = v; updateCameraOffsetScheme();})
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.option(Config.<Double>option("offset_center")
-						.binding(0D, () -> aiming_offset_center, v -> {
-							aiming_offset_center = v; updateCameraOffsetScheme();
-						})
+						.binding(0D, () -> aiming_offset_center, v -> {aiming_offset_center = v; updateCameraOffsetScheme();})
 						.controller(ConfigControllers::OFFSET)
 						.build())
 					.build())
 				.build())
-			.build(); return config.generateScreen(parent);
+			.build()
+			.generateScreen(parent);
 	}
 
 	/**
