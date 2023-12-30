@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ public class PlayerAgent {
 	public static final Logger        LOGGER            = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
 	public static       boolean       wasInterecting    = false;
+	public static       Vector2f      absoluteImpulse   = new Vector2f(0, 0);
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
@@ -109,25 +111,17 @@ public class PlayerAgent {
 	}
 
 	/**
-	 * 玩家移动
+	 * 玩家移动时自动转向移动方向
 	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
-		if (CameraAgent.attachedEntity.isSwimming()) {
-			return;
-		}
-		float left    = CameraAgent.playerEntity.xxa;
-		float forward = CameraAgent.playerEntity.isFallFlying() ? 0: CameraAgent.playerEntity.zza;
-		float speed   = (float)Math.sqrt(left * left + forward * forward);// 记录此时的速度
-		if (left != 0 || forward != 0) {
-			float absoluteRotDegree = (float)(CameraAgent.camera.getYRot() - Math.toDegrees(Math.atan2(left, forward)));
+		if (CameraAgent.attachedEntity == CameraAgent.playerEntity && !CameraAgent.attachedEntity.isSwimming() &&
+			absoluteImpulse.length() > 1e-5) {
+			float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x,
+																						  absoluteImpulse.y));
 			if (Config.rotate_to_moving_direction && !(CameraAgent.isAiming || wasInterecting)) {
-				turnTo(new Vec2(0, absoluteRotDegree), CameraAgent.playerEntity.isSprinting());
+				turnTo(absoluteRotDegree, 0, CameraAgent.playerEntity.isSprinting());
 			}
-			float relativeRotDegree = absoluteRotDegree - CameraAgent.playerEntity.getYRot();
-			float relativeRotRadian = (float)Math.toRadians(relativeRotDegree);
-			CameraAgent.playerEntity.xxa = (float)-Math.sin(relativeRotRadian) * speed;
-			CameraAgent.playerEntity.zza = (float)Math.cos(relativeRotRadian) * speed;
 		}
 	}
 
