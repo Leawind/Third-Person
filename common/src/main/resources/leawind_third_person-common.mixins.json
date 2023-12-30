@@ -8,6 +8,7 @@
 		"LocalPlayerInvoker",
 		"CameraMixin",
 		"GuiMixin",
+		"KeyboardInputMixin",
 		"LocalPlayerMixin",
 		"MinecraftMixin",
 		"MouseHandlerMixin",
