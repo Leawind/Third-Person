@@ -306,13 +306,18 @@ public class CameraAgent {
 												 pickRange);
 	}
 
+	/**
+	 * pick 方块
+	 * <p>
+	 * 瞄准时忽略草
+	 */
 	private static @NotNull BlockHitResult pickBlock (double pickRange) {
 		Vec3 viewStart  = camera.getPosition();
 		Vec3 viewVector = new Vec3(camera.getLookVector());
 		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
 		return attachedEntity.level.clip(new ClipContext(viewStart,
 														 viewEnd,
-														 ClipContext.Block.OUTLINE,
+														 isAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
 														 ClipContext.Fluid.NONE,
 														 attachedEntity));
 	}
