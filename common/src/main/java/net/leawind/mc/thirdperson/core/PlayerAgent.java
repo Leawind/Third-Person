@@ -27,8 +27,9 @@ public class PlayerAgent {
 
 	public static void reset () {
 		// 将虚拟球心放在实体眼睛处
-		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition())
-						 .setValue(CameraAgent.attachedEntity.getEyePosition());
+		float pt = Minecraft.getInstance().getFrameTime();
+		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(pt))
+						 .setValue(CameraAgent.attachedEntity.getEyePosition(pt));
 		LOGGER.info("Reset PlayerAgent");
 	}
 
@@ -84,16 +85,17 @@ public class PlayerAgent {
 	 * @param isInstantly 是否瞬间转动
 	 */
 	public static void turnTo (float ry, float rx, boolean isInstantly) {
+		Minecraft mc = Minecraft.getInstance();
 		if (isInstantly) {
 			CameraAgent.playerEntity.setYRot(ry);
 			CameraAgent.playerEntity.setXRot(rx);
 		} else {
-			float playerY = CameraAgent.playerEntity.getYRot();
+			float playerY = CameraAgent.playerEntity.getViewYRot(mc.getFrameTime());
 			float dy      = ((ry - playerY) % 360 + 360) % 360;
 			if (dy > 180) {
 				dy -= 360;
 			}
-			CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getXRot());
+			CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getViewXRot(mc.getFrameTime()));
 		}
 	}
 

@@ -21,8 +21,8 @@ public class ModEvents {
 		ClientLifecycleEvent.CLIENT_STARTED.register(ModEvents::onClientStarted);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
-		ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
+		ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
 	}
 
 	public static void onClientStarted (Minecraft minecraft) {

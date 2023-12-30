@@ -18,7 +18,7 @@ public class ModOptions {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson && ModKeys.ADJUST_POSITION.isDown();
+		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();
 	}
 
 	/**
