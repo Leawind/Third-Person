@@ -3,14 +3,14 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.ModEvents;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.Options;
+import net.leawind.mc.thirdperson.core.ModOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value=net.minecraft.client.MouseHandler.class, priority=2000)
+@Mixin(net.minecraft.client.MouseHandler.class)
 public class MouseHandlerMixin {
 	@Shadow
 	private double accumulatedDX;
@@ -19,7 +19,7 @@ public class MouseHandlerMixin {
 
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
-		if (CameraAgent.isAvailable() && Options.isAdjustingCameraOffset()) {
+		if (CameraAgent.isAvailable() && ModOptions.isAdjustingCameraOffset()) {
 			ModEvents.onAdjustingCameraOffset(accumulatedDX, accumulatedDY);
 			accumulatedDX = 0;
 			accumulatedDY = 0;

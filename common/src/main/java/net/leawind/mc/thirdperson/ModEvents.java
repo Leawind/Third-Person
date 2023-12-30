@@ -8,7 +8,7 @@ import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.Options;
+import net.leawind.mc.thirdperson.core.ModOptions;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.minecraft.client.Minecraft;
@@ -32,12 +32,12 @@ public class ModEvents {
 	 * 当玩家死亡后重生或加入新的维度时触发
 	 */
 	public static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
-		onPlayerReset(newPlayer);
+		onPlayerReset();
 		ThirdPersonMod.LOGGER.info("on Client player respawn");
 	}
 
 	public static void onClientPlayerJoin (LocalPlayer player) {
-		onPlayerReset(player);
+		onPlayerReset();
 		ThirdPersonMod.LOGGER.info("on Client player join");
 	}
 
@@ -48,7 +48,7 @@ public class ModEvents {
 	 * @param amount    向前滚是+1，向后滚是-1
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
-		if (Options.isAdjustingCameraOffset()) {
+		if (ModOptions.isAdjustingCameraOffset()) {
 			double dist = Config.cameraOffsetScheme.getMode().getMaxDistance();
 			dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
 			Config.cameraOffsetScheme.getMode().setMaxDistance(dist);
@@ -58,7 +58,7 @@ public class ModEvents {
 		}
 	}
 
-	public static void onPlayerReset (LocalPlayer player) {
+	public static void onPlayerReset () {
 		CameraAgent.reset();
 		PlayerAgent.reset();
 	}
@@ -84,8 +84,9 @@ public class ModEvents {
 		Minecraft          mc     = Minecraft.getInstance();
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		if (scheme.isCenter()) {
-			double sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
-			double dy          = yMove * sensitivity * 0.15;
+			// double sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
+			// double dx          = xMove * sensitivity * 0.15;
+			// double dy          = yMove * sensitivity * 0.15;
 			// 相机在头顶，只能上下调整
 			double topOffset = scheme.getMode().getCenterOffsetRatio();
 			topOffset += -yMove / mc.getWindow().getScreenHeight();

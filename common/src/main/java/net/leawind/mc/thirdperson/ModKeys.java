@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.Options;
+import net.leawind.mc.thirdperson.core.ModOptions;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -118,7 +118,7 @@ public class ModKeys {
 			final boolean wasDown = isDown();
 			super.setDown(down);
 			if (CameraAgent.isAvailable() && !wasDown && down) {// on key down
-				Options.isToggleToAiming = !Options.isToggleToAiming;
+				ModOptions.isToggleToAiming = !ModOptions.isToggleToAiming;
 			}
 		}
 	};

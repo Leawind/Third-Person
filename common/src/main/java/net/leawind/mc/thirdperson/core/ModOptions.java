@@ -6,7 +6,8 @@ import net.leawind.mc.thirdperson.ModKeys;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Options {
+public class ModOptions {
+	@SuppressWarnings("unused")
 	public static Map<Object, Object> debug_map        = new HashMap<>();
 	/**
 	 * 是否通过按键切换到了瞄准模式
