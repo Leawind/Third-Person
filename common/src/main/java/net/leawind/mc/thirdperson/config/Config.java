@@ -61,6 +61,8 @@ public class Config {
 	@ConfigEntry
 	public static       boolean                 is_mod_enable                      = true;
 	@ConfigEntry
+	public static       boolean                 rotate_to_moving_direction         = true;
+	@ConfigEntry
 	public static       double                  camera_ray_trace_length            = 256;
 	@ConfigEntry
 	public static       double                  flying_smooth_factor               = 1E-3;
@@ -127,6 +129,10 @@ public class Config {
 				.tooltip(getText("option_category.common.desc"))
 				.option(Config.<Boolean>option("is_mod_enable")
 					.binding(true, () -> is_mod_enable, v -> is_mod_enable = v)
+					.controller(TickBoxControllerBuilder::create)
+					.build())
+				.option(Config.<Boolean>option("rotate_to_moving_direction")
+					.binding(true, () -> rotate_to_moving_direction, v -> rotate_to_moving_direction = v)
 					.controller(TickBoxControllerBuilder::create)
 					.build())
 				.group(OptionGroup.createBuilder()

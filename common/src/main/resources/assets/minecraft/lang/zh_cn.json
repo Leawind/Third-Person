@@ -17,6 +17,8 @@
 	"leawind_third_person.option_group.aiming_mode.desc": "当使用弓|弩|戟等瞄准时",
 	"leawind_third_person.option.is_mod_enable": "本模组是否启用",
 	"leawind_third_person.option.is_mod_enable.desc": "禁用后将显示原版第三人称视角，但仍可以按键打开配置屏幕",
+	"leawind_third_person.option.rotate_to_moving_direction": "玩家移动时自动转向前进的方向",
+	"leawind_third_person.option.rotate_to_moving_direction.desc": "玩家移动时是否自动转向前进的方向",
 	"leawind_third_person.option.available_distance_count": "可选的距离数量",
 	"leawind_third_person.option.available_distance_count.desc": "使用鼠标滚轮可以调整相机到玩家距离，该选项的值是距离的档位数量",
 	"leawind_third_person.option.camera_distance_min": "距离下限",
