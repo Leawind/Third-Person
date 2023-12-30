@@ -11,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
@@ -27,7 +26,6 @@ public class PlayerAgent {
 	public static       Vector2f      absoluteImpulse   = new Vector2f(0, 0);
 
 	public static void reset () {
-		Minecraft mc = Minecraft.getInstance();
 		// 将虚拟球心放在实体眼睛处
 		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition())
 						 .setValue(CameraAgent.attachedEntity.getEyePosition());
@@ -51,8 +49,7 @@ public class PlayerAgent {
 	 */
 	public static void turnToCameraHitResult (float partialTick) {
 		// 计算相机视线落点
-		HitResult hitResult         = Minecraft.getInstance().hitResult;
-		Vec3      cameraHitPosition = CameraAgent.getPickPosition();
+		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
 			turnWithCamera(true);
 		} else {
@@ -119,7 +116,7 @@ public class PlayerAgent {
 			float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x,
 																						  absoluteImpulse.y));
 			if (Config.rotate_to_moving_direction && !(CameraAgent.isAiming || wasInterecting)) {
-				turnTo(absoluteRotDegree, 0, CameraAgent.playerEntity.isSprinting());
+				turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 			}
 		}
 	}
@@ -165,8 +162,7 @@ public class PlayerAgent {
 			return false;
 		}
 		// 只有 LivingEntity 才有可能手持物品瞄准
-		if (CameraAgent.attachedEntity instanceof LivingEntity) {
-			LivingEntity livingEntity = (LivingEntity)CameraAgent.attachedEntity;
+		if (CameraAgent.attachedEntity instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem()) {
 				ItemStack itemStack = livingEntity.getUseItem();
 				if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
@@ -182,6 +178,6 @@ public class PlayerAgent {
 				return true;// 副手拿着上了弦的弩
 			}
 		}
-		return Options.doesPlayerWantToAim();
+		return ModOptions.doesPlayerWantToAim();
 	}
 }

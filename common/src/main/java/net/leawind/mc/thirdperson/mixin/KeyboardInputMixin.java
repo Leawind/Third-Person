@@ -13,15 +13,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value=net.minecraft.client.player.KeyboardInput.class, priority=2000)
+@Mixin(KeyboardInput.class)
 public class KeyboardInputMixin {
-	/**
-	 * 根据键盘输入计算玩家实体的 forwardImpulse 和 leftImpulse
-	 */
 	@Inject(method="tick", at=@At(value="TAIL"))
-	public void tick_inject_tail (boolean isMovingSlowly, float amplifier, CallbackInfo ci) {
+	public void tick_inject_tail (boolean flag, float amplifier, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
-		if (CameraAgent.isControlledCamera()) {
+		if (!CameraAgent.isControlledCamera()) {
 			return;
 		}
 		float    cameraForward        = (that.up ? 1: 0) - (that.down ? 1: 0);
@@ -38,7 +35,7 @@ public class KeyboardInputMixin {
 			Vector2f playerForward   = new Vector2f((float)playerForward3D.x, (float)playerForward3D.z);
 			that.forwardImpulse = PlayerAgent.absoluteImpulse.dot(playerForward);
 			that.leftImpulse    = PlayerAgent.absoluteImpulse.dot(playerLeft);
-			if (isMovingSlowly) {
+			if (flag) {
 				that.forwardImpulse *= amplifier;
 				that.leftImpulse *= amplifier;
 			}

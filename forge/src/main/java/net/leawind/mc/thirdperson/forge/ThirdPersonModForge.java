@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 @Mod(ThirdPersonMod.MOD_ID)
 public class ThirdPersonModForge {
+	@SuppressWarnings("unused")
 	public static final Logger LOGGER = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 
 	public ThirdPersonModForge () {
@@ -27,9 +28,5 @@ public class ThirdPersonModForge {
 														   () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> Config.getConfigScreen(
 															   screen)));
 		});
-		// 当在服务端运行时发出警告
-		DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER,
-									 () -> () -> LOGGER.warn("Client-only mod {} is running on dedicated server.",
-															 ThirdPersonMod.MOD_ID));
 	}
 }

@@ -69,6 +69,7 @@ public class CameraAgent {
 	public static       Vec3            lastPosition          = Vec3.ZERO;
 	public static       Vec2            lastRotation          = Vec2.ZERO;
 
+	@SuppressWarnings("unused")
 	public static boolean isThirdPerson () {
 		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
@@ -90,17 +91,22 @@ public class CameraAgent {
 	}
 
 	/**
+	 * 当前是否在控制玩家
+	 * <p>
+	 * 如果当前玩家处于旁观者模式，附着在其他实体上，则返回false
+	 */
+	public static boolean isControlledCamera () {
+		return ((LocalPlayerInvoker)playerEntity).invokeIsControlledCamera();
+	}
+
+	/**
 	 * 鼠标移动导致的相机旋转
 	 *
 	 * @param turnY 偏航角变化量
 	 * @param turnX 俯仰角变化量
 	 */
 	public static void onCameraTurn (double turnY, double turnX) {
-		if (!Config.is_mod_enable) {
-			return;
-		}
-		if (Options.isAdjustingCameraOffset()) {
-		} else {
+		if (Config.is_mod_enable && !ModOptions.isAdjustingCameraOffset()) {
 			turnY *= 0.15;
 			turnX *= -0.15;
 			if (turnY != 0 || turnX != 0) {
@@ -112,24 +118,15 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 当前是否在控制玩家
-	 * <p>
-	 * 如果当前玩家处于旁观者模式，附着在其他实体上，则返回false
-	 */
-	public static boolean isControlledCamera () {
-		return ((LocalPlayerInvoker)playerEntity).invokeIsControlledCamera();
-	}
-
-	/**
 	 * 进入第三人称视角时触发
 	 */
 	public static void onEnterThirdPerson (float partialTick) {
 		reset();
 		PlayerAgent.reset();
 		isThirdPerson            = true;
-		isAiming                 = false;
-		Options.isToggleToAiming = false;
-		lastTickTime             = Blaze3D.getTime();
+		isAiming                    = false;
+		ModOptions.isToggleToAiming = false;
+		lastTickTime                = Blaze3D.getTime();
 		LOGGER.info("Enter third person, partialTick={}", partialTick);
 	}
 
@@ -173,18 +170,17 @@ public class CameraAgent {
 		}
 		// 时间
 		double now           = Blaze3D.getTime();
-		double sinceLastTurn = now - lastTurnTime;
 		double sinceLastTick = now - lastTickTime;
 		lastTickTime = now;
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		scheme.setAiming(isAiming);
 		if (isThirdPerson) {
-			boolean isAdjusting = Options.isAdjustingCameraOffset();
+			boolean isAdjusting = ModOptions.isAdjustingCameraOffset();
 			// 平滑更新距离
 			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: scheme.getMode().getDistanceSmoothFactor());
 			smoothVirtualDistance.setTarget(scheme.getMode().getMaxDistance()).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
-			if (!scheme.isAiming && !Options.isAdjustingCameraOffset()) {
+			if (!scheme.isAiming && !ModOptions.isAdjustingCameraOffset()) {
 				smoothVirtualDistance.setValue(Math.min(scheme.getMode().getMaxDistance(), smoothVirtualDistance.get()));
 			}
 			// 平滑更新相机偏移量

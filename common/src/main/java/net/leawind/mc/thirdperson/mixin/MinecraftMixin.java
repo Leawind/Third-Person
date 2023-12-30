@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>
  * 在这之前，我要立即将玩家转向准星所指的方向， 并通过调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
  */
-@Mixin(value=net.minecraft.client.Minecraft.class, priority=2000)
+@Mixin(net.minecraft.client.Minecraft.class)
 public class MinecraftMixin {
 	/**
 	 * 注入到 handleKeybinds 头部，触发相应事件
