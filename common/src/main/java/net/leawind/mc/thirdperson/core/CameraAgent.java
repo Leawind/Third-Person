@@ -35,7 +35,6 @@ public class CameraAgent {
 	public static final double          NEAR_PLANE_DISTANCE   = 0.05;
 	@Nullable
 	public static       BlockGetter     level;
-	@Nullable
 	public static       Camera          camera;
 	public static       Camera          fakeCamera            = new Camera();
 	/**

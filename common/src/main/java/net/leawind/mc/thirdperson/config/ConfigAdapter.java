@@ -68,7 +68,7 @@ public class ConfigAdapter extends TypeAdapter<Config> {
 			}
 			in.endObject();
 		} catch (NoSuchFieldException | IllegalAccessException | IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e);//TODO
 		}
 		return new Config();
 	}
