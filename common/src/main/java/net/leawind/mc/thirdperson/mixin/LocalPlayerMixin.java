@@ -17,14 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LocalPlayerMixin {
 	@Inject(method="serverAiStep", at=@At(value="TAIL"))
 	public void serverAiStep_inject_tail (CallbackInfo ci) {
-		if (CameraAgent.isControlledCamera()) {
-			if (!CameraAgent.isAvailable() || !PlayerAgent.isAvailable()) {
-				return;
-			}
-			if (!CameraAgent.isThirdPerson) {
-				return;
-			}
-			PlayerAgent.onServerAiStep();
+		if (!CameraAgent.isAvailable() || !PlayerAgent.isAvailable()) {
+			return;
 		}
+		if (!CameraAgent.isControlledCamera()) {
+			return;
+		}
+		if (!CameraAgent.isThirdPerson()) {
+			return;
+		}
+		PlayerAgent.onServerAiStep();
 	}
 }

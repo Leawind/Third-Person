@@ -123,7 +123,7 @@ public class CameraAgent {
 	public static void onEnterThirdPerson (float partialTick) {
 		reset();
 		PlayerAgent.reset();
-		isThirdPerson            = true;
+		isThirdPerson               = true;
 		isAiming                    = false;
 		ModOptions.isToggleToAiming = false;
 		lastTickTime                = Blaze3D.getTime();
@@ -140,7 +140,8 @@ public class CameraAgent {
 		camera         = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothVirtualDistance.setValue(0);
-		relativeRotation = new Vec2(-attachedEntity.getXRot(), attachedEntity.getYRot() - 180);
+		relativeRotation = new Vec2(-attachedEntity.getViewXRot(mc.getFrameTime()),
+									attachedEntity.getViewYRot(mc.getFrameTime()) - 180);
 		LOGGER.info("Reset CameraAgent");
 	}
 

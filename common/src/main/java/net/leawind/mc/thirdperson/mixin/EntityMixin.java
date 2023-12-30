@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +30,7 @@ public class EntityMixin {
 											"Lnet/minecraft/world/entity/Entity;" + ")" + "V"), index=1)
 	private Vec3 clipContextConstructor (Vec3 viewEndFake) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson) {
-			Vec3   eye                   = CameraAgent.attachedEntity.getEyePosition();
+			Vec3   eye                   = CameraAgent.attachedEntity.getEyePosition(Minecraft.getInstance().getFrameTime());
 			double pickRange             = eye.distanceTo(viewEndFake);
 			Vec3   viewVectorToCameraHit = eye.vectorTo(CameraAgent.pick().getLocation());
 			return eye.add(viewVectorToCameraHit.normalize().scale(pickRange));
