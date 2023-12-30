@@ -60,6 +60,10 @@ public class Config {
 	@ConfigEntry
 	public static       boolean                 is_mod_enable                      = true;
 	@ConfigEntry
+	public static       boolean                 render_crosshair_when_not_aiming   = true;
+	@ConfigEntry
+	public static       boolean                 render_crosshair_when_aiming       = true;
+	@ConfigEntry
 	public static       boolean                 rotate_to_moving_direction         = true;
 	@ConfigEntry
 	public static       double                  camera_ray_trace_length            = 256;
@@ -209,6 +213,18 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(getText("option_category.misc"))
 				.tooltip(getText("option_category.misc.desc"))
+				.group(OptionGroup.createBuilder()   // 准星
+					.name(getText("option_group.crosshair"))
+					.description(OptionDescription.of(getText("option_group.crosshair.desc")))
+					.option(Config.<Boolean>option("render_crosshair_when_not_aiming")
+						.binding(true, () -> render_crosshair_when_not_aiming, v -> render_crosshair_when_not_aiming = v)
+						.controller(TickBoxControllerBuilder::create)
+						.build())
+					.option(Config.<Boolean>option("render_crosshair_when_aiming")
+						.binding(true, () -> render_crosshair_when_aiming, v -> render_crosshair_when_aiming = v)
+						.controller(TickBoxControllerBuilder::create)
+						.build())
+					.build())
 				.option(Config.<Double>option("camera_ray_trace_length")
 					.binding(256d, () -> camera_ray_trace_length, v -> camera_ray_trace_length = v)
 					.controller(opt -> DoubleSliderControllerBuilder.create(opt)

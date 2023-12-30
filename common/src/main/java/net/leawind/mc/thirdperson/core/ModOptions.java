@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.thirdperson.ModKeys;
+import net.leawind.mc.thirdperson.config.Config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,5 +27,10 @@ public class ModOptions {
 	 */
 	public static boolean doesPlayerWantToAim () {
 		return isToggleToAiming || ModKeys.FORCE_AIMING.isDown();
+	}
+
+	public static boolean shouldRenderCrosshair () {
+		return CameraAgent.isAvailable() &&
+			   (CameraAgent.isAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
 	}
 }
