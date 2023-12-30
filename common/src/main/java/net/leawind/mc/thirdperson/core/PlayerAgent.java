@@ -115,8 +115,7 @@ public class PlayerAgent {
 	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
-		if (CameraAgent.attachedEntity == CameraAgent.playerEntity && !CameraAgent.attachedEntity.isSwimming() &&
-			absoluteImpulse.length() > 1e-5) {
+		if (!CameraAgent.attachedEntity.isSwimming() && absoluteImpulse.length() > 1e-5) {
 			float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x,
 																						  absoluteImpulse.y));
 			if (Config.rotate_to_moving_direction && !(CameraAgent.isAiming || wasInterecting)) {

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(net.minecraft.client.MouseHandler.class)
+@Mixin(value=net.minecraft.client.MouseHandler.class, priority=2000)
 public class MouseHandlerMixin {
 	@Shadow
 	private double accumulatedDX;

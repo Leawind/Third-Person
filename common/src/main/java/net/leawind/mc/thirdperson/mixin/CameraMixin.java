@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(net.minecraft.client.Camera.class)
+@Mixin(value=net.minecraft.client.Camera.class, priority=2000)
 public abstract class CameraMixin {
 	@Unique
 	private boolean l3p$wasFirstPerson = true;

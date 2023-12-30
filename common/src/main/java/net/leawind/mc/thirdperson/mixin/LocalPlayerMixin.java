@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>
  * 第三人称视角下，按下方向键时，玩家的移动方向可能需要和默认行为不一样。
  */
-@Mixin(net.minecraft.client.player.LocalPlayer.class)
+@Mixin(value=net.minecraft.client.player.LocalPlayer.class, priority=2000)
 public class LocalPlayerMixin {
 	@Inject(method="serverAiStep", at=@At(value="TAIL"))
 	public void serverAiStep_inject_tail (CallbackInfo ci) {
 		if (((LocalPlayerInvoker)this).invokeIsControlledCamera()) {
-			if (!CameraAgent.isAvailable() || !PlayerAgent.isAvailable()) {
+			if (!CameraAgent.isAvailable()) {
 				return;
 			}
 			if (!CameraAgent.isThirdPerson) {
