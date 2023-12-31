@@ -24,14 +24,15 @@ public class PlayerAgent {
 	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
 	public static       boolean       wasInterecting    = false;
 	public static       Vector2f      absoluteImpulse   = new Vector2f(0, 0);
+	public static       float         lastPartialTick   = 1F;
 
 	public static void reset () {
-		if (CameraAgent.attachedEntity != null) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
-			float pt = Minecraft.getInstance().getFrameTime();
-			smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(pt))
-							 .setValue(CameraAgent.attachedEntity.getEyePosition(pt));
-			LOGGER.info("Reset PlayerAgent");
+			lastPartialTick = mc.getFrameTime();
+			smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(lastPartialTick))
+							 .setValue(mc.cameraEntity.getEyePosition(lastPartialTick));
 		}
 	}
 
@@ -40,7 +41,7 @@ public class PlayerAgent {
 	 */
 	public static void onBeforeHandleKeybinds () {
 		if (wasInterecting && CameraAgent.isThirdPerson()) {
-			turnToCameraHitResult(1);
+			turnToCameraHitResult();
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
 	}
@@ -48,14 +49,14 @@ public class PlayerAgent {
 	/**
 	 * 让玩家朝向相机的落点
 	 */
-	public static void turnToCameraHitResult (float partialTick) {
+	public static void turnToCameraHitResult () {
 		// 计算相机视线落点
 		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
 			turnWithCamera(true);
 		} else {
 			// 让玩家朝向该坐标
-			turnTo(cameraHitPosition, partialTick);
+			turnTo(cameraHitPosition);
 		}
 	}
 
@@ -71,34 +72,10 @@ public class PlayerAgent {
 	 *
 	 * @param target 目标位置
 	 */
-	public static void turnTo (@NotNull Vec3 target, float partialTick) {
-		Vec3 playerViewVector = CameraAgent.playerEntity.getEyePosition(partialTick).vectorTo(target);
-		Vec2 playerViewRot    = Vectors.rotationDegreeFromDirection(playerViewVector);
-		turnTo(playerViewRot, true);
-	}
-
-	/**
-	 * 设置玩家朝向
-	 *
-	 * @param ry          偏航角
-	 * @param rx          俯仰角
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnTo (float ry, float rx, boolean isInstantly) {
-		if (CameraAgent.isControlledCamera()) {
-			Minecraft mc = Minecraft.getInstance();
-			if (isInstantly) {
-				CameraAgent.playerEntity.setYRot(ry);
-				CameraAgent.playerEntity.setXRot(rx);
-			} else {
-				float playerY = CameraAgent.playerEntity.getViewYRot(mc.getFrameTime());
-				float dy      = ((ry - playerY) % 360 + 360) % 360;
-				if (dy > 180) {
-					dy -= 360;
-				}
-				CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getViewXRot(mc.getFrameTime()));
-			}
-		}
+	public static void turnTo (@NotNull Vec3 target) {
+		Vec3 playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
+		Vec2 playerViewRotation  = Vectors.rotationDegreeFromDirection(playerViewDirection);
+		turnTo(playerViewRotation, true);
 	}
 
 	/**
@@ -112,11 +89,37 @@ public class PlayerAgent {
 	}
 
 	/**
+	 * 设置玩家朝向
+	 *
+	 * @param ry          偏航角
+	 * @param rx          俯仰角
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnTo (float ry, float rx, boolean isInstantly) {
+		if (CameraAgent.isControlledCamera()) {
+			Minecraft mc = Minecraft.getInstance();
+			assert mc.player != null;
+			if (isInstantly) {
+				mc.player.setYRot(ry);
+				mc.player.setXRot(rx);
+			} else {
+				float playerY = mc.player.getViewYRot(lastPartialTick);
+				float dy      = ((ry - playerY) % 360 + 360) % 360;
+				if (dy > 180) {
+					dy -= 360;
+				}
+				assert mc.player != null;
+				mc.player.turn(dy, rx - mc.player.getViewXRot(lastPartialTick));
+			}
+		}
+	}
+
+	/**
 	 * 玩家移动时自动转向移动方向
 	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
-		if (!CameraAgent.attachedEntity.isSwimming() && absoluteImpulse.length() > 1e-5) {
+		if (!Minecraft.getInstance().cameraEntity.isSwimming() && absoluteImpulse.length() > 1e-5) {
 			float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x,
 																						  absoluteImpulse.y));
 			if (Config.rotate_to_moving_direction && !(CameraAgent.wasAiming || wasInterecting) &&
@@ -133,20 +136,22 @@ public class PlayerAgent {
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		// 更新眼睛位置
+		assert mc.cameraEntity != null;
 		if (CameraAgent.wasAttachedEntityInvisible) {
 			// 假的第一人称，没有平滑
-			smoothEyePosition.setValue(CameraAgent.attachedEntity.getEyePosition(partialTick));
+			smoothEyePosition.setValue(mc.cameraEntity.getEyePosition(partialTick));
 		} else {
 			// 平滑更新眼睛位置，飞行时使用专用的平滑系数
-			if (CameraAgent.playerEntity.isFallFlying()) {
+			assert mc.player != null;
+			if (mc.player.isFallFlying()) {
 				smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
 			} else {
 				smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
 			}
-			smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
+			smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(partialTick)).update(sinceLastTick);
 		}
 		if (CameraAgent.wasAiming || wasInterecting) {
-			turnToCameraHitResult(Minecraft.getInstance().getFrameTime());
+			turnToCameraHitResult();
 		} else if (ModOptions.shouldPlayerRotateWithCamera()) {
 			turnWithCamera(false);
 		} else if (Config.player_rotate_with_camera_when_not_aiming) {
@@ -170,11 +175,12 @@ public class PlayerAgent {
 	 * 如果通过按相应按键切换到了持续瞄准状态，返回true
 	 */
 	public static boolean isAiming () {
-		if (CameraAgent.attachedEntity == null) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.cameraEntity == null) {
 			return false;
 		}
 		// 只有 LivingEntity 才有可能手持物品瞄准
-		if (CameraAgent.attachedEntity instanceof LivingEntity livingEntity) {
+		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem()) {
 				ItemStack itemStack = livingEntity.getUseItem();
 				if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {

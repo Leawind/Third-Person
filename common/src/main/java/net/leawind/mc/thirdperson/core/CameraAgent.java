@@ -12,7 +12,6 @@ import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -38,16 +37,6 @@ public class CameraAgent {
 	public static       Camera          camera;
 	public static       Camera          fakeCamera                 = new Camera();
 	/**
-	 * 当前玩家实体
-	 */
-	@Nullable
-	public static       LocalPlayer     playerEntity;
-	/**
-	 * 当前相机附着的实体，当以旁观者模式附着其他实体时，此实体不同于当前玩家实体
-	 */
-	@Nullable
-	public static       Entity          attachedEntity;
-	/**
 	 * renderTick 中更新
 	 */
 	public static       boolean         wasAttachedEntityInvisible = false;
@@ -59,11 +48,14 @@ public class CameraAgent {
 	 * 相机偏移量
 	 */
 	public static       ExpSmoothVec2   smoothOffsetRatio          = new ExpSmoothVec2().setValue(0, 0);
-	public static       double          lastTickTime               = 0;
 	/**
-	 * 上次转动视角的时间
+	 * 上一次 render tick 的时间戳
 	 */
-	public static       double          lastTurnTime               = 0;
+	public static       double          lastRenderTickTimeStamp    = 0;
+	/**
+	 * 上次玩家操控转动视角的时间
+	 */
+	public static       double          lastCameraTurnTimeStamp    = 0;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
@@ -84,16 +76,14 @@ public class CameraAgent {
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
 	 */
 	public static boolean isAvailable () {
+		Minecraft mc = Minecraft.getInstance();
 		if (!Config.is_mod_enable) {
 			return false;
-		}
-		Minecraft mc     = Minecraft.getInstance();
-		Camera    camera = mc.gameRenderer.getMainCamera();
-		if (!camera.isInitialized()) {
+		} else if (!mc.gameRenderer.getMainCamera().isInitialized()) {
 			return false;
+		} else {
+			return mc.player != null;
 		}
-		LocalPlayer player = mc.player;
-		return player != null;
 	}
 
 	/**
@@ -102,7 +92,8 @@ public class CameraAgent {
 	 * 如果当前玩家处于旁观者模式，附着在其他实体上，则返回false
 	 */
 	public static boolean isControlledCamera () {
-		return (playerEntity != null) && ((LocalPlayerInvoker)playerEntity).invokeIsControlledCamera();
+		Minecraft mc = Minecraft.getInstance();
+		return (mc.player != null) && ((LocalPlayerInvoker)mc.player).invokeIsControlledCamera();
 	}
 
 	/**
@@ -116,9 +107,9 @@ public class CameraAgent {
 			turnY *= 0.15;
 			turnX *= Config.lock_camera_pitch_angle ? 0: -0.15;
 			if (turnY != 0 || turnX != 0) {
-				lastTurnTime     = Blaze3D.getTime();
-				relativeRotation = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),
-											(float)(relativeRotation.y + turnY) % 360f);
+				lastCameraTurnTimeStamp = Blaze3D.getTime();
+				relativeRotation        = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),
+												   (float)(relativeRotation.y + turnY) % 360f);
 			}
 		}
 	}
@@ -126,13 +117,12 @@ public class CameraAgent {
 	/**
 	 * 进入第三人称视角时触发
 	 */
-	public static void onEnterThirdPerson (float partialTick) {
+	public static void onEnterThirdPerson () {
 		reset();
 		PlayerAgent.reset();
 		wasAiming                   = false;
 		ModOptions.isToggleToAiming = false;
-		lastTickTime                = Blaze3D.getTime();
-		LOGGER.info("Enter third person, partialTick={}", partialTick);
+		lastRenderTickTimeStamp     = Blaze3D.getTime();
 	}
 
 	/**
@@ -140,22 +130,20 @@ public class CameraAgent {
 	 */
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		assert mc.player != null;
-		attachedEntity = playerEntity = mc.player;
-		camera         = mc.gameRenderer.getMainCamera();
+		camera = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
-		smoothVirtualDistance.setValue(0);
-		relativeRotation = new Vec2(-attachedEntity.getViewXRot(mc.getFrameTime()),
-									attachedEntity.getViewYRot(mc.getFrameTime()) - 180);
+		smoothVirtualDistance.setValue(Config.distanceMonoList.get(0));
+		assert mc.cameraEntity != null;
+		relativeRotation = new Vec2(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
+									mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
 		LOGGER.info("Reset CameraAgent");
 	}
 
 	/**
 	 * 退出第三人称视角
 	 */
-	public static void onLeaveThirdPerson (float partialTick) {
-		PlayerAgent.turnToCameraHitResult(1);
-		LOGGER.info("Leave third person, partialTick={}", partialTick);
+	public static void onLeaveThirdPerson () {
+		PlayerAgent.turnToCameraHitResult();
 	}
 
 	/**
@@ -166,23 +154,23 @@ public class CameraAgent {
 	 */
 	@PerformanceSensitive
 	public static void onRenderTick (BlockGetter level, Entity attachedEntity, boolean isMirrored, float partialTick) {
-		CameraAgent.attachedEntity = attachedEntity;
-		CameraAgent.level          = level;
-		wasAiming                  = PlayerAgent.isAiming();
+		PlayerAgent.lastPartialTick = partialTick;
+		CameraAgent.level           = level;
+		wasAiming                   = PlayerAgent.isAiming();
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
 		}
 		// 时间
 		double now           = Blaze3D.getTime();
-		double sinceLastTick = now - lastTickTime;
-		lastTickTime = now;
+		double sinceLastTick = now - lastRenderTickTimeStamp;
+		lastRenderTickTimeStamp = now;
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		scheme.setAiming(wasAiming);
 		if (isThirdPerson()) {
 			boolean isAdjusting = ModOptions.isAdjustingCameraOffset();
 			// 平滑更新距离
-			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1e-5: scheme.getMode().getDistanceSmoothFactor());
+			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1E-5: scheme.getMode().getDistanceSmoothFactor());
 			smoothVirtualDistance.setTarget(scheme.getMode().getMaxDistance()).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
 			if (!scheme.isAiming && !ModOptions.isAdjustingCameraOffset()) {
@@ -193,10 +181,15 @@ public class CameraAgent {
 			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio());
 			smoothOffsetRatio.update(sinceLastTick);
 			// 设置相机朝向和位置
-			updateFakeCameraRotationPosition();
-			preventThroughWall();
-			updateFakeCameraRotationPosition();
-			applyCamera();
+			/**
+			 * TODO bug: movement chopiness
+			 */
+			{
+				updateFakeCameraRotationPosition();
+				//				preventThroughWall();
+				//				updateFakeCameraRotationPosition();
+				applyCamera();
+			}
 			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				((CameraInvoker)fakeCamera).invokeSetPosition(attachedEntity.getEyePosition(partialTick));
@@ -251,11 +244,12 @@ public class CameraAgent {
 			offsetY *= offset;
 			offsetZ *= offset;
 			Vec3 pickStart = eyePosition.add(offsetX, offsetY, offsetZ);
+			assert level != null;
 			HitResult hitresult = level.clip(new ClipContext(pickStart,
 															 pickStart.add(eyeToCamera),
 															 ClipContext.Block.VISUAL,
 															 ClipContext.Fluid.NONE,
-															 attachedEntity));
+															 Minecraft.getInstance().cameraEntity));
 			if (hitresult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
 			}
@@ -305,11 +299,14 @@ public class CameraAgent {
 	}
 
 	private static @Nullable EntityHitResult pickEntity (double pickRange) {
-		Vec3 viewStart  = camera.getPosition();
-		Vec3 viewVector = new Vec3(camera.getLookVector());
-		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
-		AABB aabb       = attachedEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-		return ProjectileUtil.getEntityHitResult(attachedEntity,
+		Minecraft mc         = Minecraft.getInstance();
+		Vec3      viewStart  = camera.getPosition();
+		Vec3      viewVector = new Vec3(camera.getLookVector());
+		Vec3      viewEnd    = viewVector.scale(pickRange).add(viewStart);
+		//
+		assert mc.cameraEntity != null;
+		AABB aabb = mc.cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
+		return ProjectileUtil.getEntityHitResult(mc.cameraEntity,
 												 viewStart,
 												 viewEnd,
 												 aabb,
@@ -323,14 +320,16 @@ public class CameraAgent {
 	 * 瞄准时忽略草
 	 */
 	private static @NotNull BlockHitResult pickBlock (double pickRange) {
-		Vec3 viewStart  = camera.getPosition();
-		Vec3 viewVector = new Vec3(camera.getLookVector());
-		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
-		return attachedEntity.level.clip(new ClipContext(viewStart,
-														 viewEnd,
-														 wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
-														 ClipContext.Fluid.NONE,
-														 attachedEntity));
+		Vec3      viewStart  = camera.getPosition();
+		Vec3      viewVector = new Vec3(camera.getLookVector());
+		Vec3      viewEnd    = viewVector.scale(pickRange).add(viewStart);
+		Minecraft mc         = Minecraft.getInstance();
+		assert mc.cameraEntity != null;
+		return mc.cameraEntity.level.clip(new ClipContext(viewStart,
+														  viewEnd,
+														  wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
+														  ClipContext.Fluid.NONE,
+														  mc.cameraEntity));
 	}
 
 	public static @NotNull HitResult pick () {

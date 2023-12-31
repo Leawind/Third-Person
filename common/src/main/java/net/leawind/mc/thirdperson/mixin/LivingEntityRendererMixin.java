@@ -2,7 +2,8 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.leawind.mc.thirdperson.MixinProxy;
+import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +29,10 @@ public class LivingEntityRendererMixin {
 						MultiBufferSource multiBufferSource,
 						int i,
 						CallbackInfo ci) {
-		LivingEntityRenderer that = (LivingEntityRenderer)(Object)this;
-		MixinProxy.entity_render(that, entity, f, g, poseStack, multiBufferSource, i, ci);
+		if (entity == Minecraft.getInstance().cameraEntity) {
+			if (CameraAgent.wasAttachedEntityInvisible) {
+				ci.cancel();
+			}
+		}
 	}
 }

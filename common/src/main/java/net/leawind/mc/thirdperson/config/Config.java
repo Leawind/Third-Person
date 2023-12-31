@@ -171,8 +171,8 @@ public class Config {
 					.option(Config.<Double>option("camera_distance_min")
 						.binding(0.1d, () -> camera_distance_min, v -> {camera_distance_min = v; updateCameraDistances();})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(0.1d, 2.0d)//TODO
-							.step(0.1d))
+							.range(0.3D, 16D)
+							.step(0.1D))
 						.build())
 					.option(Config.<Double>option("camera_distance_max")
 						.binding(8d, () -> camera_distance_max, v -> {camera_distance_max = v; updateCameraDistances();})

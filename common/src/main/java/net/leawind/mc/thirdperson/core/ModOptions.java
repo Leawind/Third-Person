@@ -43,9 +43,9 @@ public class ModOptions {
 	 * 玩家当前是否跟随相机旋转
 	 */
 	public static boolean shouldPlayerRotateWithCamera () {
-		return CameraAgent.wasAttachedEntityInvisible || CameraAgent.attachedEntity.isSwimming() ||
-			   (CameraAgent.attachedEntity instanceof LivingEntity &&
-				((LivingEntity)CameraAgent.attachedEntity).isFallFlying());
+		Minecraft mc = Minecraft.getInstance();
+		return CameraAgent.wasAttachedEntityInvisible || mc.cameraEntity.isSwimming() ||
+			   (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying());
 	}
 
 	/**
@@ -58,11 +58,7 @@ public class ModOptions {
 		//		return (CameraAgent.isAiming
 		//				? Config.cameraOffsetScheme.aimingMode
 		//				: Config.cameraOffsetScheme.normalMode).getMaxDistance() < 0.5;
-		return Math.min((CameraAgent.wasAiming
-						 ? Config.cameraOffsetScheme.aimingMode
-						 : Config.cameraOffsetScheme.normalMode).getMaxDistance(),
-						CameraAgent.attachedEntity.getEyePosition(Minecraft.getInstance().getFrameTime())
-												  .distanceTo(CameraAgent.camera.getPosition())) < 0.3;
+		return false;
 	}
 
 	/**
@@ -73,13 +69,13 @@ public class ModOptions {
 	 * 当启用假的第一人称或相机距离玩家足够近时隐藏
 	 */
 	public static boolean isAttachedEntityInvisible () {
-		if (Config.player_fade_out_enabled && CameraAgent.attachedEntity != null) {
+		Minecraft mc = Minecraft.getInstance();
+		if (Config.player_fade_out_enabled && mc.cameraEntity != null) {
 			return Math.min((CameraAgent.wasAiming
 							 ? Config.cameraOffsetScheme.aimingMode
 							 : Config.cameraOffsetScheme.normalMode).getMaxDistance(),
-							CameraAgent.attachedEntity.getEyePosition(Minecraft.getInstance().getFrameTime())
-													  .distanceTo(CameraAgent.camera.getPosition())) <
-				   Config.player_fade_out_threshold;
+							mc.cameraEntity.getEyePosition(Minecraft.getInstance().getFrameTime())
+										   .distanceTo(CameraAgent.camera.getPosition())) <= Config.distanceMonoList.get(0);
 		} else {
 			return false;
 		}

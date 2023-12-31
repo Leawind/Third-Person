@@ -35,9 +35,9 @@ public abstract class CameraMixin {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
 			if (l3p$wasFirstPerson && !isFirstPerson) {
-				CameraAgent.onEnterThirdPerson(partialTick);
+				CameraAgent.onEnterThirdPerson();
 			} else if (!l3p$wasFirstPerson && isFirstPerson) {
-				CameraAgent.onLeaveThirdPerson(partialTick);
+				CameraAgent.onLeaveThirdPerson();
 			}
 			l3p$wasFirstPerson = isFirstPerson;
 		}
