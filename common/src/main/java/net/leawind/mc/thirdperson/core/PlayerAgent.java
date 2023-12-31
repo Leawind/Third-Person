@@ -5,7 +5,6 @@ import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.Vectors;
-import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
 	public static final Logger        LOGGER            = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static       ExpSmoothVec3 smoothEyePosition = new ExpSmoothVec3();
 	public static       boolean       wasInterecting    = false;
 	public static       Vector2f      absoluteImpulse   = new Vector2f(0, 0);
 	public static       float         lastPartialTick   = 1F;
@@ -31,8 +29,8 @@ public class PlayerAgent {
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
 			lastPartialTick = mc.getFrameTime();
-			smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(lastPartialTick))
-							 .setValue(mc.cameraEntity.getEyePosition(lastPartialTick));
+			CameraAgent.smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(lastPartialTick))
+										 .setValue(mc.cameraEntity.getEyePosition(lastPartialTick));
 		}
 	}
 
@@ -135,21 +133,7 @@ public class PlayerAgent {
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
-		// 更新眼睛位置
 		assert mc.cameraEntity != null;
-		if (CameraAgent.wasAttachedEntityInvisible) {
-			// 假的第一人称，没有平滑
-			smoothEyePosition.setValue(mc.cameraEntity.getEyePosition(partialTick));
-		} else {
-			// 平滑更新眼睛位置，飞行时使用专用的平滑系数
-			assert mc.player != null;
-			if (mc.player.isFallFlying()) {
-				smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
-			} else {
-				smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
-			}
-			smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(partialTick)).update(sinceLastTick);
-		}
 		if (CameraAgent.wasAiming || wasInterecting) {
 			turnToCameraHitResult();
 		} else if (ModOptions.shouldPlayerRotateWithCamera()) {

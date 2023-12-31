@@ -18,7 +18,7 @@ public class ModOptions {
 	public static boolean             isToggleToAiming = false;
 
 	/**
-	 * 是否正在调整摄像机偏移量 // TODO 偏移量和距离分开
+	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
 		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();

@@ -9,6 +9,7 @@ import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec2;
+import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -60,6 +61,7 @@ public class CameraAgent {
 	 * 虚相机到平滑眼睛的距离
 	 */
 	public static       ExpSmoothDouble smoothVirtualDistance      = new ExpSmoothDouble().setValue(0).setTarget(0);
+	public static       ExpSmoothVec3   smoothEyePosition          = new ExpSmoothVec3();
 	public static       Vec2            relativeRotation           = Vec2.ZERO;
 	/**
 	 * 相机上次的朝向和位置
@@ -180,16 +182,25 @@ public class CameraAgent {
 			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-7F, 1e-7F): scheme.getMode().getOffsetSmoothFactor());
 			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio());
 			smoothOffsetRatio.update(sinceLastTick);
-			// 设置相机朝向和位置
-			/**
-			 * TODO bug: movement chopiness
-			 */
-			{
-				updateFakeCameraRotationPosition();
-				//				preventThroughWall();
-				//				updateFakeCameraRotationPosition();
-				applyCamera();
+			// 更新眼睛位置
+			if (CameraAgent.wasAttachedEntityInvisible) {
+				// 假的第一人称，没有平滑
+				smoothEyePosition.setValue(mc.cameraEntity.getEyePosition(partialTick));
+			} else {
+				// 平滑更新眼睛位置，飞行时使用专用的平滑系数
+				assert mc.player != null;
+				if (mc.player.isFallFlying()) {
+					smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
+				} else {
+					smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+				}
+				smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(partialTick)).update(sinceLastTick);
 			}
+			// 设置相机朝向和位置
+			updateFakeCameraRotationPosition();
+			preventThroughWall();
+			updateFakeCameraRotationPosition();
+			applyCamera();
 			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				((CameraInvoker)fakeCamera).invokeSetPosition(attachedEntity.getEyePosition(partialTick));
@@ -232,7 +243,7 @@ public class CameraAgent {
 		final double offset = 0.18;
 		// 防止穿墙
 		Vec3   cameraPosition = fakeCamera.getPosition();
-		Vec3   eyePosition    = PlayerAgent.smoothEyePosition.get();
+		Vec3   eyePosition    = smoothEyePosition.get();
 		Vec3   eyeToCamera    = eyePosition.vectorTo(cameraPosition);
 		double initDistance   = eyeToCamera.length();
 		double minDistance    = initDistance;
@@ -268,8 +279,7 @@ public class CameraAgent {
 	}
 
 	public static Vec3 getVirtualPosition () {
-		return PlayerAgent.smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation)
-														   .scale(smoothVirtualDistance.get()));
+		return smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation).scale(smoothVirtualDistance.get()));
 	}
 
 	public static Vec2 calculateRotation () {
