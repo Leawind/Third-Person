@@ -134,7 +134,7 @@ public class CameraAgent {
 		Minecraft mc = Minecraft.getInstance();
 		camera = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
-		smoothVirtualDistance.setValue(Config.distanceMonoList.get(0));
+		smoothVirtualDistance.set(Config.distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
 			relativeRotation = new Vec2(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
 										mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
@@ -180,7 +180,7 @@ public class CameraAgent {
 			smoothVirtualDistance.setTarget(scheme.getMode().getMaxDistance()).update(sinceLastTick);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
 			if (!scheme.isAiming && !ModOptions.isAdjustingCameraOffset()) {
-				smoothVirtualDistance.setValue(Math.min(scheme.getMode().getMaxDistance(), smoothVirtualDistance.get()));
+				smoothVirtualDistance.set(Math.min(scheme.getMode().getMaxDistance(), smoothVirtualDistance.get()));
 			}
 			// 平滑更新相机偏移量
 			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-7F, 1e-7F): scheme.getMode().getOffsetSmoothFactor());
@@ -205,7 +205,7 @@ public class CameraAgent {
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
-			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
+			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();//TODO optimize
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				((CameraInvoker)fakeCamera).invokeSetPosition(attachedEntity.getEyePosition(partialTick));
 				applyCamera();
@@ -269,8 +269,7 @@ public class CameraAgent {
 				minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
 			}
 		}
-		smoothVirtualDistance.setValue(smoothVirtualDistance.get() * minDistance / initDistance);
-		smoothVirtualDistance.setTarget(smoothVirtualDistance.get() * minDistance / initDistance);
+		smoothVirtualDistance.set(smoothVirtualDistance.get() * minDistance / initDistance);
 	}
 
 	/**

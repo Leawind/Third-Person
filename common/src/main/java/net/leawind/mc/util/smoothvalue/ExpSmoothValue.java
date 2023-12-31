@@ -26,6 +26,11 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
+	final public ExpSmoothValue<T> set (T value) {
+		this.value = this.target = value;
+		return this;
+	}
+
 	final public ExpSmoothValue<T> setSmoothFactor (T decreaseSpeed) {
 		this.smoothFactor = decreaseSpeed;
 		return this;
