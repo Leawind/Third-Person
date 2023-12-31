@@ -138,8 +138,9 @@ public class PlayerAgent {
 		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
 		if (CameraAgent.isAiming || wasInterecting) {
 			turnToCameraHitResult(partialTick);
-		} else if (CameraAgent.attachedEntity.isSwimming() || (CameraAgent.attachedEntity instanceof LivingEntity &&
-															   ((LivingEntity)CameraAgent.attachedEntity).isFallFlying())) {
+		} else if (ModOptions.shouldPlayerRotateWithCamera()) {
+			turnWithCamera(false);
+		} else if (Config.player_rotate_with_camera_when_not_aiming) {
 			turnWithCamera(true);
 		}
 	}

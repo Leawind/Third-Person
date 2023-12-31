@@ -42,11 +42,11 @@ import java.nio.file.Path;
  * 所以原本的3个选项不必被外界访问，可以使用private。
  */
 public class Config {
-	public static final Logger                  LOGGER                             = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static final Logger                  LOGGER                                    = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	// 配置文件路径
-	public static final Path                    CONFIG_FILE_PATH                   = ExpectPlatform.getConfigDirectory()
+	public static final Path                    CONFIG_FILE_PATH                          = ExpectPlatform.getConfigDirectory()
 		.resolve(ThirdPersonMod.MOD_ID + ".json");
-	public static final ConfigInstance<Config>  GSON                               = GsonConfigInstance.createBuilder(Config.class)
+	public static final ConfigInstance<Config>  GSON                                      = GsonConfigInstance.createBuilder(Config.class)
 		.setPath(CONFIG_FILE_PATH)
 		.overrideGsonBuilder(new GsonBuilder().setPrettyPrinting()
 			.serializeNulls()
@@ -58,61 +58,63 @@ public class Config {
 		.build();
 	// ============================================================//
 	@ConfigEntry
-	public static       boolean                 is_mod_enable                      = true;
+	public static       boolean                 is_mod_enable                             = true;
 	@ConfigEntry
-	public static       boolean                 render_crosshair_when_not_aiming   = true;
+	public static       boolean                 player_rotate_with_camera_when_not_aiming = false;
 	@ConfigEntry
-	public static       boolean                 render_crosshair_when_aiming       = true;
+	public static       boolean                 render_crosshair_when_not_aiming          = true;
 	@ConfigEntry
-	public static       boolean                 rotate_to_moving_direction         = true;
+	public static       boolean                 render_crosshair_when_aiming              = true;
 	@ConfigEntry
-	public static       double                  camera_ray_trace_length            = 256;
+	public static       boolean                 rotate_to_moving_direction                = true;
 	@ConfigEntry
-	public static       double                  flying_smooth_factor               = Math.pow(10, -2.25);
+	public static       double                  camera_ray_trace_length                   = 256;
 	@ConfigEntry
-	private static      int                     available_distance_count           = 16;
+	public static       double                  flying_smooth_factor                      = Math.pow(10, -2.25);
 	@ConfigEntry
-	private static      double                  camera_distance_min                = 0.1;
+	private static      int                     available_distance_count                  = 16;
 	@ConfigEntry
-	private static      double                  camera_distance_max                = 8;
+	private static      double                  camera_distance_min                       = 0.1;
 	@ConfigEntry
-	private static      double                  normal_smooth_factor_horizon       = Math.pow(10, -7.75);
+	private static      double                  camera_distance_max                       = 8;
 	@ConfigEntry
-	private static      double                  normal_smooth_factor_vertical      = Math.pow(10, -4);
+	private static      double                  normal_smooth_factor_horizon              = Math.pow(10, -7.75);
 	@ConfigEntry
-	private static      double                  normal_camera_offset_smooth_factor = Math.pow(10, -4);
+	private static      double                  normal_smooth_factor_vertical             = Math.pow(10, -4);
 	@ConfigEntry
-	private static      double                  normal_distance_smooth_factor      = Math.pow(10, -2);
+	private static      double                  normal_camera_offset_smooth_factor        = Math.pow(10, -4);
 	@ConfigEntry
-	private static      double                  aiming_smooth_factor_horizon       = Math.pow(10, -9);
+	private static      double                  normal_distance_smooth_factor             = Math.pow(10, -2);
 	@ConfigEntry
-	private static      double                  aiming_smooth_factor_vertical      = Math.pow(10, -9);
+	private static      double                  aiming_smooth_factor_horizon              = Math.pow(10, -9);
 	@ConfigEntry
-	private static      double                  aiming_camera_offset_smooth_factor = Math.pow(10, -8);
+	private static      double                  aiming_smooth_factor_vertical             = Math.pow(10, -9);
 	@ConfigEntry
-	private static      double                  aiming_distance_smooth_factor      = Math.pow(10, -8);
+	private static      double                  aiming_camera_offset_smooth_factor        = Math.pow(10, -8);
 	@ConfigEntry
-	private static      double                  normal_max_distance                = 2.5;
+	private static      double                  aiming_distance_smooth_factor             = Math.pow(10, -8);
 	@ConfigEntry
-	private static      double                  normal_offset_x                    = -0.28;
+	private static      double                  normal_max_distance                       = 2.5;
 	@ConfigEntry
-	private static      double                  normal_offset_y                    = 0.31;
+	private static      double                  normal_offset_x                           = -0.28;
 	@ConfigEntry
-	private static      double                  normal_offset_center               = 0.24D;
+	private static      double                  normal_offset_y                           = 0.31;
 	@ConfigEntry
-	private static      double                  aiming_max_distance                = 0.89;
+	private static      double                  normal_offset_center                      = 0.24D;
 	@ConfigEntry
-	private static      double                  aiming_offset_x                    = -0.47;
+	private static      double                  aiming_max_distance                       = 0.89;
 	@ConfigEntry
-	private static      double                  aiming_offset_y                    = -0.09;
+	private static      double                  aiming_offset_x                           = -0.47;
 	@ConfigEntry
-	private static      double                  aiming_offset_center               = 0.48;
+	private static      double                  aiming_offset_y                           = -0.09;
+	@ConfigEntry
+	private static      double                  aiming_offset_center                      = 0.48;
 	// ============================================================//
 	// 根据上面的配置选项生成的配置
 	public static       MonoList                distanceMonoList;
-	public static       CameraOffsetScheme      cameraOffsetScheme                 = CameraOffsetScheme.DEFAULT;
+	public static       CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
 	@SuppressWarnings("unused")
-	public static       Option.Builder<Boolean> HIDDEN_OPTION_496                  = Option.<Boolean>createBuilder()
+	public static       Option.Builder<Boolean> HIDDEN_OPTION_496                         = Option.<Boolean>createBuilder()
 		.name(getText("option.projectile_auto_aim"))
 		.description(OptionDescription.of(getText("option.projectile_auto_aim.desc")))
 		.binding(true, () -> false, v -> {})
@@ -135,9 +137,17 @@ public class Config {
 					.binding(true, () -> is_mod_enable, v -> is_mod_enable = v)
 					.controller(TickBoxControllerBuilder::create)
 					.build())
-				.option(Config.<Boolean>option("rotate_to_moving_direction")
-					.binding(true, () -> rotate_to_moving_direction, v -> rotate_to_moving_direction = v)
-					.controller(TickBoxControllerBuilder::create)
+				.group(OptionGroup.createBuilder()
+					.name(getText("option_group.player_rotation"))
+					.description(OptionDescription.of(getText("option_group.player_rotation.desc")))
+					.option(Config.<Boolean>option("player_rotate_with_camera_when_not_aiming")
+						.binding(false, () -> player_rotate_with_camera_when_not_aiming, v -> player_rotate_with_camera_when_not_aiming = v)
+						.controller(TickBoxControllerBuilder::create)
+						.build())
+					.option(Config.<Boolean>option("rotate_to_moving_direction")
+						.binding(true, () -> rotate_to_moving_direction, v -> rotate_to_moving_direction = v)
+						.controller(TickBoxControllerBuilder::create)
+						.build())
 					.build())
 				.group(OptionGroup.createBuilder()
 					.name(getText("option_group.camera_distance_adjustment"))

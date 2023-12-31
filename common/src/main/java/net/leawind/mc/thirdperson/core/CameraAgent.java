@@ -52,6 +52,11 @@ public class CameraAgent {
 	 */
 	public static       ExpSmoothVec2   smoothOffsetRatio     = new ExpSmoothVec2().setValue(0, 0);
 	public static       double          lastTickTime          = 0;
+	/**
+	 * 在 renderTick 中更新
+	 * <p>
+	 * TODO move to PlayerAgent
+	 */
 	public static       boolean         isAiming              = false;
 	/**
 	 * 上次转动视角的时间
