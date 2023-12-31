@@ -44,21 +44,11 @@ public class ModOptions {
 	 */
 	public static boolean shouldPlayerRotateWithCamera () {
 		Minecraft mc = Minecraft.getInstance();
-		return CameraAgent.wasAttachedEntityInvisible || mc.cameraEntity.isSwimming() ||
+		if (CameraAgent.wasAttachedEntityInvisible) {
+			return true;
+		}
+		return mc.cameraEntity != null && mc.cameraEntity.isSwimming() ||
 			   (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying());
-	}
-
-	/**
-	 * 根据配置和相机距离判断是否启用假的第一人称
-	 * <p>
-	 * 假的第一人称就是相机固定在玩家眼睛处，显示玩家身体，不显示玩家头部
-	 */
-	@Deprecated
-	public static boolean isFakeFirstPerson () {
-		//		return (CameraAgent.isAiming
-		//				? Config.cameraOffsetScheme.aimingMode
-		//				: Config.cameraOffsetScheme.normalMode).getMaxDistance() < 0.5;
-		return false;
 	}
 
 	/**

@@ -135,9 +135,10 @@ public class CameraAgent {
 		camera = mc.gameRenderer.getMainCamera();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothVirtualDistance.setValue(Config.distanceMonoList.get(0));
-		assert mc.cameraEntity != null;
-		relativeRotation = new Vec2(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
-									mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
+		if (mc.cameraEntity != null) {
+			relativeRotation = new Vec2(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
+										mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
+		}
 		LOGGER.info("Reset CameraAgent");
 	}
 
@@ -160,6 +161,9 @@ public class CameraAgent {
 		CameraAgent.level           = level;
 		wasAiming                   = PlayerAgent.isAiming();
 		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null) {
+			return;
+		}
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
 		}
@@ -183,12 +187,12 @@ public class CameraAgent {
 			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio());
 			smoothOffsetRatio.update(sinceLastTick);
 			// 更新眼睛位置
+			assert mc.cameraEntity != null;
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
 				smoothEyePosition.setValue(mc.cameraEntity.getEyePosition(partialTick));
 			} else {
 				// 平滑更新眼睛位置，飞行时使用专用的平滑系数
-				assert mc.player != null;
 				if (mc.player.isFallFlying()) {
 					smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
 				} else {
@@ -247,6 +251,7 @@ public class CameraAgent {
 		Vec3   eyeToCamera    = eyePosition.vectorTo(cameraPosition);
 		double initDistance   = eyeToCamera.length();
 		double minDistance    = initDistance;
+		assert level != null;
 		for (int i = 0; i < 8; ++i) {
 			double offsetX = (i & 1) * 2 - 1;
 			double offsetY = (i >> 1 & 1) * 2 - 1;
@@ -255,7 +260,6 @@ public class CameraAgent {
 			offsetY *= offset;
 			offsetZ *= offset;
 			Vec3 pickStart = eyePosition.add(offsetX, offsetY, offsetZ);
-			assert level != null;
 			HitResult hitresult = level.clip(new ClipContext(pickStart,
 															 pickStart.add(eyeToCamera),
 															 ClipContext.Block.VISUAL,
@@ -309,12 +313,14 @@ public class CameraAgent {
 	}
 
 	private static @Nullable EntityHitResult pickEntity (double pickRange) {
-		Minecraft mc         = Minecraft.getInstance();
-		Vec3      viewStart  = camera.getPosition();
-		Vec3      viewVector = new Vec3(camera.getLookVector());
-		Vec3      viewEnd    = viewVector.scale(pickRange).add(viewStart);
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.cameraEntity == null) {
+			return null;
+		}
+		Vec3 viewStart  = camera.getPosition();
+		Vec3 viewVector = new Vec3(camera.getLookVector());
+		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
 		//
-		assert mc.cameraEntity != null;
 		AABB aabb = mc.cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
 		return ProjectileUtil.getEntityHitResult(mc.cameraEntity,
 												 viewStart,

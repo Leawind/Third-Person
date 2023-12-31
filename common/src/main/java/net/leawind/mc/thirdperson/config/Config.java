@@ -72,8 +72,6 @@ public class Config {
 	@ConfigEntry
 	public static       boolean                 player_fade_out_enabled                   = true;
 	@ConfigEntry
-	public static       double                  player_fade_out_threshold                 = 2.0;
-	@ConfigEntry
 	public static       double                  camera_ray_trace_length                   = 256;
 	@ConfigEntry
 	public static       double                  flying_smooth_factor                      = Math.pow(10, -2.25);
@@ -191,12 +189,6 @@ public class Config {
 					.option(Config.<Boolean>option("player_fade_out_enabled")
 						.binding(true, () -> player_fade_out_enabled, v -> player_fade_out_enabled = v)
 						.controller(TickBoxControllerBuilder::create)
-						.build())
-					.option(Config.<Double>option("player_fade_out_threshold")
-						.binding(2.00, () -> player_fade_out_threshold, v -> player_fade_out_threshold = v)
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(0D, 16D)
-							.step(0.2d))
 						.build())
 					.build())
 				.group(OptionGroup.createBuilder()   // 准星

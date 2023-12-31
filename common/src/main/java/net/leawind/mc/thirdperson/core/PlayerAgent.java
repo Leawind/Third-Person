@@ -19,10 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
-	public static final Logger        LOGGER            = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static       boolean       wasInterecting    = false;
-	public static       Vector2f      absoluteImpulse   = new Vector2f(0, 0);
-	public static       float         lastPartialTick   = 1F;
+	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static       boolean  wasInterecting  = false;
+	public static       Vector2f absoluteImpulse = new Vector2f(0, 0);
+	public static       float    lastPartialTick = 1F;
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
@@ -94,9 +94,8 @@ public class PlayerAgent {
 	 * @param isInstantly 是否瞬间转动
 	 */
 	public static void turnTo (float ry, float rx, boolean isInstantly) {
-		if (CameraAgent.isControlledCamera()) {
-			Minecraft mc = Minecraft.getInstance();
-			assert mc.player != null;
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
 				mc.player.setYRot(ry);
 				mc.player.setXRot(rx);
@@ -106,7 +105,6 @@ public class PlayerAgent {
 				if (dy > 180) {
 					dy -= 360;
 				}
-				assert mc.player != null;
 				mc.player.turn(dy, rx - mc.player.getViewXRot(lastPartialTick));
 			}
 		}
@@ -129,11 +127,13 @@ public class PlayerAgent {
 
 	@PerformanceSensitive
 	public static void onRenderTick (float partialTick, double sinceLastTick) {
-		Minecraft          mc     = Minecraft.getInstance();
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.cameraEntity == null) {
+			return;
+		}
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
-		assert mc.cameraEntity != null;
 		if (CameraAgent.wasAiming || wasInterecting) {
 			turnToCameraHitResult();
 		} else if (ModOptions.shouldPlayerRotateWithCamera()) {
