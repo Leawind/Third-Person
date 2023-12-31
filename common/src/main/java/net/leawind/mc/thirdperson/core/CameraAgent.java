@@ -54,8 +54,6 @@ public class CameraAgent {
 	public static       double          lastTickTime          = 0;
 	/**
 	 * 在 renderTick 中更新
-	 * <p>
-	 * TODO move to PlayerAgent
 	 */
 	public static       boolean         isAiming              = false;
 	/**

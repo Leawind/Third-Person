@@ -5,6 +5,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dev.isxander.yacl3.config.ConfigEntry;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -13,6 +14,8 @@ import java.lang.reflect.Field;
  * 由于我的配置项使用的是静态字段，此版本的 YACL 无法正确识别，所以我得自己写 Adapter
  */
 public class ConfigAdapter extends TypeAdapter<Config> {
+	public static final Logger LOGGER = Config.LOGGER;
+
 	@Override
 	public void write (JsonWriter out, Config value) {
 		try {
@@ -47,9 +50,12 @@ public class ConfigAdapter extends TypeAdapter<Config> {
 		try {
 			in.beginObject();
 			while (in.hasNext()) {
-				String key   = in.nextName();
-				Field  field = net.leawind.mc.thirdperson.config.Config.class.getDeclaredField(key);
-				if (field.isAnnotationPresent(ConfigEntry.class)) {
+				String key = in.nextName();
+				try {
+					Field field = net.leawind.mc.thirdperson.config.Config.class.getDeclaredField(key);
+					if (!field.isAnnotationPresent(ConfigEntry.class)) {
+						throw new NoSuchFieldException();
+					}
 					Class<?> clazz = field.getType();
 					field.setAccessible(true);
 					switch (clazz.getName()) {
@@ -64,11 +70,13 @@ public class ConfigAdapter extends TypeAdapter<Config> {
 						case "string" -> field.set(null, in.nextString());
 						default -> throw new RuntimeException("Unsupported class: " + clazz.getName());
 					}
+				} catch (NoSuchFieldException e) {
+					LOGGER.warn("Unrecognized config key: {}", key);
 				}
 			}
 			in.endObject();
-		} catch (NoSuchFieldException | IllegalAccessException | IOException e) {
-			throw new RuntimeException(e);//TODO
+		} catch (IllegalAccessException | IOException e) {
+			throw new RuntimeException(e);
 		}
 		return new Config();
 	}
