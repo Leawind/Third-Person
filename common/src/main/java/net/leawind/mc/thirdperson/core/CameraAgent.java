@@ -110,7 +110,7 @@ public class CameraAgent {
 	public static void onCameraTurn (double turnY, double turnX) {
 		if (Config.is_mod_enable && !ModOptions.isAdjustingCameraOffset()) {
 			turnY *= 0.15;
-			turnX *= -0.15;
+			turnX *= Config.lock_camera_pitch_angle ? 0: -0.15;
 			if (turnY != 0 || turnX != 0) {
 				lastTurnTime     = Blaze3D.getTime();
 				relativeRotation = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),

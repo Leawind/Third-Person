@@ -21,6 +21,8 @@
 	"leawind_third_person.option_group.player_rotation.desc": "",
 	"leawind_third_person.option.is_mod_enable": "本模组是否启用",
 	"leawind_third_person.option.is_mod_enable.desc": "禁用后将显示原版第三人称视角，但仍可以按键打开配置屏幕",
+	"leawind_third_person.option.lock_camera_pitch_angle": "锁定相机的俯仰角",
+	"leawind_third_person.option.lock_camera_pitch_angle.desc": "锁定后无法上下转动",
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming": "未瞄准时强制玩家跟随相机转动",
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming.desc": "未瞄准时强制玩家视线和相机视线保持平行",
 	"leawind_third_person.option.rotate_to_moving_direction": "玩家移动时自动转向前进的方向",

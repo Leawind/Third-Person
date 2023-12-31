@@ -21,6 +21,8 @@
 	"leawind_third_person.option_group.player_rotation.desc": "",
 	"leawind_third_person.option.is_mod_enable": "Is the mod enabled",
 	"leawind_third_person.option.is_mod_enable.desc": "Disabling will display the original third-person view. But you can still open config menu by pressing specified key.",
+	"leawind_third_person.option.lock_camera_pitch_angle": "Lock camera pitch angle",
+	"leawind_third_person.option.lock_camera_pitch_angle.desc": "",
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming": "Force player rotate with camera",
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming.desc": "Forcing the player's gaze to be parallel to the camera's gaze when not aiming",
 	"leawind_third_person.option.rotate_to_moving_direction": "Auto rotate to moving direction",
