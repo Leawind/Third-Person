@@ -6,6 +6,7 @@
 	"client": [
 		"CameraInvoker",
 		"LocalPlayerInvoker",
+		"LivingEntityRendererMixin",
 		"CameraMixin",
 		"GuiMixin",
 		"KeyboardInputMixin",

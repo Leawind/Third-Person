@@ -87,7 +87,7 @@ public class MonoList {
 		return this;
 	}
 
-	public double get (int i) {
+	public double get (int i) throws ArrayIndexOutOfBoundsException {
 		return list[i];
 	}
 

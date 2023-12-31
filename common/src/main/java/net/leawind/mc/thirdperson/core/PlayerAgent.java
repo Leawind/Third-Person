@@ -85,17 +85,19 @@ public class PlayerAgent {
 	 * @param isInstantly 是否瞬间转动
 	 */
 	public static void turnTo (float ry, float rx, boolean isInstantly) {
-		Minecraft mc = Minecraft.getInstance();
-		if (isInstantly) {
-			CameraAgent.playerEntity.setYRot(ry);
-			CameraAgent.playerEntity.setXRot(rx);
-		} else {
-			float playerY = CameraAgent.playerEntity.getViewYRot(mc.getFrameTime());
-			float dy      = ((ry - playerY) % 360 + 360) % 360;
-			if (dy > 180) {
-				dy -= 360;
+		if (CameraAgent.isControlledCamera()) {
+			Minecraft mc = Minecraft.getInstance();
+			if (isInstantly) {
+				CameraAgent.playerEntity.setYRot(ry);
+				CameraAgent.playerEntity.setXRot(rx);
+			} else {
+				float playerY = CameraAgent.playerEntity.getViewYRot(mc.getFrameTime());
+				float dy      = ((ry - playerY) % 360 + 360) % 360;
+				if (dy > 180) {
+					dy -= 360;
+				}
+				CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getViewXRot(mc.getFrameTime()));
 			}
-			CameraAgent.playerEntity.turn(dy, rx - CameraAgent.playerEntity.getViewXRot(mc.getFrameTime()));
 		}
 	}
 
@@ -117,7 +119,8 @@ public class PlayerAgent {
 		if (!CameraAgent.attachedEntity.isSwimming() && absoluteImpulse.length() > 1e-5) {
 			float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x,
 																						  absoluteImpulse.y));
-			if (Config.rotate_to_moving_direction && !(CameraAgent.isAiming || wasInterecting)) {
+			if (Config.rotate_to_moving_direction && !(CameraAgent.wasAiming || wasInterecting) &&
+				!ModOptions.shouldPlayerRotateWithCamera()) {
 				turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 			}
 		}
@@ -129,15 +132,21 @@ public class PlayerAgent {
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
-		// 平滑更新眼睛位置，飞行时使用专用的平滑系数
-		if (CameraAgent.playerEntity.isFallFlying()) {
-			smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
+		// 更新眼睛位置
+		if (CameraAgent.wasAttachedEntityInvisible) {
+			// 假的第一人称，没有平滑
+			smoothEyePosition.setValue(CameraAgent.attachedEntity.getEyePosition(partialTick));
 		} else {
-			smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+			// 平滑更新眼睛位置，飞行时使用专用的平滑系数
+			if (CameraAgent.playerEntity.isFallFlying()) {
+				smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
+			} else {
+				smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+			}
+			smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
 		}
-		smoothEyePosition.setTarget(CameraAgent.attachedEntity.getEyePosition(partialTick)).update(sinceLastTick);
-		if (CameraAgent.isAiming || wasInterecting) {
-			turnToCameraHitResult(partialTick);
+		if (CameraAgent.wasAiming || wasInterecting) {
+			turnToCameraHitResult(Minecraft.getInstance().getFrameTime());
 		} else if (ModOptions.shouldPlayerRotateWithCamera()) {
 			turnWithCamera(false);
 		} else if (Config.player_rotate_with_camera_when_not_aiming) {

@@ -70,6 +70,10 @@ public class Config {
 	@ConfigEntry
 	public static       boolean                 lock_camera_pitch_angle                   = false;
 	@ConfigEntry
+	public static       boolean                 player_fade_out_enabled                   = true;
+	@ConfigEntry
+	public static       double                  player_fade_out_threshold                 = 2.0;
+	@ConfigEntry
 	public static       double                  camera_ray_trace_length                   = 256;
 	@ConfigEntry
 	public static       double                  flying_smooth_factor                      = Math.pow(10, -2.25);
@@ -161,13 +165,13 @@ public class Config {
 					.option(Config.<Integer>option("available_distance_count")
 						.binding(16, () -> available_distance_count, v -> {available_distance_count = v; updateCameraDistances();})
 						.controller(opt -> IntegerSliderControllerBuilder.create(opt)
-							.range(2, 64)
+							.range(3, 64)    // At least 2
 							.step(1))
 						.build())
 					.option(Config.<Double>option("camera_distance_min")
 						.binding(0.1d, () -> camera_distance_min, v -> {camera_distance_min = v; updateCameraDistances();})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(0d, 2d)
+							.range(0.1d, 2.0d)//TODO
 							.step(0.1d))
 						.build())
 					.option(Config.<Double>option("camera_distance_max")
@@ -181,6 +185,20 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(getText("option_category.misc"))
 				.tooltip(getText("option_category.misc.desc"))
+				.group(OptionGroup.createBuilder()   // 准星
+					.name(getText("option_group.player_fade_out"))
+					.description(OptionDescription.of(getText("option_group.player_fade_out.desc")))
+					.option(Config.<Boolean>option("player_fade_out_enabled")
+						.binding(true, () -> player_fade_out_enabled, v -> player_fade_out_enabled = v)
+						.controller(TickBoxControllerBuilder::create)
+						.build())
+					.option(Config.<Double>option("player_fade_out_threshold")
+						.binding(2.00, () -> player_fade_out_threshold, v -> player_fade_out_threshold = v)
+						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
+							.range(0D, 16D)
+							.step(0.2d))
+						.build())
+					.build())
 				.group(OptionGroup.createBuilder()   // 准星
 					.name(getText("option_group.crosshair"))
 					.description(OptionDescription.of(getText("option_group.crosshair.desc")))

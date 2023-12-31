@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ModKeys;
 import net.leawind.mc.thirdperson.config.Config;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class ModOptions {
 	public static boolean             isToggleToAiming = false;
 
 	/**
-	 * 是否正在调整摄像机偏移量
+	 * 是否正在调整摄像机偏移量 // TODO 偏移量和距离分开
 	 */
 	public static boolean isAdjustingCameraOffset () {
 		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();
@@ -35,14 +36,52 @@ public class ModOptions {
 	 */
 	public static boolean shouldRenderCrosshair () {
 		return CameraAgent.isAvailable() &&
-			   (CameraAgent.isAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
+			   (CameraAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
 	}
 
 	/**
 	 * 玩家当前是否跟随相机旋转
 	 */
 	public static boolean shouldPlayerRotateWithCamera () {
-		return CameraAgent.attachedEntity.isSwimming() || (CameraAgent.attachedEntity instanceof LivingEntity &&
-														   ((LivingEntity)CameraAgent.attachedEntity).isFallFlying());
+		return CameraAgent.wasAttachedEntityInvisible || CameraAgent.attachedEntity.isSwimming() ||
+			   (CameraAgent.attachedEntity instanceof LivingEntity &&
+				((LivingEntity)CameraAgent.attachedEntity).isFallFlying());
+	}
+
+	/**
+	 * 根据配置和相机距离判断是否启用假的第一人称
+	 * <p>
+	 * 假的第一人称就是相机固定在玩家眼睛处，显示玩家身体，不显示玩家头部
+	 */
+	@Deprecated
+	public static boolean isFakeFirstPerson () {
+		//		return (CameraAgent.isAiming
+		//				? Config.cameraOffsetScheme.aimingMode
+		//				: Config.cameraOffsetScheme.normalMode).getMaxDistance() < 0.5;
+		return Math.min((CameraAgent.wasAiming
+						 ? Config.cameraOffsetScheme.aimingMode
+						 : Config.cameraOffsetScheme.normalMode).getMaxDistance(),
+						CameraAgent.attachedEntity.getEyePosition(Minecraft.getInstance().getFrameTime())
+												  .distanceTo(CameraAgent.camera.getPosition())) < 0.3;
+	}
+
+	/**
+	 * TODO 让玩家实体淡出淡入，而不是瞬间消失出现
+	 * <p>
+	 * 是否完全隐藏玩家实体
+	 * <p>
+	 * 当启用假的第一人称或相机距离玩家足够近时隐藏
+	 */
+	public static boolean isAttachedEntityInvisible () {
+		if (Config.player_fade_out_enabled && CameraAgent.attachedEntity != null) {
+			return Math.min((CameraAgent.wasAiming
+							 ? Config.cameraOffsetScheme.aimingMode
+							 : Config.cameraOffsetScheme.normalMode).getMaxDistance(),
+							CameraAgent.attachedEntity.getEyePosition(Minecraft.getInstance().getFrameTime())
+													  .distanceTo(CameraAgent.camera.getPosition())) <
+				   Config.player_fade_out_threshold;
+		} else {
+			return false;
+		}
 	}
 }

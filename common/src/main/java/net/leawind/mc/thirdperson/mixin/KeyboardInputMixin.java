@@ -27,7 +27,7 @@ public class KeyboardInputMixin {
 			Vector3f      cameraLeftImpulse    = CameraAgent.fakeCamera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
 			PlayerAgent.absoluteImpulse = new Vector2f(cameraForwardImpulse.x + cameraLeftImpulse.x,
 													   cameraForwardImpulse.z + cameraLeftImpulse.z);
-			if (PlayerAgent.absoluteImpulse.length() > 1E-5) {
+			if (PlayerAgent.absoluteImpulse.length() > 1E-5 && CameraAgent.playerEntity != null) {
 				float    playerRotation  = CameraAgent.playerEntity.getViewYRot(Minecraft.getInstance().getFrameTime());
 				Vec3     playerForward3D = Vec3.directionFromRotation(0, playerRotation);
 				Vec3     playerLeft3D    = Vec3.directionFromRotation(0, playerRotation - 90);

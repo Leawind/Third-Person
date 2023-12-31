@@ -26,17 +26,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CameraAgent {
-	public static final Logger          LOGGER                = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static final Logger          LOGGER                     = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	/**
 	 * 成像平面到相机的距离，这是一个固定值，硬编码在Minecraft源码中。
 	 * <p>
 	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
 	 */
-	public static final double          NEAR_PLANE_DISTANCE   = 0.05;
+	public static final double          NEAR_PLANE_DISTANCE        = 0.05;
 	@Nullable
 	public static       BlockGetter     level;
 	public static       Camera          camera;
-	public static       Camera          fakeCamera            = new Camera();
+	public static       Camera          fakeCamera                 = new Camera();
 	/**
 	 * 当前玩家实体
 	 */
@@ -48,28 +48,32 @@ public class CameraAgent {
 	@Nullable
 	public static       Entity          attachedEntity;
 	/**
-	 * 相机偏移量
+	 * renderTick 中更新
 	 */
-	public static       ExpSmoothVec2   smoothOffsetRatio     = new ExpSmoothVec2().setValue(0, 0);
-	public static       double          lastTickTime          = 0;
+	public static       boolean         wasAttachedEntityInvisible = false;
 	/**
 	 * 在 renderTick 中更新
 	 */
-	public static       boolean         isAiming              = false;
+	public static       boolean         wasAiming                  = false;
+	/**
+	 * 相机偏移量
+	 */
+	public static       ExpSmoothVec2   smoothOffsetRatio          = new ExpSmoothVec2().setValue(0, 0);
+	public static       double          lastTickTime               = 0;
 	/**
 	 * 上次转动视角的时间
 	 */
-	public static       double          lastTurnTime          = 0;
+	public static       double          lastTurnTime               = 0;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static       ExpSmoothDouble smoothVirtualDistance = new ExpSmoothDouble().setValue(0).setTarget(0);
-	public static       Vec2            relativeRotation      = Vec2.ZERO;
+	public static       ExpSmoothDouble smoothVirtualDistance      = new ExpSmoothDouble().setValue(0).setTarget(0);
+	public static       Vec2            relativeRotation           = Vec2.ZERO;
 	/**
 	 * 相机上次的朝向和位置
 	 */
-	public static       Vec3            lastPosition          = Vec3.ZERO;
-	public static       Vec2            lastRotation          = Vec2.ZERO;
+	public static       Vec3            lastPosition               = Vec3.ZERO;
+	public static       Vec2            lastRotation               = Vec2.ZERO;
 
 	@SuppressWarnings("unused")
 	public static boolean isThirdPerson () {
@@ -125,7 +129,7 @@ public class CameraAgent {
 	public static void onEnterThirdPerson (float partialTick) {
 		reset();
 		PlayerAgent.reset();
-		isAiming                    = false;
+		wasAiming                   = false;
 		ModOptions.isToggleToAiming = false;
 		lastTickTime                = Blaze3D.getTime();
 		LOGGER.info("Enter third person, partialTick={}", partialTick);
@@ -164,7 +168,7 @@ public class CameraAgent {
 	public static void onRenderTick (BlockGetter level, Entity attachedEntity, boolean isMirrored, float partialTick) {
 		CameraAgent.attachedEntity = attachedEntity;
 		CameraAgent.level          = level;
-		isAiming                   = PlayerAgent.isAiming();
+		wasAiming                  = PlayerAgent.isAiming();
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
@@ -174,7 +178,7 @@ public class CameraAgent {
 		double sinceLastTick = now - lastTickTime;
 		lastTickTime = now;
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
-		scheme.setAiming(isAiming);
+		scheme.setAiming(wasAiming);
 		if (isThirdPerson()) {
 			boolean isAdjusting = ModOptions.isAdjustingCameraOffset();
 			// 平滑更新距离
@@ -193,6 +197,11 @@ public class CameraAgent {
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
+			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
+			if (CameraAgent.wasAttachedEntityInvisible) {
+				((CameraInvoker)fakeCamera).invokeSetPosition(attachedEntity.getEyePosition(partialTick));
+				applyCamera();
+			}
 		}
 		PlayerAgent.onRenderTick(partialTick, sinceLastTick);
 		lastPosition = camera.getPosition();
@@ -200,7 +209,7 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 根据角度、距离、偏移量计算相机实际朝向和位置
+	 * 根据角度、距离、偏移量计算假相机实际朝向和位置
 	 */
 	private static void updateFakeCameraRotationPosition () {
 		Minecraft mc = Minecraft.getInstance();
@@ -213,14 +222,13 @@ public class CameraAgent {
 		double widthHalf  = aspectRatio * heightHalf;
 		// 水平视野角度一半(弧度制）
 		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
-		// 偏移
-		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / NEAR_PLANE_DISTANCE;
-		double upOffset   = smoothOffsetRatio.get().y * smoothVirtualDistance.get() * Math.tan(verticalRadianHalf);
 		// 没有偏移的情况下相机位置
 		Vec3 positionWithoutOffset = getVirtualPosition();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		((CameraInvoker)fakeCamera).invokeSetPosition(positionWithoutOffset);
+		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / NEAR_PLANE_DISTANCE;
+		double upOffset   = smoothOffsetRatio.get().y * smoothVirtualDistance.get() * Math.tan(verticalRadianHalf);
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
@@ -320,7 +328,7 @@ public class CameraAgent {
 		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
 		return attachedEntity.level.clip(new ClipContext(viewStart,
 														 viewEnd,
-														 isAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
+														 wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
 														 ClipContext.Fluid.NONE,
 														 attachedEntity));
 	}
