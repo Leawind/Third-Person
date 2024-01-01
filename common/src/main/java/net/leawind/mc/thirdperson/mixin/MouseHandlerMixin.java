@@ -1,9 +1,9 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.event.ModEvents;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModOptions;
+import net.leawind.mc.thirdperson.event.ModEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

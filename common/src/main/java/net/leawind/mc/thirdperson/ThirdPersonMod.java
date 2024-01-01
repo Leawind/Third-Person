@@ -1,9 +1,9 @@
 package net.leawind.mc.thirdperson;
 
 
+import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModEvents;
 import net.leawind.mc.thirdperson.event.ModKeys;
-import net.leawind.mc.thirdperson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

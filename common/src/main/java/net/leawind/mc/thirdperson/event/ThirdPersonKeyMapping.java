@@ -20,15 +20,6 @@ import java.util.function.Supplier;
 public final class ThirdPersonKeyMapping extends KeyMapping {
 	private static final String                                 CATEGORY_KEY = "key.categories." + ThirdPersonMod.MOD_ID;
 	private static final HashMap<String, ThirdPersonKeyMapping> mappings     = new HashMap<>();
-
-	private static String getId (String name) {
-		return "key." + ThirdPersonMod.MOD_ID + "." + name;
-	}
-
-	public static void registerAll () {
-		mappings.values().forEach(KeyMappingRegistry::register);
-	}
-
 	/**
 	 * 按下后经过 holdLength 则触发 hold 事件
 	 */
@@ -47,11 +38,9 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 	private Supplier<Boolean> onhold      = null;
 	@Nullable
 	private Supplier<Boolean> onpress     = null;
-
 	public ThirdPersonKeyMapping (String name) {
 		this(name, InputConstants.UNKNOWN.getValue());
 	}
-
 	public ThirdPersonKeyMapping (String name, int defaultValue) {
 		this(name, defaultValue, CATEGORY_KEY);
 	}
@@ -59,6 +48,14 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 	public ThirdPersonKeyMapping (String name, int defaultValue, String categoryKey) {
 		super(getId(name), defaultValue, categoryKey);
 		mappings.put(getId(name), this);
+	}
+
+	private static String getId (String name) {
+		return "key." + ThirdPersonMod.MOD_ID + "." + name;
+	}
+
+	public static void registerAll () {
+		mappings.values().forEach(KeyMappingRegistry::register);
 	}
 
 	public ThirdPersonKeyMapping holdLength (long holdLength) {
@@ -71,11 +68,6 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 		return this;
 	}
 
-	public ThirdPersonKeyMapping onDown (Supplier<Boolean> handler) {
-		ondown = handler;
-		return this;
-	}
-
 	public ThirdPersonKeyMapping onDown (Runnable handler) {
 		return onDown(() -> {
 			handler.run();
@@ -83,8 +75,8 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 		});
 	}
 
-	public ThirdPersonKeyMapping onUp (Supplier<Boolean> handler) {
-		onup = handler;
+	public ThirdPersonKeyMapping onDown (Supplier<Boolean> handler) {
+		ondown = handler;
 		return this;
 	}
 
@@ -95,8 +87,8 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 		});
 	}
 
-	public ThirdPersonKeyMapping onPress (Supplier<Boolean> handler) {
-		onpress = handler;
+	public ThirdPersonKeyMapping onUp (Supplier<Boolean> handler) {
+		onup = handler;
 		return this;
 	}
 
@@ -107,8 +99,8 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 		});
 	}
 
-	public ThirdPersonKeyMapping onHold (Supplier<Boolean> handler) {
-		onhold = handler;
+	public ThirdPersonKeyMapping onPress (Supplier<Boolean> handler) {
+		onpress = handler;
 		return this;
 	}
 
@@ -117,6 +109,11 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 			handler.run();
 			return false;
 		});
+	}
+
+	public ThirdPersonKeyMapping onHold (Supplier<Boolean> handler) {
+		onhold = handler;
+		return this;
 	}
 
 	@Override

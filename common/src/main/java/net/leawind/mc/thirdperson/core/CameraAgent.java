@@ -123,15 +123,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 退出第三人称视角
-	 */
-	public static void onLeaveThirdPerson () {
-		if (Config.turn_with_camera_when_enter_first_person) {
-			PlayerAgent.turnWithCamera(true);
-		}
-	}
-
-	/**
 	 * 重置玩家对象，重置相机的位置、角度等参数
 	 */
 	public static void reset () {
@@ -144,6 +135,15 @@ public class CameraAgent {
 										mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
 		}
 		LOGGER.info("Reset CameraAgent");
+	}
+
+	/**
+	 * 退出第三人称视角
+	 */
+	public static void onLeaveThirdPerson () {
+		if (Config.turn_with_camera_when_enter_first_person) {
+			PlayerAgent.turnWithCamera(true);
+		}
 	}
 
 	/**

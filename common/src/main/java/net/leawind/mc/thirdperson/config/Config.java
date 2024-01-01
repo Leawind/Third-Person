@@ -208,6 +208,14 @@ public class Config {
 						.binding(true, () -> player_fade_out_enabled, v -> player_fade_out_enabled = v)
 						.controller(TickBoxControllerBuilder::create)
 						.build())
+					.option(Config.<Double>option("camera_distance_min")
+						.binding(0.5d, () -> camera_distance_min, v -> {
+							camera_distance_min = v; updateCameraDistances();
+						})
+						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
+							.range(0.3D, 16D)
+							.step(0.1D))
+						.build())
 					.build())
 				.group(OptionGroup.createBuilder()   // 准星
 					.name(getText("option_group.crosshair"))

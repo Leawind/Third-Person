@@ -38,7 +38,7 @@
 	"leawind_third_person.option.available_distance_count": "可选的距离数量",
 	"leawind_third_person.option.available_distance_count.desc": "使用鼠标滚轮可以调整相机到玩家距离，该选项的值是距离的档位数量",
 	"leawind_third_person.option.camera_distance_min": "距离下限",
-	"leawind_third_person.option.camera_distance_min.desc": "使用滚轮调整时相机到玩家的最小距离",
+	"leawind_third_person.option.camera_distance_min.desc": "使用滚轮调整时相机到玩家的最小距离。当处于最小距离时玩家实体会不可见（如果开启该功能）",
 	"leawind_third_person.option.camera_distance_max": "距离上限",
 	"leawind_third_person.option.camera_distance_max.desc": "使用滚轮调整时相机到玩家的最大距离",
 	"leawind_third_person.option.flying_smooth_factor": "飞行时相机跟随玩家的平滑系数",
