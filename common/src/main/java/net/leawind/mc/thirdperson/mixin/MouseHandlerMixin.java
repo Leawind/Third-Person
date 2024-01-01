@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.ModEvents;
+import net.leawind.mc.thirdperson.event.ModEvents;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModOptions;
 import org.spongepowered.asm.mixin.Mixin;

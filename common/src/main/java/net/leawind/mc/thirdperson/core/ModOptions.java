@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.thirdperson.ModKeys;
+import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
