@@ -1,7 +1,7 @@
 package net.leawind.mc.util.smoothvalue;
 
 
-import net.leawind.mc.util.Vectors;
+import net.leawind.mc.util.math.Vectors;
 import net.minecraft.world.phys.Vec2;
 
 public class ExpSmoothVec2f extends ExpSmoothValue<Vec2> {

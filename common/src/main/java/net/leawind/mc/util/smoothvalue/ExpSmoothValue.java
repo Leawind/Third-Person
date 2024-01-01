@@ -14,6 +14,12 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
+	/**
+	 * @param tickTime 经过的时间（s）
+	 */
+	@Override
+	abstract public ExpSmoothValue<T> update (double tickTime);
+
 	@Override
 	final public T get () {
 		return value;
@@ -41,12 +47,6 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		this.smoothFactor = smoothFactor;
 		return this;
 	}
-
-	/**
-	 * @param tickTime 经过的时间（s）
-	 */
-	@Override
-	abstract public ExpSmoothValue<T> update (double tickTime);
 
 	abstract public T get (float delta);
 

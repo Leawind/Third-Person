@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.Vectors;
+import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
@@ -133,6 +133,7 @@ public class PlayerAgent {
 		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
 			return;
 		}
+		// 键盘控制的移动方向
 		float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x, absoluteImpulse.y));
 		turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 	}

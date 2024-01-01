@@ -78,6 +78,7 @@ public class ConfigAdapter extends TypeAdapter<Config> {
 		} catch (IllegalAccessException | IOException e) {
 			throw new RuntimeException(e);
 		}
+		//noinspection InstantiationOfUtilityClass
 		return new Config();
 	}
 }

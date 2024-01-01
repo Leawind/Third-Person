@@ -29,8 +29,8 @@ public class MixinProxy {
 				Vec3     playerLeft3D    = Vec3.directionFromRotation(0, playerRotation - 90);
 				Vector2f playerForward   = new Vector2f((float)playerForward3D.x, (float)playerForward3D.z);
 				Vector2f playerLeft      = new Vector2f((float)playerLeft3D.x, (float)playerLeft3D.z);
-				that.forwardImpulse = PlayerAgent.absoluteImpulse.dot(playerForward);
-				that.leftImpulse    = PlayerAgent.absoluteImpulse.dot(playerLeft);
+				that.forwardImpulse = PlayerAgent.absoluteImpulse.dot(playerForward) / playerForward.length();
+				that.leftImpulse    = PlayerAgent.absoluteImpulse.dot(playerLeft) / playerLeft.length();
 				if (flag) {
 					that.forwardImpulse *= sneakingSpeedBonus;
 					that.leftImpulse *= sneakingSpeedBonus;

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetScheme {
+	@SuppressWarnings("unused")
 	public static final Logger             LOGGER   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static final CameraOffsetScheme DEFAULT  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
 	public              CameraOffsetMode   aimingMode;
@@ -47,6 +48,7 @@ public class CameraOffsetScheme {
 	/**
 	 * 获取当前未启用的模式
 	 */
+	@SuppressWarnings("unused")
 	public CameraOffsetMode getAnotherMode () {
 		return isAiming ? normalMode: aimingMode;
 	}

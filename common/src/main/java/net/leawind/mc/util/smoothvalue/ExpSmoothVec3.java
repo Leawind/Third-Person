@@ -1,7 +1,7 @@
 package net.leawind.mc.util.smoothvalue;
 
 
-import net.leawind.mc.util.Vectors;
+import net.leawind.mc.util.math.Vectors;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
@@ -25,7 +25,7 @@ public class ExpSmoothVec3 extends ExpSmoothValue<Vec3> {
 	@Override
 	public ExpSmoothVec3 update (double tickTime) {
 		super.preUpdate();
-		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, tickTime).reverse().add(1, 1, 1));
+		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, tickTime).scale(-1).add(1, 1, 1));
 		return this;
 	}
 

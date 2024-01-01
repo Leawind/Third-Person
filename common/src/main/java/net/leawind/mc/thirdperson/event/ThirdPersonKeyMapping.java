@@ -23,24 +23,26 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 	/**
 	 * 按下后经过 holdLength 则触发 hold 事件
 	 */
-	private long              holdLength  = 300;
+	private              long                                   holdLength   = 300;
 	/**
 	 * 按下->抬起 经过时长小于 pressLength 将触发 press 事件
 	 */
-	private long              pressLength = 300;
-	private long              keyDownTime = 0;
-	private Timer             timer       = null;
+	private              long                                   pressLength  = 300;
+	private              long                                   keyDownTime  = 0;
+	private              Timer                                  timer        = null;
 	@Nullable
-	private Supplier<Boolean> ondown      = null;
+	private              Supplier<Boolean>                      ondown       = null;
 	@Nullable
-	private Supplier<Boolean> onup        = null;
+	private              Supplier<Boolean>                      onup         = null;
 	@Nullable
-	private Supplier<Boolean> onhold      = null;
+	private              Supplier<Boolean>                      onhold       = null;
 	@Nullable
-	private Supplier<Boolean> onpress     = null;
+	private              Supplier<Boolean>                      onpress      = null;
+
 	public ThirdPersonKeyMapping (String name) {
 		this(name, InputConstants.UNKNOWN.getValue());
 	}
+
 	public ThirdPersonKeyMapping (String name, int defaultValue) {
 		this(name, defaultValue, CATEGORY_KEY);
 	}
