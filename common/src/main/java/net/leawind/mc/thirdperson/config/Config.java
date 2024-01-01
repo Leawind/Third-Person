@@ -90,7 +90,7 @@ public class Config {
 	@ConfigEntry
 	private static      int                     available_distance_count                  = 16;
 	@ConfigEntry
-	private static      double                  camera_distance_min                       = 0.1;
+	private static      double                  camera_distance_min                       = 0.5;
 	@ConfigEntry
 	private static      double                  camera_distance_max                       = 8;
 	@ConfigEntry
@@ -171,7 +171,7 @@ public class Config {
 							.step(1))
 						.build())
 					.option(Config.<Double>option("camera_distance_min")
-						.binding(0.1d, () -> camera_distance_min, v -> {
+						.binding(0.5d, () -> camera_distance_min, v -> {
 							camera_distance_min = v; updateCameraDistances();
 						})
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
