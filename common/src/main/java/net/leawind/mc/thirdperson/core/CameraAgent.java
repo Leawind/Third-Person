@@ -123,6 +123,13 @@ public class CameraAgent {
 	}
 
 	/**
+	 * 退出第三人称视角
+	 */
+	public static void onLeaveThirdPerson () {
+		PlayerAgent.turnToCameraHitResult();
+	}
+
+	/**
 	 * 重置玩家对象，重置相机的位置、角度等参数
 	 */
 	public static void reset () {
@@ -135,13 +142,6 @@ public class CameraAgent {
 										mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
 		}
 		LOGGER.info("Reset CameraAgent");
-	}
-
-	/**
-	 * 退出第三人称视角
-	 */
-	public static void onLeaveThirdPerson () {
-		PlayerAgent.turnToCameraHitResult();
 	}
 
 	/**
@@ -211,7 +211,6 @@ public class CameraAgent {
 		lastRotation = new Vec2(camera.getXRot(), camera.getYRot());
 	}
 
-	@SuppressWarnings("unused")
 	public static boolean isThirdPerson () {
 		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}

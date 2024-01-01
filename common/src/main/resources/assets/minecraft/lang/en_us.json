@@ -65,6 +65,7 @@
 	"leawind_third_person.option.projectile_auto_aim.desc": "When aiming at a block or entity, automatically adjust the shooting angle to hit the target.",
 	"key.categories.leawind_third_person": "Leawind's Third Person",
 	"key.leawind_third_person.open_config_menu": "Open Configuration Menu",
+	"key.leawind_third_person.toggle_mod_enable": "Toggle mod enable/disable",
 	"key.leawind_third_person.toggle_side": "Toggle Camera to the Other Side",
 	"key.leawind_third_person.adjust_position": "Hold to Adjust Camera Position",
 	"key.leawind_third_person.force_aiming": "Hold to Force Aim",

@@ -65,6 +65,7 @@
 	"leawind_third_person.option.projectile_auto_aim.desc": "瞄准方块或实体时，自动调整射击角度以击中该目标",
 	"key.categories.leawind_third_person": "Leawind的第三人称",
 	"key.leawind_third_person.open_config_menu": "打开配置菜单",
+	"key.leawind_third_person.toggle_mod_enable": "切换模组是否启用",
 	"key.leawind_third_person.toggle_side": "切换相机到另一侧",
 	"key.leawind_third_person.adjust_position": "按住调节相机位置",
 	"key.leawind_third_person.force_aiming": "按住强制瞄准",
