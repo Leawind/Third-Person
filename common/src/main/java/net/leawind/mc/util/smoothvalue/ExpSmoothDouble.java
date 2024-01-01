@@ -27,13 +27,19 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
 	@Override
 	public ExpSmoothDouble update (double tickTime) {
+		super.preUpdate();
 		value = Mth.lerp(1 - Math.pow(smoothFactor, tickTime), value, target);
 		return this;
 	}
 
 	@Override
-	public ExpSmoothValue<Double> setSmoothFactor (double decreaseSpeed) {
-		this.smoothFactor = decreaseSpeed;
+	public Double get (float delta) {
+		return Mth.lerp(delta, lastValue, value);
+	}
+
+	@Override
+	public ExpSmoothValue<Double> setSmoothFactor (double smoothFactor) {
+		this.smoothFactor = smoothFactor;
 		return this;
 	}
 

@@ -3,6 +3,7 @@ package net.leawind.mc.util.smoothvalue;
 
 import net.minecraft.world.phys.Vec3;
 
+@SuppressWarnings("unused")
 public class FuncSmoothVec3 extends FuncSmoothValue<Vec3> {
 	public FuncSmoothVec3 () {
 		value       = Vec3.ZERO;

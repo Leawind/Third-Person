@@ -111,6 +111,14 @@ public class Vectors {
 		return new Vec2(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
 	}
 
+	public static Vec2 lerp (Vec2 src, Vec2 dst, float k) {
+		return new Vec2(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y));
+	}
+
+	public static Vec3 lerp (Vec3 src, Vec3 dst, float k) {
+		return new Vec3(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y), Mth.lerp(k, src.z, dst.z));
+	}
+
 	/**
 	 * 各分量分别求幂
 	 */

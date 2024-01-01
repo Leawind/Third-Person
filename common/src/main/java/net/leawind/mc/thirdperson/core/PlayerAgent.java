@@ -140,12 +140,12 @@ public class PlayerAgent {
 	@PerformanceSensitive
 	public static void onRenderTick () {
 		Minecraft mc = Minecraft.getInstance();
-		// 更新是否在与方块交互
 		if (mc.cameraEntity == null) {
 			return;
 		} else if (!CameraAgent.isControlledCamera()) {
 			return;
 		}
+		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		if (CameraAgent.wasAiming) {
 			turnToCameraHitResult(true);

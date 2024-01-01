@@ -5,6 +5,7 @@ import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
@@ -22,9 +23,37 @@ public class ModEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
+		ClientTickEvent.CLIENT_POST.register(ModEvents::onClientTickPost);
 	}
 
 	public static void onClientStarted (Minecraft minecraft) {
+	}
+
+	private static void onClientTickPost (Minecraft mc) {
+		boolean            isAdjusting = ModOptions.isAdjustingCameraOffset();
+		CameraOffsetScheme scheme      = Config.cameraOffsetScheme;
+		// 更新相机偏移量
+		//		CameraAgent.smoothOffsetRatio.setSmoothFactor(isAdjusting
+		//													  ? new Vec2(1e-7F, 1e-7F)
+		//													  : scheme.getMode().getOffsetSmoothFactor());
+		//		CameraAgent.smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio());
+		//		CameraAgent.smoothOffsetRatio.update(50);
+		// 更新眼睛位置
+		//		if (mc.cameraEntity != null && mc.player != null) {
+		//			Vec3 eyePosition = mc.cameraEntity.getEyePosition(mc.getFrameTime());
+		//			if (CameraAgent.wasAttachedEntityInvisible) {
+		//				// 假的第一人称，没有平滑
+		//				CameraAgent.smoothEyePosition.setValue(eyePosition);
+		//			} else {
+		//				// 平滑更新眼睛位置，飞行时使用专用的平滑系数
+		//				if (mc.player.isFallFlying()) {
+		//					CameraAgent.smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
+		//				} else {
+		//					CameraAgent.smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+		//				}
+		//				CameraAgent.smoothEyePosition.setTarget(eyePosition).update(50);
+		//			}
+		//		}
 	}
 
 	/**

@@ -8,4 +8,5 @@ public interface ISmoothValue<T> {
 	ISmoothValue<T> update (double time);
 
 	T get ();
+
 }
