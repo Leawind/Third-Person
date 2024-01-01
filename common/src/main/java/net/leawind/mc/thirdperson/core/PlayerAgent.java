@@ -79,16 +79,6 @@ public class PlayerAgent {
 	/**
 	 * 设置玩家朝向
 	 *
-	 * @param rot         朝向
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnTo (Vec2 rot, boolean isInstantly) {
-		turnTo(rot.y, rot.x, isInstantly);
-	}
-
-	/**
-	 * 设置玩家朝向
-	 *
 	 * @param ry          偏航角
 	 * @param rx          俯仰角
 	 * @param isInstantly 是否瞬间转动
@@ -108,6 +98,16 @@ public class PlayerAgent {
 				mc.player.turn(dy, rx - mc.player.getViewXRot(lastPartialTick));
 			}
 		}
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param rot         朝向
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnTo (Vec2 rot, boolean isInstantly) {
+		turnTo(rot.y, rot.x, isInstantly);
 	}
 
 	/**

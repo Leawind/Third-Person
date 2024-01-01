@@ -20,6 +20,37 @@ public class ModKeys {
 	public static final  Logger     LOGGER           = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	private static final String     CATEGORY_KEY     = "key.categories." + ThirdPersonMod.MOD_ID;
 	/**
+	 * 按住后进入调整相机位置的模式
+	 * <p>
+	 * 移动鼠标调整相机位置
+	 * <p>
+	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
+	 */
+	public static final  KeyMapping ADJUST_POSITION  = new KeyMapping(getText("adjust_position"),
+																	  InputConstants.KEY_Z,
+																	  CATEGORY_KEY) {
+		@Override
+		public void setDown (boolean down) {
+			boolean wasDown = isDown();
+			super.setDown(down);
+			if (CameraAgent.isAvailable()) {
+				if (!wasDown && down) {
+					// key down
+					ModEvents.onStartAdjustingCameraOffset();
+				} else if (wasDown && !down) {
+					// key up
+					ModEvents.onStopAdjustingCameraOffset();
+				}
+			}
+		}
+	};
+	/**
+	 * 按住强制瞄准
+	 */
+	public static final  KeyMapping FORCE_AIMING     = new KeyMapping(getText("force_aiming"),
+																	  InputConstants.UNKNOWN.getValue(),
+																	  CATEGORY_KEY);
+	/**
 	 * 按下打开配置菜单
 	 */
 	private static final KeyMapping OPEN_CONFIG_MENU = new KeyMapping(getText("open_config_menu"),
@@ -83,31 +114,6 @@ public class ModKeys {
 		}
 	};
 	/**
-	 * 按住后进入调整相机位置的模式
-	 * <p>
-	 * 移动鼠标调整相机位置
-	 * <p>
-	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
-	 */
-	public static final  KeyMapping ADJUST_POSITION  = new KeyMapping(getText("adjust_position"),
-																	  InputConstants.KEY_Z,
-																	  CATEGORY_KEY) {
-		@Override
-		public void setDown (boolean down) {
-			boolean wasDown = isDown();
-			super.setDown(down);
-			if (CameraAgent.isAvailable()) {
-				if (!wasDown && down) {
-					// key down
-					ModEvents.onStartAdjustingCameraOffset();
-				} else if (wasDown && !down) {
-					// key up
-					ModEvents.onStopAdjustingCameraOffset();
-				}
-			}
-		}
-	};
-	/**
 	 * 切换瞄准状态
 	 */
 	private static final KeyMapping TOGGLE_AIMING    = new KeyMapping(getText("toggle_aiming"),
@@ -122,12 +128,6 @@ public class ModKeys {
 			}
 		}
 	};
-	/**
-	 * 按住强制瞄准
-	 */
-	public static final  KeyMapping FORCE_AIMING     = new KeyMapping(getText("force_aiming"),
-																	  InputConstants.UNKNOWN.getValue(),
-																	  CATEGORY_KEY);
 
 	private static String getText (String name) {
 		return "key." + ThirdPersonMod.MOD_ID + "." + name;

@@ -6,14 +6,11 @@ import net.leawind.mc.thirdperson.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ModOptions {
 	/**
 	 * 是否通过按键切换到了瞄准模式
 	 */
-	public static boolean             isToggleToAiming = false;
+	public static boolean isToggleToAiming = false;
 
 	/**
 	 * 是否正在调整摄像机偏移量

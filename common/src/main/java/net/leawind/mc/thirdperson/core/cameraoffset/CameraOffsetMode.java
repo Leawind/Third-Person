@@ -87,26 +87,6 @@ public class CameraOffsetMode {
 		return this;
 	}
 
-	public Vec2 getOffsetValue () {
-		return offsetRatio;
-	}
-
-	public CameraOffsetMode setOffsetRatio (Vec2 offset) {
-		offsetRatio = offset;
-		cameraOffsetScheme.onModify();
-		return this;
-	}
-
-	public double getCenterOffsetRatio () {
-		return centerOffsetRatio;
-	}
-
-	public CameraOffsetMode setCenterOffsetRatio (double offset) {
-		centerOffsetRatio = offset;
-		cameraOffsetScheme.onModify();
-		return this;
-	}
-
 	public CameraOffsetMode setSide (boolean isLeft) {
 		if (isLeft && offsetRatio.x < 0) {
 			offsetRatio = new Vec2(-offsetRatio.x, offsetRatio.y);
@@ -119,5 +99,25 @@ public class CameraOffsetMode {
 
 	public Vec2 getOffsetRatio () {
 		return cameraOffsetScheme.isCenter ? new Vec2(0, (float)getCenterOffsetRatio()): getOffsetValue();
+	}
+
+	public CameraOffsetMode setOffsetRatio (Vec2 offset) {
+		offsetRatio = offset;
+		cameraOffsetScheme.onModify();
+		return this;
+	}
+
+	public double getCenterOffsetRatio () {
+		return centerOffsetRatio;
+	}
+
+	public Vec2 getOffsetValue () {
+		return offsetRatio;
+	}
+
+	public CameraOffsetMode setCenterOffsetRatio (double offset) {
+		centerOffsetRatio = offset;
+		cameraOffsetScheme.onModify();
+		return this;
 	}
 }

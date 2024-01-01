@@ -69,11 +69,6 @@ public class CameraAgent {
 	public static       Vec3            lastPosition               = Vec3.ZERO;
 	public static       Vec2            lastRotation               = Vec2.ZERO;
 
-	@SuppressWarnings("unused")
-	public static boolean isThirdPerson () {
-		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
-	}
-
 	/**
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
 	 */
@@ -214,6 +209,11 @@ public class CameraAgent {
 		PlayerAgent.onRenderTick(partialTick, sinceLastTick);
 		lastPosition = camera.getPosition();
 		lastRotation = new Vec2(camera.getXRot(), camera.getYRot());
+	}
+
+	@SuppressWarnings("unused")
+	public static boolean isThirdPerson () {
+		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 
 	/**
