@@ -153,7 +153,7 @@ public class CameraAgent {
 	 * @param attachedEntity 附着的实体
 	 */
 	@PerformanceSensitive
-	public static void onRenderTick (BlockGetter level, Entity attachedEntity, boolean isMirrored, float partialTick) {
+	public static void onRenderTick (BlockGetter level, Entity attachedEntity, float partialTick) {
 		PlayerAgent.lastPartialTick = partialTick;
 		CameraAgent.level           = level;
 		wasAiming                   = PlayerAgent.isAiming();
@@ -165,8 +165,8 @@ public class CameraAgent {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
 		}
 		// 时间
-		double now           = Blaze3D.getTime();
-		double sinceLastTick = now - lastRenderTickTimeStamp;
+		double now      = Blaze3D.getTime();
+		double tickCost = now - lastRenderTickTimeStamp;
 		lastRenderTickTimeStamp = now;
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		scheme.setAiming(wasAiming);
@@ -174,7 +174,7 @@ public class CameraAgent {
 			boolean isAdjusting = ModOptions.isAdjustingCameraOffset();
 			// 平滑更新距离
 			smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1E-5: scheme.getMode().getDistanceSmoothFactor());
-			smoothVirtualDistance.setTarget(scheme.getMode().getMaxDistance()).update(sinceLastTick);
+			smoothVirtualDistance.setTarget(scheme.getMode().getMaxDistance()).update(tickCost);
 			// 如果是非瞄准模式下，且距离过远则强行放回去
 			if (!scheme.isAiming && !ModOptions.isAdjustingCameraOffset()) {
 				smoothVirtualDistance.set(Math.min(scheme.getMode().getMaxDistance(), smoothVirtualDistance.get()));
@@ -182,12 +182,13 @@ public class CameraAgent {
 			// 平滑更新相机偏移量
 			smoothOffsetRatio.setSmoothFactor(isAdjusting ? new Vec2(1e-7F, 1e-7F): scheme.getMode().getOffsetSmoothFactor());
 			smoothOffsetRatio.setTarget(scheme.getMode().getOffsetRatio());
-			smoothOffsetRatio.update(sinceLastTick);
+			smoothOffsetRatio.update(tickCost);
 			// 更新眼睛位置
 			assert mc.cameraEntity != null;
+			Vec3 eyePosition = mc.cameraEntity.getEyePosition(partialTick);
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
-				smoothEyePosition.setValue(mc.cameraEntity.getEyePosition(partialTick));
+				smoothEyePosition.setValue(eyePosition);
 			} else {
 				// 平滑更新眼睛位置，飞行时使用专用的平滑系数
 				if (mc.player.isFallFlying()) {
@@ -195,20 +196,21 @@ public class CameraAgent {
 				} else {
 					smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
 				}
-				smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(partialTick)).update(sinceLastTick);
+				smoothEyePosition.setTarget(eyePosition).update(tickCost);
 			}
+			//			smoothEyePosition.set(mc.cameraEntity.getEyePosition(partialTick));
 			// 设置相机朝向和位置
 			updateFakeCameraRotationPosition();
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
-			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();//TODO optimize
+			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
 			if (CameraAgent.wasAttachedEntityInvisible) {
-				((CameraInvoker)fakeCamera).invokeSetPosition(attachedEntity.getEyePosition(partialTick));
+				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
 				applyCamera();
 			}
 		}
-		PlayerAgent.onRenderTick(partialTick, sinceLastTick);
+		PlayerAgent.onRenderTick();
 		lastPosition = camera.getPosition();
 		lastRotation = new Vec2(camera.getXRot(), camera.getYRot());
 	}
@@ -229,16 +231,25 @@ public class CameraAgent {
 		// 成像平面宽高
 		double heightHalf = Math.tan(verticalRadianHalf) * NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
-		// 水平视野角度一半(弧度制）
-		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
+		//		// 水平视野角度一半(弧度制）
+		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
 		// 没有偏移的情况下相机位置
-		Vec3 positionWithoutOffset = getVirtualPosition();
+		Vec3 positionWithoutOffset = getPositionWithoutOffset();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
 		((CameraInvoker)fakeCamera).invokeSetPosition(positionWithoutOffset);
 		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / NEAR_PLANE_DISTANCE;
 		double upOffset   = smoothOffsetRatio.get().y * smoothVirtualDistance.get() * Math.tan(verticalRadianHalf);
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
+	}
+
+	/**
+	 * 将假相机的朝向和位置应用到真相机上
+	 */
+	private static void applyCamera () {
+		// 应用到真相机
+		((CameraInvoker)camera).invokeSetRotation(fakeCamera.getYRot(), fakeCamera.getXRot());
+		((CameraInvoker)camera).invokeSetPosition(fakeCamera.getPosition());
 	}
 
 	/**
@@ -273,16 +284,7 @@ public class CameraAgent {
 		smoothVirtualDistance.set(smoothVirtualDistance.get() * minDistance / initDistance);
 	}
 
-	/**
-	 * 将假相机的朝向和位置应用到真相机上
-	 */
-	private static void applyCamera () {
-		// 应用到真相机
-		((CameraInvoker)camera).invokeSetRotation(fakeCamera.getYRot(), fakeCamera.getXRot());
-		((CameraInvoker)camera).invokeSetPosition(fakeCamera.getPosition());
-	}
-
-	public static Vec3 getVirtualPosition () {
+	public static Vec3 getPositionWithoutOffset () {
 		return smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation).scale(smoothVirtualDistance.get()));
 	}
 

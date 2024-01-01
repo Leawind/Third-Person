@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
+	@SuppressWarnings("unused")
 	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static       boolean  wasInterecting  = false;
 	public static       Vector2f absoluteImpulse = new Vector2f(0, 0);
@@ -39,7 +39,7 @@ public class PlayerAgent {
 	 */
 	public static void onBeforeHandleKeybinds () {
 		if (wasInterecting && CameraAgent.isThirdPerson()) {
-			turnToCameraHitResult();
+			turnToCameraHitResult(true);
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
 	}
@@ -47,14 +47,14 @@ public class PlayerAgent {
 	/**
 	 * 让玩家朝向相机的落点
 	 */
-	public static void turnToCameraHitResult () {
+	public static void turnToCameraHitResult (boolean isInstantly) {
 		// 计算相机视线落点
 		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
-			turnWithCamera(true);
+			turnWithCamera(isInstantly);
 		} else {
 			// 让玩家朝向该坐标
-			turnTo(cameraHitPosition);
+			turnTo(cameraHitPosition, isInstantly);
 		}
 	}
 
@@ -70,10 +70,11 @@ public class PlayerAgent {
 	 *
 	 * @param target 目标位置
 	 */
-	public static void turnTo (@NotNull Vec3 target) {
+	public static void turnTo (@NotNull Vec3 target, boolean isInstantly) {
+		assert Minecraft.getInstance().player != null;
 		Vec3 playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
 		Vec2 playerViewRotation  = Vectors.rotationDegreeFromDirection(playerViewDirection);
-		turnTo(playerViewRotation, true);
+		turnTo(playerViewRotation, isInstantly);
 	}
 
 	/**
@@ -115,29 +116,45 @@ public class PlayerAgent {
 	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
-		if (!Minecraft.getInstance().cameraEntity.isSwimming() && absoluteImpulse.length() > 1e-5) {
-			float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x,
-																						  absoluteImpulse.y));
-			if (Config.rotate_to_moving_direction && !(CameraAgent.wasAiming || wasInterecting) &&
-				!ModOptions.shouldPlayerRotateWithCamera()) {
-				turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
-			}
+		Minecraft mc = Minecraft.getInstance();
+		assert mc.cameraEntity != null;
+		if (!Config.rotate_to_moving_direction) {
+			return;
+		} else if (wasInterecting) {
+			return;
+		} else if (CameraAgent.wasAiming) {
+			return;
+		} else if (CameraAgent.wasAttachedEntityInvisible) {
+			return;
+		} else if (absoluteImpulse.length() <= 1e-5) {
+			return;
+		} else if (mc.cameraEntity.isSwimming()) {
+			return;
+		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
+			return;
 		}
+		float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x, absoluteImpulse.y));
+		turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 	}
 
 	@PerformanceSensitive
-	public static void onRenderTick (float partialTick, double sinceLastTick) {
+	public static void onRenderTick () {
 		Minecraft mc = Minecraft.getInstance();
+		// 更新是否在与方块交互
 		if (mc.cameraEntity == null) {
 			return;
+		} else if (!CameraAgent.isControlledCamera()) {
+			return;
 		}
-		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
-		// 更新是否在与方块交互
 		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
-		if (CameraAgent.wasAiming || wasInterecting) {
-			turnToCameraHitResult();
-		} else if (ModOptions.shouldPlayerRotateWithCamera()) {
+		if (CameraAgent.wasAiming) {
+			turnToCameraHitResult(true);
+		} else if (wasInterecting) {
 			turnWithCamera(false);
+		} else if (CameraAgent.wasAttachedEntityInvisible) {
+			turnWithCamera(true);
+		} else if (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying()) {
+			turnWithCamera(true);
 		} else if (Config.player_rotate_with_camera_when_not_aiming) {
 			turnWithCamera(true);
 		}

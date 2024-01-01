@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.LivingEntity;
 
 public class ModOptions {
 	/**
@@ -32,18 +31,6 @@ public class ModOptions {
 	public static boolean shouldRenderCrosshair () {
 		return CameraAgent.isAvailable() &&
 			   (CameraAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
-	}
-
-	/**
-	 * 玩家当前是否跟随相机旋转
-	 */
-	public static boolean shouldPlayerRotateWithCamera () {
-		Minecraft mc = Minecraft.getInstance();
-		if (CameraAgent.wasAttachedEntityInvisible) {
-			return true;
-		}
-		return mc.cameraEntity != null && mc.cameraEntity.isSwimming() ||
-			   (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying());
 	}
 
 	/**

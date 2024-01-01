@@ -27,6 +27,8 @@ import java.awt.*;
 import java.nio.file.Path;
 
 /**
+ * TODO 分离
+ * <p>
  * 模组配置项
  * <p>
  * 普通配置项可由用户在配置屏幕中调整，程序可以直接使用其值。

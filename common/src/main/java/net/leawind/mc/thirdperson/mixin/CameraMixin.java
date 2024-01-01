@@ -64,7 +64,7 @@ public abstract class CameraMixin {
 				Camera camera = (Camera)(Object)this;
 				((CameraInvoker)camera).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());
 			}
-			CameraAgent.onRenderTick(level, entity, reversedView, partialTick);
+			CameraAgent.onRenderTick(level, entity, partialTick);
 			ci.cancel();
 		}
 	}
