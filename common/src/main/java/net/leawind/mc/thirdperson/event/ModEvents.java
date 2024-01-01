@@ -5,7 +5,6 @@ import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
@@ -23,7 +22,6 @@ public class ModEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
-		ClientTickEvent.CLIENT_POST.register(ModKeys::handleThrowExpey);
 	}
 
 	public static void onClientStarted (Minecraft minecraft) {
