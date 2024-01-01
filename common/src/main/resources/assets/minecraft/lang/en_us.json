@@ -61,6 +61,8 @@
 	"leawind_third_person.option.offset_center.desc": "Hold specific keys can center the view. When centered, X offset is fixed at 0, and the player is in the center of the screen. This option adjusts the Y offset in this state.",
 	"leawind_third_person.option.camera_ray_trace_length": "Camera Line of Sight Detection Distance",
 	"leawind_third_person.option.camera_ray_trace_length.desc": "When aiming at an object beyond this distance, the player's line of sight will be parallel to the camera line of sight.",
+	"leawind_third_person.option.turn_with_camera_when_enter_first_person": "Turn player with to camera when enter FP",
+	"leawind_third_person.option.turn_with_camera_when_enter_first_person.desc": "When entering first person, make player face the same direction as the camera did in the just-ended third-person perspective.",
 	"leawind_third_person.option.projectile_auto_aim": "Auto-Aim While Shooting",
 	"leawind_third_person.option.projectile_auto_aim.desc": "When aiming at a block or entity, automatically adjust the shooting angle to hit the target.",
 	"key.categories.leawind_third_person": "Leawind's Third Person",

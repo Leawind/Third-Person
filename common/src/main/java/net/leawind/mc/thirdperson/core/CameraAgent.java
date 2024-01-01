@@ -126,7 +126,9 @@ public class CameraAgent {
 	 * 退出第三人称视角
 	 */
 	public static void onLeaveThirdPerson () {
-		PlayerAgent.turnToCameraHitResult();
+		if (Config.turn_with_camera_when_enter_first_person) {
+			PlayerAgent.turnWithCamera(true);
+		}
 	}
 
 	/**
