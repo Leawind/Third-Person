@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
-import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.phys.Vec3;
@@ -20,10 +19,6 @@ public class MixinProxy {
 			Minecraft mc            = Minecraft.getInstance();
 			float     cameraForward = (that.up ? 1: 0) - (that.down ? 1: 0);
 			float     cameraLeft    = (that.left ? 1: 0) - (that.right ? 1: 0);
-			if (Float.isNaN(CameraAgent.camera.getLookVector().x)) {//TODO Why sometimes it is NaN ?
-				((CameraInvoker)CameraAgent.camera).invokeSetRotation(CameraAgent.camera.getYRot(),
-																	  CameraAgent.camera.getXRot());
-			}
 			Vector3f cameraForwardImpulse = CameraAgent.camera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
 			Vector3f cameraLeftImpulse    = CameraAgent.camera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
 			PlayerAgent.absoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x,

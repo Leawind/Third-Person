@@ -195,8 +195,6 @@ public class CameraAgent {
 	}
 
 	public static Vec3 getPositionWithoutOffset () {
-		//		return smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation).scale(smoothVirtualDistance
-		//		.get()));
 		return smoothEyePosition.get(PlayerAgent.lastPartialTick).add(Vec3d.directionFromRotation(relativeRotation)
 																		   .scale(smoothVirtualDistance.get()));
 	}
@@ -258,13 +256,17 @@ public class CameraAgent {
 		double widthHalf  = aspectRatio * heightHalf;
 		//		// 水平视野角度一半(弧度制）
 		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
+		// 平滑值
+		Vec2d  smoothOffsetRatioValue     = smoothOffsetRatio.get();
+		double smoothVirtualDistanceValue = smoothVirtualDistance.get();
+		// 偏移量
+		double upOffset   = smoothOffsetRatioValue.y * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
+		double leftOffset = smoothOffsetRatioValue.x * smoothVirtualDistanceValue * widthHalf / NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
 		Vec3 positionWithoutOffset = getPositionWithoutOffset();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y + 180), (float)-relativeRotation.x);
 		((CameraInvoker)fakeCamera).invokeSetPosition(positionWithoutOffset);
-		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / NEAR_PLANE_DISTANCE;
-		double upOffset   = smoothOffsetRatio.get().y * smoothVirtualDistance.get() * Math.tan(verticalRadianHalf);
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
@@ -275,7 +277,7 @@ public class CameraAgent {
 		final double offset = 0.18;
 		// 防止穿墙
 		Vec3   cameraPosition = fakeCamera.getPosition();
-		Vec3   eyePosition    = smoothEyePosition.get();
+		Vec3   eyePosition    = smoothEyePosition.get(PlayerAgent.lastPartialTick);
 		Vec3   eyeToCamera    = eyePosition.vectorTo(cameraPosition);
 		double initDistance   = eyeToCamera.length();
 		double minDistance    = initDistance;

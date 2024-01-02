@@ -35,7 +35,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
 	@Override
 	public Double get (double delta) {
-		return Mth.lerp(delta, lastValue, value);
+		return value + Mth.lerp(delta, 0, value - lastValue);
 	}
 
 	@Override
