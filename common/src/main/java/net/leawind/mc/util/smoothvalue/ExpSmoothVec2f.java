@@ -4,6 +4,7 @@ package net.leawind.mc.util.smoothvalue;
 import net.leawind.mc.util.math.Vectors;
 import net.minecraft.world.phys.Vec2;
 
+@SuppressWarnings("unused")
 public class ExpSmoothVec2f extends ExpSmoothValue<Vec2> {
 	public ExpSmoothVec2f () {
 		value        = Vec2.ZERO;
@@ -29,7 +30,7 @@ public class ExpSmoothVec2f extends ExpSmoothValue<Vec2> {
 	}
 
 	@Override
-	public Vec2 get (float delta) {
+	public Vec2 get (double delta) {
 		return Vectors.lerp(lastValue, value, delta);
 	}
 

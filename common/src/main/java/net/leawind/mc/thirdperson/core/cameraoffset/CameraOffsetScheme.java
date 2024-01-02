@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.minecraft.world.phys.Vec2;
+import net.leawind.mc.util.math.Vec2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +33,8 @@ public class CameraOffsetScheme {
 											 double aimingOffsetX,
 											 double aimingOffsetY) {
 		final CameraOffsetScheme scheme = new CameraOffsetScheme();
-		scheme.normalMode = new CameraOffsetMode(scheme, normalMaxDist, (float)normalOffsetX, (float)normalOffsetY);
-		scheme.aimingMode = new CameraOffsetMode(scheme, aimingMaxDist, (float)aimingOffsetX, (float)aimingOffsetY);
+		scheme.normalMode = new CameraOffsetMode(scheme, normalMaxDist, normalOffsetX, normalOffsetY);
+		scheme.aimingMode = new CameraOffsetMode(scheme, aimingMaxDist, aimingOffsetX, aimingOffsetY);
 		return scheme;
 	}
 
@@ -82,8 +82,8 @@ public class CameraOffsetScheme {
 		if (isCenter) {
 			isCenter = false;
 		} else {
-			aimingMode.setOffsetRatio(new Vec2(-aimingMode.getOffsetValue().x, aimingMode.getOffsetValue().y));
-			normalMode.setOffsetRatio(new Vec2(-normalMode.getOffsetValue().x, normalMode.getOffsetValue().y));
+			aimingMode.setOffsetRatio(new Vec2d(-aimingMode.getOffsetValue().x, aimingMode.getOffsetValue().y));
+			normalMode.setOffsetRatio(new Vec2d(-normalMode.getOffsetValue().x, normalMode.getOffsetValue().y));
 		}
 		onModify();
 	}

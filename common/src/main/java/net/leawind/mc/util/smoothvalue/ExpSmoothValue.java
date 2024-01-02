@@ -48,7 +48,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
-	abstract public T get (float delta);
+	abstract public T get (double delta);
 
 	abstract ExpSmoothValue<T> setSmoothFactor (double smoothFactor);
 

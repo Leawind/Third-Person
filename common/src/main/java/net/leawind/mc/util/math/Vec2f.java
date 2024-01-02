@@ -98,7 +98,7 @@ public class Vec2f extends Vec2 {
 	public float distanceTo (Vec2f v) {
 		double ex = v.x - x;
 		double ey = v.y - y;
-		return (float)Math.sqrt(x * x + y * y);
+		return (float)Math.sqrt(ex * ex + ey * ey);
 	}
 
 	public Vec2f multiply (float x, float y) {

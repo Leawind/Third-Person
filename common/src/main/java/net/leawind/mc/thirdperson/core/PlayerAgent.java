@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.util.math.Vec2d;
 import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
@@ -72,8 +72,8 @@ public class PlayerAgent {
 	 */
 	public static void turnTo (@NotNull Vec3 target, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
-		Vec3 playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
-		Vec2 playerViewRotation  = Vectors.rotationDegreeFromDirection(playerViewDirection);
+		Vec3  playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
+		Vec2d playerViewRotation  = Vectors.rotationDegreeFromDirection(playerViewDirection);
 		turnTo(playerViewRotation, isInstantly);
 	}
 
@@ -84,15 +84,15 @@ public class PlayerAgent {
 	 * @param rx          俯仰角
 	 * @param isInstantly 是否瞬间转动
 	 */
-	public static void turnTo (float ry, float rx, boolean isInstantly) {
+	public static void turnTo (double ry, double rx, boolean isInstantly) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
-				mc.player.setYRot(ry);
-				mc.player.setXRot(rx);
+				mc.player.setYRot((float)ry);
+				mc.player.setXRot((float)rx);
 			} else {
-				float playerY = mc.player.getViewYRot(lastPartialTick);
-				float dy      = ((ry - playerY) % 360 + 360) % 360;
+				double playerY = mc.player.getViewYRot(lastPartialTick);
+				double dy      = ((ry - playerY) % 360 + 360) % 360;
 				if (dy > 180) {
 					dy -= 360;
 				}
@@ -107,7 +107,7 @@ public class PlayerAgent {
 	 * @param rot         朝向
 	 * @param isInstantly 是否瞬间转动
 	 */
-	public static void turnTo (Vec2 rot, boolean isInstantly) {
+	public static void turnTo (Vec2d rot, boolean isInstantly) {
 		turnTo(rot.y, rot.x, isInstantly);
 	}
 
@@ -134,7 +134,7 @@ public class PlayerAgent {
 			return;
 		}
 		// 键盘控制的移动方向
-		float absoluteRotDegree = (float)Vectors.rotationDegreeFromDirection(new Vec2(absoluteImpulse.x, absoluteImpulse.y));
+		double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(absoluteImpulse.x, absoluteImpulse.y));
 		turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 	}
 

@@ -8,9 +8,11 @@ import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
+import net.leawind.mc.util.math.Vec2d;
+import net.leawind.mc.util.math.Vec3d;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
-import net.leawind.mc.util.smoothvalue.ExpSmoothVec2f;
-import net.leawind.mc.util.smoothvalue.ExpSmoothVec3;
+import net.leawind.mc.util.smoothvalue.ExpSmoothVec2d;
+import net.leawind.mc.util.smoothvalue.ExpSmoothVec3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -49,7 +51,7 @@ public class CameraAgent {
 	/**
 	 * 相机偏移量
 	 */
-	public static       ExpSmoothVec2f  smoothOffsetRatio          = new ExpSmoothVec2f().setValue(0, 0);
+	public static       ExpSmoothVec2d  smoothOffsetRatio          = new ExpSmoothVec2d().setValue(0, 0);
 	/**
 	 * 上一次 render tick 的时间戳
 	 */
@@ -65,8 +67,8 @@ public class CameraAgent {
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static       ExpSmoothVec3   smoothEyePosition          = new ExpSmoothVec3();
-	public static       Vec2            relativeRotation           = Vec2.ZERO;
+	public static       ExpSmoothVec3d  smoothEyePosition          = new ExpSmoothVec3d();
+	public static       Vec2d           relativeRotation           = Vec2d.ZERO;
 
 	/**
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
@@ -95,17 +97,17 @@ public class CameraAgent {
 	/**
 	 * 鼠标移动导致的相机旋转
 	 *
-	 * @param turnY 偏航角变化量
-	 * @param turnX 俯仰角变化量
+	 * @param y 偏航角变化量
+	 * @param x 俯仰角变化量
 	 */
-	public static void onCameraTurn (double turnY, double turnX) {
+	public static void onCameraTurn (double y, double x) {
 		if (Config.is_mod_enable && !ModOptions.isAdjustingCameraOffset()) {
-			turnY *= 0.15;
-			turnX *= Config.lock_camera_pitch_angle ? 0: -0.15;
-			if (turnY != 0 || turnX != 0) {
+			y *= 0.15;
+			x *= Config.lock_camera_pitch_angle ? 0: -0.15;
+			if (y != 0 || x != 0) {
 				lastCameraTurnTimeStamp = Blaze3D.getTime();
-				relativeRotation        = new Vec2((float)Mth.clamp(relativeRotation.x + turnX, -89.8, 89.8),
-												   (float)(relativeRotation.y + turnY) % 360f);
+				relativeRotation        = new Vec2d(Mth.clamp(relativeRotation.x + x, -89.8, 89.8),
+													(relativeRotation.y + y) % 360f);
 			}
 		}
 	}
@@ -130,8 +132,8 @@ public class CameraAgent {
 		smoothOffsetRatio.setValue(0, 0);
 		smoothVirtualDistance.set(Config.distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
-			relativeRotation = new Vec2(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
-										mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
+			relativeRotation = new Vec2d(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
+										 mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
 		}
 		LOGGER.info("Reset CameraAgent");
 	}
@@ -195,8 +197,8 @@ public class CameraAgent {
 	public static Vec3 getPositionWithoutOffset () {
 		//		return smoothEyePosition.get().add(Vec3.directionFromRotation(relativeRotation).scale(smoothVirtualDistance
 		//		.get()));
-		return smoothEyePosition.get(PlayerAgent.lastPartialTick).add(Vec3.directionFromRotation(relativeRotation)
-																		  .scale(smoothVirtualDistance.get()));
+		return smoothEyePosition.get(PlayerAgent.lastPartialTick).add(Vec3d.directionFromRotation(relativeRotation)
+																		   .scale(smoothVirtualDistance.get()));
 	}
 
 	public static void updateSmoothVirtualDistance (double tickCost) {
@@ -212,7 +214,7 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double tickCost) {
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset()
-										  ? new Vec2(1e-7F, 1e-7F)
+										  ? new Vec2d(1e-7F, 1e-7F)
 										  : Config.cameraOffsetScheme.getMode().getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(Config.cameraOffsetScheme.getMode().getOffsetRatio());
 		smoothOffsetRatio.update(tickCost);
@@ -259,7 +261,7 @@ public class CameraAgent {
 		// 没有偏移的情况下相机位置
 		Vec3 positionWithoutOffset = getPositionWithoutOffset();
 		// 应用到假相机
-		((CameraInvoker)fakeCamera).invokeSetRotation(relativeRotation.y + 180, -relativeRotation.x);
+		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y + 180), (float)-relativeRotation.x);
 		((CameraInvoker)fakeCamera).invokeSetPosition(positionWithoutOffset);
 		double leftOffset = smoothOffsetRatio.get().x * smoothVirtualDistance.get() * widthHalf / NEAR_PLANE_DISTANCE;
 		double upOffset   = smoothOffsetRatio.get().y * smoothVirtualDistance.get() * Math.tan(verticalRadianHalf);
@@ -310,8 +312,8 @@ public class CameraAgent {
 	/**
 	 * 根据相对角度计算相机朝向
 	 */
-	public static Vec2 calculateRotation () {
-		return new Vec2(relativeRotation.y + 180, -relativeRotation.x);
+	public static Vec2d calculateRotation () {
+		return new Vec2d(relativeRotation.y + 180, -relativeRotation.x);
 	}
 
 	/**
@@ -329,6 +331,10 @@ public class CameraAgent {
 	public static @Nullable Vec3 getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
 		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
+	}
+
+	public static @NotNull HitResult pick () {
+		return pick(smoothVirtualDistance.get() + Config.camera_ray_trace_length);
 	}
 
 	public static @NotNull HitResult pick (double pickRange) {
@@ -370,9 +376,5 @@ public class CameraAgent {
 														  wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
 														  ClipContext.Fluid.NONE,
 														  mc.cameraEntity));
-	}
-
-	public static @NotNull HitResult pick () {
-		return pick(smoothVirtualDistance.get() + Config.camera_ray_trace_length);
 	}
 }

@@ -25,7 +25,7 @@ public class Vectors {
 	 * @param dx  俯仰角变化量（弧度制）
 	 */
 	public static Vec3 rotateRadian (Vec3 vec, float dy, float dx) {
-		return Vec3.directionFromRotation(rotationRadianFromDirection(vec).add(new Vec2(dx, dy))).scale(vec.length());
+		return directionFromRotationDegree(rotationRadianFromDirection(vec).add(new Vec2d(dx, dy))).scale(vec.length());
 	}
 
 	/**
@@ -34,9 +34,9 @@ public class Vectors {
 	 * @param d 方向
 	 * @return [x=俯仰角, y=偏航角]
 	 */
-	public static Vec2 rotationRadianFromDirection (Vec3 d) {
+	public static Vec2d rotationRadianFromDirection (Vec3 d) {
 		d = d.normalize();
-		return new Vec2((float)-Math.asin(d.y), (float)Math.atan2(-d.x, d.z));
+		return new Vec2d(-Math.asin(d.y), Math.atan2(-d.x, d.z));
 	}
 
 	/**
@@ -45,8 +45,8 @@ public class Vectors {
 	 * @param vec      原向量
 	 * @param rotation 弧度变化量（弧度制）
 	 */
-	public static Vec3 rotateRadian (Vec3 vec, Vec2 rotation) {
-		return Vec3.directionFromRotation(rotationRadianFromDirection(vec).add(rotation)).scale(vec.length());
+	public static Vec3 rotateRadian (Vec3 vec, Vec2d rotation) {
+		return directionFromRotationDegree(rotationRadianFromDirection(vec).add(rotation)).scale(vec.length());
 	}
 
 	/**
@@ -56,8 +56,8 @@ public class Vectors {
 	 * @param dy  偏航角变化量（角度制）
 	 * @param dx  俯仰角变化量（角度制）
 	 */
-	public static Vec3 rotateDegree (Vec3 vec, float dy, float dx) {
-		return Vec3.directionFromRotation(rotationDegreeFromDirection(vec).add(new Vec2(dx, dy))).scale(vec.length());
+	public static Vec3 rotateDegree (Vec3 vec, double dy, double dx) {
+		return directionFromRotationDegree(rotationDegreeFromDirection(vec).add(new Vec2d(dx, dy))).scale(vec.length());
 	}
 
 	/**
@@ -66,9 +66,9 @@ public class Vectors {
 	 * @param d 方向
 	 * @return [x=俯仰角, y=偏航角]
 	 */
-	public static Vec2 rotationDegreeFromDirection (Vec3 d) {
+	public static Vec2d rotationDegreeFromDirection (Vec3 d) {
 		d = d.normalize();
-		return new Vec2((float)(-Math.toDegrees(Math.asin(d.y))), (float)Math.toDegrees(Math.atan2(-d.x, d.z)));
+		return new Vec2d((-Math.toDegrees(Math.asin(d.y))), Math.toDegrees(Math.atan2(-d.x, d.z)));
 	}
 
 	/**
@@ -77,20 +77,24 @@ public class Vectors {
 	 * @param vec           原向量
 	 * @param rotationAngle 角度变化量（角度制）
 	 */
-	public static Vec3 rotateDegree (Vec3 vec, Vec2 rotationAngle) {
-		return Vec3.directionFromRotation(rotationDegreeFromDirection(vec).add(rotationAngle)).scale(vec.length());
+	public static Vec3 rotateDegree (Vec3 vec, Vec2d rotationAngle) {
+		return directionFromRotationDegree(rotationDegreeFromDirection(vec).add(rotationAngle)).scale(vec.length());
 	}
 
-	public static double rotationRadianFromDirection (Vec2 d) {
-		return -Math.atan2(d.x, d.y);
-	}
-
-	public static double rotationDegreeFromDirection (Vec2 d) {
+	public static double rotationDegreeFromDirection (Vec2d d) {
 		return -Math.toDegrees(Math.atan2(d.x, d.y));
 	}
 
-	public static Vec3 directionDegreeFromDirection (Vec2 r) {
-		return Vec3.directionFromRotation(r);
+	public static Vec3 directionFromRotationDegree (Vec2d r) {
+		return directionFromRotationDegree(r.x, r.y);
+	}
+
+	public static Vec3 directionFromRotationDegree (double x, double y) {
+		double h = Math.cos(-y * 0.017453292519943295 - Math.PI);
+		double i = Math.sin(-y * 0.017453292519943295 - Math.PI);
+		double j = -Math.cos(-x * 0.017453292519943295);
+		double k = Math.sin(-x * 0.017453292519943295);
+		return new Vec3(i * j, k, h * j);
 	}
 
 	/**
@@ -115,11 +119,19 @@ public class Vectors {
 		return new Vec2(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
 	}
 
-	public static Vec2 lerp (Vec2 src, Vec2 dst, float k) {
-		return new Vec2(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y));
+	public static Vec2d lerp (Vec2d src, Vec2d dst, Vec2d k) {
+		return new Vec2d(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
 	}
 
-	public static Vec3 lerp (Vec3 src, Vec3 dst, float k) {
+	public static Vec2 lerp (Vec2 src, Vec2 dst, double k) {
+		return new Vec2((float)Mth.lerp(k, src.x, dst.x), (float)Mth.lerp(k, src.y, dst.y));
+	}
+
+	public static Vec2d lerp (Vec2d src, Vec2d dst, double k) {
+		return new Vec2d(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y));
+	}
+
+	public static Vec3 lerp (Vec3 src, Vec3 dst, double k) {
 		return new Vec3(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y), Mth.lerp(k, src.z, dst.z));
 	}
 
@@ -149,6 +161,10 @@ public class Vectors {
 	 */
 	public static Vec2 pow (Vec2 v, double p) {
 		return new Vec2((float)Math.pow(v.x, p), (float)Math.pow(v.y, p));
+	}
+
+	public static Vec2d pow (Vec2d v, double p) {
+		return new Vec2d(Math.pow(v.x, p), Math.pow(v.y, p));
 	}
 
 	public static Vec3 sigmoid (Vec3 v) {

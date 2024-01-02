@@ -5,27 +5,27 @@ import net.leawind.mc.util.math.Vectors;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
-public class ExpSmoothVec3f extends ExpSmoothValue<Vec3> {
-	public ExpSmoothVec3f () {
+public class ExpSmoothVec3d extends ExpSmoothValue<Vec3> {
+	public ExpSmoothVec3d () {
 		value        = Vec3.ZERO;
 		target       = Vec3.ZERO;
 		smoothFactor = Vec3.ZERO;
 	}
 
-	public ExpSmoothVec3f setTarget (float x, float y, float z) {
+	public ExpSmoothVec3d setTarget (double x, double y, double z) {
 		this.target = new Vec3(x, y, z);
 		return this;
 	}
 
-	public ExpSmoothVec3f setValue (float x, float y, float z) {
+	public ExpSmoothVec3d setValue (double x, double y, double z) {
 		this.value = new Vec3(x, y, z);
 		return this;
 	}
 
 	@Override
-	public ExpSmoothVec3f update (double tickTime) {
+	public ExpSmoothVec3d update (double tickTime) {
 		super.preUpdate();
-		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, tickTime).reverse().add(1, 1, 1));
+		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, tickTime).scale(-1).add(1, 1, 1));
 		return this;
 	}
 
@@ -35,17 +35,17 @@ public class ExpSmoothVec3f extends ExpSmoothValue<Vec3> {
 	}
 
 	@Override
-	public ExpSmoothVec3f setSmoothFactor (double smoothFactor) {
+	public ExpSmoothVec3d setSmoothFactor (double smoothFactor) {
 		return setSmoothFactor(smoothFactor, smoothFactor, smoothFactor);
 	}
 
-	private ExpSmoothVec3f setSmoothFactor (double x, double y, double z) {
+	private ExpSmoothVec3d setSmoothFactor (double x, double y, double z) {
 		this.smoothFactor = new Vec3(x, y, z);
 		return this;
 	}
 
 	@Override
-	public ExpSmoothVec3f setSmoothFactor (Vec3 k, Vec3 t) {
+	public ExpSmoothVec3d setSmoothFactor (Vec3 k, Vec3 t) {
 		this.smoothFactor = new Vec3(Math.pow(k.x, 1 / t.x), Math.pow(k.y, 1 / t.y), Math.pow(k.z, 1 / t.z));
 		return this;
 	}

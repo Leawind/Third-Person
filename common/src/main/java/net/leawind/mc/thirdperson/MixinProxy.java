@@ -26,8 +26,8 @@ public class MixinProxy {
 			}
 			Vector3f cameraForwardImpulse = CameraAgent.camera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
 			Vector3f cameraLeftImpulse    = CameraAgent.camera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
-			PlayerAgent.absoluteImpulse = new Vector2f(cameraForwardImpulse.x + cameraLeftImpulse.x,
-													   cameraForwardImpulse.z + cameraLeftImpulse.z);
+			PlayerAgent.absoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x,
+											cameraForwardImpulse.z + cameraLeftImpulse.z);
 			if (PlayerAgent.absoluteImpulse.length() > 1E-5 && mc.player != null) {
 				float    playerRotation  = mc.player.getViewYRot(Minecraft.getInstance().getFrameTime());
 				Vec3     playerForward3D = Vec3.directionFromRotation(0, playerRotation);

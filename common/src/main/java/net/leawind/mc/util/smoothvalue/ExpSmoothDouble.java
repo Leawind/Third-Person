@@ -3,6 +3,7 @@ package net.leawind.mc.util.smoothvalue;
 
 import net.minecraft.util.Mth;
 
+@SuppressWarnings("unused")
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	public ExpSmoothDouble () {
 		value        = 0d;
@@ -33,7 +34,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public Double get (float delta) {
+	public Double get (double delta) {
 		return Mth.lerp(delta, lastValue, value);
 	}
 

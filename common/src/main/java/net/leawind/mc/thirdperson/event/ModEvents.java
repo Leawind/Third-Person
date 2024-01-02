@@ -12,10 +12,10 @@ import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModOptions;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
+import net.leawind.mc.util.math.Vec2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec2;
 
 public class ModEvents {
 	public static final long PERIOD = 1000 / 100;
@@ -111,7 +111,7 @@ public class ModEvents {
 			offsetY = Mth.clamp(offsetY, -1, 1);
 			double newXsgn = Math.signum(offsetX);
 			scheme.setSide(newXsgn);
-			scheme.getMode().setOffsetRatio(new Vec2((float)offsetX, (float)offsetY));
+			scheme.getMode().setOffsetRatio(new Vec2d(offsetX, offsetY));
 		}
 	}
 }
