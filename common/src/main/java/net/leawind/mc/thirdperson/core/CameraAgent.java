@@ -39,7 +39,7 @@ public class CameraAgent {
 	@Nullable
 	public static       BlockGetter     level;
 	public static       Camera          camera;
-	protected static    Camera          fakeCamera                 = new Camera();
+	public static       Camera          fakeCamera                 = new Camera();
 	/**
 	 * renderTick 中更新
 	 */

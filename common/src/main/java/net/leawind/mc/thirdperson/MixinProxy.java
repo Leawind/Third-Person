@@ -16,11 +16,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinProxy {
 	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean flag, float sneakingSpeedBonus, CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
-			Minecraft mc            = Minecraft.getInstance();
-			float     cameraForward = (that.up ? 1: 0) - (that.down ? 1: 0);
-			float     cameraLeft    = (that.left ? 1: 0) - (that.right ? 1: 0);
-			Vector3f cameraForwardImpulse = CameraAgent.camera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
-			Vector3f cameraLeftImpulse    = CameraAgent.camera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
+			Minecraft mc                   = Minecraft.getInstance();
+			float     cameraForward        = (that.up ? 1: 0) - (that.down ? 1: 0);
+			float     cameraLeft           = (that.left ? 1: 0) - (that.right ? 1: 0);
+			Vector3f  cameraForwardImpulse = CameraAgent.fakeCamera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
+			Vector3f  cameraLeftImpulse    = CameraAgent.fakeCamera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
 			PlayerAgent.absoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x,
 											cameraForwardImpulse.z + cameraLeftImpulse.z);
 			if (PlayerAgent.absoluteImpulse.length() > 1E-5 && mc.player != null) {

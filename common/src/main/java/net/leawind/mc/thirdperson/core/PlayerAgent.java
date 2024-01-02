@@ -22,6 +22,7 @@ public class PlayerAgent {
 	@SuppressWarnings("unused")
 	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static       Vector2f absoluteImpulse = new Vector2f(0, 0);
+	public static       boolean  wasInterecting  = false;
 	public static       float    lastPartialTick = 1F;
 
 	public static void reset () {
@@ -38,7 +39,7 @@ public class PlayerAgent {
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
 	public static void onBeforeHandleKeybinds () {
-		if (isInterection() && CameraAgent.isThirdPerson()) {
+		if ((wasInterecting = isInterecting()) && CameraAgent.isThirdPerson()) {
 			turnToCameraHitResult(true);
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
@@ -53,8 +54,7 @@ public class PlayerAgent {
 		if (cameraHitPosition == null) {
 			turnWithCamera(isInstantly);
 		} else {
-			// 让玩家朝向该坐标
-			turnTo(cameraHitPosition, isInstantly);
+			turnToPosition(cameraHitPosition, isInstantly);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class PlayerAgent {
 	 * 让玩家朝向与相机相同
 	 */
 	public static void turnWithCamera (boolean isInstantly) {
-		turnTo(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
+		turnToRotation(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
 	}
 
 	/**
@@ -70,11 +70,11 @@ public class PlayerAgent {
 	 *
 	 * @param target 目标位置
 	 */
-	public static void turnTo (@NotNull Vec3 target, boolean isInstantly) {
+	public static void turnToPosition (@NotNull Vec3 target, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
 		Vec3  playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
 		Vec2d playerViewRotation  = Vectors.rotationDegreeFromDirection(playerViewDirection);
-		turnTo(playerViewRotation, isInstantly);
+		turnToRotation(playerViewRotation, isInstantly);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class PlayerAgent {
 	 * @param rx          俯仰角
 	 * @param isInstantly 是否瞬间转动
 	 */
-	public static void turnTo (double ry, double rx, boolean isInstantly) {
+	public static void turnToRotation (double ry, double rx, boolean isInstantly) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
@@ -107,8 +107,8 @@ public class PlayerAgent {
 	 * @param rot         朝向
 	 * @param isInstantly 是否瞬间转动
 	 */
-	public static void turnTo (Vec2d rot, boolean isInstantly) {
-		turnTo(rot.y, rot.x, isInstantly);
+	public static void turnToRotation (Vec2d rot, boolean isInstantly) {
+		turnToRotation(rot.y, rot.x, isInstantly);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class PlayerAgent {
 		assert mc.cameraEntity != null;
 		if (!Config.rotate_to_moving_direction) {
 			return;
-		} else if (isInterection()) {
+		} else if (wasInterecting) {
 			return;
 		} else if (CameraAgent.wasAiming) {
 			return;
@@ -135,7 +135,7 @@ public class PlayerAgent {
 		}
 		// 键盘控制的移动方向
 		double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(absoluteImpulse.x, absoluteImpulse.y));
-		turnTo(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
+		turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 	}
 
 	@PerformanceSensitive
@@ -148,8 +148,8 @@ public class PlayerAgent {
 		}
 		if (CameraAgent.wasAiming) {
 			turnToCameraHitResult(true);
-		} else if (isInterection()) {
-			turnWithCamera(false);
+		} else if (wasInterecting) {
+			turnToCameraHitResult(true);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			turnWithCamera(true);
 		} else if (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying()) {
@@ -164,7 +164,7 @@ public class PlayerAgent {
 	 * <p>
 	 * 即是否按下了 使用|攻击|选取 键
 	 */
-	public static boolean isInterection () {
+	public static boolean isInterecting () {
 		Options mcOptions = Minecraft.getInstance().options;
 		return mcOptions.keyUse.isDown() || mcOptions.keyAttack.isDown() || mcOptions.keyPickItem.isDown();
 	}
