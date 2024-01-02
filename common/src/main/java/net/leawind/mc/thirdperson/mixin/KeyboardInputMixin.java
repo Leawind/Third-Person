@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyboardInput.class)
 public class KeyboardInputMixin {
+	/**
+	 * 注入到tick的末尾，重新计算 leftImpulse 和 forwardImpulse 的值
+	 */
 	@Inject(method="tick", at=@At(value="TAIL"))
 	@PerformanceSensitive
 	public void tick_inject_tail (boolean moveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {

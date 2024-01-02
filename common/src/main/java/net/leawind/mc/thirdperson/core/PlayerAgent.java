@@ -5,6 +5,7 @@ import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +21,6 @@ import org.slf4j.LoggerFactory;
 public class PlayerAgent {
 	@SuppressWarnings("unused")
 	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static       boolean  wasInterecting  = false;
 	public static       Vector2f absoluteImpulse = new Vector2f(0, 0);
 	public static       float    lastPartialTick = 1F;
 
@@ -38,7 +38,7 @@ public class PlayerAgent {
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
 	public static void onBeforeHandleKeybinds () {
-		if (wasInterecting && CameraAgent.isThirdPerson()) {
+		if (isInterection() && CameraAgent.isThirdPerson()) {
 			turnToCameraHitResult(true);
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
@@ -120,7 +120,7 @@ public class PlayerAgent {
 		assert mc.cameraEntity != null;
 		if (!Config.rotate_to_moving_direction) {
 			return;
-		} else if (wasInterecting) {
+		} else if (isInterection()) {
 			return;
 		} else if (CameraAgent.wasAiming) {
 			return;
@@ -146,11 +146,9 @@ public class PlayerAgent {
 		} else if (!CameraAgent.isControlledCamera()) {
 			return;
 		}
-		// 更新是否在与方块交互
-		wasInterecting = mc.options.keyUse.isDown() || mc.options.keyAttack.isDown() || mc.options.keyPickItem.isDown();
 		if (CameraAgent.wasAiming) {
 			turnToCameraHitResult(true);
-		} else if (wasInterecting) {
+		} else if (isInterection()) {
 			turnWithCamera(false);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			turnWithCamera(true);
@@ -159,6 +157,16 @@ public class PlayerAgent {
 		} else if (Config.player_rotate_with_camera_when_not_aiming) {
 			turnWithCamera(true);
 		}
+	}
+
+	/**
+	 * 玩家是否在交互
+	 * <p>
+	 * 即是否按下了 使用|攻击|选取 键
+	 */
+	public static boolean isInterection () {
+		Options mcOptions = Minecraft.getInstance().options;
+		return mcOptions.keyUse.isDown() || mcOptions.keyAttack.isDown() || mcOptions.keyPickItem.isDown();
 	}
 
 	public static boolean isAvailable () {

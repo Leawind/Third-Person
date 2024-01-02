@@ -26,12 +26,12 @@ public abstract class CameraMixin {
 	 * @param reversedView 已经被我改成了false
 	 */
 	@Inject(method="setup", at=@At(value="HEAD"))
-	public void setup_inject_head (BlockGetter blockGetter,
-								   Entity entity,
-								   boolean detached,
-								   boolean reversedView,
-								   float partialTick,
-								   CallbackInfo ci) {
+	public void setup_head (BlockGetter blockGetter,
+							Entity entity,
+							boolean detached,
+							boolean reversedView,
+							float partialTick,
+							CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
 			if (l3p$wasFirstPerson && !isFirstPerson) {
@@ -52,12 +52,12 @@ public abstract class CameraMixin {
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE),
 			cancellable=true)
-	public void setup_inject_invoke (BlockGetter level,
-									 Entity entity,
-									 boolean detached,
-									 boolean reversedView,
-									 float partialTick,
-									 CallbackInfo ci) {
+	public void setup_invoke (BlockGetter level,
+							  Entity entity,
+							  boolean detached,
+							  boolean reversedView,
+							  float partialTick,
+							  CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			if (reversedView) {
 				// 咱给它转回去

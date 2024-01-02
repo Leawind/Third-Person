@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.phys.Vec3;
@@ -11,16 +12,20 @@ import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Mixin 方法不支持热更新，所以需要这个类来调试
+ * TODO mixin proxy
  */
 public class MixinProxy {
 	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean flag, float sneakingSpeedBonus, CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
-			Minecraft mc                   = Minecraft.getInstance();
-			float     cameraForward        = (that.up ? 1: 0) - (that.down ? 1: 0);
-			float     cameraLeft           = (that.left ? 1: 0) - (that.right ? 1: 0);
-			Vector3f  cameraForwardImpulse = CameraAgent.fakeCamera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
-			Vector3f  cameraLeftImpulse    = CameraAgent.fakeCamera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
+			Minecraft mc            = Minecraft.getInstance();
+			float     cameraForward = (that.up ? 1: 0) - (that.down ? 1: 0);
+			float     cameraLeft    = (that.left ? 1: 0) - (that.right ? 1: 0);
+			if (Float.isNaN(CameraAgent.camera.getLookVector().x)) {//TODO Why sometimes it is NaN ?
+				((CameraInvoker)CameraAgent.camera).invokeSetRotation(CameraAgent.camera.getYRot(),
+																	  CameraAgent.camera.getXRot());
+			}
+			Vector3f cameraForwardImpulse = CameraAgent.camera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
+			Vector3f cameraLeftImpulse    = CameraAgent.camera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
 			PlayerAgent.absoluteImpulse = new Vector2f(cameraForwardImpulse.x + cameraLeftImpulse.x,
 													   cameraForwardImpulse.z + cameraLeftImpulse.z);
 			if (PlayerAgent.absoluteImpulse.length() > 1E-5 && mc.player != null) {
