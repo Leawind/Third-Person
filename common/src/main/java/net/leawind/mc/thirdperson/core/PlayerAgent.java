@@ -20,18 +20,18 @@ import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
 	@SuppressWarnings("unused")
-	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static       Vector2f absoluteImpulse = new Vector2f(0, 0);
-	public static       boolean  wasInterecting  = false;
-	public static       float    lastPartialTick = 1F;
+	public static final Logger   LOGGER                   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static       Vec3     absoluteImpulse          = Vec3.ZERO;
+	public static       Vector2f horizonalAbsoluteImpulse = new Vector2f(0);
+	public static       boolean  wasInterecting           = false;
+	public static       float    lastPartialTick          = 1F;
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
 			lastPartialTick = mc.getFrameTime();
-			CameraAgent.smoothEyePosition.setTarget(mc.cameraEntity.getEyePosition(lastPartialTick))
-										 .setValue(mc.cameraEntity.getEyePosition(lastPartialTick));
+			CameraAgent.smoothEyePosition.set(mc.cameraEntity.getEyePosition(lastPartialTick));
 		}
 	}
 
@@ -52,7 +52,7 @@ public class PlayerAgent {
 		// 计算相机视线落点
 		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
-			turnWithCamera(isInstantly);
+			turnToCameraRotation(isInstantly);
 		} else {
 			turnToPosition(cameraHitPosition, isInstantly);
 		}
@@ -61,7 +61,7 @@ public class PlayerAgent {
 	/**
 	 * 让玩家朝向与相机相同
 	 */
-	public static void turnWithCamera (boolean isInstantly) {
+	public static void turnToCameraRotation (boolean isInstantly) {
 		turnToRotation(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
 	}
 
@@ -72,9 +72,23 @@ public class PlayerAgent {
 	 */
 	public static void turnToPosition (@NotNull Vec3 target, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
-		Vec3  playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
-		Vec2d playerViewRotation  = Vectors.rotationDegreeFromDirection(playerViewDirection);
-		turnToRotation(playerViewRotation, isInstantly);
+		Vec3 playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
+		turnToDirection(playerViewDirection, isInstantly);
+	}
+
+	public static void turnToDirection (Vec3 d, boolean isInstantly) {
+		Vec2d rotation = Vectors.rotationDegreeFromDirection(d);
+		turnToRotation(rotation, isInstantly);
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param rot         朝向
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnToRotation (Vec2d rot, boolean isInstantly) {
+		turnToRotation(rot.y, rot.x, isInstantly);
 	}
 
 	/**
@@ -102,16 +116,6 @@ public class PlayerAgent {
 	}
 
 	/**
-	 * 设置玩家朝向
-	 *
-	 * @param rot         朝向
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnToRotation (Vec2d rot, boolean isInstantly) {
-		turnToRotation(rot.y, rot.x, isInstantly);
-	}
-
-	/**
 	 * 玩家移动时自动转向移动方向
 	 */
 	@PerformanceSensitive
@@ -126,16 +130,18 @@ public class PlayerAgent {
 			return;
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			return;
-		} else if (absoluteImpulse.length() <= 1e-5) {
-			return;
-		} else if (mc.cameraEntity.isSwimming()) {
+		} else if (horizonalAbsoluteImpulse.length() <= 1e-5) {
 			return;
 		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
 			return;
+		} else if (mc.cameraEntity.isUnderWater()) {
+			return;
+		} else {
+			// 键盘控制的移动方向
+			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(horizonalAbsoluteImpulse.x,
+																					 horizonalAbsoluteImpulse.y));
+			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 		}
-		// 键盘控制的移动方向
-		double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(absoluteImpulse.x, absoluteImpulse.y));
-		turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 	}
 
 	@PerformanceSensitive
@@ -148,14 +154,16 @@ public class PlayerAgent {
 		}
 		if (CameraAgent.wasAiming) {
 			turnToCameraHitResult(true);
+		} else if (mc.cameraEntity.isUnderWater()) {
+			turnToCameraRotation(true);
 		} else if (wasInterecting) {
 			turnToCameraHitResult(true);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
-			turnWithCamera(true);
+			turnToCameraRotation(true);
 		} else if (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying()) {
-			turnWithCamera(true);
+			turnToCameraRotation(true);
 		} else if (Config.player_rotate_with_camera_when_not_aiming) {
-			turnWithCamera(true);
+			turnToCameraRotation(true);
 		}
 	}
 

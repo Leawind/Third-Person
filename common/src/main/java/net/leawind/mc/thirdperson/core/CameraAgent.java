@@ -143,7 +143,7 @@ public class CameraAgent {
 	 */
 	public static void onLeaveThirdPerson () {
 		if (Config.turn_with_camera_when_enter_first_person) {
-			PlayerAgent.turnWithCamera(true);
+			PlayerAgent.turnToCameraRotation(true);
 		}
 	}
 
@@ -169,17 +169,17 @@ public class CameraAgent {
 		// 时间
 		double now = Blaze3D.getTime();
 		//		double now      = mc.frameTimer.getLogEnd();
-		double tickCost = now - lastRenderTickTimeStamp;
+		double period = now - lastRenderTickTimeStamp;
 		lastRenderTickTimeStamp = now;
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		scheme.setAiming(wasAiming);
 		if (isThirdPerson()) {
 			// 平滑更新距离
-			updateSmoothVirtualDistance(tickCost);
+			updateSmoothVirtualDistance(period);
 			// 平滑更新相机偏移量
-			updateSmoothOffsetRatio(tickCost);
+			updateSmoothOffsetRatio(period);
 			//			// 更新眼睛位置
-			//			updateSmoothEyePosition(tickCost);
+			//			updateSmoothEyePosition(period);
 			// 设置相机朝向和位置
 			updateFakeCameraRotationPosition();
 			preventThroughWall();
@@ -199,26 +199,26 @@ public class CameraAgent {
 																		   .scale(smoothVirtualDistance.get()));
 	}
 
-	public static void updateSmoothVirtualDistance (double tickCost) {
+	public static void updateSmoothVirtualDistance (double period) {
 		boolean          isAdjusting = ModOptions.isAdjustingCameraOffset();
 		CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
 		smoothVirtualDistance.setSmoothFactor(isAdjusting ? 1E-5: mode.getDistanceSmoothFactor());
-		smoothVirtualDistance.setTarget(mode.getMaxDistance()).update(tickCost);
+		smoothVirtualDistance.setTarget(mode.getMaxDistance()).update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
 		if (!Config.cameraOffsetScheme.isAiming && !isAdjusting) {
 			smoothVirtualDistance.set(Math.min(mode.getMaxDistance(), smoothVirtualDistance.get()));
 		}
 	}
 
-	public static void updateSmoothOffsetRatio (double tickCost) {
+	public static void updateSmoothOffsetRatio (double period) {
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset()
 										  ? new Vec2d(1e-7F, 1e-7F)
 										  : Config.cameraOffsetScheme.getMode().getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(Config.cameraOffsetScheme.getMode().getOffsetRatio());
-		smoothOffsetRatio.update(tickCost);
+		smoothOffsetRatio.update(period);
 	}
 
-	public static void updateSmoothEyePosition (double tickCost) {
+	public static void updateSmoothEyePosition (double period) {
 		Minecraft          mc     = Minecraft.getInstance();
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		if (mc.cameraEntity != null && mc.player != null) {
@@ -233,7 +233,7 @@ public class CameraAgent {
 				} else {
 					CameraAgent.smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
 				}
-				CameraAgent.smoothEyePosition.setTarget(eyePosition).update(tickCost);
+				CameraAgent.smoothEyePosition.setTarget(eyePosition).update(period);
 			}
 		}
 	}

@@ -33,7 +33,7 @@ public class ModKeys {
 	private static final KeyMapping TOOGLE_MOD_ENABLE = new ThirdPersonKeyMapping("toggle_mod_enable").onDown(() -> {
 		if (CameraAgent.isThirdPerson()) {
 			if (Config.is_mod_enable) {
-				PlayerAgent.turnWithCamera(true);
+				PlayerAgent.turnToCameraRotation(true);
 			} else {
 				CameraAgent.onEnterThirdPerson();
 			}
