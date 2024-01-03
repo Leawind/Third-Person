@@ -5,7 +5,6 @@ import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.util.math.Vec2d;
@@ -172,13 +171,14 @@ public class CameraAgent {
 		//		double now      = mc.frameTimer.getLogEnd();
 		double period = now - lastRenderTickTimeStamp;
 		lastRenderTickTimeStamp = now;
-		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
-		scheme.setAiming(wasAiming);
+		Config.cameraOffsetScheme.setAiming(wasAiming);
 		if (isThirdPerson()) {
-			// 平滑更新距离
-			updateSmoothVirtualDistance(period);
-			// 平滑更新相机偏移量
-			updateSmoothOffsetRatio(period);
+			if (!mc.isPaused()) {
+				// 平滑更新距离
+				updateSmoothVirtualDistance(period);
+				// 平滑更新相机偏移量
+				updateSmoothOffsetRatio(period);
+			}
 			// 设置相机朝向和位置
 			updateFakeCameraRotationPosition();
 			preventThroughWall();
@@ -230,10 +230,11 @@ public class CameraAgent {
 	}
 
 	public static void updateSmoothOffsetRatio (double period) {
+		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset()
 										  ? new Vec2d(Config.adjusting_camera_offset_smooth_factor)
-										  : Config.cameraOffsetScheme.getMode().getOffsetSmoothFactor());
-		smoothOffsetRatio.setTarget(Config.cameraOffsetScheme.getMode().getOffsetRatio());
+										  : mode.getOffsetSmoothFactor());
+		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}
 
