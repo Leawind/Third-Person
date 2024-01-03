@@ -37,16 +37,6 @@ public class PlayerAgent {
 	}
 
 	/**
-	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
-	 */
-	public static void onBeforeHandleKeybinds () {
-		if ((wasInterecting = isInterecting()) && CameraAgent.isThirdPerson()) {
-			turnToCameraHitResult(true);
-			Minecraft.getInstance().gameRenderer.pick(1.0f);
-		}
-	}
-
-	/**
 	 * 让玩家朝向相机的落点
 	 */
 	public static void turnToCameraHitResult (boolean isInstantly) {

@@ -95,9 +95,6 @@ public class ModEvents {
 		Minecraft          mc     = Minecraft.getInstance();
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		if (scheme.isCenter()) {
-			// double sensitivity = mc.options.sensitivity().get() * 0.6 + 0.2;
-			// double dx          = xMove * sensitivity * 0.15;
-			// double dy          = yMove * sensitivity * 0.15;
 			// 相机在头顶，只能上下调整
 			double topOffset = scheme.getMode().getCenterOffsetRatio();
 			topOffset += -yMove / mc.getWindow().getScreenHeight();
@@ -114,6 +111,17 @@ public class ModEvents {
 			double newXsgn = Math.signum(offsetX);
 			scheme.setSide(newXsgn);
 			scheme.getMode().setOffsetRatio(new Vec2d(offsetX, offsetY));
+		}
+	}
+
+	/**
+	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
+	 */
+	public static void onBeforeHandleKeybinds () {
+		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
+		if (PlayerAgent.wasInterecting) {
+			PlayerAgent.turnToCameraHitResult(true);//TODO no need
+			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
 	}
 }

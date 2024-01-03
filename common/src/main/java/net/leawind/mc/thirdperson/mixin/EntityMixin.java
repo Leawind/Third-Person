@@ -1,8 +1,10 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.leawind.mc.thirdperson.MixinProxy;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,16 +31,7 @@ public class EntityMixin {
 											"Lnet/minecraft/world/level/ClipContext$Fluid;" +
 											"Lnet/minecraft/world/entity/Entity;" + ")" + "V"), index=1)
 	private Vec3 clipContextConstructor (Vec3 viewEndFake) {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.cameraEntity == null) {
-			return null;
-		}
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
-			Vec3   eye                   = mc.cameraEntity.getEyePosition(Minecraft.getInstance().getFrameTime());
-			double pickRange             = eye.distanceTo(viewEndFake);
-			Vec3   viewVectorToCameraHit = eye.vectorTo(CameraAgent.pick().getLocation());
-			return eye.add(viewVectorToCameraHit.normalize().scale(pickRange));
-		}
-		return viewEndFake;
+		Entity    that = (Entity)(Object)this;
+		return MixinProxy.pick_EntityMixin(that, viewEndFake);
 	}
 }

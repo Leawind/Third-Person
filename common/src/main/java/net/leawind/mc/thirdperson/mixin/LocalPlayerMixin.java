@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * 计算玩家移动方向和速度
  * <p>
- * 第三人称视角下，按下方向键时，玩家的移动方向可能需要和默认行为不一样。
+ * 第三人称视角下，按下方向键时，玩家的移动方向应由相机朝向和按键决定
  */
 @Mixin(net.minecraft.client.player.LocalPlayer.class)
 public class LocalPlayerMixin {

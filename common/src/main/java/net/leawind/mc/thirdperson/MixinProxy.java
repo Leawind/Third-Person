@@ -5,6 +5,7 @@ import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -14,6 +15,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * TODO mixin proxy
  */
 public class MixinProxy {
+	public static Vec3 pick_EntityMixin (Entity that, Vec3 viewEndFake) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null || mc.player != that) {
+			return null;
+		}
+		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
+			Vec3   eye                   = mc.player.getEyePosition(Minecraft.getInstance().getFrameTime());
+			double pickRange             = eye.distanceTo(viewEndFake);
+			Vec3   viewVectorToCameraHit = eye.vectorTo(CameraAgent.pick().getLocation());
+			return eye.add(viewVectorToCameraHit.normalize().scale(pickRange));
+		}
+		return viewEndFake;
+	}
+
 	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean flag, float sneakingSpeedBonus, CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
 			Minecraft mc                   = Minecraft.getInstance();

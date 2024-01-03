@@ -17,6 +17,11 @@ public class MouseHandlerMixin {
 	@Shadow
 	private double accumulatedDY;
 
+	/**
+	 * 在 MouseHandler 尝试转动玩家前，阻止其行为。
+	 * <p>
+	 * 如果此时正在调整相机，那么不转动玩家，而是触发转动相机事件
+	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && ModOptions.isAdjustingCameraOffset()) {

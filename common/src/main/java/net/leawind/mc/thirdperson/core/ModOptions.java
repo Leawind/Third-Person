@@ -12,6 +12,8 @@ public class ModOptions {
 	public static boolean isToggleToAiming = false;
 
 	/**
+	 * TODO 假的第一人称下不调整
+	 * <p>
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {

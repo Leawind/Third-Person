@@ -39,9 +39,6 @@ public class CameraOffsetMode {
 
 	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, Vec2d offset) {
 		this.cameraOffsetScheme = scheme;
-		setEyeSmoothFactor(new Vec3d(1e-11, 1e-8, 1e-11));
-		setDistanceSmoothFactor(1e-5);
-		setOffsetSmoothFactor(new Vec2d(2e-8));
 		setMaxDistance(maxDist);
 		setOffsetRatio(offset);
 		setCenterOffsetRatio(0.6);

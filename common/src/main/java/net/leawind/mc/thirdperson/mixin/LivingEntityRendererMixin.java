@@ -24,7 +24,7 @@ public class LivingEntityRendererMixin {
 				   "Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at=@At(value="HEAD"), cancellable=true)
 	public void render (LivingEntity entity,
 						float f,
-						float g,
+						float partialTicks,
 						PoseStack poseStack,
 						MultiBufferSource multiBufferSource,
 						int i,
