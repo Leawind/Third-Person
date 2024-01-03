@@ -46,7 +46,7 @@ public class ModOptions {
 			return Math.min((CameraAgent.wasAiming
 							 ? Config.cameraOffsetScheme.aimingMode
 							 : Config.cameraOffsetScheme.normalMode).getMaxDistance(),
-							mc.cameraEntity.getEyePosition(Minecraft.getInstance().getFrameTime())
+							mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick)
 										   .distanceTo(CameraAgent.camera.getPosition())) <= Config.distanceMonoList.get(0);
 		} else {
 			return false;

@@ -29,9 +29,9 @@ public class PlayerAgent {
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
+		lastPartialTick = mc.getFrameTime();
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
-			lastPartialTick = mc.getFrameTime();
 			CameraAgent.smoothEyePosition.set(Vec3d.of(mc.cameraEntity.getEyePosition(lastPartialTick)));
 		}
 	}

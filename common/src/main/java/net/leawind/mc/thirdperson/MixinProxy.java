@@ -24,37 +24,7 @@ public class MixinProxy {
 			PlayerAgent.horizonalAbsoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x,
 													 cameraForwardImpulse.z + cameraLeftImpulse.z);
 			if (PlayerAgent.horizonalAbsoluteImpulse.length() > 1E-5 && mc.player != null) {
-				float    playerRotation  = mc.player.getViewYRot(Minecraft.getInstance().getFrameTime());
-				Vec3     playerForward3D = Vec3.directionFromRotation(0, playerRotation);
-				Vec3     playerLeft3D    = Vec3.directionFromRotation(0, playerRotation - 90);
-				Vector2f playerForward   = new Vector2f((float)playerForward3D.x, (float)playerForward3D.z);
-				Vector2f playerLeft      = new Vector2f((float)playerLeft3D.x, (float)playerLeft3D.z);
-				that.forwardImpulse = PlayerAgent.horizonalAbsoluteImpulse.dot(playerForward) / playerForward.length();
-				that.leftImpulse    = PlayerAgent.horizonalAbsoluteImpulse.dot(playerLeft) / playerLeft.length();
-				if (flag) {
-					that.forwardImpulse *= sneakingSpeedBonus;
-					that.leftImpulse *= sneakingSpeedBonus;
-				}
-			}
-		}
-	}
-
-	public static void temp_KeyboardInputMixin (KeyboardInput that, boolean flag, float sneakingSpeedBonus, CallbackInfo ci) {
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
-			Minecraft mc = Minecraft.getInstance();
-			if (mc.player != null && (that.up ^ that.down || that.left ^ that.right)) {
-				float    cameraForward        = (that.up ? 1: 0) - (that.down ? 1: 0);
-				float    cameraLeft           = (that.left ? 1: 0) - (that.right ? 1: 0);
-				Vector3f cameraForwardImpulse = CameraAgent.fakeCamera.getLookVector().normalize(cameraForward);
-				Vector3f cameraLeftImpulse    = CameraAgent.fakeCamera.getLeftVector().normalize(cameraLeft);
-				Vector3f cameraHorizonalForwardImpulse = CameraAgent.fakeCamera.getLookVector().mul(1, 0, 1).normalize(
-					cameraForward);
-				Vector3f cameraHorizonalLeftImpulse =
-                        CameraAgent.fakeCamera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
-				PlayerAgent.absoluteImpulse = new Vec3(cameraForwardImpulse.add(cameraLeftImpulse));
-				PlayerAgent.horizonalAbsoluteImpulse.set(cameraHorizonalForwardImpulse.x + cameraHorizonalLeftImpulse.x,
-														 cameraHorizonalForwardImpulse.z + cameraHorizonalLeftImpulse.z);
-				float    playerRotation  = mc.player.getViewYRot(Minecraft.getInstance().getFrameTime());
+				float    playerRotation  = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
 				Vec3     playerForward3D = Vec3.directionFromRotation(0, playerRotation);
 				Vec3     playerLeft3D    = Vec3.directionFromRotation(0, playerRotation - 90);
 				Vector2f playerForward   = new Vector2f((float)playerForward3D.x, (float)playerForward3D.z);

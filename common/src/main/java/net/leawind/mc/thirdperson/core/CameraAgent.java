@@ -131,12 +131,13 @@ public class CameraAgent {
 	 */
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		camera = mc.gameRenderer.getMainCamera();
+		camera                      = mc.gameRenderer.getMainCamera();
+		PlayerAgent.lastPartialTick = mc.getFrameTime();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(Config.distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
-			relativeRotation = new Vec2d(-mc.cameraEntity.getViewXRot(mc.getFrameTime()),
-										 mc.cameraEntity.getViewYRot(mc.getFrameTime()) - 180);
+			relativeRotation = new Vec2d(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick),
+										 mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
 		}
 		LOGGER.info("Reset CameraAgent");
 	}
@@ -243,7 +244,7 @@ public class CameraAgent {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
-			Vec3d            eyePosition = Vec3d.of(mc.cameraEntity.getEyePosition(mc.getFrameTime()));
+			Vec3d            eyePosition = Vec3d.of(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
 				CameraAgent.smoothEyePosition.setValue(eyePosition);
