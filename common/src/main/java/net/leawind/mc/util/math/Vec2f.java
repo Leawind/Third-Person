@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
 import org.joml.Vector2f;
 
-@SuppressWarnings("unused")
+@Deprecated
 public class Vec2f extends Vec2 {
 	public static final Vec2f ZERO       = new Vec2f(0.0f, 0.0f);
 	public static final Vec2f ONE        = new Vec2f(1.0f, 1.0f);

@@ -15,7 +15,7 @@ import org.joml.Vector3f;
 import java.util.EnumSet;
 import java.util.List;
 
-@SuppressWarnings("unused")
+@Deprecated
 public class Vec3d extends Vec3 {
 	public static final Codec<Vec3d> CODEC      = Codec.DOUBLE.listOf().comapFlatMap(list2 -> Util.fixedSize(list2, 3)
 																								  .map(list -> new Vec3d(list.get(

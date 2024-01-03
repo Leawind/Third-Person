@@ -8,6 +8,7 @@ import org.joml.Vector2d;
 import org.joml.Vector2f;
 
 @SuppressWarnings("unused")
+@Deprecated
 public class Vec2d {
 	public static Vec2d  ZERO       = new Vec2d(0);
 	public static Vec2d  ONE        = new Vec2d(1);
