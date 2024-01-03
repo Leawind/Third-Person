@@ -27,8 +27,6 @@ import java.awt.*;
 import java.nio.file.Path;
 
 /**
- * TODO 分离
- * <p>
  * 模组配置项
  * <p>
  * 普通配置项可由用户在配置屏幕中调整，程序可以直接使用其值。
@@ -78,38 +76,33 @@ public class Config {
 	@ConfigEntry
 	public static       double                  camera_ray_trace_length                   = 256;
 	@ConfigEntry
-	public static       double                  flying_smooth_factor                      = 0.5;
-	// ============================================================//
-	public static       MonoList                distanceMonoList;
-	public static       CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
-	@SuppressWarnings("unused")
-	public static       Option.Builder<Boolean> HIDDEN_OPTION_496                         = Option.<Boolean>createBuilder()
-		.name(ConfigBuilders.getText("option.projectile_auto_aim"))
-		.description(OptionDescription.of(ConfigBuilders.getText("option.projectile_auto_aim.desc")))
-		.binding(true, () -> false, v -> {})
-		.controller(TickBoxControllerBuilder::create);
-	@ConfigEntry
 	private static      int                     available_distance_count                  = 16;
 	@ConfigEntry
 	private static      double                  camera_distance_min                       = 0.5;
 	@ConfigEntry
 	private static      double                  camera_distance_max                       = 8;
 	@ConfigEntry
-	private static      double                  normal_smooth_factor_horizon              = 0.5;
+	public static       double                  flying_smooth_factor                      = 0.5;
 	@ConfigEntry
-	private static      double                  normal_smooth_factor_vertical             = 0.5;
+	public static       double                  adjusting_camera_offset_smooth_factor     = 0.100;
 	@ConfigEntry
-	private static      double                  normal_camera_offset_smooth_factor        = 0.5;
+	public static       double                  adjusting_distance_smooth_factor          = 0.050;
 	@ConfigEntry
-	private static      double                  normal_distance_smooth_factor             = 0.64;
+	private static      double                  normal_smooth_factor_horizon              = 0.500;
+	@ConfigEntry
+	private static      double                  normal_smooth_factor_vertical             = 0.500;
+	@ConfigEntry
+	private static      double                  normal_camera_offset_smooth_factor        = 0.500;
+	@ConfigEntry
+	private static      double                  normal_distance_smooth_factor             = 0.640;
 	@ConfigEntry
 	private static      double                  aiming_smooth_factor_horizon              = 0.002;
 	@ConfigEntry
 	private static      double                  aiming_smooth_factor_vertical             = 0.002;
 	@ConfigEntry
-	private static      double                  aiming_camera_offset_smooth_factor        = 0.1;
+	private static      double                  aiming_camera_offset_smooth_factor        = 0.100;
 	@ConfigEntry
-	private static      double                  aiming_distance_smooth_factor             = 0.11;
+	private static      double                  aiming_distance_smooth_factor             = 0.110;
 	@ConfigEntry
 	private static      double                  normal_max_distance                       = 2.5;
 	@ConfigEntry
@@ -127,6 +120,15 @@ public class Config {
 	@ConfigEntry
 	private static      double                  aiming_offset_center                      = 0.48;
 	// ============================================================//
+	public static       MonoList                distanceMonoList;
+	public static       CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
+	// ============================================================//
+	@SuppressWarnings("unused")
+	public static       Option.Builder<Boolean> HIDDEN_OPTION_496                         = Option.<Boolean>createBuilder()
+		.name(ConfigBuilders.getText("option.projectile_auto_aim"))
+		.description(OptionDescription.of(ConfigBuilders.getText("option.projectile_auto_aim.desc")))
+		.binding(true, () -> false, v -> {})
+		.controller(TickBoxControllerBuilder::create);
 
 	/**
 	 * 获取配置屏幕
@@ -235,6 +237,12 @@ public class Config {
 				.name(ConfigBuilders.getText("option_category.smooth_factors"))
 				.tooltip(ConfigBuilders.getText("option_category.smooth_factors.desc"))
 				.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.5, "flying_smooth_factor", () -> flying_smooth_factor, v -> flying_smooth_factor = v))
+				.group(OptionGroup.createBuilder()    // 调节相机
+					.name(ConfigBuilders.getText("option_group.adjusting_camera"))
+					.description(OptionDescription.of(ConfigBuilders.getText("option_group.adjusting_camera.desc")))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "adjusting_camera_offset_smooth_factor", () -> adjusting_camera_offset_smooth_factor, v -> adjusting_camera_offset_smooth_factor = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.050, "adjusting_distance_smooth_factor", () -> adjusting_distance_smooth_factor, v -> adjusting_distance_smooth_factor = v))
+					.build())
 				.group(OptionGroup.createBuilder()    // 普通模式
 					.name(ConfigBuilders.getText("option_group.normal_mode"))
 					.description(OptionDescription.of(ConfigBuilders.getText("option_group.normal_mode.desc")))

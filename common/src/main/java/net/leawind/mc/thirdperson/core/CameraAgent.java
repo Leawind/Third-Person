@@ -167,7 +167,6 @@ public class CameraAgent {
 			return;
 		}
 		Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
-
 		// 时间
 		double now = Blaze3D.getTime();
 		//		double now      = mc.frameTimer.getLogEnd();
@@ -220,7 +219,9 @@ public class CameraAgent {
 	public static void updateSmoothVirtualDistance (double period) {
 		boolean          isAdjusting = ModOptions.isAdjustingCameraOffset();
 		CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
-		smoothDistanceToEye.setSmoothFactor(isAdjusting ? 1E-5: mode.getDistanceSmoothFactor());
+		smoothDistanceToEye.setSmoothFactor(isAdjusting
+											? Config.adjusting_distance_smooth_factor
+											: mode.getDistanceSmoothFactor());
 		smoothDistanceToEye.setTarget(mode.getMaxDistance()).update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
 		if (!Config.cameraOffsetScheme.isAiming && !isAdjusting) {
@@ -230,7 +231,7 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double period) {
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset()
-										  ? new Vec2d(1e-7F)
+										  ? new Vec2d(Config.adjusting_camera_offset_smooth_factor)
 										  : Config.cameraOffsetScheme.getMode().getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(Config.cameraOffsetScheme.getMode().getOffsetRatio());
 		smoothOffsetRatio.update(period);

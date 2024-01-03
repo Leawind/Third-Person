@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 import net.leawind.mc.util.math.Vec2d;
 import net.leawind.mc.util.math.Vec3d;
-import net.minecraft.world.phys.Vec3;
 
 public class CameraOffsetMode {
 	public  CameraOffsetScheme cameraOffsetScheme;
