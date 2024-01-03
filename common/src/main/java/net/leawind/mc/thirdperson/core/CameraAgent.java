@@ -201,7 +201,19 @@ public class CameraAgent {
 	}
 
 	public static Vec3 getSmoothEyePositionValue () {
-		return smoothEyePosition.get(PlayerAgent.lastPartialTick);
+		Vec3      smoothEyePositionValue = smoothEyePosition.get(PlayerAgent.lastPartialTick);
+		Minecraft mc                     = Minecraft.getInstance();
+		Vec3      eyePosition            = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
+		double    dist                   = smoothEyePositionValue.distanceTo(eyePosition);
+		Vec3d     sf                     = smoothEyePosition.smoothFactor;
+		boolean   isHorizontalZero       = sf.x * sf.z == 0;
+		boolean   isVerticalZero         = sf.y == 0;
+		if (isHorizontalZero || isVerticalZero) {
+			smoothEyePositionValue = new Vec3(isHorizontalZero ? eyePosition.x: smoothEyePositionValue.x,
+											  isVerticalZero ? eyePosition.y: smoothEyePositionValue.y,
+											  isHorizontalZero ? eyePosition.z: smoothEyePositionValue.z);
+		}
+		return smoothEyePositionValue;
 	}
 
 	public static Vec3 getPositionWithoutOffset () {
@@ -228,10 +240,10 @@ public class CameraAgent {
 	}
 
 	public static void updateSmoothEyePosition (double period) {
-		Minecraft          mc     = Minecraft.getInstance();
-		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
+		Minecraft mc = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
-			Vec3d eyePosition = Vec3d.of(mc.cameraEntity.getEyePosition(mc.getFrameTime()));
+			CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
+			Vec3d            eyePosition = Vec3d.of(mc.cameraEntity.getEyePosition(mc.getFrameTime()));
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
 				CameraAgent.smoothEyePosition.setValue(eyePosition);
@@ -240,7 +252,7 @@ public class CameraAgent {
 				if (mc.player.isFallFlying()) {
 					CameraAgent.smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
 				} else {
-					CameraAgent.smoothEyePosition.setSmoothFactor(scheme.getMode().getEyeSmoothFactor());
+					CameraAgent.smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());
 				}
 				CameraAgent.smoothEyePosition.setTarget(eyePosition).update(period);
 			}
