@@ -27,9 +27,9 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public ExpSmoothDouble update (double tickTime) {
+	public ExpSmoothDouble update (double period) {
 		super.preUpdate();
-		value = Mth.lerp(1 - Math.pow(smoothFactor, tickTime), value, target);
+		value = Mth.lerp(1 - Math.pow(smoothFactor, period), value, target);
 		return this;
 	}
 

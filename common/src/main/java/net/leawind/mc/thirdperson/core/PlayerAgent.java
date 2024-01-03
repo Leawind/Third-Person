@@ -130,11 +130,11 @@ public class PlayerAgent {
 			return;
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			return;
+		} else if (mc.cameraEntity.isUnderWater()) {
+			return;
 		} else if (horizonalAbsoluteImpulse.length() <= 1e-5) {
 			return;
 		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
-			return;
-		} else if (mc.cameraEntity.isUnderWater()) {
 			return;
 		} else {
 			// 键盘控制的移动方向

@@ -23,9 +23,9 @@ public class ExpSmoothVec2d extends ExpSmoothValue<Vec2d> {
 	}
 
 	@Override
-	public ExpSmoothVec2d update (double tickTime) {
+	public ExpSmoothVec2d update (double period) {
 		super.preUpdate();
-		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, tickTime).negated().add(1));
+		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, period).negated().add(1));
 		return this;
 	}
 

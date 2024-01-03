@@ -178,8 +178,6 @@ public class CameraAgent {
 			updateSmoothVirtualDistance(period);
 			// 平滑更新相机偏移量
 			updateSmoothOffsetRatio(period);
-			//			// 更新眼睛位置
-			//			updateSmoothEyePosition(period);
 			// 设置相机朝向和位置
 			updateFakeCameraRotationPosition();
 			preventThroughWall();

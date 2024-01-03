@@ -15,10 +15,10 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	}
 
 	/**
-	 * @param tickTime 经过的时间（s）
+	 * @param period 经过的时间（s）
 	 */
 	@Override
-	abstract public ExpSmoothValue<T> update (double tickTime);
+	abstract public ExpSmoothValue<T> update (double period);
 
 	@Override
 	final public T get () {
