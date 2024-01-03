@@ -86,7 +86,7 @@ public class Config {
 	@ConfigEntry
 	public static       double                  adjusting_camera_offset_smooth_factor     = 0.100;
 	@ConfigEntry
-	public static       double                  adjusting_distance_smooth_factor          = 0.050;
+	public static       double                  adjusting_distance_smooth_factor          = 0.100;
 	@ConfigEntry
 	private static      double                  normal_smooth_factor_horizon              = 0.500;
 	@ConfigEntry
@@ -211,14 +211,6 @@ public class Config {
 						.binding(true, () -> player_fade_out_enabled, v -> player_fade_out_enabled = v)
 						.controller(TickBoxControllerBuilder::create)
 						.build())
-					.option(ConfigBuilders.<Double>option("camera_distance_min")
-						.binding(0.5d, () -> camera_distance_min, v -> {
-							camera_distance_min = v; updateCameraDistances();
-						})
-						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
-							.range(0.3D, 16D)
-							.step(0.1D))
-						.build())
 					.build())
 				.group(OptionGroup.createBuilder()   // 准星
 					.name(ConfigBuilders.getText("option_group.crosshair"))
@@ -241,7 +233,7 @@ public class Config {
 					.name(ConfigBuilders.getText("option_group.adjusting_camera"))
 					.description(OptionDescription.of(ConfigBuilders.getText("option_group.adjusting_camera.desc")))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "adjusting_camera_offset_smooth_factor", () -> adjusting_camera_offset_smooth_factor, v -> adjusting_camera_offset_smooth_factor = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.050, "adjusting_distance_smooth_factor", () -> adjusting_distance_smooth_factor, v -> adjusting_distance_smooth_factor = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "adjusting_distance_smooth_factor", () -> adjusting_distance_smooth_factor, v -> adjusting_distance_smooth_factor = v))
 					.build())
 				.group(OptionGroup.createBuilder()    // 普通模式
 					.name(ConfigBuilders.getText("option_group.normal_mode"))
