@@ -20,7 +20,6 @@ import net.leawind.mc.util.monolist.MonoList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +78,7 @@ public class Config {
 	@ConfigEntry
 	public static       double                  camera_ray_trace_length                   = 256;
 	@ConfigEntry
-	public static       double                  flying_smooth_factor                      = Math.pow(10, -2.25);
+	public static       double                  flying_smooth_factor                      = 0.5;
 	// ============================================================//
 	public static       MonoList                distanceMonoList;
 	public static       CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
@@ -96,21 +95,21 @@ public class Config {
 	@ConfigEntry
 	private static      double                  camera_distance_max                       = 8;
 	@ConfigEntry
-	private static      double                  normal_smooth_factor_horizon              = Math.pow(10, -6);
+	private static      double                  normal_smooth_factor_horizon              = 0.5;
 	@ConfigEntry
-	private static      double                  normal_smooth_factor_vertical             = Math.pow(10, -4);
+	private static      double                  normal_smooth_factor_vertical             = 0.5;
 	@ConfigEntry
-	private static      double                  normal_camera_offset_smooth_factor        = Math.pow(10, -4);
+	private static      double                  normal_camera_offset_smooth_factor        = 0.5;
 	@ConfigEntry
-	private static      double                  normal_distance_smooth_factor             = Math.pow(10, -2);
+	private static      double                  normal_distance_smooth_factor             = 0.64;
 	@ConfigEntry
-	private static      double                  aiming_smooth_factor_horizon              = Math.pow(10, -9);
+	private static      double                  aiming_smooth_factor_horizon              = 0.002;
 	@ConfigEntry
-	private static      double                  aiming_smooth_factor_vertical             = Math.pow(10, -9);
+	private static      double                  aiming_smooth_factor_vertical             = 0.002;
 	@ConfigEntry
-	private static      double                  aiming_camera_offset_smooth_factor        = Math.pow(10, -8);
+	private static      double                  aiming_camera_offset_smooth_factor        = 0.1;
 	@ConfigEntry
-	private static      double                  aiming_distance_smooth_factor             = Math.pow(10, -8);
+	private static      double                  aiming_distance_smooth_factor             = 0.11;
 	@ConfigEntry
 	private static      double                  normal_max_distance                       = 2.5;
 	@ConfigEntry
@@ -235,22 +234,22 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(ConfigBuilders.getText("option_category.smooth_factors"))
 				.tooltip(ConfigBuilders.getText("option_category.smooth_factors.desc"))
-				.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.7, "flying_smooth_factor", () -> flying_smooth_factor, v -> flying_smooth_factor = v))
+				.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.5, "flying_smooth_factor", () -> flying_smooth_factor, v -> flying_smooth_factor = v))
 				.group(OptionGroup.createBuilder()    // 普通模式
 					.name(ConfigBuilders.getText("option_group.normal_mode"))
 					.description(OptionDescription.of(ConfigBuilders.getText("option_group.normal_mode.desc")))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.2, "smooth_factor_horizon", () -> normal_smooth_factor_horizon, v -> normal_smooth_factor_horizon = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(4.00, "smooth_factor_vertical", () -> normal_smooth_factor_vertical, v -> normal_smooth_factor_vertical = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(4.00, "camera_offset_smooth_factor", () -> normal_camera_offset_smooth_factor, v -> normal_camera_offset_smooth_factor = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(2.00, "distance_smooth_factor", () -> normal_distance_smooth_factor, v -> normal_distance_smooth_factor = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.500, "smooth_factor_horizon", () -> normal_smooth_factor_horizon, v -> normal_smooth_factor_horizon = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.500, "smooth_factor_vertical", () -> normal_smooth_factor_vertical, v -> normal_smooth_factor_vertical = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.500, "camera_offset_smooth_factor", () -> normal_camera_offset_smooth_factor, v -> normal_camera_offset_smooth_factor = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.640, "distance_smooth_factor", () -> normal_distance_smooth_factor, v -> normal_distance_smooth_factor = v))
 					.build())
 				.group(OptionGroup.createBuilder()    // 瞄准模式
 					.name(ConfigBuilders.getText("option_group.aiming_mode"))
 					.description(OptionDescription.of(ConfigBuilders.getText("option_group.aiming_mode.desc")))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(9.00, "smooth_factor_horizon", () -> aiming_smooth_factor_horizon, v -> aiming_smooth_factor_horizon = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(9.00, "smooth_factor_vertical", () -> aiming_smooth_factor_vertical, v -> aiming_smooth_factor_vertical = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(8.00, "camera_offset_smooth_factor", () -> aiming_camera_offset_smooth_factor, v -> aiming_camera_offset_smooth_factor = v))
-					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(8.00, "distance_smooth_factor", () -> aiming_distance_smooth_factor, v -> aiming_distance_smooth_factor = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.002, "smooth_factor_horizon", () -> aiming_smooth_factor_horizon, v -> aiming_smooth_factor_horizon = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.002, "smooth_factor_vertical", () -> aiming_smooth_factor_vertical, v -> aiming_smooth_factor_vertical = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "camera_offset_smooth_factor", () -> aiming_camera_offset_smooth_factor, v -> aiming_camera_offset_smooth_factor = v))
+					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.110, "distance_smooth_factor", () -> aiming_distance_smooth_factor, v -> aiming_distance_smooth_factor = v))
 					.build())
 				.build())
 			.category(ConfigCategory.createBuilder()

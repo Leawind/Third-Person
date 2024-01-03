@@ -61,7 +61,7 @@ public class CameraAgent {
 	 * 相机偏移量
 	 */
 	public static       ExpSmoothVec2d  smoothOffsetRatio          =//
-		(ExpSmoothVec2d)new ExpSmoothVec2d().setSmoothFactorWeight(8).set(Vec2d.ZERO);
+		(ExpSmoothVec2d)new ExpSmoothVec2d().setSmoothFactorWeight(10).set(Vec2d.ZERO);
 	/**
 	 * 眼睛的平滑位置
 	 */
@@ -159,11 +159,6 @@ public class CameraAgent {
 	 */
 	@PerformanceSensitive
 	public static void onRenderTick (BlockGetter level, Entity attachedEntity, float partialTick) {
-		// Test start
-		smoothEyePosition.setSmoothFactorWeight(8);
-		smoothOffsetRatio.setSmoothFactorWeight(8);
-		smoothDistanceToEye.setSmoothFactorWeight(4);
-		// Test end
 		PlayerAgent.lastPartialTick = partialTick;
 		CameraAgent.level           = level;
 		wasAiming                   = PlayerAgent.isAiming();
@@ -172,6 +167,7 @@ public class CameraAgent {
 			return;
 		}
 		Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
+
 		// 时间
 		double now = Blaze3D.getTime();
 		//		double now      = mc.frameTimer.getLogEnd();
