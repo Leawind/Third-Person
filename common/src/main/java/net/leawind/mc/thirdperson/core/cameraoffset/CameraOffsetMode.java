@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
 import net.leawind.mc.util.math.Vec2d;
+import net.leawind.mc.util.math.Vec3d;
 import net.minecraft.world.phys.Vec3;
 
 public class CameraOffsetMode {
@@ -9,7 +10,7 @@ public class CameraOffsetMode {
 	/**
 	 * 眼睛位置的平滑系数
 	 */
-	private Vec3               eyeSmoothFactor      = Vec3.ZERO;
+	private Vec3d              eyeSmoothFactor      = Vec3d.ZERO;
 	/**
 	 * 距离的平滑系数
 	 */
@@ -39,7 +40,7 @@ public class CameraOffsetMode {
 
 	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, Vec2d offset) {
 		this.cameraOffsetScheme = scheme;
-		setEyeSmoothFactor(new Vec3(1e-11, 1e-8, 1e-11));
+		setEyeSmoothFactor(new Vec3d(1e-11, 1e-8, 1e-11));
 		setDistanceSmoothFactor(1e-5);
 		setOffsetSmoothFactor(new Vec2d(2e-8));
 		setMaxDistance(maxDist);
@@ -47,11 +48,11 @@ public class CameraOffsetMode {
 		setCenterOffsetRatio(0.6);
 	}
 
-	public Vec3 getEyeSmoothFactor () {
+	public Vec3d getEyeSmoothFactor () {
 		return eyeSmoothFactor;
 	}
 
-	public CameraOffsetMode setEyeSmoothFactor (Vec3 smoothFactor) {
+	public CameraOffsetMode setEyeSmoothFactor (Vec3d smoothFactor) {
 		eyeSmoothFactor = smoothFactor;
 		cameraOffsetScheme.onModify();
 		return this;

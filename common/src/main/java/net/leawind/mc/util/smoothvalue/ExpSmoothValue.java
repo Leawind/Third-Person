@@ -4,6 +4,7 @@ package net.leawind.mc.util.smoothvalue;
 @SuppressWarnings("unused")
 public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	public    T smoothFactor;
+	public    T smoothFactorWeight;// factor ^ weight
 	protected T value;
 	protected T lastValue;
 	protected T target;
@@ -56,4 +57,8 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	 * 每隔 deltaTime 秒，value 变为原来的 multiplier 倍
 	 */
 	abstract ExpSmoothValue<T> setSmoothFactor (T multiplier, T deltaTime);
+
+	abstract ExpSmoothValue<T> setSmoothFactorWeight (double smoothFactorWeight);
+
+	abstract ExpSmoothValue<T> setSmoothFactorWeight (T smoothFactorWeight);
 }

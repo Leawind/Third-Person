@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.math.Vec2d;
+import net.leawind.mc.util.math.Vec3d;
 import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -31,7 +32,7 @@ public class PlayerAgent {
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
 			lastPartialTick = mc.getFrameTime();
-			CameraAgent.smoothEyePosition.set(mc.cameraEntity.getEyePosition(lastPartialTick));
+			CameraAgent.smoothEyePosition.set(Vec3d.of(mc.cameraEntity.getEyePosition(lastPartialTick)));
 		}
 	}
 

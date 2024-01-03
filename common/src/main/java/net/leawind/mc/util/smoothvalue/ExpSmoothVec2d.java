@@ -7,9 +7,10 @@ import net.leawind.mc.util.math.Vectors;
 @SuppressWarnings("unused")
 public class ExpSmoothVec2d extends ExpSmoothValue<Vec2d> {
 	public ExpSmoothVec2d () {
-		value        = Vec2d.ZERO;
-		target       = Vec2d.ZERO;
-		smoothFactor = Vec2d.ZERO;
+		value              = Vec2d.ZERO;
+		target             = Vec2d.ZERO;
+		smoothFactor       = Vec2d.ZERO;
+		smoothFactorWeight = Vec2d.ONE;
 	}
 
 	public ExpSmoothVec2d setTarget (double x, double y) {
@@ -25,7 +26,7 @@ public class ExpSmoothVec2d extends ExpSmoothValue<Vec2d> {
 	@Override
 	public ExpSmoothVec2d update (double period) {
 		super.preUpdate();
-		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, period).negated().add(1));
+		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, smoothFactorWeight.multiply(period)).negated().add(1));
 		return this;
 	}
 
@@ -47,6 +48,19 @@ public class ExpSmoothVec2d extends ExpSmoothValue<Vec2d> {
 	@Override
 	public ExpSmoothVec2d setSmoothFactor (Vec2d multiplier, Vec2d deltaTime) {
 		this.smoothFactor = new Vec2d(Math.pow(multiplier.x, 1 / deltaTime.x), Math.pow(multiplier.y, 1 / deltaTime.y));
+		return this;
+	}
+
+	public ExpSmoothVec2d setSmoothFactorWeight (double weight) {
+		return setSmoothFactorWeight(new Vec2d(weight));
+	}
+
+	public ExpSmoothVec2d setSmoothFactorWeight (double weightX, double weightY) {
+		return setSmoothFactorWeight(new Vec2d(weightX, weightY));
+	}
+
+	public ExpSmoothVec2d setSmoothFactorWeight (Vec2d weight) {
+		this.smoothFactorWeight = weight;
 		return this;
 	}
 }

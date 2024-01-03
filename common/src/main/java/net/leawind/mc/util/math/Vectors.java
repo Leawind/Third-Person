@@ -2,7 +2,6 @@ package net.leawind.mc.util.math;
 
 
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("unused")
@@ -104,8 +103,8 @@ public class Vectors {
 	 * @param dst 目标向量
 	 * @param k   各分量插值系数
 	 */
-	public static Vec3 lerp (Vec3 src, Vec3 dst, Vec3 k) {
-		return new Vec3(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y), Mth.lerp(k.z, src.z, dst.z));
+	public static Vec3d lerp (Vec3d src, Vec3d dst, Vec3d k) {
+		return new Vec3d(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y), Mth.lerp(k.z, src.z, dst.z));
 	}
 
 	/**
@@ -115,59 +114,63 @@ public class Vectors {
 	 * @param dst 目标向量
 	 * @param k   各分量插值系数
 	 */
-	public static Vec2 lerp (Vec2 src, Vec2 dst, Vec2 k) {
-		return new Vec2(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
+	public static Vec2f lerp (Vec2f src, Vec2f dst, Vec2f k) {
+		return new Vec2f(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
 	}
 
 	public static Vec2d lerp (Vec2d src, Vec2d dst, Vec2d k) {
 		return new Vec2d(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
 	}
 
-	public static Vec2 lerp (Vec2 src, Vec2 dst, double k) {
-		return new Vec2((float)Mth.lerp(k, src.x, dst.x), (float)Mth.lerp(k, src.y, dst.y));
+	public static Vec2f lerp (Vec2f src, Vec2f dst, double k) {
+		return new Vec2f((float)Mth.lerp(k, src.x, dst.x), (float)Mth.lerp(k, src.y, dst.y));
 	}
 
 	public static Vec2d lerp (Vec2d src, Vec2d dst, double k) {
 		return new Vec2d(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y));
 	}
 
-	public static Vec3 lerp (Vec3 src, Vec3 dst, double k) {
-		return new Vec3(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y), Mth.lerp(k, src.z, dst.z));
+	public static Vec3d lerp (Vec3d src, Vec3d dst, double k) {
+		return new Vec3d(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y), Mth.lerp(k, src.z, dst.z));
 	}
 
 	/**
 	 * 各分量分别求幂
 	 */
-	public static Vec3 pow (Vec3 v, Vec3 p) {
-		return new Vec3(Math.pow(v.x, p.x), Math.pow(v.y, p.y), Math.pow(v.z, p.z));
+	public static Vec3d pow (Vec3d v, Vec3d p) {
+		return new Vec3d(Math.pow(v.x, p.x), Math.pow(v.y, p.y), Math.pow(v.z, p.z));
 	}
 
 	/**
 	 * 各分量分别求幂
 	 */
-	public static Vec2 pow (Vec2 v, Vec2 p) {
-		return new Vec2((float)Math.pow(v.x, p.x), (float)Math.pow(v.y, p.y));
+	public static Vec2f pow (Vec2f v, Vec2f p) {
+		return new Vec2f((float)Math.pow(v.x, p.x), (float)Math.pow(v.y, p.y));
+	}
+
+	public static Vec2d pow (Vec2d v, Vec2d p) {
+		return new Vec2d(Math.pow(v.x, p.x), Math.pow(v.y, p.y));
 	}
 
 	/**
 	 * 各分量分别求幂
 	 */
-	public static Vec3 pow (Vec3 v, double p) {
-		return new Vec3(Math.pow(v.x, p), Math.pow(v.y, p), Math.pow(v.z, p));
+	public static Vec3d pow (Vec3d v, double p) {
+		return new Vec3d(Math.pow(v.x, p), Math.pow(v.y, p), Math.pow(v.z, p));
 	}
 
 	/**
 	 * 各分量分别求幂
 	 */
-	public static Vec2 pow (Vec2 v, double p) {
-		return new Vec2((float)Math.pow(v.x, p), (float)Math.pow(v.y, p));
+	public static Vec2f pow (Vec2f v, double p) {
+		return new Vec2f((float)Math.pow(v.x, p), (float)Math.pow(v.y, p));
 	}
 
 	public static Vec2d pow (Vec2d v, double p) {
 		return new Vec2d(Math.pow(v.x, p), Math.pow(v.y, p));
 	}
 
-	public static Vec3 sigmoid (Vec3 v) {
-		return new Vec3(1 / (1 + Math.exp(-v.x)), 1 / (1 + Math.exp(-v.y)), 1 / (1 + Math.exp(-v.z)));
+	public static Vec3d sigmoid (Vec3d v) {
+		return new Vec3d(1 / (1 + Math.exp(-v.x)), 1 / (1 + Math.exp(-v.y)), 1 / (1 + Math.exp(-v.z)));
 	}
 }

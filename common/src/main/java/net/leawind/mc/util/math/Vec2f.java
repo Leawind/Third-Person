@@ -20,7 +20,7 @@ public class Vec2f extends Vec2 {
 	public static final Vec2f MIN        = new Vec2f(Float.MIN_VALUE, Float.MIN_VALUE);
 
 	public static Vec2f of (Vec2 v) {
-		return (Vec2f)v;
+		return new Vec2f(v.x, v.y);
 	}
 
 	public Vec2f (Vector2f v) {
@@ -101,12 +101,16 @@ public class Vec2f extends Vec2 {
 		return (float)Math.sqrt(ex * ex + ey * ey);
 	}
 
-	public Vec2f multiply (float x, float y) {
-		return new Vec2f(this.x * x, this.y * y);
+	public Vec2f multiply (float f) {
+		return multiply(f, f);
 	}
 
 	public Vec2f multiply (Vec2f v) {
 		return multiply(v.x, v.y);
+	}
+
+	public Vec2f multiply (float x, float y) {
+		return new Vec2f(this.x * x, this.y * y);
 	}
 
 	public Vec2f offsetRandom (RandomSource randomSource, float limit) {

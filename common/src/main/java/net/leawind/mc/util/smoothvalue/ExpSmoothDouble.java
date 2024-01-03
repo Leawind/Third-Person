@@ -6,9 +6,10 @@ import net.minecraft.util.Mth;
 @SuppressWarnings("unused")
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	public ExpSmoothDouble () {
-		value        = 0d;
-		target       = 0d;
-		smoothFactor = 0d;
+		value              = 0d;
+		target             = 0d;
+		smoothFactor       = 0d;
+		smoothFactorWeight = 1d;
 	}
 
 	public ExpSmoothDouble setValue (double value) {
@@ -26,10 +27,20 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		return this;
 	}
 
+	public ExpSmoothDouble setSmoothFactorWeight (double weight) {
+		this.smoothFactorWeight = weight;
+		return this;
+	}
+
+	public ExpSmoothDouble setSmoothFactorWeight (Double weight) {
+		this.smoothFactorWeight = weight;
+		return this;
+	}
+
 	@Override
 	public ExpSmoothDouble update (double period) {
 		super.preUpdate();
-		value = Mth.lerp(1 - Math.pow(smoothFactor, period), value, target);
+		value = Mth.lerp(1 - Math.pow(smoothFactor, smoothFactorWeight * period), value, target);
 		return this;
 	}
 

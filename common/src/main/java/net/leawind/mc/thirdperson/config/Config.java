@@ -15,6 +15,7 @@ import net.leawind.mc.thirdperson.ExpectPlatform;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.math.Vec2d;
+import net.leawind.mc.util.math.Vec3d;
 import net.leawind.mc.util.monolist.MonoList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -330,12 +331,12 @@ public class Config {
 		// Normal mode //
 		scheme.normalMode.setDistanceSmoothFactor(normal_distance_smooth_factor)
 			.setOffsetSmoothFactor(new Vec2d(normal_camera_offset_smooth_factor))
-			.setEyeSmoothFactor(new Vec3(normal_smooth_factor_horizon, normal_smooth_factor_vertical, normal_smooth_factor_horizon))
+			.setEyeSmoothFactor(new Vec3d(normal_smooth_factor_horizon, normal_smooth_factor_vertical, normal_smooth_factor_horizon))
 			.setCenterOffsetRatio(normal_offset_center);
 		// Aiming mode //
 		scheme.aimingMode.setDistanceSmoothFactor(aiming_distance_smooth_factor)
 			.setOffsetSmoothFactor(new Vec2d(aiming_camera_offset_smooth_factor))
-			.setEyeSmoothFactor(new Vec3(aiming_smooth_factor_horizon, aiming_smooth_factor_vertical, aiming_smooth_factor_horizon))
+			.setEyeSmoothFactor(new Vec3d(aiming_smooth_factor_horizon, aiming_smooth_factor_vertical, aiming_smooth_factor_horizon))
 			.setCenterOffsetRatio(aiming_offset_center);
 		// apply
 		cameraOffsetScheme = scheme;

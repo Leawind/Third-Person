@@ -220,7 +220,7 @@ public class CameraAgent {
 		Minecraft          mc     = Minecraft.getInstance();
 		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
 		if (mc.cameraEntity != null && mc.player != null) {
-			Vec3 eyePosition = mc.cameraEntity.getEyePosition(mc.getFrameTime());
+			Vec3d eyePosition = Vec3d.of(mc.cameraEntity.getEyePosition(mc.getFrameTime()));
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
 				CameraAgent.smoothEyePosition.setValue(eyePosition);

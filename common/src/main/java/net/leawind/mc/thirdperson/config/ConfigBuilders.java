@@ -17,10 +17,14 @@ import java.util.function.Supplier;
 class ConfigBuilders {
 	public static Option<Double> SMOOTH_FACTOR_OPTION (double defaultValue,
 													   String name,
-													   Supplier<Double> getter,
-													   Consumer<Double> setter) {
+													   Supplier<Double> rawGetter,
+													   Consumer<Double> rawSetter) {
+		Consumer<Double> packedSetter = v -> {
+			rawSetter.accept(v);
+			Config.updateCameraOffsetScheme();
+		};
 		return ConfigBuilders.<Double>option(name)
-							 .binding(defaultValue, getter, setter)
+							 .binding(defaultValue, rawGetter, packedSetter)
 							 .controller(ConfigBuilders::SMOOTH_FACTOR_CONTROLLER)
 							 .build();
 	}

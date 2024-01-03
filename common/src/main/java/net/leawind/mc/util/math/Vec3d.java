@@ -39,7 +39,7 @@ public class Vec3d extends Vec3 {
 	public static final Vec3d        MIN        = new Vec3d(Double.MIN_VALUE);
 
 	public static Vec3d of (Vec3 v) {
-		return (Vec3d)v;
+		return new Vec3d(v.x, v.y, v.z);
 	}
 
 	public Vec3d (double d) {
@@ -165,6 +165,10 @@ public class Vec3d extends Vec3 {
 
 	public @NotNull Vec3d scale (double d) {
 		return this.multiply(d, d, d);
+	}
+
+	public @NotNull Vec3d multiply (double d) {
+		return multiply(d, d, d);
 	}
 
 	public @NotNull Vec3d multiply (double d, double e, double f) {

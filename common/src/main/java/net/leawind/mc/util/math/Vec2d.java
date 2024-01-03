@@ -113,6 +113,10 @@ public class Vec2d {
 		return multiply(d, d);
 	}
 
+	public Vec2d multiply (double d) {
+		return multiply(d, d);
+	}
+
 	public Vec2d multiply (double x, double y) {
 		return new Vec2d(this.x * x, this.y * y);
 	}
