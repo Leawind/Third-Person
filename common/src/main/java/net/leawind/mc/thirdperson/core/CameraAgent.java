@@ -163,9 +163,6 @@ public class CameraAgent {
 			return;
 		}
 		Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
-		if (mc.options.getCameraType().isMirrored()) {
-			mc.options.setCameraType(CameraType.FIRST_PERSON);
-		}
 		// 时间
 		double now = Blaze3D.getTime();
 		//		double now      = mc.frameTimer.getLogEnd();
@@ -190,6 +187,9 @@ public class CameraAgent {
 			}
 		}
 		PlayerAgent.onRenderTick();
+		if (mc.options.getCameraType().isMirrored()) {
+			mc.options.setCameraType(CameraType.FIRST_PERSON);
+		}
 	}
 
 	public static Vec3 getPositionWithoutOffset () {
