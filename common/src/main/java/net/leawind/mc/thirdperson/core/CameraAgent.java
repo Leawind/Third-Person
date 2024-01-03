@@ -210,7 +210,7 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double period) {
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset()
-										  ? new Vec2d(1e-7F, 1e-7F)
+										  ? new Vec2d(1e-7F)
 										  : Config.cameraOffsetScheme.getMode().getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(Config.cameraOffsetScheme.getMode().getOffsetRatio());
 		smoothOffsetRatio.update(period);

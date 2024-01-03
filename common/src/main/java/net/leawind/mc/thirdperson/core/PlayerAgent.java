@@ -138,8 +138,7 @@ public class PlayerAgent {
 			return;
 		} else {
 			// 键盘控制的移动方向
-			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(horizonalAbsoluteImpulse.x,
-																					 horizonalAbsoluteImpulse.y));
+			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(horizonalAbsoluteImpulse));
 			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 		}
 	}
