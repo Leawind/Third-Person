@@ -115,4 +115,14 @@ public class ModEvents {
 			scheme.getMode().setOffsetRatio(new Vec2d(offsetX, offsetY));
 		}
 	}
+
+	/**
+	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
+	 */
+	public static void onBeforeHandleKeybinds () {
+		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
+		if (PlayerAgent.wasInterecting) {
+			Minecraft.getInstance().gameRenderer.pick(1.0f);
+		}
+	}
 }

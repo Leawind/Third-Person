@@ -361,7 +361,12 @@ public class CameraAgent {
 
 	public static @NotNull HitResult pick (double pickRange) {
 		EntityHitResult ehr = pickEntity(pickRange);
-		return ehr == null ? pickBlock(pickRange): ehr;
+		BlockHitResult  bhr = pickBlock(pickRange);
+		return ehr == null
+			   ? bhr
+			   : bhr.getLocation().distanceTo(camera.getPosition()) < ehr.getLocation().distanceTo(camera.getPosition())
+				 ? bhr
+				 : ehr;
 	}
 
 	private static @Nullable EntityHitResult pickEntity (double pickRange) {

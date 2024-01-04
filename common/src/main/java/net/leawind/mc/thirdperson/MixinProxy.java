@@ -5,6 +5,7 @@ import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -20,8 +21,9 @@ public class MixinProxy {
 			return viewVectorFake;
 		}
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
-			Vec3 eyePosition    = mc.player.getEyePosition(1);
-			Vec3 eyeToHitResult = eyePosition.vectorTo(CameraAgent.pick().getLocation());
+			Vec3      eyePosition    = mc.player.getEyePosition(1);
+			HitResult hr             = CameraAgent.pick();
+			Vec3      eyeToHitResult = eyePosition.vectorTo(hr.getLocation());
 			return eyeToHitResult.normalize();
 		}
 		return viewVectorFake;
