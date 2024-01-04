@@ -38,9 +38,21 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
+	public ExpSmoothDouble setTarget (Double target) {
+		this.target = target;
+		return this;
+	}
+
+	@Override
 	public ExpSmoothDouble update (double period) {
 		super.preUpdate();
 		value = Mth.lerp(1 - Math.pow(smoothFactor, smoothFactorWeight * period), value, target);
+		return this;
+	}
+
+	@Override
+	public ExpSmoothDouble setSmoothFactor (Double smoothFactor) {
+		this.smoothFactor = smoothFactor;
 		return this;
 	}
 

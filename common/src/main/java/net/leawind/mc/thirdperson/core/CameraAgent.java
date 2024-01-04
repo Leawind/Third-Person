@@ -169,11 +169,10 @@ public class CameraAgent {
 		}
 		Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
 		// 时间
-		double now = Blaze3D.getTime();
-		//		double now      = mc.frameTimer.getLogEnd();
+		double now    = Blaze3D.getTime();
 		double period = now - lastRenderTickTimeStamp;
 		lastRenderTickTimeStamp = now;
-		Config.cameraOffsetScheme.setAiming(wasAiming);
+		Config.cameraOffsetScheme.setAiming(wasAiming);//TODO move to client tick
 		if (isThirdPerson()) {
 			if (!mc.isPaused()) {
 				// 平滑更新距离
@@ -230,6 +229,7 @@ public class CameraAgent {
 	public static void updateSmoothOffsetRatio (double period) {
 		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset() ? new Vector2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
+		System.out.printf("\r%b", ModOptions.isAttachedEntityInvisible());
 		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}

@@ -44,7 +44,7 @@ public class CameraOffsetMode {
 	}
 
 	public Vector3d getEyeSmoothFactor () {
-		return eyeSmoothFactor;
+		return new Vector3d(eyeSmoothFactor);
 	}
 
 	public CameraOffsetMode setEyeSmoothFactor (double horizon, double vertical) {
@@ -64,7 +64,7 @@ public class CameraOffsetMode {
 	}
 
 	public Vector2d getOffsetSmoothFactor () {
-		return offsetSmoothFactor;
+		return new Vector2d(offsetSmoothFactor);
 	}
 
 	public CameraOffsetMode setOffsetSmoothFactor (double d) {
@@ -91,6 +91,7 @@ public class CameraOffsetMode {
 		return this;
 	}
 
+
 	public Vector2d getOffsetRatio () {
 		return cameraOffsetScheme.isCenter ? new Vector2d(0, getCenterOffsetRatio()): getSideOffsetRatio();
 	}
@@ -106,7 +107,7 @@ public class CameraOffsetMode {
 	}
 
 	public Vector2d getSideOffsetRatio () {
-		return sideOffsetRatio;
+		return new Vector2d(sideOffsetRatio);// DOITNOW
 	}
 
 	public CameraOffsetMode setCenterOffsetRatio (double offset) {

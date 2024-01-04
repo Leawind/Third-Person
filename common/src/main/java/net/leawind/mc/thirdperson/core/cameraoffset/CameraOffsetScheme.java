@@ -19,7 +19,7 @@ public class CameraOffsetScheme {
 	public static final CameraOffsetScheme DEFAULT  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
 	public              CameraOffsetMode   aimingMode;
 	public              CameraOffsetMode   normalMode;
-	public transient    boolean            isAiming = false;
+	public              boolean            isAiming = false;
 	protected           boolean            isCenter = false;
 
 	private CameraOffsetScheme () {

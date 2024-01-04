@@ -312,10 +312,10 @@ public class Config {
 	 */
 	public static void loadFromCameraOffsetScheme () {
 		// Normal mode //
-		normal_max_distance  = cameraOffsetScheme.normalMode.getMaxDistance();normal_offset_x = cameraOffsetScheme.normalMode.getSideOffsetRatio().x;normal_offset_y = cameraOffsetScheme.normalMode.getSideOffsetRatio().y;
+		normal_max_distance  = cameraOffsetScheme.normalMode.getMaxDistance(); normal_offset_x = cameraOffsetScheme.normalMode.getSideOffsetRatio().x; normal_offset_y = cameraOffsetScheme.normalMode.getSideOffsetRatio().y;
 		normal_offset_center = cameraOffsetScheme.normalMode.getCenterOffsetRatio();
 		// Aiming mode //
-		aiming_max_distance  = cameraOffsetScheme.aimingMode.getMaxDistance();aiming_offset_x = cameraOffsetScheme.aimingMode.getSideOffsetRatio().x;aiming_offset_y = cameraOffsetScheme.aimingMode.getSideOffsetRatio().y;
+		aiming_max_distance  = cameraOffsetScheme.aimingMode.getMaxDistance(); aiming_offset_x = cameraOffsetScheme.aimingMode.getSideOffsetRatio().x; aiming_offset_y = cameraOffsetScheme.aimingMode.getSideOffsetRatio().y;
 		aiming_offset_center = cameraOffsetScheme.aimingMode.getCenterOffsetRatio();
 	}
 

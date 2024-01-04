@@ -24,9 +24,21 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	}
 
 	@Override
+	public ExpSmoothVector3d setTarget (Vector3d s) {
+		this.target.set(s);
+		return this;
+	}
+
+	@Override
 	public ExpSmoothVector3d update (double period) {
 		super.preUpdate();
 		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, new Vector3d(smoothFactorWeight).mul(period)).negate().add(1, 1, 1));
+		return this;
+	}
+
+	@Override
+	public ExpSmoothVector3d setSmoothFactor (Vector3d smoothFactor) {
+		this.smoothFactor.set(smoothFactor);
 		return this;
 	}
 
@@ -56,7 +68,8 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	}
 
 	public ExpSmoothVector3d setSmoothFactorWeight (Vector3d w) {
-		return setSmoothFactorWeight(w.x, w.y, w.z);
+		this.smoothFactorWeight.set(w);
+		return this;
 	}
 
 	public ExpSmoothVector3d setSmoothFactorWeight (double x, double y, double z) {

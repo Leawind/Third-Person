@@ -10,10 +10,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	protected T target;
 
 	@Override
-	final public ExpSmoothValue<T> setTarget (T target) {
-		this.target = target;
-		return this;
-	}
+	abstract public ExpSmoothValue<T> setTarget (T target);
 
 	/**
 	 * @param period 经过的时间（s）
@@ -44,10 +41,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		return this;
 	}
 
-	final public ExpSmoothValue<T> setSmoothFactor (T smoothFactor) {
-		this.smoothFactor = smoothFactor;
-		return this;
-	}
+	abstract public ExpSmoothValue<T> setSmoothFactor (T smoothFactor);
 
 	abstract public T get (double delta);
 

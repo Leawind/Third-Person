@@ -147,7 +147,7 @@ public class PlayerAgent {
 				PlayerAgent.turnToCameraRotation(true);
 			} else if (Config.player_rotate_with_camera_when_not_aiming) {
 				PlayerAgent.turnToCameraRotation(true);
-			} else if (PlayerAgent.wasInterecting) {//DOITNOW
+			} else if (PlayerAgent.wasInterecting) {
 				if (Config.auto_rotate_interacting) {
 					if (Config.rotate_interacting_type) {
 						turnToCameraHitResult(true);

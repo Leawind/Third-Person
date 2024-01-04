@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.Vec3;
 
 public class ModOptions {
 	/**
@@ -17,11 +18,11 @@ public class ModOptions {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && ModKeys.ADJUST_POSITION.isDown() && !ModOptions.isAttachedEntityInvisible();
+		return isAdjustingCameraDistance() && !ModOptions.isAttachedEntityInvisible();
 	}
 
 	public static boolean isAdjustingCameraDistance () {
-		return isAdjustingCameraOffset() || ModOptions.isAttachedEntityInvisible();
+		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();
 	}
 
 	/**
@@ -47,11 +48,17 @@ public class ModOptions {
 	 */
 	public static boolean isAttachedEntityInvisible () {
 		Minecraft mc = Minecraft.getInstance();
-		if (Config.player_fade_out_enabled && mc.cameraEntity != null) {
-			return Math.min((CameraAgent.wasAiming ? Config.cameraOffsetScheme.aimingMode: Config.cameraOffsetScheme.normalMode).getMaxDistance(), mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick).distanceTo(CameraAgent.camera.getPosition())) <=
-				   Config.distanceMonoList.get(0);
-		} else {
+		if (!Config.player_fade_out_enabled) {
 			return false;
+		} else if (mc.cameraEntity == null || CameraAgent.camera == null) {
+			return false;
+		}
+		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
+		Vec3 cameraPosition = CameraAgent.fakeCamera.getPosition();
+		if (Config.cameraOffsetScheme.getMode().getMaxDistance() <= Config.distanceMonoList.get(0)) {
+			return true;
+		} else {
+			return eyePosition.distanceTo(cameraPosition) <= Config.distanceMonoList.get(0);
 		}
 	}
 }
