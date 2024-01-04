@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Config 控制器
+ * 用于构建 Config
  */
 class ConfigBuilders {
 	public static Option<Double> SMOOTH_FACTOR_OPTION (double defaultValue, String name, Supplier<Double> rawGetter, Consumer<Double> rawSetter) {

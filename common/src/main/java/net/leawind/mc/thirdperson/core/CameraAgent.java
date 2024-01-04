@@ -214,7 +214,7 @@ public class CameraAgent {
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
-		boolean          isAdjusting = ModOptions.isAdjustingCameraOffset();
+		boolean          isAdjusting = ModOptions.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
 		smoothDistanceToEye.setSmoothFactor(isAdjusting ? Config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
 		smoothDistanceToEye.setTarget(mode.getMaxDistance()).update(period);

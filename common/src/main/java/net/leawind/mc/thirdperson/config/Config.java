@@ -177,7 +177,7 @@ public class Config {
 						.controller(TickBoxControllerBuilder::create)
 						.build())
 					.option(ConfigBuilders.<Boolean>option("rotate_interacting_type")
-						.binding(false, () -> rotate_interacting_type, v -> rotate_interacting_type = v)
+						.binding(true, () -> rotate_interacting_type, v -> rotate_interacting_type = v)
 						.controller(opt -> BooleanControllerBuilder.create(opt)
 							.valueFormatter(v -> ConfigBuilders.getText("option.rotate_interacting_type." + (v ? "turn_to_crosshair": "turn_with_camera"))))
 						.build())

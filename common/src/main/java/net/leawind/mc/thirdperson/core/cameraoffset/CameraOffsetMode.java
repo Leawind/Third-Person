@@ -4,6 +4,9 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 
+/**
+ * 相机偏移模式
+ */
 public class CameraOffsetMode {
 	public  CameraOffsetScheme cameraOffsetScheme;
 	/**

@@ -66,7 +66,7 @@ public class ModEvents {
 	 * @param amount    向前滚是+1，向后滚是-1
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
-		if (ModOptions.isAdjustingCameraOffset()) {
+		if (ModOptions.isAdjustingCameraDistance()) {
 			double dist = Config.cameraOffsetScheme.getMode().getMaxDistance();
 			dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
 			Config.cameraOffsetScheme.getMode().setMaxDistance(dist);
