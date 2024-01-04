@@ -26,6 +26,59 @@ public class PlayerAgent {
 	public static       float    lastPartialTick          = 1F;
 	public static       boolean  wasAiming                = false;
 
+	/**
+	 * 玩家移动时自动转向移动方向
+	 */
+	@PerformanceSensitive
+	public static void onServerAiStep () {
+		Minecraft mc = Minecraft.getInstance();
+		assert mc.cameraEntity != null;
+		if (!Config.rotate_to_moving_direction) {
+			return;
+		} else if (wasInterecting) {
+			return;
+		} else if (wasAiming) {
+			return;
+		} else if (CameraAgent.wasAttachedEntityInvisible) {
+			return;
+		} else if (mc.cameraEntity.isUnderWater()) {
+			return;
+		} else if (horizonalAbsoluteImpulse.length() <= 1e-5) {
+			return;
+		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
+			return;
+		} else {
+			// 键盘控制的移动方向
+			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vector2d(horizonalAbsoluteImpulse));
+			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
+		}
+	}
+
+	public static void onRenderTick () {
+		Minecraft mc = Minecraft.getInstance();
+		if (CameraAgent.isControlledCamera()) {
+			if (wasAiming) {
+				turnToCameraHitResult(true);
+			} else if (mc.player != null && mc.player.isUnderWater()) {
+				turnToCameraRotation(true);
+			} else if (mc.player != null && mc.player.isFallFlying()) {
+				turnToCameraRotation(true);
+			} else if (CameraAgent.wasAttachedEntityInvisible) {
+				turnToCameraRotation(true);
+			} else if (Config.player_rotate_with_camera_when_not_aiming) {
+				turnToCameraRotation(true);
+			} else if (wasInterecting) {
+				if (Config.auto_rotate_interacting) {
+					if (Config.rotate_interacting_type) {
+						turnToCameraHitResult(true);
+					} else {
+						turnToCameraRotation(true);
+					}
+				}
+			}
+		}
+	}
+
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
 		lastPartialTick = mc.getFrameTime();
@@ -108,59 +161,6 @@ public class PlayerAgent {
 	}
 
 	/**
-	 * 玩家移动时自动转向移动方向
-	 */
-	@PerformanceSensitive
-	public static void onServerAiStep () {
-		Minecraft mc = Minecraft.getInstance();
-		assert mc.cameraEntity != null;
-		if (!Config.rotate_to_moving_direction) {
-			return;
-		} else if (wasInterecting) {
-			return;
-		} else if (wasAiming) {
-			return;
-		} else if (CameraAgent.wasAttachedEntityInvisible) {
-			return;
-		} else if (mc.cameraEntity.isUnderWater()) {
-			return;
-		} else if (horizonalAbsoluteImpulse.length() <= 1e-5) {
-			return;
-		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
-			return;
-		} else {
-			// 键盘控制的移动方向
-			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vector2d(horizonalAbsoluteImpulse));
-			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
-		}
-	}
-
-	public static void onRenderTick () {
-		Minecraft mc = Minecraft.getInstance();
-		if (CameraAgent.isControlledCamera()) {
-			if (wasAiming) {
-				turnToCameraHitResult(true);
-			} else if (mc.player != null && mc.player.isUnderWater()) {
-				turnToCameraRotation(true);
-			} else if (mc.player != null && mc.player.isFallFlying()) {
-				turnToCameraRotation(true);
-			} else if (CameraAgent.wasAttachedEntityInvisible) {
-				turnToCameraRotation(true);
-			} else if (Config.player_rotate_with_camera_when_not_aiming) {
-				turnToCameraRotation(true);
-			} else if (wasInterecting) {
-				if (Config.auto_rotate_interacting) {
-					if (Config.rotate_interacting_type) {
-						turnToCameraHitResult(true);
-					} else {
-						turnToCameraRotation(true);
-					}
-				}
-			}
-		}
-	}
-
-	/**
 	 * 玩家是否在交互
 	 * <p>
 	 * 即是否按下了 使用|攻击|选取 键
@@ -187,9 +187,6 @@ public class PlayerAgent {
 	 */
 	public static boolean isAiming () {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.cameraEntity == null) {
-			return false;
-		}
 		// 只有 LivingEntity 才有可能手持物品瞄准
 		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem()) {

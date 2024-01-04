@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  * <p>
  * 为了在第三人称视角中能够随时选取准星所指的实体，将获取到的玩家 viewVector 修改为朝向相机视线落点的方向
  */
-@Mixin(net.minecraft.client.renderer.GameRenderer.class)
+@Mixin(value=net.minecraft.client.renderer.GameRenderer.class, priority=2000)
 public class GameRendererMixin {
 	/**
 	 * 在 viewVector 赋值时截获，重新计算 viewVector 的值。这样就可以计算出正确的 pickEnd 和 aabb
