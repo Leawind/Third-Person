@@ -17,16 +17,7 @@ import java.util.List;
 
 @Deprecated
 public class Vec3d extends Vec3 {
-	public static final Codec<Vec3d> CODEC      = Codec.DOUBLE.listOf().comapFlatMap(list2 -> Util.fixedSize(list2, 3)
-																								  .map(list -> new Vec3d(list.get(
-																									  0),
-																														 list.get(
-																															 1),
-																														 list.get(
-																															 2))),
-																					 vec3 -> List.of(vec3.x(),
-																									 vec3.y(),
-																									 vec3.z()));
+	public static final Codec<Vec3d> CODEC      = Codec.DOUBLE.listOf().comapFlatMap(list2 -> Util.fixedSize(list2, 3).map(list -> new Vec3d(list.get(0), list.get(1), list.get(2))), vec3 -> List.of(vec3.x(), vec3.y(), vec3.z()));
 	public static final Vec3d        ZERO       = new Vec3d(0);
 	public static final Vec3d        ONE        = new Vec3d(1);
 	public static final Vec3d        UNIT_X     = new Vec3d(1, 0, 0);
@@ -180,9 +171,7 @@ public class Vec3d extends Vec3 {
 	}
 
 	public @NotNull Vec3d offsetRandom (RandomSource randomSource, double f) {
-		return this.add((randomSource.nextDouble() - 0.5D) * f,
-						(randomSource.nextDouble() - 0.5D) * f,
-						(randomSource.nextDouble() - 0.5D) * f);
+		return this.add((randomSource.nextDouble() - 0.5D) * f, (randomSource.nextDouble() - 0.5D) * f, (randomSource.nextDouble() - 0.5D) * f);
 	}
 
 	public boolean equals (Object object) {

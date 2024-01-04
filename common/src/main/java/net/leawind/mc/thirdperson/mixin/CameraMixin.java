@@ -26,12 +26,7 @@ public abstract class CameraMixin {
 	 * @param reversedView 已经被我改成了false
 	 */
 	@Inject(method="setup", at=@At(value="HEAD"))
-	public void setup_head (BlockGetter blockGetter,
-							Entity entity,
-							boolean detached,
-							boolean reversedView,
-							float partialTick,
-							CallbackInfo ci) {
+	public void setup_head (BlockGetter blockGetter, Entity entity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
 			if (l3p$wasFirstPerson && !isFirstPerson) {
@@ -50,14 +45,8 @@ public abstract class CameraMixin {
 	 *
 	 * @param entity 相机附着的实体，即玩家正在操控的实体或旁观者正在观察的实体
 	 */
-	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE),
-			cancellable=true)
-	public void setup_invoke (BlockGetter level,
-							  Entity entity,
-							  boolean detached,
-							  boolean reversedView,
-							  float partialTick,
-							  CallbackInfo ci) {
+	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE), cancellable=true)
+	public void setup_invoke (BlockGetter level, Entity entity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			if (reversedView) {
 				// 咱给它转回去

@@ -36,8 +36,7 @@ public class MixinProxy {
 			float     cameraLeft           = (that.left ? 1: 0) - (that.right ? 1: 0);
 			Vector3f  cameraForwardImpulse = CameraAgent.fakeCamera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
 			Vector3f  cameraLeftImpulse    = CameraAgent.fakeCamera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
-			PlayerAgent.horizonalAbsoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x,
-													 cameraForwardImpulse.z + cameraLeftImpulse.z);
+			PlayerAgent.horizonalAbsoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x, cameraForwardImpulse.z + cameraLeftImpulse.z);
 			if (PlayerAgent.horizonalAbsoluteImpulse.length() > 1E-5 && mc.player != null) {
 				float    playerRotation  = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
 				Vec3     playerForward3D = Vec3.directionFromRotation(0, playerRotation);

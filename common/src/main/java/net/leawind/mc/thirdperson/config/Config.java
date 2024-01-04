@@ -43,11 +43,11 @@ import java.nio.file.Path;
  * 所以原本的3个选项不必被外界访问，可以使用private。
  */
 public class Config {
-	public static final Logger                  LOGGER                                    = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static final                       Logger                  LOGGER                                    = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	// 配置文件路径
-	public static final Path                    CONFIG_FILE_PATH                          = ExpectPlatform.getConfigDirectory()
+	public static final                       Path                    CONFIG_FILE_PATH                          = ExpectPlatform.getConfigDirectory()
 		.resolve(ThirdPersonMod.MOD_ID + ".json");
-	public static final ConfigInstance<Config>  GSON                                      = GsonConfigInstance.createBuilder(Config.class)
+	public static final                       ConfigInstance<Config>  GSON                                      = GsonConfigInstance.createBuilder(Config.class)
 		.setPath(CONFIG_FILE_PATH)
 		.overrideGsonBuilder(new GsonBuilder().setPrettyPrinting()
 			.serializeNulls()
@@ -57,79 +57,45 @@ public class Config {
 			.registerTypeHierarchyAdapter(Color.class, new GsonConfigInstance.ColorTypeAdapter())
 			.registerTypeHierarchyAdapter(Config.class, new ConfigAdapter()))
 		.build();
-	// ============================================================//
-	@ConfigEntry
-	public static       boolean                 is_mod_enable                             = true;
-	@ConfigEntry
-	public static       boolean                 player_rotate_with_camera_when_not_aiming = false;
-	@ConfigEntry
-	public static       boolean                 render_crosshair_when_not_aiming          = true;
-	@ConfigEntry
-	public static       boolean                 render_crosshair_when_aiming              = true;
-	@ConfigEntry
-	public static       boolean                 rotate_to_moving_direction                = true;
-	@ConfigEntry
-	public static       boolean                 lock_camera_pitch_angle                   = false;
-	@ConfigEntry
-	public static       boolean                 turn_with_camera_when_enter_first_person  = true;
-	@ConfigEntry
-	public static       boolean                 player_fade_out_enabled                   = true;
-	@ConfigEntry
-	public static       double                  camera_ray_trace_length                   = 256;
-	@ConfigEntry
-	public static       boolean                 auto_rotate_interacting                   = true;
-	@ConfigEntry
-	public static       boolean                 rotate_interacting_type                   = true;
-	@ConfigEntry
-	private static      int                     available_distance_count                  = 16;
-	@ConfigEntry
-	private static      double                  camera_distance_min                       = 0.5;
-	@ConfigEntry
-	private static      double                  camera_distance_max                       = 8;
-	@ConfigEntry
-	public static       double                  flying_smooth_factor                      = 0.5;
-	@ConfigEntry
-	public static       double                  adjusting_camera_offset_smooth_factor     = 0.100;
-	@ConfigEntry
-	public static       double                  adjusting_distance_smooth_factor          = 0.100;
-	@ConfigEntry
-	private static      double                  normal_smooth_factor_horizon              = 0.500;
-	@ConfigEntry
-	private static      double                  normal_smooth_factor_vertical             = 0.500;
-	@ConfigEntry
-	private static      double                  normal_camera_offset_smooth_factor        = 0.500;
-	@ConfigEntry
-	private static      double                  normal_distance_smooth_factor             = 0.640;
-	@ConfigEntry
-	private static      double                  aiming_smooth_factor_horizon              = 0.002;
-	@ConfigEntry
-	private static      double                  aiming_smooth_factor_vertical             = 0.002;
-	@ConfigEntry
-	private static      double                  aiming_camera_offset_smooth_factor        = 0.100;
-	@ConfigEntry
-	private static      double                  aiming_distance_smooth_factor             = 0.110;
-	@ConfigEntry
-	private static      double                  normal_max_distance                       = 2.5;
-	@ConfigEntry
-	private static      double                  normal_offset_x                           = -0.28;
-	@ConfigEntry
-	private static      double                  normal_offset_y                           = 0.31;
-	@ConfigEntry
-	private static      double                  normal_offset_center                      = 0.24D;
-	@ConfigEntry
-	private static      double                  aiming_max_distance                       = 0.89;
-	@ConfigEntry
-	private static      double                  aiming_offset_x                           = -0.47;
-	@ConfigEntry
-	private static      double                  aiming_offset_y                           = -0.09;
-	@ConfigEntry
-	private static      double                  aiming_offset_center                      = 0.48;
 	// ============================================================ //
-	public static       MonoList                distanceMonoList;
-	public static       CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
+	@ConfigEntry public static                boolean                 is_mod_enable                             = true;
+	@ConfigEntry public static                boolean                 player_rotate_with_camera_when_not_aiming = false;
+	@ConfigEntry public static                boolean                 render_crosshair_when_not_aiming          = true;
+	@ConfigEntry public static                boolean                 render_crosshair_when_aiming              = true;
+	@ConfigEntry public static                boolean                 rotate_to_moving_direction                = true;
+	@ConfigEntry public static                boolean                 lock_camera_pitch_angle                   = false;
+	@ConfigEntry public static                boolean                 turn_with_camera_when_enter_first_person  = true;
+	@ConfigEntry public static                boolean                 player_fade_out_enabled                   = true;
+	@ConfigEntry public static                double                  camera_ray_trace_length                   = 256;
+	@ConfigEntry public static                boolean                 auto_rotate_interacting                   = true;
+	@ConfigEntry public static                boolean                 rotate_interacting_type                   = true;
+	@ConfigEntry private static               int                     available_distance_count                  = 16;
+	@ConfigEntry private static               double                  camera_distance_min                       = 0.5;
+	@ConfigEntry private static               double                  camera_distance_max                       = 8;
+	@ConfigEntry public static                double                  flying_smooth_factor                      = 0.5;
+	@ConfigEntry public static                double                  adjusting_camera_offset_smooth_factor     = 0.100;
+	@ConfigEntry public static                double                  adjusting_distance_smooth_factor          = 0.100;
+	@ConfigEntry private static               double                  normal_smooth_factor_horizon              = 0.500;
+	@ConfigEntry private static               double                  normal_smooth_factor_vertical             = 0.500;
+	@ConfigEntry private static               double                  normal_camera_offset_smooth_factor        = 0.500;
+	@ConfigEntry private static               double                  normal_distance_smooth_factor             = 0.640;
+	@ConfigEntry private static               double                  aiming_smooth_factor_horizon              = 0.002;
+	@ConfigEntry private static               double                  aiming_smooth_factor_vertical             = 0.002;
+	@ConfigEntry private static               double                  aiming_camera_offset_smooth_factor        = 0.100;
+	@ConfigEntry private static               double                  aiming_distance_smooth_factor             = 0.110;
+	@ConfigEntry private static               double                  normal_max_distance                       = 2.5;
+	@ConfigEntry private static               double                  normal_offset_x                           = -0.28;
+	@ConfigEntry private static               double                  normal_offset_y                           = 0.31;
+	@ConfigEntry private static               double                  normal_offset_center                      = 0.24D;
+	@ConfigEntry private static               double                  aiming_max_distance                       = 0.89;
+	@ConfigEntry private static               double                  aiming_offset_x                           = -0.47;
+	@ConfigEntry private static               double                  aiming_offset_y                           = -0.09;
+	@ConfigEntry private static               double                  aiming_offset_center                      = 0.48;
 	// ============================================================ //
-	@SuppressWarnings("unused")
-	public static       Option.Builder<Boolean> HIDDEN_OPTION_496                         = Option.<Boolean>createBuilder()
+	public static                             MonoList                distanceMonoList;
+	public static                             CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
+	// ============================================================ //
+	@SuppressWarnings("unused") public static Option.Builder<Boolean> HIDDEN_OPTION_496                         = Option.<Boolean>createBuilder()
 		.name(ConfigBuilders.getText("option.projectile_auto_aim"))
 		.description(OptionDescription.of(ConfigBuilders.getText("option.projectile_auto_aim.desc")))
 		.binding(true, () -> false, v -> {})
@@ -155,9 +121,7 @@ public class Config {
 					.binding(false, () -> lock_camera_pitch_angle, v -> lock_camera_pitch_angle = v)
 					.controller(TickBoxControllerBuilder::create)
 					.build())
-				.group(OptionGroup.createBuilder()
-					.name(ConfigBuilders.getText("option_group.player_rotation"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.player_rotation.desc")))
+				.group(ConfigBuilders.group("player_rotation")
 					.option(ConfigBuilders.<Boolean>option("player_rotate_with_camera_when_not_aiming")
 						.binding(false, () -> player_rotate_with_camera_when_not_aiming, v -> player_rotate_with_camera_when_not_aiming = v)
 						.controller(TickBoxControllerBuilder::create)
@@ -167,9 +131,7 @@ public class Config {
 						.controller(TickBoxControllerBuilder::create)
 						.build())
 					.build())
-				.group(OptionGroup.createBuilder()
-					.name(ConfigBuilders.getText("option_group.camera_distance_adjustment"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.camera_distance_adjustment.desc")))
+				.group(ConfigBuilders.group("camera_distance_adjustment")
 					.option(ConfigBuilders.<Integer>option("available_distance_count")
 						.binding(16, () -> available_distance_count, v -> {
 							available_distance_count = v; updateCameraDistances();
@@ -209,9 +171,7 @@ public class Config {
 					.binding(true, () -> turn_with_camera_when_enter_first_person, v -> turn_with_camera_when_enter_first_person = v)
 					.controller(TickBoxControllerBuilder::create)
 					.build())
-				.group(OptionGroup.createBuilder()
-					.name(ConfigBuilders.getText("option_group.behavior_interacting"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.behavior_interacting.desc")))
+				.group(ConfigBuilders.group("behavior_interacting")
 					.option(ConfigBuilders.<Boolean>option("auto_rotate_interacting")
 						.binding(true, () -> auto_rotate_interacting, v -> auto_rotate_interacting = v)
 						.controller(TickBoxControllerBuilder::create)
@@ -222,17 +182,13 @@ public class Config {
 							.valueFormatter(v -> ConfigBuilders.getText("option.rotate_interacting_type." + (v ? "turn_to_crosshair": "turn_with_camera"))))
 						.build())
 					.build())
-				.group(OptionGroup.createBuilder()   // 玩家淡出
-					.name(ConfigBuilders.getText("option_group.player_fade_out"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.player_fade_out.desc")))
+				.group(ConfigBuilders.group("player_fade_out")
 					.option(ConfigBuilders.<Boolean>option("player_fade_out_enabled")
 						.binding(true, () -> player_fade_out_enabled, v -> player_fade_out_enabled = v)
 						.controller(TickBoxControllerBuilder::create)
 						.build())
 					.build())
-				.group(OptionGroup.createBuilder()   // 准星
-					.name(ConfigBuilders.getText("option_group.crosshair"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.crosshair.desc")))
+				.group(ConfigBuilders.group("crosshair")
 					.option(ConfigBuilders.<Boolean>option("render_crosshair_when_not_aiming")
 						.binding(true, () -> render_crosshair_when_not_aiming, v -> render_crosshair_when_not_aiming = v)
 						.controller(TickBoxControllerBuilder::create)
@@ -247,23 +203,17 @@ public class Config {
 				.name(ConfigBuilders.getText("option_category.smooth_factors"))
 				.tooltip(ConfigBuilders.getText("option_category.smooth_factors.desc"))
 				.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.5, "flying_smooth_factor", () -> flying_smooth_factor, v -> flying_smooth_factor = v))
-				.group(OptionGroup.createBuilder()    // 调节相机
-					.name(ConfigBuilders.getText("option_group.adjusting_camera"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.adjusting_camera.desc")))
+				.group(ConfigBuilders.group("adjusting_camera")
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "adjusting_camera_offset_smooth_factor", () -> adjusting_camera_offset_smooth_factor, v -> adjusting_camera_offset_smooth_factor = v))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "adjusting_distance_smooth_factor", () -> adjusting_distance_smooth_factor, v -> adjusting_distance_smooth_factor = v))
 					.build())
-				.group(OptionGroup.createBuilder()    // 普通模式
-					.name(ConfigBuilders.getText("option_group.normal_mode"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.normal_mode.desc")))
+				.group(ConfigBuilders.group("normal_mode")
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.500, "smooth_factor_horizon", () -> normal_smooth_factor_horizon, v -> normal_smooth_factor_horizon = v))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.500, "smooth_factor_vertical", () -> normal_smooth_factor_vertical, v -> normal_smooth_factor_vertical = v))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.500, "camera_offset_smooth_factor", () -> normal_camera_offset_smooth_factor, v -> normal_camera_offset_smooth_factor = v))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.640, "distance_smooth_factor", () -> normal_distance_smooth_factor, v -> normal_distance_smooth_factor = v))
 					.build())
-				.group(OptionGroup.createBuilder()    // 瞄准模式
-					.name(ConfigBuilders.getText("option_group.aiming_mode"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.aiming_mode.desc")))
+				.group(ConfigBuilders.group("aiming_mode")
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.002, "smooth_factor_horizon", () -> aiming_smooth_factor_horizon, v -> aiming_smooth_factor_horizon = v))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.002, "smooth_factor_vertical", () -> aiming_smooth_factor_vertical, v -> aiming_smooth_factor_vertical = v))
 					.option(ConfigBuilders.SMOOTH_FACTOR_OPTION(0.100, "camera_offset_smooth_factor", () -> aiming_camera_offset_smooth_factor, v -> aiming_camera_offset_smooth_factor = v))
@@ -273,9 +223,7 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(ConfigBuilders.getText("option_category.camera_offset"))
 				.tooltip(ConfigBuilders.getText("option_category.camera_offset.desc"))
-				.group(OptionGroup.createBuilder()    // 普通模式
-					.name(ConfigBuilders.getText("option_group.normal_mode"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.normal_mode.desc")))
+				.group(ConfigBuilders.group("normal_mode")
 					.option(ConfigBuilders.<Double>option("max_distance")
 						.binding(2.50D, () -> normal_max_distance, v -> normal_max_distance = v)
 						.controller(opt -> DoubleSliderControllerBuilder.create(opt)
@@ -297,9 +245,7 @@ public class Config {
 						.controller(ConfigBuilders::OFFSET_CONTROLLER)
 						.build())
 					.build())
-				.group(OptionGroup.createBuilder()    // 瞄准模式
-					.name(ConfigBuilders.getText("option_group.aiming_mode"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.aiming_mode.desc")))
+				.group(ConfigBuilders.group("aiming_mode")
 					.option(ConfigBuilders.<Double>option("max_distance")
 						.binding(0.89D, () -> aiming_max_distance, v -> {
 							aiming_max_distance = v; updateCameraOffsetScheme();

@@ -31,8 +31,7 @@ public class ModOptions {
 	 * 当前是否显示准星
 	 */
 	public static boolean shouldRenderCrosshair () {
-		return CameraAgent.isAvailable() &&
-			   (CameraAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
+		return CameraAgent.isAvailable() && (CameraAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
 	}
 
 	/**
@@ -45,11 +44,8 @@ public class ModOptions {
 	public static boolean isAttachedEntityInvisible () {
 		Minecraft mc = Minecraft.getInstance();
 		if (Config.player_fade_out_enabled && mc.cameraEntity != null) {
-			return Math.min((CameraAgent.wasAiming
-							 ? Config.cameraOffsetScheme.aimingMode
-							 : Config.cameraOffsetScheme.normalMode).getMaxDistance(),
-							mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick)
-										   .distanceTo(CameraAgent.camera.getPosition())) <= Config.distanceMonoList.get(0);
+			return Math.min((CameraAgent.wasAiming ? Config.cameraOffsetScheme.aimingMode: Config.cameraOffsetScheme.normalMode).getMaxDistance(), mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick).distanceTo(CameraAgent.camera.getPosition())) <=
+				   Config.distanceMonoList.get(0);
 		} else {
 			return false;
 		}

@@ -22,14 +22,11 @@ public class ModKeys {
 	 * <p>
 	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
 	 */
-	public static final  KeyMapping ADJUST_POSITION   = new ThirdPersonKeyMapping("adjust_position",
-																				  InputConstants.KEY_Z).onDown(ModEvents::onStartAdjustingCameraOffset)
-																									   .onUp(ModEvents::onStopAdjustingCameraOffset);
+	public static final  KeyMapping ADJUST_POSITION   = new ThirdPersonKeyMapping("adjust_position", InputConstants.KEY_Z).onDown(ModEvents::onStartAdjustingCameraOffset).onUp(ModEvents::onStopAdjustingCameraOffset);
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final  KeyMapping FORCE_AIMING      = new ThirdPersonKeyMapping("force_aiming",
-																				  InputConstants.UNKNOWN.getValue());
+	public static final  KeyMapping FORCE_AIMING      = new ThirdPersonKeyMapping("force_aiming", InputConstants.UNKNOWN.getValue());
 	private static final KeyMapping TOOGLE_MOD_ENABLE = new ThirdPersonKeyMapping("toggle_mod_enable").onDown(() -> {
 		if (CameraAgent.isThirdPerson()) {
 			if (Config.is_mod_enable) {
@@ -52,8 +49,7 @@ public class ModKeys {
 	/**
 	 * 切换左右
 	 */
-	private static final KeyMapping TOGGLE_SIDE       = new ThirdPersonKeyMapping("toggle_side",
-																				  InputConstants.KEY_CAPSLOCK).onDown(() -> {
+	private static final KeyMapping TOGGLE_SIDE       = new ThirdPersonKeyMapping("toggle_side", InputConstants.KEY_CAPSLOCK).onDown(() -> {
 		if (Config.cameraOffsetScheme.isCenter()) {
 			Config.cameraOffsetScheme.nextSide();
 			return true;

@@ -6,7 +6,7 @@ end_of_line                 = crlf
 indent_size                 = 4
 indent_style                = tab
 insert_final_newline        = true
-max_line_length             = 128
+max_line_length             = 256
 tab_width                   = 4
 ij_continuation_indent_size = 4
 ij_formatter_off_tag        = @formatter:off
@@ -304,6 +304,8 @@ ij_java_special_else_if_treatment                       = true
 ij_java_ternary_operation_signs_on_next_line            = true
 ij_java_ternary_operation_wrap                          = on_every_item
 ij_java_use_fq_class_names                              = false
+ij_java_field_annotation_wrap                           = off
+ij_java_lambda_brace_style                              = end_of_line
 
 [*.nbtt]
 max_line_length                     = 150

@@ -26,12 +26,7 @@ public class CameraOffsetScheme {
 	private CameraOffsetScheme () {
 	}
 
-	public static CameraOffsetScheme create (double normalMaxDist,
-											 double normalOffsetX,
-											 double normalOffsetY,
-											 double aimingMaxDist,
-											 double aimingOffsetX,
-											 double aimingOffsetY) {
+	public static CameraOffsetScheme create (double normalMaxDist, double normalOffsetX, double normalOffsetY, double aimingMaxDist, double aimingOffsetX, double aimingOffsetY) {
 		final CameraOffsetScheme scheme = new CameraOffsetScheme();
 		scheme.normalMode = new CameraOffsetMode(scheme, normalMaxDist, normalOffsetX, normalOffsetY);
 		scheme.aimingMode = new CameraOffsetMode(scheme, aimingMaxDist, aimingOffsetX, aimingOffsetY);

@@ -11,8 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(net.minecraft.client.MouseHandler.class)
 public class MouseHandlerMixin {
-	@Inject(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"),
-			locals=LocalCapture.CAPTURE_FAILHARD, cancellable=true)
+	@Inject(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), locals=LocalCapture.CAPTURE_FAILHARD, cancellable=true)
 	private void turnPlayerInject (CallbackInfo ci, double d1, double dx, double dy, int m) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
 			if (Minecraft.getInstance().options.invertYMouse().get()) {

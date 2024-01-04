@@ -24,9 +24,7 @@ public class ThirdPersonModForge {
 			EventBuses.registerModEventBus(ThirdPersonMod.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
 			ThirdPersonMod.init();
 			// 配置屏幕
-			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-														   () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> Config.getConfigScreen(
-															   screen)));
+			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> Config.getConfigScreen(screen)));
 		});
 	}
 }

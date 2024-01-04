@@ -108,8 +108,7 @@ public class CameraAgent {
 			x *= Config.lock_camera_pitch_angle ? 0: -0.15;
 			if (y != 0 || x != 0) {
 				lastCameraTurnTimeStamp = Blaze3D.getTime();
-				relativeRotation        = new Vec2d(Mth.clamp(relativeRotation.x + x, -89.8, 89.8),
-													(relativeRotation.y + y) % 360f);
+				relativeRotation        = new Vec2d(Mth.clamp(relativeRotation.x + x, -89.8, 89.8), (relativeRotation.y + y) % 360f);
 			}
 		}
 	}
@@ -135,8 +134,7 @@ public class CameraAgent {
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(Config.distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
-			relativeRotation = new Vec2d(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick),
-										 mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
+			relativeRotation = new Vec2d(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick), mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
 		}
 		LOGGER.info("Reset CameraAgent");
 	}
@@ -205,9 +203,7 @@ public class CameraAgent {
 		boolean   isHorizontalZero       = sf.x * sf.z == 0;
 		boolean   isVerticalZero         = sf.y == 0;
 		if (isHorizontalZero || isVerticalZero) {
-			smoothEyePositionValue = new Vec3(isHorizontalZero ? eyePosition.x: smoothEyePositionValue.x,
-											  isVerticalZero ? eyePosition.y: smoothEyePositionValue.y,
-											  isHorizontalZero ? eyePosition.z: smoothEyePositionValue.z);
+			smoothEyePositionValue = new Vec3(isHorizontalZero ? eyePosition.x: smoothEyePositionValue.x, isVerticalZero ? eyePosition.y: smoothEyePositionValue.y, isHorizontalZero ? eyePosition.z: smoothEyePositionValue.z);
 		}
 		return smoothEyePositionValue;
 	}
@@ -219,9 +215,7 @@ public class CameraAgent {
 	public static void updateSmoothVirtualDistance (double period) {
 		boolean          isAdjusting = ModOptions.isAdjustingCameraOffset();
 		CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
-		smoothDistanceToEye.setSmoothFactor(isAdjusting
-											? Config.adjusting_distance_smooth_factor
-											: mode.getDistanceSmoothFactor());
+		smoothDistanceToEye.setSmoothFactor(isAdjusting ? Config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
 		smoothDistanceToEye.setTarget(mode.getMaxDistance()).update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
 		if (!Config.cameraOffsetScheme.isAiming && !isAdjusting) {
@@ -231,9 +225,7 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double period) {
 		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
-		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset()
-										  ? new Vec2d(Config.adjusting_camera_offset_smooth_factor)
-										  : mode.getOffsetSmoothFactor());
+		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset() ? new Vec2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}
@@ -310,11 +302,7 @@ public class CameraAgent {
 			offsetY *= offset;
 			offsetZ *= offset;
 			Vec3 pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
-			HitResult hitresult = level.clip(new ClipContext(pickStart,
-															 pickStart.add(smoothEyeToCamera),
-															 ClipContext.Block.VISUAL,
-															 ClipContext.Fluid.NONE,
-															 Minecraft.getInstance().cameraEntity));
+			HitResult hitresult = level.clip(new ClipContext(pickStart, pickStart.add(smoothEyeToCamera), ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));
 			if (hitresult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
 			}
@@ -362,11 +350,7 @@ public class CameraAgent {
 	public static @NotNull HitResult pick (double pickRange) {
 		EntityHitResult ehr = pickEntity(pickRange);
 		BlockHitResult  bhr = pickBlock(pickRange);
-		return ehr == null
-			   ? bhr
-			   : bhr.getLocation().distanceTo(camera.getPosition()) < ehr.getLocation().distanceTo(camera.getPosition())
-				 ? bhr
-				 : ehr;
+		return ehr == null ? bhr: bhr.getLocation().distanceTo(camera.getPosition()) < ehr.getLocation().distanceTo(camera.getPosition()) ? bhr: ehr;
 	}
 
 	private static @Nullable EntityHitResult pickEntity (double pickRange) {
@@ -379,12 +363,7 @@ public class CameraAgent {
 		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
 		//
 		AABB aabb = mc.cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-		return ProjectileUtil.getEntityHitResult(mc.cameraEntity,
-												 viewStart,
-												 viewEnd,
-												 aabb,
-												 (Entity target) -> !target.isSpectator() && target.isPickable(),
-												 pickRange);
+		return ProjectileUtil.getEntityHitResult(mc.cameraEntity, viewStart, viewEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange);
 	}
 
 	/**
@@ -398,10 +377,6 @@ public class CameraAgent {
 		Vec3      viewEnd    = viewVector.scale(pickRange).add(viewStart);
 		Minecraft mc         = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
-		return mc.cameraEntity.level.clip(new ClipContext(viewStart,
-														  viewEnd,
-														  wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE,
-														  ClipContext.Fluid.NONE,
-														  mc.cameraEntity));
+		return mc.cameraEntity.level.clip(new ClipContext(viewStart, viewEnd, wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.cameraEntity));
 	}
 }
