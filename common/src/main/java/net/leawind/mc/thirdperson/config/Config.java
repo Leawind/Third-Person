@@ -19,8 +19,6 @@ import net.leawind.mc.util.monolist.MonoList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -293,13 +291,13 @@ public class Config {
 		CameraOffsetScheme scheme = CameraOffsetScheme.create(normal_max_distance, normal_offset_x, normal_offset_y, aiming_max_distance, aiming_offset_x, aiming_offset_y);
 		// Normal mode //
 		scheme.normalMode.setDistanceSmoothFactor(normal_distance_smooth_factor)
-			.setOffsetSmoothFactor(new Vector2d(normal_camera_offset_smooth_factor))
-			.setEyeSmoothFactor(new Vector3d(normal_smooth_factor_horizon, normal_smooth_factor_vertical, normal_smooth_factor_horizon))
+			.setOffsetSmoothFactor(normal_camera_offset_smooth_factor)
+			.setEyeSmoothFactor(normal_smooth_factor_horizon, normal_smooth_factor_vertical)
 			.setCenterOffsetRatio(normal_offset_center);
 		// Aiming mode //
 		scheme.aimingMode.setDistanceSmoothFactor(aiming_distance_smooth_factor)
-			.setOffsetSmoothFactor(new Vector2d(aiming_camera_offset_smooth_factor))
-			.setEyeSmoothFactor(new Vector3d(aiming_smooth_factor_horizon, aiming_smooth_factor_vertical, aiming_smooth_factor_horizon))
+			.setOffsetSmoothFactor(aiming_camera_offset_smooth_factor)
+			.setEyeSmoothFactor(aiming_smooth_factor_horizon, aiming_smooth_factor_vertical)
 			.setCenterOffsetRatio(aiming_offset_center);
 		// apply
 		cameraOffsetScheme = scheme;
@@ -314,10 +312,10 @@ public class Config {
 	 */
 	public static void loadFromCameraOffsetScheme () {
 		// Normal mode //
-		normal_max_distance  = cameraOffsetScheme.normalMode.getMaxDistance(); normal_offset_x = cameraOffsetScheme.normalMode.getOffsetValue().x; normal_offset_y = cameraOffsetScheme.normalMode.getOffsetValue().y;
+		normal_max_distance  = cameraOffsetScheme.normalMode.getMaxDistance();normal_offset_x = cameraOffsetScheme.normalMode.getSideOffsetRatio().x;normal_offset_y = cameraOffsetScheme.normalMode.getSideOffsetRatio().y;
 		normal_offset_center = cameraOffsetScheme.normalMode.getCenterOffsetRatio();
 		// Aiming mode //
-		aiming_max_distance  = cameraOffsetScheme.aimingMode.getMaxDistance(); aiming_offset_x = cameraOffsetScheme.aimingMode.getOffsetValue().x; aiming_offset_y = cameraOffsetScheme.aimingMode.getOffsetValue().y;
+		aiming_max_distance  = cameraOffsetScheme.aimingMode.getMaxDistance();aiming_offset_x = cameraOffsetScheme.aimingMode.getSideOffsetRatio().x;aiming_offset_y = cameraOffsetScheme.aimingMode.getSideOffsetRatio().y;
 		aiming_offset_center = cameraOffsetScheme.aimingMode.getCenterOffsetRatio();
 	}
 

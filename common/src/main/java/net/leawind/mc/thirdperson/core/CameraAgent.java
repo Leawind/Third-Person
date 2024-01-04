@@ -38,7 +38,9 @@ public class CameraAgent {
 	public static final double            NEAR_PLANE_DISTANCE        = 0.05;
 	@Nullable
 	public static       BlockGetter       level;
+	@Nullable
 	public static       Camera            camera;
+	@NotNull
 	public static       Camera            fakeCamera                 = new Camera();
 	/**
 	 * renderTick 中更新
@@ -56,21 +58,22 @@ public class CameraAgent {
 	 * 上次玩家操控转动视角的时间
 	 */
 	public static       double            lastCameraTurnTimeStamp    = 0;
-	public static       Vector2d          relativeRotation           = new Vector2d(0);
+	@NotNull
+	public static final Vector2d          relativeRotation           = new Vector2d(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static       ExpSmoothVector2d smoothOffsetRatio          =//
+	public static final ExpSmoothVector2d smoothOffsetRatio          =//
 		(ExpSmoothVector2d)new ExpSmoothVector2d().setSmoothFactorWeight(10).set(new Vector2d(0));
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static       ExpSmoothVector3d smoothEyePosition          = //
+	public static final ExpSmoothVector3d smoothEyePosition          = //
 		new ExpSmoothVector3d().setSmoothFactorWeight(8);
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static       ExpSmoothDouble   smoothDistanceToEye        =//
+	public static final ExpSmoothDouble   smoothDistanceToEye        =//
 		(ExpSmoothDouble)new ExpSmoothDouble().setSmoothFactorWeight(4).set(0D);
 
 	/**

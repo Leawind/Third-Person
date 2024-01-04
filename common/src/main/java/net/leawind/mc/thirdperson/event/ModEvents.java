@@ -15,11 +15,8 @@ import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import org.joml.Vector2d;
 
 public class ModEvents {
-	public static final long PERIOD = 1000 / 100;
-
 	public static void register () {
 		ClientTickEvent.CLIENT_PRE.register(ModEvents::onClientTickPost);
 		ClientLifecycleEvent.CLIENT_STARTED.register(ModEvents::onClientStarted);
@@ -27,8 +24,6 @@ public class ModEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
 	}
-
-	public static long lastSmoothTick = 0;
 
 	private static void onClientTickPost (Minecraft mc) {
 		if (mc.isPaused()) {
@@ -104,15 +99,15 @@ public class ModEvents {
 			scheme.getMode().setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
-			double offsetX = scheme.getMode().getOffsetValue().x;
-			double offsetY = scheme.getMode().getOffsetValue().y;
+			double offsetX = scheme.getMode().getSideOffsetRatio().x;
+			double offsetY = scheme.getMode().getSideOffsetRatio().y;
 			offsetX += -xMove / mc.getWindow().getScreenWidth();
 			offsetY += -yMove / mc.getWindow().getScreenHeight();
 			offsetX = Mth.clamp(offsetX, -1, 1);
 			offsetY = Mth.clamp(offsetY, -1, 1);
 			double newXsgn = Math.signum(offsetX);
 			scheme.setSide(newXsgn);
-			scheme.getMode().setOffsetRatio(new Vector2d(offsetX, offsetY));
+			scheme.getMode().setSideOffsetRatio(offsetX, offsetY);
 		}
 	}
 

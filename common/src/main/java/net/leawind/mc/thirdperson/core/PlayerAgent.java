@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
@@ -22,8 +21,7 @@ import org.slf4j.LoggerFactory;
 public class PlayerAgent {
 	@SuppressWarnings("unused")
 	public static final Logger   LOGGER                   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static       Vec3     absoluteImpulse          = Vec3.ZERO;
-	public static       Vector2f horizonalAbsoluteImpulse = new Vector2f(0);
+	public static final Vector2f horizonalAbsoluteImpulse = new Vector2f(0);
 	public static       boolean  wasInterecting           = false;
 	public static       float    lastPartialTick          = 1F;
 
