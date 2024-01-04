@@ -26,7 +26,7 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	@Override
 	public ExpSmoothVector3d update (double period) {
 		super.preUpdate();
-		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, smoothFactorWeight.mul(period)).mul(-1).add(1, 1, 1));
+		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, new Vector3d(smoothFactorWeight).mul(period)).negate().add(1, 1, 1));
 		return this;
 	}
 

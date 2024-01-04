@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import net.leawind.mc.util.math.Vec2d;
+import org.joml.Vector2d;
 import org.joml.Vector3d;
 
 public class CameraOffsetMode {
@@ -17,7 +17,7 @@ public class CameraOffsetMode {
 	/**
 	 * 相机偏移量的平滑系数
 	 */
-	private Vec2d              offsetSmoothFactor   = Vec2d.ZERO;
+	private Vector2d           offsetSmoothFactor   = new Vector2d(0);
 	/**
 	 * 到平滑眼睛的最大距离
 	 */
@@ -27,17 +27,17 @@ public class CameraOffsetMode {
 	 * <p>
 	 * 表示玩家眼睛在屏幕上的位置，x 和 y 的范围都是 [-1, 1]
 	 */
-	private Vec2d              offsetRatio          = Vec2d.ZERO;
+	private Vector2d           offsetRatio          = new Vector2d(0);
 	/**
 	 * 当切换到头顶视角时的y偏移量（x偏移固定为0）
 	 */
 	private double             centerOffsetRatio    = 0.25;
 
 	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, double x, double y) {
-		this(scheme, maxDist, new Vec2d(x, y));
+		this(scheme, maxDist, new Vector2d(x, y));
 	}
 
-	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, Vec2d offset) {
+	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, Vector2d offset) {
 		this.cameraOffsetScheme = scheme;
 		setMaxDistance(maxDist);
 		setOffsetRatio(offset);
@@ -64,11 +64,11 @@ public class CameraOffsetMode {
 		return this;
 	}
 
-	public Vec2d getOffsetSmoothFactor () {
+	public Vector2d getOffsetSmoothFactor () {
 		return offsetSmoothFactor;
 	}
 
-	public CameraOffsetMode setOffsetSmoothFactor (Vec2d smoothFactor) {
+	public CameraOffsetMode setOffsetSmoothFactor (Vector2d smoothFactor) {
 		offsetSmoothFactor = smoothFactor;
 		cameraOffsetScheme.onModify();
 		return this;
@@ -86,19 +86,19 @@ public class CameraOffsetMode {
 
 	public CameraOffsetMode setSide (boolean isLeft) {
 		if (isLeft && offsetRatio.x < 0) {
-			offsetRatio = new Vec2d(-offsetRatio.x, offsetRatio.y);
+			offsetRatio.set(-offsetRatio.x, offsetRatio.y);
 		} else if (!isLeft && offsetRatio.x > 0) {
-			offsetRatio = new Vec2d(-offsetRatio.x, offsetRatio.y);
+			offsetRatio.set(-offsetRatio.x, offsetRatio.y);
 		}
 		cameraOffsetScheme.onModify();
 		return this;
 	}
 
-	public Vec2d getOffsetRatio () {
-		return cameraOffsetScheme.isCenter ? new Vec2d(0, getCenterOffsetRatio()): getOffsetValue();
+	public Vector2d getOffsetRatio () {
+		return cameraOffsetScheme.isCenter ? new Vector2d(0, getCenterOffsetRatio()): getOffsetValue();
 	}
 
-	public CameraOffsetMode setOffsetRatio (Vec2d offset) {
+	public CameraOffsetMode setOffsetRatio (Vector2d offset) {
 		offsetRatio = offset;
 		cameraOffsetScheme.onModify();
 		return this;
@@ -108,7 +108,7 @@ public class CameraOffsetMode {
 		return centerOffsetRatio;
 	}
 
-	public Vec2d getOffsetValue () {
+	public Vector2d getOffsetValue () {
 		return offsetRatio;
 	}
 

@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.math.Vec2d;
+import org.joml.Vector2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,8 +77,8 @@ public class CameraOffsetScheme {
 		if (isCenter) {
 			isCenter = false;
 		} else {
-			aimingMode.setOffsetRatio(new Vec2d(-aimingMode.getOffsetValue().x, aimingMode.getOffsetValue().y));
-			normalMode.setOffsetRatio(new Vec2d(-normalMode.getOffsetValue().x, normalMode.getOffsetValue().y));
+			aimingMode.setOffsetRatio(new Vector2d(-aimingMode.getOffsetValue().x, aimingMode.getOffsetValue().y));
+			normalMode.setOffsetRatio(new Vector2d(-normalMode.getOffsetValue().x, normalMode.getOffsetValue().y));
 		}
 		onModify();
 	}

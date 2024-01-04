@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.math.Vec2d;
 import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector2d;
 import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
@@ -68,7 +68,7 @@ public class PlayerAgent {
 	}
 
 	public static void turnToDirection (Vector3d v, boolean isInstantly) {
-		Vec2d rotation = Vectors.rotationDegreeFromDirection(v);
+		Vector2d rotation = Vectors.rotationDegreeFromDirection(v);
 		turnToRotation(rotation, isInstantly);
 	}
 
@@ -78,7 +78,7 @@ public class PlayerAgent {
 	 * @param rot         朝向
 	 * @param isInstantly 是否瞬间转动
 	 */
-	public static void turnToRotation (Vec2d rot, boolean isInstantly) {
+	public static void turnToRotation (Vector2d rot, boolean isInstantly) {
 		turnToRotation(rot.y, rot.x, isInstantly);
 	}
 
@@ -131,7 +131,7 @@ public class PlayerAgent {
 			return;
 		} else {
 			// 键盘控制的移动方向
-			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vec2d(horizonalAbsoluteImpulse));
+			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vector2d(horizonalAbsoluteImpulse));
 			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 		}
 	}

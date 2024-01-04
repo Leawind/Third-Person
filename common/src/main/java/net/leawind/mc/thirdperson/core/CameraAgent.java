@@ -7,10 +7,9 @@ import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
-import net.leawind.mc.util.math.Vec2d;
 import net.leawind.mc.util.math.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
-import net.leawind.mc.util.smoothvalue.ExpSmoothVec2d;
+import net.leawind.mc.util.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
@@ -24,6 +23,7 @@ import net.minecraft.world.phys.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2d;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,12 +56,12 @@ public class CameraAgent {
 	 * 上次玩家操控转动视角的时间
 	 */
 	public static       double            lastCameraTurnTimeStamp    = 0;
-	public static       Vec2d             relativeRotation           = Vec2d.ZERO;
+	public static       Vector2d          relativeRotation           = new Vector2d(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static       ExpSmoothVec2d    smoothOffsetRatio          =//
-		(ExpSmoothVec2d)new ExpSmoothVec2d().setSmoothFactorWeight(10).set(Vec2d.ZERO);
+	public static       ExpSmoothVector2d smoothOffsetRatio          =//
+		(ExpSmoothVector2d)new ExpSmoothVector2d().setSmoothFactorWeight(10).set(new Vector2d(0));
 	/**
 	 * 眼睛的平滑位置
 	 */
@@ -109,7 +109,7 @@ public class CameraAgent {
 			x *= Config.lock_camera_pitch_angle ? 0: -0.15;
 			if (y != 0 || x != 0) {
 				lastCameraTurnTimeStamp = Blaze3D.getTime();
-				relativeRotation        = new Vec2d(Mth.clamp(relativeRotation.x + x, -89.8, 89.8), (relativeRotation.y + y) % 360f);
+				relativeRotation.set(Mth.clamp(relativeRotation.x + x, -89.8, 89.8), (relativeRotation.y + y) % 360f);
 			}
 		}
 	}
@@ -135,7 +135,7 @@ public class CameraAgent {
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(Config.distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
-			relativeRotation = new Vec2d(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick), mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
+			relativeRotation.set(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick), mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
 		}
 		LOGGER.info("Reset CameraAgent");
 	}
@@ -226,7 +226,7 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double period) {
 		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
-		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset() ? new Vec2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
+		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset() ? new Vector2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}
@@ -270,8 +270,8 @@ public class CameraAgent {
 		//		// 水平视野角度一半(弧度制）
 		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
 		// 平滑值
-		Vec2d  smoothOffsetRatioValue     = smoothOffsetRatio.get();
-		double smoothVirtualDistanceValue = smoothDistanceToEye.get();
+		Vector2d smoothOffsetRatioValue     = smoothOffsetRatio.get();
+		double   smoothVirtualDistanceValue = smoothDistanceToEye.get();
 		// 偏移量
 		double upOffset   = smoothOffsetRatioValue.y * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
 		double leftOffset = smoothOffsetRatioValue.x * smoothVirtualDistanceValue * widthHalf / NEAR_PLANE_DISTANCE;
@@ -323,8 +323,8 @@ public class CameraAgent {
 	/**
 	 * 根据相对角度计算相机朝向
 	 */
-	public static Vec2d calculateRotation () {
-		return new Vec2d(relativeRotation.y + 180, -relativeRotation.x);
+	public static Vector2d calculateRotation () {
+		return new Vector2d(relativeRotation.y + 180, -relativeRotation.x);
 	}
 
 	/**
