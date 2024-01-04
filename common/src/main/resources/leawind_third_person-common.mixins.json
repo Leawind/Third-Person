@@ -11,9 +11,9 @@
 		"GuiMixin",
 		"KeyboardInputMixin",
 		"LocalPlayerMixin",
-		"MinecraftMixin",
 		"MouseHandlerMixin",
-		"EntityMixin"
+		"EntityMixin",
+		"GameRendererMixin"
 	],
 	"mixins": [],
 	"injectors": {

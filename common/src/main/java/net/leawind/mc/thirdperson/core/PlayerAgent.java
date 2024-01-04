@@ -142,11 +142,12 @@ public class PlayerAgent {
 		} else if (!CameraAgent.isControlledCamera()) {
 			return;
 		}
+		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		if (CameraAgent.wasAiming) {
 			turnToCameraHitResult(true);
 		} else if (mc.cameraEntity.isUnderWater()) {
 			turnToCameraRotation(true);
-		} else if (wasInterecting) {
+		} else if (wasInterecting) {//DOITNOW
 			turnToCameraHitResult(true);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			turnToCameraRotation(true);

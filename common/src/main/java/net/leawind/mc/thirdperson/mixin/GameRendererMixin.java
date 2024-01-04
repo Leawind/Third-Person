@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 /**
- * 方法 Entity#pick 用于计算玩家视线落点
+ * 方法 GameRenderer#pick 用于计算玩家pick的实体
  * <p>
- * 为了在第三人称视角中能够随时选取准星所指的方块，将获取到的玩家 viewVector 修改为朝向相机视线落点的方向
+ * 为了在第三人称视角中能够随时选取准星所指的实体，将获取到的玩家 viewVector 修改为朝向相机视线落点的方向
  */
-@Mixin(net.minecraft.world.entity.Entity.class)
-public class EntityMixin {
+@Mixin(net.minecraft.client.renderer.GameRenderer.class)
+public class GameRendererMixin {
 	/**
 	 * 在 viewVector 赋值时截获，重新计算 viewVector 的值。这样就可以计算出正确的 pickEnd 和 aabb
 	 */
