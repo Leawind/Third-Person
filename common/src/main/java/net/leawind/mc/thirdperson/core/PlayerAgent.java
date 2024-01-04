@@ -150,12 +150,13 @@ public class PlayerAgent {
 			} else if (Config.player_rotate_with_camera_when_not_aiming) {
 				PlayerAgent.turnToCameraRotation(true);
 			} else if (PlayerAgent.wasInterecting) {//DOITNOW
-				//				switch (Config.behavior_interecting) {
-				//					case TURN_TO_HIT_RESULT -> turnToCameraHitResult(true);
-				//					case TURN_WITH_CAMERA -> PlayerAgent.turnToCameraRotation(true);
-				//					case NO_TURN -> {
-				//					}
-				//				}
+				if (Config.auto_rotate_interacting) {
+					if (Config.rotate_interacting_type) {
+						turnToCameraHitResult(true);
+					} else {
+						turnToCameraRotation(true);
+					}
+				}
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import dev.isxander.yacl3.api.*;
+import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
@@ -76,6 +77,10 @@ public class Config {
 	@ConfigEntry
 	public static       double                  camera_ray_trace_length                   = 256;
 	@ConfigEntry
+	public static       boolean                 auto_rotate_interacting                   = true;
+	@ConfigEntry
+	public static       boolean                 rotate_interacting_type                   = true;
+	@ConfigEntry
 	private static      int                     available_distance_count                  = 16;
 	@ConfigEntry
 	private static      double                  camera_distance_min                       = 0.5;
@@ -119,10 +124,10 @@ public class Config {
 	private static      double                  aiming_offset_y                           = -0.09;
 	@ConfigEntry
 	private static      double                  aiming_offset_center                      = 0.48;
-	// ============================================================//
+	// ============================================================ //
 	public static       MonoList                distanceMonoList;
 	public static       CameraOffsetScheme      cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT;
-	// ============================================================//
+	// ============================================================ //
 	@SuppressWarnings("unused")
 	public static       Option.Builder<Boolean> HIDDEN_OPTION_496                         = Option.<Boolean>createBuilder()
 		.name(ConfigBuilders.getText("option.projectile_auto_aim"))
@@ -204,15 +209,18 @@ public class Config {
 					.binding(true, () -> turn_with_camera_when_enter_first_person, v -> turn_with_camera_when_enter_first_person = v)
 					.controller(TickBoxControllerBuilder::create)
 					.build())
-				//				 DOITNOW
-				//				 .option(ConfigBuilders.<BehaviorInterecting>option("behavior_interecting")
-				//				 	.binding(BehaviorInterecting.TURN_TO_HIT_RESULT, () -> behavior_interecting, v -> behavior_interecting = v)
-				//				 	.controller(opt -> EnumControllerBuilder.create(opt)
-				//				 		.enumClass(BehaviorInterecting.class))
-				//				 	.build())
 				.group(OptionGroup.createBuilder()
-					.name(ConfigBuilders.getText("option_group.behavior_interecting"))
-					.description(OptionDescription.of(ConfigBuilders.getText("option_group.behavior_interecting.desc")))
+					.name(ConfigBuilders.getText("option_group.behavior_interacting"))
+					.description(OptionDescription.of(ConfigBuilders.getText("option_group.behavior_interacting.desc")))
+					.option(ConfigBuilders.<Boolean>option("auto_rotate_interacting")
+						.binding(true, () -> auto_rotate_interacting, v -> auto_rotate_interacting = v)
+						.controller(TickBoxControllerBuilder::create)
+						.build())
+					.option(ConfigBuilders.<Boolean>option("rotate_interacting_type")
+						.binding(false, () -> rotate_interacting_type, v -> rotate_interacting_type = v)
+						.controller(opt -> BooleanControllerBuilder.create(opt)
+							.valueFormatter(v -> ConfigBuilders.getText("option.rotate_interacting_type." + (v ? "turn_to_crosshair": "turn_with_camera"))))
+						.build())
 					.build())
 				.group(OptionGroup.createBuilder()   // 玩家淡出
 					.name(ConfigBuilders.getText("option_group.player_fade_out"))
@@ -419,7 +427,7 @@ public class Config {
 
 		@Override
 		public Component getDisplayName () {
-			return Component.translatable(ThirdPersonMod.MOD_ID + ".behavior_interecting." + name);
+			return Component.translatable(ThirdPersonMod.MOD_ID + ".behavior_interacting." + name);
 		}
 	}
 }
