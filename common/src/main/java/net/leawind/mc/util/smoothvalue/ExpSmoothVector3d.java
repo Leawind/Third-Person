@@ -1,7 +1,7 @@
 package net.leawind.mc.util.smoothvalue;
 
 
-import net.leawind.mc.util.math.Vectors;
+import net.leawind.mc.util.Vectors;
 import org.joml.Vector3d;
 
 @SuppressWarnings("unused")

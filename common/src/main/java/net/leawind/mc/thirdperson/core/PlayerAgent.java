@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.math.Vectors;
+import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.world.entity.LivingEntity;

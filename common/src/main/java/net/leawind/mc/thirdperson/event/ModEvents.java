@@ -12,7 +12,7 @@ import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModOptions;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.util.math.Vectors;
+import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 

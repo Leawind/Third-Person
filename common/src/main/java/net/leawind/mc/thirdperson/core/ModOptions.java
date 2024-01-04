@@ -1,8 +1,10 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
+import net.leawind.mc.util.deferedvalue.DeferedBoolean;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 
@@ -17,7 +19,7 @@ public class ModOptions {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return isAdjustingCameraDistance() && !isAttachedEntityInvisible();
+		return isAdjustingCameraDistance() && !deferedIsAttachedEntityInvisible(Blaze3D.getTime());
 	}
 
 	public static boolean isAdjustingCameraDistance () {
@@ -59,5 +61,11 @@ public class ModOptions {
 		} else {
 			return eyePosition.distanceTo(cameraPosition) <= Config.distanceMonoList.get(0);
 		}
+	}
+
+	public static DeferedBoolean deferedInvisible = new DeferedBoolean(false).setDelay(0, 0.1);
+
+	public static boolean deferedIsAttachedEntityInvisible (double t) {
+		return deferedInvisible.set(isAttachedEntityInvisible()).get(t);
 	}
 }

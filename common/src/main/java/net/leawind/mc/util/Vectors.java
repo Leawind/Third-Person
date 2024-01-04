@@ -1,4 +1,4 @@
-package net.leawind.mc.util.math;
+package net.leawind.mc.util;
 
 
 import net.minecraft.util.Mth;

@@ -7,7 +7,7 @@ import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
-import net.leawind.mc.util.math.Vectors;
+import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVector3d;
@@ -178,8 +178,9 @@ public class CameraAgent {
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
-			wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
+			wasAttachedEntityInvisible = ModOptions.deferedIsAttachedEntityInvisible(now);
 			if (wasAttachedEntityInvisible) {
+				// 假的第一人称，强制将相机放在玩家眼睛处
 				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
 				applyCamera();
 			}
