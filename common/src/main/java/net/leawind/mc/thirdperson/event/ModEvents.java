@@ -31,9 +31,11 @@ public class ModEvents {
 	public static long lastSmoothTick = 0;
 
 	private static void onClientTickPost (Minecraft mc) {
-		if (!mc.isPaused()) {
-			CameraAgent.updateSmoothEyePosition(0.05);
+		if (mc.isPaused()) {
+			return;
 		}
+		CameraAgent.updateSmoothEyePosition(0.05);
+		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 	}
 
 	private static void onClientStarted (Minecraft minecraft) {

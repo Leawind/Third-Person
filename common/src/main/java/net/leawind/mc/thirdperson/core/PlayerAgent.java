@@ -85,23 +85,25 @@ public class PlayerAgent {
 	/**
 	 * 设置玩家朝向
 	 *
-	 * @param ry          偏航角
-	 * @param rx          俯仰角
+	 * @param y           偏航角
+	 * @param x           俯仰角
 	 * @param isInstantly 是否瞬间转动
 	 */
-	public static void turnToRotation (double ry, double rx, boolean isInstantly) {
+	public static void turnToRotation (double y, double x, boolean isInstantly) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
-				mc.player.setYRot((float)ry);
-				mc.player.setXRot((float)rx);
+				mc.player.setYRot((float)y);
+				mc.player.setXRot((float)x);
 			} else {
-				double playerY = mc.player.getViewYRot(lastPartialTick);
-				double dy      = ((ry - playerY) % 360 + 360) % 360;
+				double previousY = mc.player.getViewYRot(lastPartialTick);
+				double dy        = ((y - previousY) % 360 + 360) % 360;
 				if (dy > 180) {
 					dy -= 360;
 				}
-				mc.player.turn(dy, rx - mc.player.getViewXRot(lastPartialTick));
+				double previousX = mc.player.getViewXRot(lastPartialTick);
+				double dx        = x - previousX;
+				mc.player.turn(dy, dx);
 			}
 		}
 	}
@@ -134,27 +136,27 @@ public class PlayerAgent {
 		}
 	}
 
-	@PerformanceSensitive
 	public static void onRenderTick () {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.cameraEntity == null) {
-			return;
-		} else if (!CameraAgent.isControlledCamera()) {
-			return;
-		}
-		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
-		if (CameraAgent.wasAiming) {
-			turnToCameraHitResult(true);
-		} else if (mc.cameraEntity.isUnderWater()) {
-			turnToCameraRotation(true);
-		} else if (wasInterecting) {//DOITNOW
-			turnToCameraHitResult(true);
-		} else if (CameraAgent.wasAttachedEntityInvisible) {
-			turnToCameraRotation(true);
-		} else if (mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying()) {
-			turnToCameraRotation(true);
-		} else if (Config.player_rotate_with_camera_when_not_aiming) {
-			turnToCameraRotation(true);
+		if (CameraAgent.isControlledCamera()) {
+			if (CameraAgent.wasAiming) {
+				PlayerAgent.turnToCameraHitResult(true);
+			} else if (mc.player != null && mc.player.isUnderWater()) {
+				PlayerAgent.turnToCameraRotation(true);
+			} else if (mc.player != null && mc.player.isFallFlying()) {
+				PlayerAgent.turnToCameraRotation(true);
+			} else if (CameraAgent.wasAttachedEntityInvisible) {
+				PlayerAgent.turnToCameraRotation(true);
+			} else if (Config.player_rotate_with_camera_when_not_aiming) {
+				PlayerAgent.turnToCameraRotation(true);
+			} else if (PlayerAgent.wasInterecting) {//DOITNOW
+				//				switch (Config.behavior_interecting) {
+				//					case TURN_TO_HIT_RESULT -> turnToCameraHitResult(true);
+				//					case TURN_WITH_CAMERA -> PlayerAgent.turnToCameraRotation(true);
+				//					case NO_TURN -> {
+				//					}
+				//				}
+			}
 		}
 	}
 

@@ -204,6 +204,16 @@ public class Config {
 					.binding(true, () -> turn_with_camera_when_enter_first_person, v -> turn_with_camera_when_enter_first_person = v)
 					.controller(TickBoxControllerBuilder::create)
 					.build())
+				//				 DOITNOW
+				//				 .option(ConfigBuilders.<BehaviorInterecting>option("behavior_interecting")
+				//				 	.binding(BehaviorInterecting.TURN_TO_HIT_RESULT, () -> behavior_interecting, v -> behavior_interecting = v)
+				//				 	.controller(opt -> EnumControllerBuilder.create(opt)
+				//				 		.enumClass(BehaviorInterecting.class))
+				//				 	.build())
+				.group(OptionGroup.createBuilder()
+					.name(ConfigBuilders.getText("option_group.behavior_interecting"))
+					.description(OptionDescription.of(ConfigBuilders.getText("option_group.behavior_interecting.desc")))
+					.build())
 				.group(OptionGroup.createBuilder()   // 玩家淡出
 					.name(ConfigBuilders.getText("option_group.player_fade_out"))
 					.description(OptionDescription.of(ConfigBuilders.getText("option_group.player_fade_out.desc")))
@@ -395,5 +405,21 @@ public class Config {
 	 */
 	public static void onLoad () {
 		updateCameraDistances(); updateCameraOffsetScheme();
+	}
+
+	public enum BehaviorInterecting implements NameableEnum {
+		TURN_TO_HIT_RESULT("turn_to_hit_result"),
+		TURN_WITH_CAMERA("turn_with_camera"),
+		NO_TURN("no_turn");
+		public final String name;
+
+		BehaviorInterecting (String name) {
+			this.name = name;
+		}
+
+		@Override
+		public Component getDisplayName () {
+			return Component.translatable(ThirdPersonMod.MOD_ID + ".behavior_interecting." + name);
+		}
 	}
 }

@@ -23,6 +23,8 @@
 	"leawind_third_person.option_group.player_fade_out.desc": "狭小空间内让玩家淡出，避免遮挡视线。",
 	"leawind_third_person.option_group.adjusting_camera": "调整相机",
 	"leawind_third_person.option_group.adjusting_camera.desc": "默认按住Z可以用鼠标调节相机的偏移量和远近。",
+	"leawind_third_person.option_group.behavior_interecting": "#TODO 交互时玩家转动方式",
+	"leawind_third_person.option_group.behavior_interecting.desc": "当按下交互键（攻击|使用|选取）时，玩家如何转动",
 	"leawind_third_person.option.is_mod_enable": "本模组是否启用",
 	"leawind_third_person.option.is_mod_enable.desc": "禁用后将显示原版第三人称视角，但仍可以按键打开配置屏幕",
 	"leawind_third_person.option.player_fade_out_enabled": "启用玩家淡出",
