@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.math.Vec2d;
-import net.leawind.mc.util.math.Vec3d;
 import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -16,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2f;
+import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class PlayerAgent {
 		lastPartialTick = mc.getFrameTime();
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
-			CameraAgent.smoothEyePosition.set(Vec3d.of(mc.cameraEntity.getEyePosition(lastPartialTick)));
+			CameraAgent.smoothEyePosition.set(Vectors.toVector3d(mc.cameraEntity.getEyePosition(lastPartialTick)));
 		}
 	}
 
@@ -41,7 +41,7 @@ public class PlayerAgent {
 	 */
 	public static void turnToCameraHitResult (boolean isInstantly) {
 		// 计算相机视线落点
-		Vec3 cameraHitPosition = CameraAgent.getPickPosition();
+		Vector3d cameraHitPosition = CameraAgent.getPickPosition();
 		if (cameraHitPosition == null) {
 			turnToCameraRotation(isInstantly);
 		} else {
@@ -61,14 +61,14 @@ public class PlayerAgent {
 	 *
 	 * @param target 目标位置
 	 */
-	public static void turnToPosition (@NotNull Vec3 target, boolean isInstantly) {
+	public static void turnToPosition (@NotNull Vector3d target, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
-		Vec3 playerViewDirection = Minecraft.getInstance().player.getEyePosition(lastPartialTick).vectorTo(target);
-		turnToDirection(playerViewDirection, isInstantly);
+		Vector3d playerViewVector = target.sub(Vectors.toVector3d(Minecraft.getInstance().player.getEyePosition(lastPartialTick)));
+		turnToDirection(playerViewVector, isInstantly);
 	}
 
-	public static void turnToDirection (Vec3 d, boolean isInstantly) {
-		Vec2d rotation = Vectors.rotationDegreeFromDirection(d);
+	public static void turnToDirection (Vector3d v, boolean isInstantly) {
+		Vec2d rotation = Vectors.rotationDegreeFromDirection(v);
 		turnToRotation(rotation, isInstantly);
 	}
 

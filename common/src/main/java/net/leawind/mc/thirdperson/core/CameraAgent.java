@@ -8,10 +8,10 @@ import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.util.math.Vec2d;
-import net.leawind.mc.util.math.Vec3d;
+import net.leawind.mc.util.math.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVec2d;
-import net.leawind.mc.util.smoothvalue.ExpSmoothVec3d;
+import net.leawind.mc.util.smoothvalue.ExpSmoothVector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -24,52 +24,53 @@ import net.minecraft.world.phys.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CameraAgent {
-	public static final Logger          LOGGER                     = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static final Logger            LOGGER                     = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	/**
 	 * 成像平面到相机的距离，这是一个固定值，硬编码在Minecraft源码中。
 	 * <p>
 	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
 	 */
-	public static final double          NEAR_PLANE_DISTANCE        = 0.05;
+	public static final double            NEAR_PLANE_DISTANCE        = 0.05;
 	@Nullable
-	public static       BlockGetter     level;
-	public static       Camera          camera;
-	public static       Camera          fakeCamera                 = new Camera();
+	public static       BlockGetter       level;
+	public static       Camera            camera;
+	public static       Camera            fakeCamera                 = new Camera();
 	/**
 	 * renderTick 中更新
 	 */
-	public static       boolean         wasAttachedEntityInvisible = false;
+	public static       boolean           wasAttachedEntityInvisible = false;
 	/**
 	 * 在 renderTick 中更新
 	 */
-	public static       boolean         wasAiming                  = false;
+	public static       boolean           wasAiming                  = false;
 	/**
 	 * 上一次 render tick 的时间戳
 	 */
-	public static       double          lastRenderTickTimeStamp    = 0;
+	public static       double            lastRenderTickTimeStamp    = 0;
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	public static       double          lastCameraTurnTimeStamp    = 0;
-	public static       Vec2d           relativeRotation           = Vec2d.ZERO;
+	public static       double            lastCameraTurnTimeStamp    = 0;
+	public static       Vec2d             relativeRotation           = Vec2d.ZERO;
 	/**
 	 * 相机偏移量
 	 */
-	public static       ExpSmoothVec2d  smoothOffsetRatio          =//
+	public static       ExpSmoothVec2d    smoothOffsetRatio          =//
 		(ExpSmoothVec2d)new ExpSmoothVec2d().setSmoothFactorWeight(10).set(Vec2d.ZERO);
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static       ExpSmoothVec3d  smoothEyePosition          = //
-		new ExpSmoothVec3d().setSmoothFactorWeight(8);
+	public static       ExpSmoothVector3d smoothEyePosition          = //
+		new ExpSmoothVector3d().setSmoothFactorWeight(8);
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static       ExpSmoothDouble smoothDistanceToEye        =//
+	public static       ExpSmoothDouble   smoothDistanceToEye        =//
 		(ExpSmoothDouble)new ExpSmoothDouble().setSmoothFactorWeight(4).set(0D);
 
 	/**
@@ -194,22 +195,22 @@ public class CameraAgent {
 		}
 	}
 
-	public static Vec3 getSmoothEyePositionValue () {
-		Vec3      smoothEyePositionValue = smoothEyePosition.get(PlayerAgent.lastPartialTick);
+	public static Vector3d getSmoothEyePositionValue () {
+		Vector3d  smoothEyePositionValue = smoothEyePosition.get(PlayerAgent.lastPartialTick);
 		Minecraft mc                     = Minecraft.getInstance();
-		Vec3      eyePosition            = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
-		double    dist                   = smoothEyePositionValue.distanceTo(eyePosition);
-		Vec3d     sf                     = smoothEyePosition.smoothFactor;
+		Vector3d  eyePosition            = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
+		double    dist                   = smoothEyePositionValue.distance(eyePosition);
+		Vector3d  sf                     = smoothEyePosition.smoothFactor;
 		boolean   isHorizontalZero       = sf.x * sf.z == 0;
 		boolean   isVerticalZero         = sf.y == 0;
 		if (isHorizontalZero || isVerticalZero) {
-			smoothEyePositionValue = new Vec3(isHorizontalZero ? eyePosition.x: smoothEyePositionValue.x, isVerticalZero ? eyePosition.y: smoothEyePositionValue.y, isHorizontalZero ? eyePosition.z: smoothEyePositionValue.z);
+			smoothEyePositionValue = new Vector3d(isHorizontalZero ? eyePosition.x: smoothEyePositionValue.x, isVerticalZero ? eyePosition.y: smoothEyePositionValue.y, isHorizontalZero ? eyePosition.z: smoothEyePositionValue.z);
 		}
 		return smoothEyePositionValue;
 	}
 
-	public static Vec3 getPositionWithoutOffset () {
-		return getSmoothEyePositionValue().add(Vec3d.directionFromRotation(relativeRotation).scale(smoothDistanceToEye.get()));
+	public static Vector3d getPositionWithoutOffset () {
+		return getSmoothEyePositionValue().add(Vectors.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
@@ -234,7 +235,7 @@ public class CameraAgent {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
-			Vec3d            eyePosition = Vec3d.of(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
+			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
 			if (CameraAgent.wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
 				CameraAgent.smoothEyePosition.setValue(eyePosition);
@@ -275,10 +276,10 @@ public class CameraAgent {
 		double upOffset   = smoothOffsetRatioValue.y * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
 		double leftOffset = smoothOffsetRatioValue.x * smoothVirtualDistanceValue * widthHalf / NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
-		Vec3 positionWithoutOffset = getPositionWithoutOffset();
+		Vector3d positionWithoutOffset = getPositionWithoutOffset();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y + 180), (float)-relativeRotation.x);
-		((CameraInvoker)fakeCamera).invokeSetPosition(positionWithoutOffset);
+		((CameraInvoker)fakeCamera).invokeSetPosition(Vectors.toVec3(positionWithoutOffset));
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
@@ -289,7 +290,7 @@ public class CameraAgent {
 		final double offset = 0.18;
 		// 防止穿墙
 		Vec3   cameraPosition    = fakeCamera.getPosition();
-		Vec3   smoothEyePosition = getSmoothEyePositionValue();
+		Vec3   smoothEyePosition = Vectors.toVec3(getSmoothEyePositionValue());
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		double minDistance       = initDistance;
@@ -301,7 +302,7 @@ public class CameraAgent {
 			offsetX *= offset;
 			offsetY *= offset;
 			offsetZ *= offset;
-			Vec3 pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
+			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			HitResult hitresult = level.clip(new ClipContext(pickStart, pickStart.add(smoothEyeToCamera), ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));
 			if (hitresult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
@@ -329,7 +330,7 @@ public class CameraAgent {
 	/**
 	 * 获取相机视线落点坐标
 	 */
-	public static @Nullable Vec3 getPickPosition () {
+	public static @Nullable Vector3d getPickPosition () {
 		return getPickPosition(smoothDistanceToEye.get() + Config.camera_ray_trace_length);
 	}
 
@@ -338,9 +339,9 @@ public class CameraAgent {
 	 *
 	 * @param pickRange 最大探测距离
 	 */
-	public static @Nullable Vec3 getPickPosition (double pickRange) {
+	public static @Nullable Vector3d getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
-		return hitResult.getType() == HitResult.Type.MISS ? null: hitResult.getLocation();
+		return hitResult.getType() == HitResult.Type.MISS ? null: Vectors.toVector3d(hitResult.getLocation());
 	}
 
 	public static @NotNull HitResult pick () {

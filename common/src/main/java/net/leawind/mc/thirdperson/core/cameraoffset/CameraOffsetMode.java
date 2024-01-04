@@ -2,14 +2,14 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
 import net.leawind.mc.util.math.Vec2d;
-import net.leawind.mc.util.math.Vec3d;
+import org.joml.Vector3d;
 
 public class CameraOffsetMode {
 	public  CameraOffsetScheme cameraOffsetScheme;
 	/**
 	 * 眼睛位置的平滑系数
 	 */
-	private Vec3d              eyeSmoothFactor      = Vec3d.ZERO;
+	private Vector3d           eyeSmoothFactor      = new Vector3d(0);
 	/**
 	 * 距离的平滑系数
 	 */
@@ -44,11 +44,11 @@ public class CameraOffsetMode {
 		setCenterOffsetRatio(0.6);
 	}
 
-	public Vec3d getEyeSmoothFactor () {
+	public Vector3d getEyeSmoothFactor () {
 		return eyeSmoothFactor;
 	}
 
-	public CameraOffsetMode setEyeSmoothFactor (Vec3d smoothFactor) {
+	public CameraOffsetMode setEyeSmoothFactor (Vector3d smoothFactor) {
 		eyeSmoothFactor = smoothFactor;
 		cameraOffsetScheme.onModify();
 		return this;
