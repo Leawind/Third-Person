@@ -76,8 +76,8 @@ public class CameraOffsetScheme {
 		if (isCenter) {
 			isCenter = false;
 		} else {
-			aimingMode.setSideOffsetRatio(-aimingMode.getSideOffsetRatio().x, aimingMode.getSideOffsetRatio().y);
-			normalMode.setSideOffsetRatio(-normalMode.getSideOffsetRatio().x, normalMode.getSideOffsetRatio().y);
+			aimingMode.nextSide();
+			normalMode.nextSide();
 		}
 		onModify();
 	}

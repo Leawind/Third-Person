@@ -13,12 +13,11 @@ public class ModOptions {
 	public static boolean isToggleToAiming = false;
 
 	/**
-	 * TODO 假的第一人称下不调整
 	 * <p>
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return isAdjustingCameraDistance() && !ModOptions.isAttachedEntityInvisible();
+		return isAdjustingCameraDistance() && !isAttachedEntityInvisible();
 	}
 
 	public static boolean isAdjustingCameraDistance () {
@@ -36,7 +35,7 @@ public class ModOptions {
 	 * 当前是否显示准星
 	 */
 	public static boolean shouldRenderCrosshair () {
-		return CameraAgent.isAvailable() && (CameraAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
+		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
 	}
 
 	/**

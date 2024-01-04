@@ -12,25 +12,27 @@ import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModOptions;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
+import net.leawind.mc.util.math.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.util.Mth;
 
 public class ModEvents {
 	public static void register () {
-		ClientTickEvent.CLIENT_PRE.register(ModEvents::onClientTickPost);
+		ClientTickEvent.CLIENT_PRE.register(ModEvents::onClientTickPre);
 		ClientLifecycleEvent.CLIENT_STARTED.register(ModEvents::onClientStarted);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
 	}
 
-	private static void onClientTickPost (Minecraft mc) {
+	private static void onClientTickPre (Minecraft mc) {
 		if (mc.isPaused()) {
 			return;
 		}
 		CameraAgent.updateSmoothEyePosition(0.05);
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
+		PlayerAgent.wasAiming      = PlayerAgent.isAiming();
+		Config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
 	}
 
 	private static void onClientStarted (Minecraft minecraft) {
@@ -95,7 +97,7 @@ public class ModEvents {
 			// 相机在头顶，只能上下调整
 			double topOffset = scheme.getMode().getCenterOffsetRatio();
 			topOffset += -yMove / mc.getWindow().getScreenHeight();
-			topOffset = Mth.clamp(topOffset, -1, 1);
+			topOffset = Vectors.clamp(topOffset, -1, 1);
 			scheme.getMode().setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
@@ -103,10 +105,9 @@ public class ModEvents {
 			double offsetY = scheme.getMode().getSideOffsetRatio().y;
 			offsetX += -xMove / mc.getWindow().getScreenWidth();
 			offsetY += -yMove / mc.getWindow().getScreenHeight();
-			offsetX = Mth.clamp(offsetX, -1, 1);
-			offsetY = Mth.clamp(offsetY, -1, 1);
-			double newXsgn = Math.signum(offsetX);
-			scheme.setSide(newXsgn);
+			offsetX = Vectors.clamp(offsetX, -1, 1);
+			offsetY = Vectors.clamp(offsetY, -1, 1);
+			scheme.setSide(Math.signum(offsetX));
 			scheme.getMode().setSideOffsetRatio(offsetX, offsetY);
 		}
 	}

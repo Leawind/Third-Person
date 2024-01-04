@@ -77,29 +77,29 @@ public class CameraOffsetMode {
 		return maxDistance;
 	}
 
-	public CameraOffsetMode setMaxDistance (double distance) {
+	public void setMaxDistance (double distance) {
 		maxDistance = distance;
 		cameraOffsetScheme.onModify();
-		return this;
 	}
 
-	public CameraOffsetMode setSide (boolean isLeft) {
+	public void setSide (boolean isLeft) {
 		if (isLeft ^ (sideOffsetRatio.x > 0)) {
 			sideOffsetRatio.set(-sideOffsetRatio.x, sideOffsetRatio.y);
 		}
 		cameraOffsetScheme.onModify();
-		return this;
 	}
 
+	public void nextSide () {
+		sideOffsetRatio.x = -sideOffsetRatio.x;
+	}
 
 	public Vector2d getOffsetRatio () {
 		return cameraOffsetScheme.isCenter ? new Vector2d(0, getCenterOffsetRatio()): getSideOffsetRatio();
 	}
 
-	public CameraOffsetMode setSideOffsetRatio (double x, double y) {
+	public void setSideOffsetRatio (double x, double y) {
 		sideOffsetRatio.set(x, y);
 		cameraOffsetScheme.onModify();
-		return this;
 	}
 
 	public double getCenterOffsetRatio () {
@@ -107,12 +107,11 @@ public class CameraOffsetMode {
 	}
 
 	public Vector2d getSideOffsetRatio () {
-		return new Vector2d(sideOffsetRatio);// DOITNOW
+		return new Vector2d(sideOffsetRatio);
 	}
 
-	public CameraOffsetMode setCenterOffsetRatio (double offset) {
+	public void setCenterOffsetRatio (double offset) {
 		centerOffsetRatio = offset;
 		cameraOffsetScheme.onModify();
-		return this;
 	}
 }

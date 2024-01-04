@@ -154,4 +154,12 @@ public class Vectors {
 	public static Vec3 toVec3 (Vector3d v) {
 		return new Vec3(v.x, v.y, v.z);
 	}
+
+	public static double clamp (double d, double min, double max) {
+		return d < min ? min: Math.min(d, max);
+	}
+
+	public static void clamp (Vector2d v, double min, double max) {
+		v.set(clamp(v.x, min, max), clamp(v.y, min, max));
+	}
 }

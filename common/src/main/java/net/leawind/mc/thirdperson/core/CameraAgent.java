@@ -47,10 +47,6 @@ public class CameraAgent {
 	 */
 	public static       boolean           wasAttachedEntityInvisible = false;
 	/**
-	 * 在 renderTick 中更新
-	 */
-	public static       boolean           wasAiming                  = false;
-	/**
 	 * 上一次 render tick 的时间戳
 	 */
 	public static       double            lastRenderTickTimeStamp    = 0;
@@ -123,7 +119,7 @@ public class CameraAgent {
 	public static void onEnterThirdPerson () {
 		reset();
 		PlayerAgent.reset();
-		wasAiming                   = false;
+		PlayerAgent.wasAiming       = false;
 		ModOptions.isToggleToAiming = false;
 		lastRenderTickTimeStamp     = Blaze3D.getTime();
 	}
@@ -140,7 +136,6 @@ public class CameraAgent {
 		if (mc.cameraEntity != null) {
 			relativeRotation.set(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick), mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
 		}
-		LOGGER.info("Reset CameraAgent");
 	}
 
 	/**
@@ -162,7 +157,6 @@ public class CameraAgent {
 	public static void onRenderTick (BlockGetter level, Entity attachedEntity, float partialTick) {
 		PlayerAgent.lastPartialTick = partialTick;
 		CameraAgent.level           = level;
-		wasAiming                   = PlayerAgent.isAiming();
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null) {
 			return;
@@ -172,7 +166,6 @@ public class CameraAgent {
 		double now    = Blaze3D.getTime();
 		double period = now - lastRenderTickTimeStamp;
 		lastRenderTickTimeStamp = now;
-		Config.cameraOffsetScheme.setAiming(wasAiming);//TODO move to client tick
 		if (isThirdPerson()) {
 			if (!mc.isPaused()) {
 				// 平滑更新距离
@@ -185,8 +178,8 @@ public class CameraAgent {
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
-			CameraAgent.wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
-			if (CameraAgent.wasAttachedEntityInvisible) {
+			wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
+			if (wasAttachedEntityInvisible) {
 				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
 				applyCamera();
 			}
@@ -229,7 +222,6 @@ public class CameraAgent {
 	public static void updateSmoothOffsetRatio (double period) {
 		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
 		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset() ? new Vector2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
-		System.out.printf("\r%b", ModOptions.isAttachedEntityInvisible());
 		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}
@@ -239,17 +231,17 @@ public class CameraAgent {
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
 			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
-			if (CameraAgent.wasAttachedEntityInvisible) {
+			if (wasAttachedEntityInvisible) {
 				// 假的第一人称，没有平滑
-				CameraAgent.smoothEyePosition.setValue(eyePosition);
+				smoothEyePosition.setValue(eyePosition);
 			} else {
 				// 平滑更新眼睛位置，飞行时使用专用的平滑系数
 				if (mc.player.isFallFlying()) {
-					CameraAgent.smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
+					smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
 				} else {
-					CameraAgent.smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());
+					smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());
 				}
-				CameraAgent.smoothEyePosition.setTarget(eyePosition).update(period);
+				smoothEyePosition.setTarget(eyePosition).update(period);
 			}
 		}
 	}
@@ -381,6 +373,6 @@ public class CameraAgent {
 		Vec3      viewEnd    = viewVector.scale(pickRange).add(viewStart);
 		Minecraft mc         = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
-		return mc.cameraEntity.level.clip(new ClipContext(viewStart, viewEnd, wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.cameraEntity));
+		return mc.cameraEntity.level.clip(new ClipContext(viewStart, viewEnd, PlayerAgent.wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, mc.cameraEntity));
 	}
 }

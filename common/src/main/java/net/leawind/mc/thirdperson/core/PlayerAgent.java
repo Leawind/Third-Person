@@ -24,6 +24,7 @@ public class PlayerAgent {
 	public static final Vector2f horizonalAbsoluteImpulse = new Vector2f(0);
 	public static       boolean  wasInterecting           = false;
 	public static       float    lastPartialTick          = 1F;
+	public static       boolean  wasAiming                = false;
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
@@ -117,7 +118,7 @@ public class PlayerAgent {
 			return;
 		} else if (wasInterecting) {
 			return;
-		} else if (CameraAgent.wasAiming) {
+		} else if (wasAiming) {
 			return;
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			return;
@@ -137,17 +138,17 @@ public class PlayerAgent {
 	public static void onRenderTick () {
 		Minecraft mc = Minecraft.getInstance();
 		if (CameraAgent.isControlledCamera()) {
-			if (CameraAgent.wasAiming) {
-				PlayerAgent.turnToCameraHitResult(true);
+			if (wasAiming) {
+				turnToCameraHitResult(true);
 			} else if (mc.player != null && mc.player.isUnderWater()) {
-				PlayerAgent.turnToCameraRotation(true);
+				turnToCameraRotation(true);
 			} else if (mc.player != null && mc.player.isFallFlying()) {
-				PlayerAgent.turnToCameraRotation(true);
+				turnToCameraRotation(true);
 			} else if (CameraAgent.wasAttachedEntityInvisible) {
-				PlayerAgent.turnToCameraRotation(true);
+				turnToCameraRotation(true);
 			} else if (Config.player_rotate_with_camera_when_not_aiming) {
-				PlayerAgent.turnToCameraRotation(true);
-			} else if (PlayerAgent.wasInterecting) {
+				turnToCameraRotation(true);
+			} else if (wasInterecting) {
 				if (Config.auto_rotate_interacting) {
 					if (Config.rotate_interacting_type) {
 						turnToCameraHitResult(true);
