@@ -43,6 +43,18 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
+	public ExpSmoothVector2d set (Vector2d v) {
+		value = target = v;
+		return this;
+	}
+
+	@Override
+	public ExpSmoothVector2d setValue (Vector2d v) {
+		value = v;
+		return this;
+	}
+
+	@Override
 	public Vector2d get (double delta) {
 		return Vectors.lerp(lastValue, value, delta);
 	}

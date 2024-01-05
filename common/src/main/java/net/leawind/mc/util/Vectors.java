@@ -132,17 +132,6 @@ public class Vectors {
 		return new Vector2d(Math.pow(v.x, p.x), Math.pow(v.y, p.y));
 	}
 
-	/**
-	 * 各分量分别求幂
-	 */
-	public static Vector3d pow (Vector3d v, double p) {
-		return new Vector3d(Math.pow(v.x, p), Math.pow(v.y, p), Math.pow(v.z, p));
-	}
-
-	public static Vector2d pow (Vector2d v, double p) {
-		return new Vector2d(Math.pow(v.x, p), Math.pow(v.y, p));
-	}
-
 	public static Vector3d sigmoid (Vector3d v) {
 		return new Vector3d(1 / (1 + Math.exp(-v.x)), 1 / (1 + Math.exp(-v.y)), 1 / (1 + Math.exp(-v.z)));
 	}

@@ -31,15 +31,9 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		lastValue = value;
 	}
 
-	final public ExpSmoothValue<T> setValue (T value) {
-		this.value = value;
-		return this;
-	}
+	abstract public ExpSmoothValue<T> setValue (T value);
 
-	final public ExpSmoothValue<T> set (T value) {
-		this.value = this.target = value;
-		return this;
-	}
+	abstract public ExpSmoothValue<T> set (T value);
 
 	abstract public ExpSmoothValue<T> setSmoothFactor (T smoothFactor);
 

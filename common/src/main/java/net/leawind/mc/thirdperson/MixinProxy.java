@@ -3,11 +3,13 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector2f;
+import org.joml.Vector2d;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -29,7 +31,7 @@ public class MixinProxy {
 		return viewVectorFake;
 	}
 
-	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean flag, float sneakingSpeedBonus, CallbackInfo ci) {
+	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
 			Minecraft mc                   = Minecraft.getInstance();
 			float     cameraForward        = (that.up ? 1: 0) - (that.down ? 1: 0);
@@ -39,13 +41,13 @@ public class MixinProxy {
 			PlayerAgent.horizonalAbsoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x, cameraForwardImpulse.z + cameraLeftImpulse.z);
 			if (PlayerAgent.horizonalAbsoluteImpulse.length() > 1E-5 && mc.player != null) {
 				float    playerRotation  = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
-				Vec3     playerForward3D = Vec3.directionFromRotation(0, playerRotation);
-				Vec3     playerLeft3D    = Vec3.directionFromRotation(0, playerRotation - 90);
-				Vector2f playerForward   = new Vector2f((float)playerForward3D.x, (float)playerForward3D.z);
-				Vector2f playerLeft      = new Vector2f((float)playerLeft3D.x, (float)playerLeft3D.z);
-				that.forwardImpulse = PlayerAgent.horizonalAbsoluteImpulse.dot(playerForward) / playerForward.length();
-				that.leftImpulse    = PlayerAgent.horizonalAbsoluteImpulse.dot(playerLeft) / playerLeft.length();
-				if (flag) {
+				Vector3d playerForward3D = Vectors.directionFromRotationDegree(0, playerRotation);
+				Vector3d playerLeft3D    = Vectors.directionFromRotationDegree(0, playerRotation - 90);
+				Vector2d playerForward   = new Vector2d(playerForward3D.x, playerForward3D.z).normalize();
+				Vector2d playerLeft      = new Vector2d(playerLeft3D.x, playerLeft3D.z).normalize();
+				that.forwardImpulse = (float)(PlayerAgent.horizonalAbsoluteImpulse.dot(playerForward));
+				that.leftImpulse    = (float)(PlayerAgent.horizonalAbsoluteImpulse.dot(playerLeft));
+				if (isMoveSlowly) {
 					that.forwardImpulse *= sneakingSpeedBonus;
 					that.leftImpulse *= sneakingSpeedBonus;
 				}

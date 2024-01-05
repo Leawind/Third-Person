@@ -13,7 +13,6 @@ import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
-import org.joml.Vector2f;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class PlayerAgent {
 	@SuppressWarnings("unused")
 	public static final Logger   LOGGER                   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static final Vector2f horizonalAbsoluteImpulse = new Vector2f(0);
+	public static final Vector2d horizonalAbsoluteImpulse = new Vector2d(0);
 	public static       boolean  wasInterecting           = false;
 	public static       float    lastPartialTick          = 1F;
 	public static       boolean  wasAiming                = false;
@@ -49,7 +48,7 @@ public class PlayerAgent {
 			return;
 		} else {
 			// 键盘控制的移动方向
-			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(new Vector2d(horizonalAbsoluteImpulse));
+			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(horizonalAbsoluteImpulse);
 			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
 		}
 	}
@@ -67,13 +66,11 @@ public class PlayerAgent {
 				//				turnToCameraRotation(true);
 			} else if (Config.player_rotate_with_camera_when_not_aiming) {
 				turnToCameraRotation(true);
-			} else if (wasInterecting) {
-				if (Config.auto_rotate_interacting) {
-					if (Config.rotate_interacting_type) {
-						turnToCameraHitResult(true);
-					} else {
-						turnToCameraRotation(true);
-					}
+			} else if (wasInterecting && Config.auto_rotate_interacting) {
+				if (Config.rotate_interacting_type) {
+					turnToCameraHitResult(true);
+				} else {
+					turnToCameraRotation(true);
 				}
 			}
 		}

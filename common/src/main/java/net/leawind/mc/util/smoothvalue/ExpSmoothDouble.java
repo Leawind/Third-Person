@@ -51,6 +51,18 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
+	public ExpSmoothDouble set (Double v) {
+		value = target = v;
+		return this;
+	}
+
+	@Override
+	public ExpSmoothDouble setValue (Double v) {
+		value = v;
+		return this;
+	}
+
+	@Override
 	public ExpSmoothDouble setSmoothFactor (Double smoothFactor) {
 		this.smoothFactor = smoothFactor;
 		return this;

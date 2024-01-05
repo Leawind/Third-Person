@@ -48,6 +48,18 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	}
 
 	@Override
+	public ExpSmoothVector3d set (Vector3d v) {
+		value = target = v;
+		return this;
+	}
+
+	@Override
+	public ExpSmoothVector3d setValue (Vector3d v) {
+		value = v;
+		return this;
+	}
+
+	@Override
 	public ExpSmoothVector3d setSmoothFactor (double d) {
 		return setSmoothFactor(d, d, d);
 	}
