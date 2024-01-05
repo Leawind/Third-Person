@@ -178,12 +178,12 @@ public class CameraAgent {
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
-			wasAttachedEntityInvisible = ModOptions.deferedIsAttachedEntityInvisible(now);
-			if (wasAttachedEntityInvisible) {
-				// 假的第一人称，强制将相机放在玩家眼睛处
-				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
-				applyCamera();
-			}
+			wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
+			//			if (wasAttachedEntityInvisible) {
+			//				// 假的第一人称，强制将相机放在玩家眼睛处
+			//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
+			//				applyCamera();
+			//			}
 		}
 		PlayerAgent.onRenderTick();
 		if (mc.options.getCameraType().isMirrored()) {
@@ -232,18 +232,13 @@ public class CameraAgent {
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
 			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
-			if (wasAttachedEntityInvisible) {
-				// 假的第一人称，没有平滑
-				smoothEyePosition.setValue(eyePosition);
+			// 平滑更新眼睛位置，飞行时使用专用的平滑系数
+			if (mc.player.isFallFlying()) {
+				smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
 			} else {
-				// 平滑更新眼睛位置，飞行时使用专用的平滑系数
-				if (mc.player.isFallFlying()) {
-					smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
-				} else {
-					smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());
-				}
-				smoothEyePosition.setTarget(eyePosition).update(period);
+				smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());
 			}
+			smoothEyePosition.setTarget(eyePosition).update(period);
 		}
 	}
 

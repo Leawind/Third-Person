@@ -63,8 +63,8 @@ public class PlayerAgent {
 				turnToCameraRotation(true);
 			} else if (mc.player != null && mc.player.isFallFlying()) {
 				turnToCameraRotation(true);
-			} else if (CameraAgent.wasAttachedEntityInvisible) {
-				turnToCameraRotation(true);
+				//			} else if (CameraAgent.wasAttachedEntityInvisible) {
+				//				turnToCameraRotation(true);
 			} else if (Config.player_rotate_with_camera_when_not_aiming) {
 				turnToCameraRotation(true);
 			} else if (wasInterecting) {

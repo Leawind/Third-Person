@@ -1,12 +1,12 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
+import net.leawind.mc.util.Vectors;
 import net.leawind.mc.util.deferedvalue.DeferedBoolean;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 
 public class ModOptions {
 	/**
@@ -19,7 +19,7 @@ public class ModOptions {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return isAdjustingCameraDistance() && !deferedIsAttachedEntityInvisible(Blaze3D.getTime());
+		return isAdjustingCameraDistance() && !isAttachedEntityInvisible();
 	}
 
 	public static boolean isAdjustingCameraDistance () {
@@ -54,17 +54,19 @@ public class ModOptions {
 		} else if (mc.cameraEntity == null || CameraAgent.camera == null) {
 			return false;
 		}
-		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
-		Vec3 cameraPosition = CameraAgent.fakeCamera.getPosition();
+		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
+		Vector3d eyePosition    = CameraAgent.getSmoothEyePositionValue();
+		Vector3d cameraPosition = Vectors.toVector3d(CameraAgent.camera.getPosition());
 		if (Config.cameraOffsetScheme.getMode().getMaxDistance() <= Config.distanceMonoList.get(0)) {
 			return true;
 		} else {
-			return eyePosition.distanceTo(cameraPosition) <= Config.distanceMonoList.get(0);
+			return eyePosition.distance(cameraPosition) <= Config.distanceMonoList.get(0);
 		}
 	}
 
-	public static DeferedBoolean deferedInvisible = new DeferedBoolean(false).setDelay(0, 0.1);
+	public static DeferedBoolean deferedInvisible = new DeferedBoolean(false).setDelay(0, 0);
 
+	@Deprecated
 	public static boolean deferedIsAttachedEntityInvisible (double t) {
 		return deferedInvisible.set(isAttachedEntityInvisible()).get(t);
 	}
