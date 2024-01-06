@@ -9,7 +9,7 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModOptions;
+import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.Vectors;
@@ -31,7 +31,7 @@ public class ModEvents {
 		}
 		CameraAgent.updateSmoothEyePosition(0.05);
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
-		PlayerAgent.wasAiming      = PlayerAgent.isAiming();
+		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
 		Config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
 	}
 
@@ -63,7 +63,7 @@ public class ModEvents {
 	 * @param amount    向前滚是+1，向后滚是-1
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
-		if (ModOptions.isAdjustingCameraDistance()) {
+		if (ModReferee.isAdjustingCameraDistance()) {
 			double dist = Config.cameraOffsetScheme.getMode().getMaxDistance();
 			dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
 			Config.cameraOffsetScheme.getMode().setMaxDistance(dist);

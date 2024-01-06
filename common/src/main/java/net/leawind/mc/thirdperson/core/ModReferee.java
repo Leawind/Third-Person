@@ -4,11 +4,18 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.util.Vectors;
-import net.leawind.mc.util.deferedvalue.DeferedBoolean;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.joml.Vector3d;
 
-public class ModOptions {
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
+public class ModReferee {
 	/**
 	 * 是否通过按键切换到了瞄准模式
 	 */
@@ -64,10 +71,45 @@ public class ModOptions {
 		}
 	}
 
-	public static DeferedBoolean deferedInvisible = new DeferedBoolean(false).setDelay(0, 0);
+	public static final HashSet<String> AUTO_AIM_ITEMS = new HashSet<>(List.of("item.minecraft.ender_pearl",
+																			   "item.minecraft.snowball",
+																			   "item.minecraft.egg",
+																			   "item.minecraft.splash_potion",
+																			   "item.minecraft.lingering_potion",
+																			   "item.minecraft.experience_bottle"));
 
-	@Deprecated
-	public static boolean deferedIsAttachedEntityInvisible (double t) {
-		return deferedInvisible.set(isAttachedEntityInvisible()).get(t);
+	/**
+	 * 判断当前是否在瞄准<br/>
+	 * <p>
+	 * 如果正在使用弓或三叉戟瞄准，返回true
+	 * <p>
+	 * 如果正在手持上了弦的弩|鸡蛋|末影珍珠|雪球，返回true
+	 * <p>
+	 * 如果按住了相应按键，返回true
+	 * <p>
+	 * 如果通过按相应按键切换到了持续瞄准状态，返回true
+	 */
+	public static boolean isCameraEntityAiming () {
+		Minecraft mc = Minecraft.getInstance();
+		// 只有 LivingEntity 才有可能手持物品瞄准
+		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
+			if (livingEntity.isUsingItem()) {
+				// 正在使用（瞄准）
+				ItemStack itemStack = livingEntity.getUseItem();
+				if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
+					return true;// 正在使用弓或三叉戟瞄准
+				}
+			}
+			ItemStack mainHandItem = livingEntity.getMainHandItem();
+			ItemStack offhandItem  = livingEntity.getOffhandItem();
+			for (ItemStack stack: Arrays.asList(mainHandItem, offhandItem)) {
+				if (stack.is(Items.CROSSBOW) && CrossbowItem.isCharged(stack)) {
+					return true;    // 上了弦的弩
+				} else if (AUTO_AIM_ITEMS.contains(stack.getItem().getDescriptionId())) {
+					return true;
+				}
+			}
+		}
+		return doesPlayerWantToAim();
 	}
 }

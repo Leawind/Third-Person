@@ -101,7 +101,7 @@ public class CameraAgent {
 	 * @param x 俯仰角变化量
 	 */
 	public static void onCameraTurn (double y, double x) {
-		if (Config.is_mod_enable && !ModOptions.isAdjustingCameraOffset()) {
+		if (Config.is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
 			y *= 0.15;
 			x *= Config.lock_camera_pitch_angle ? 0: -0.15;
 			if (y != 0 || x != 0) {
@@ -118,7 +118,7 @@ public class CameraAgent {
 		reset();
 		PlayerAgent.reset();
 		PlayerAgent.wasAiming       = false;
-		ModOptions.isToggleToAiming = false;
+		ModReferee.isToggleToAiming = false;
 		lastRenderTickTimeStamp     = Blaze3D.getTime();
 	}
 
@@ -175,7 +175,7 @@ public class CameraAgent {
 			preventThroughWall();
 			updateFakeCameraRotationPosition();
 			applyCamera();
-			wasAttachedEntityInvisible = ModOptions.isAttachedEntityInvisible();
+			wasAttachedEntityInvisible = ModReferee.isAttachedEntityInvisible();
 			//			if (wasAttachedEntityInvisible) {
 			//				// 假的第一人称，强制将相机放在玩家眼睛处
 			//				Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
@@ -209,7 +209,7 @@ public class CameraAgent {
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
-		boolean          isAdjusting = ModOptions.isAdjustingCameraDistance();
+		boolean          isAdjusting = ModReferee.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
 		smoothDistanceToEye.setSmoothFactor(isAdjusting ? Config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
 		smoothDistanceToEye.setTarget(mode.getMaxDistance()).update(period);
@@ -221,7 +221,7 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double period) {
 		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
-		smoothOffsetRatio.setSmoothFactor(ModOptions.isAdjustingCameraOffset() ? new Vector2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
+		smoothOffsetRatio.setSmoothFactor(ModReferee.isAdjustingCameraOffset() ? new Vector2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
 		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}

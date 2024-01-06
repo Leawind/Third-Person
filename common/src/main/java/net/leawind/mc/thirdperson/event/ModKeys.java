@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModOptions;
+import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -66,7 +66,7 @@ public class ModKeys {
 	 */
 	private static final KeyMapping TOGGLE_AIMING     = new ThirdPersonKeyMapping("toggle_aiming").onDown(() -> {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
-			ModOptions.isToggleToAiming = !ModOptions.isToggleToAiming;
+			ModReferee.isToggleToAiming = !ModReferee.isToggleToAiming;
 		}
 	});
 

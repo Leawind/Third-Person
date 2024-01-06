@@ -7,9 +7,6 @@ import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
@@ -42,7 +39,7 @@ public class PlayerAgent {
 		} else if (impulseHorizon.length() <= 1e-5) {
 			return;
 		} else if (mc.cameraEntity.isSwimming()) {
-			turnToDirection(impulse, true);
+			turnToDirection(impulse, false);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			return;
 		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
@@ -170,38 +167,5 @@ public class PlayerAgent {
 
 	public static boolean isAvailable () {
 		return CameraAgent.isAvailable();
-	}
-
-	/**
-	 * 判断当前是否在瞄准<br/>
-	 * <p>
-	 * 如果正在使用弓或三叉戟瞄准，返回true
-	 * <p>
-	 * 如果正在手持上了弦的弩，返回true
-	 * <p>
-	 * 如果按住了相应按键，返回true
-	 * <p>
-	 * 如果通过按相应按键切换到了持续瞄准状态，返回true
-	 */
-	public static boolean isAiming () {
-		Minecraft mc = Minecraft.getInstance();
-		// 只有 LivingEntity 才有可能手持物品瞄准
-		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
-			if (livingEntity.isUsingItem()) {
-				ItemStack itemStack = livingEntity.getUseItem();
-				if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
-					return true;// 正在使用弓或三叉戟瞄准
-				}
-			}
-			ItemStack mainHandItem = livingEntity.getMainHandItem();
-			if (mainHandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(mainHandItem)) {
-				return true;// 主手拿着上了弦的弩
-			}
-			ItemStack offhandItem = livingEntity.getOffhandItem();
-			if (offhandItem.is(Items.CROSSBOW) && CrossbowItem.isCharged(offhandItem)) {
-				return true;// 副手拿着上了弦的弩
-			}
-		}
-		return ModOptions.doesPlayerWantToAim();
 	}
 }

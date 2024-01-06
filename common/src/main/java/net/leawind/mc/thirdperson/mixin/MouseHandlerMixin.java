@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModOptions;
+import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.event.ModEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +24,7 @@ public class MouseHandlerMixin {
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
-		if (CameraAgent.isAvailable() && ModOptions.isAdjustingCameraOffset()) {
+		if (CameraAgent.isAvailable() && ModReferee.isAdjustingCameraOffset()) {
 			ModEvents.onAdjustingCameraOffset(accumulatedDX, accumulatedDY);
 			accumulatedDX = 0;
 			accumulatedDY = 0;
