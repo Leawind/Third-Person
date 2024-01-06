@@ -98,6 +98,12 @@ public class Vectors {
 		return new Vector3d(i * j, k, h * j);
 	}
 
+	public static Vector2d directionFromRotationDegree (double yRot) {
+		double x = Math.sin(yRot * 0.017453292519943295 + Math.PI);
+		double z = -Math.cos(yRot * 0.017453292519943295 + Math.PI);
+		return new Vector2d(x, z);
+	}
+
 	/**
 	 * 各分量分别线性插值
 	 *

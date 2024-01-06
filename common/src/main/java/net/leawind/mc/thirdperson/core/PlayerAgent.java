@@ -19,11 +19,12 @@ import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
 	@SuppressWarnings("unused")
-	public static final Logger   LOGGER                   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	public static final Vector2d horizonalAbsoluteImpulse = new Vector2d(0);
-	public static       boolean  wasInterecting           = false;
-	public static       float    lastPartialTick          = 1F;
-	public static       boolean  wasAiming                = false;
+	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
+	public static final Vector2d impulseHorizon  = new Vector2d(0);
+	public static final Vector3d impulse         = new Vector3d(0);
+	public static       boolean  wasInterecting  = false;
+	public static       float    lastPartialTick = 1F;
+	public static       boolean  wasAiming       = false;
 
 	/**
 	 * 玩家移动时自动转向移动方向
@@ -38,40 +39,40 @@ public class PlayerAgent {
 			return;
 		} else if (wasAiming) {
 			return;
+		} else if (impulseHorizon.length() <= 1e-5) {
+			return;
+		} else if (mc.cameraEntity.isSwimming()) {
+			turnToDirection(impulse, true);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
-			return;
-		} else if (mc.cameraEntity.isUnderWater()) {
-			return;
-		} else if (horizonalAbsoluteImpulse.length() <= 1e-5) {
 			return;
 		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
 			return;
 		} else {
 			// 键盘控制的移动方向
-			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(horizonalAbsoluteImpulse);
-			turnToRotation(absoluteRotDegree, 0, Minecraft.getInstance().options.keySprint.isDown());
+			double absoluteRotDegree = Vectors.rotationDegreeFromDirection(impulseHorizon);
+			turnToRotation(absoluteRotDegree, 0, mc.options.keySprint.isDown());
 		}
 	}
 
 	public static void onRenderTick () {
 		Minecraft mc = Minecraft.getInstance();
-		if (CameraAgent.isControlledCamera()) {
-			if (wasAiming) {
+		if (!CameraAgent.isControlledCamera()) {
+			return;
+			//		} else if (mc.cameraEntity != null && mc.cameraEntity.isSwimming()) {
+			//			turnToDirection(impulse, false);
+		} else if (wasAiming) {
+			turnToCameraHitResult(true);
+		} else if (mc.player != null && mc.player.isFallFlying()) {
+			turnToCameraRotation(true);
+			//			} else if (CameraAgent.wasAttachedEntityInvisible) {
+			//				turnToCameraRotation(true);
+		} else if (Config.player_rotate_with_camera_when_not_aiming) {
+			turnToCameraRotation(true);
+		} else if (wasInterecting && Config.auto_rotate_interacting) {
+			if (Config.rotate_interacting_type) {
 				turnToCameraHitResult(true);
-			} else if (mc.player != null && mc.player.isUnderWater()) {
+			} else {
 				turnToCameraRotation(true);
-			} else if (mc.player != null && mc.player.isFallFlying()) {
-				turnToCameraRotation(true);
-				//			} else if (CameraAgent.wasAttachedEntityInvisible) {
-				//				turnToCameraRotation(true);
-			} else if (Config.player_rotate_with_camera_when_not_aiming) {
-				turnToCameraRotation(true);
-			} else if (wasInterecting && Config.auto_rotate_interacting) {
-				if (Config.rotate_interacting_type) {
-					turnToCameraHitResult(true);
-				} else {
-					turnToCameraRotation(true);
-				}
 			}
 		}
 	}

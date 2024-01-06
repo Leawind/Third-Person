@@ -10,7 +10,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -32,21 +31,34 @@ public class MixinProxy {
 	}
 
 	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
+		//				//				if (mc.player.isSwimming()) {
+		//				//					PlayerAgent.turnToDirection(PlayerAgent.absoluteImpulse, true);
+		//				//					that.forwardImpulse = (float)PlayerAgent.absoluteImpulse.length();
+		//				//				} else {
 		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
-			Minecraft mc                   = Minecraft.getInstance();
-			float     cameraForward        = (that.up ? 1: 0) - (that.down ? 1: 0);
-			float     cameraLeft           = (that.left ? 1: 0) - (that.right ? 1: 0);
-			Vector3f  cameraForwardImpulse = CameraAgent.fakeCamera.getLookVector().mul(1, 0, 1).normalize(cameraForward);
-			Vector3f  cameraLeftImpulse    = CameraAgent.fakeCamera.getLeftVector().mul(1, 0, 1).normalize(cameraLeft);
-			PlayerAgent.horizonalAbsoluteImpulse.set(cameraForwardImpulse.x + cameraLeftImpulse.x, cameraForwardImpulse.z + cameraLeftImpulse.z);
-			if (PlayerAgent.horizonalAbsoluteImpulse.length() > 1E-5 && mc.player != null) {
-				float    playerRotation  = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
-				Vector3d playerForward3D = Vectors.directionFromRotationDegree(0, playerRotation);
-				Vector3d playerLeft3D    = Vectors.directionFromRotationDegree(0, playerRotation - 90);
-				Vector2d playerForward   = new Vector2d(playerForward3D.x, playerForward3D.z).normalize();
-				Vector2d playerLeft      = new Vector2d(playerLeft3D.x, playerLeft3D.z).normalize();
-				that.forwardImpulse = (float)(PlayerAgent.horizonalAbsoluteImpulse.dot(playerForward));
-				that.leftImpulse    = (float)(PlayerAgent.horizonalAbsoluteImpulse.dot(playerLeft));
+			Minecraft mc                = Minecraft.getInstance();
+			double    cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
+			double    cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);
+			// 方向向量 != 0
+			Vector3d lookImpulse        = new Vector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
+			Vector3d leftImpulse        = new Vector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
+			Vector2d lookImpulseHorizon = new Vector2d(lookImpulse.x, lookImpulse.z).normalize();
+			Vector2d leftImpulseHorizon = new Vector2d(leftImpulse.x, leftImpulse.z).normalize();
+			// 乘上 impulse
+			lookImpulse.mul(cameraLookImpulse);
+			leftImpulse.mul(cameraLeftImpulse);
+			lookImpulseHorizon.mul(cameraLookImpulse);
+			leftImpulseHorizon.mul(cameraLeftImpulse);
+			//求和
+			lookImpulse.add(leftImpulse, PlayerAgent.impulse);
+			lookImpulseHorizon.add(leftImpulseHorizon, PlayerAgent.impulseHorizon);
+			if (PlayerAgent.impulseHorizon.length() > 1E-5 && mc.player != null) {
+				PlayerAgent.impulseHorizon.normalize();
+				float    playerRotation    = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
+				Vector2d playerLookHorizon = Vectors.directionFromRotationDegree(playerRotation).normalize();
+				Vector2d playerLeftHorizon = Vectors.directionFromRotationDegree(playerRotation - 90).normalize();
+				that.forwardImpulse = (float)(PlayerAgent.impulseHorizon.dot(playerLookHorizon));
+				that.leftImpulse    = (float)(PlayerAgent.impulseHorizon.dot(playerLeftHorizon));
 				if (isMoveSlowly) {
 					that.forwardImpulse *= sneakingSpeedBonus;
 					that.leftImpulse *= sneakingSpeedBonus;
