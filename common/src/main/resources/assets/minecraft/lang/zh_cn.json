@@ -27,6 +27,8 @@
 	"leawind_third_person.option_group.behavior_interacting.desc": "当按下交互键（攻击|使用|选取）时，玩家如何转动",
 	"leawind_third_person.option.is_mod_enable": "本模组是否启用",
 	"leawind_third_person.option.is_mod_enable.desc": "禁用后将显示原版第三人称视角，但仍可以按键打开配置屏幕",
+	"leawind_third_person.option.center_offset_when_flying": "飞行时自动居中",
+	"leawind_third_person.option.center_offset_when_flying.desc": "当相机附着的实体正在使用鞘翅飞行时，不使用相机偏移量",
 	"leawind_third_person.option.player_fade_out_enabled": "启用玩家淡出",
 	"leawind_third_person.option.player_fade_out_enabled.desc": "实际上不是“淡出”，只是突然看不见，但避免玩家实体遮挡视线",
 	"leawind_third_person.option.lock_camera_pitch_angle": "锁定相机的俯仰角",

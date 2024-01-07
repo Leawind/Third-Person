@@ -224,7 +224,11 @@ public class CameraAgent {
 		} else {
 			smoothOffsetRatio.setSmoothFactor(mode.getOffsetSmoothFactor());
 		}
-		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
+		if (Config.center_offset_when_flying && ModReferee.isAttachedEntityFallFlying()) {
+			smoothOffsetRatio.setTarget(0, 0);
+		} else {
+			smoothOffsetRatio.setTarget(mode.getOffsetRatio());
+		}
 		smoothOffsetRatio.update(period);
 	}
 
@@ -234,7 +238,7 @@ public class CameraAgent {
 			CameraOffsetMode mode        = Config.cameraOffsetScheme.getMode();
 			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
 			// 飞行时使用专用的平滑系数
-			if (mc.player.isFallFlying()) {
+			if (ModReferee.isAttachedEntityFallFlying()) {
 				smoothEyePosition.setSmoothFactor(Config.flying_smooth_factor);
 			} else {
 				smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());

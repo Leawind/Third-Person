@@ -42,7 +42,7 @@ public class PlayerAgent {
 			turnToDirection(impulse, false);
 		} else if (CameraAgent.wasAttachedEntityInvisible) {
 			return;
-		} else if ((mc.cameraEntity instanceof LivingEntity && ((LivingEntity)mc.cameraEntity).isFallFlying())) {
+		} else if (ModReferee.isAttachedEntityFallFlying()) {
 			return;
 		} else {
 			// 键盘控制的移动方向

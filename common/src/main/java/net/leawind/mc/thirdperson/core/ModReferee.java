@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
@@ -105,5 +104,16 @@ public class ModReferee {
 			}
 		}
 		return doesPlayerWantToAim();
+	}
+
+	/**
+	 * 判断是否在飞行
+	 */
+	public static boolean isAttachedEntityFallFlying () {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
+			return livingEntity.isFallFlying();
+		}
+		return false;
 	}
 }

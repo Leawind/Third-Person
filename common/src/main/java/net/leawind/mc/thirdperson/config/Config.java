@@ -60,6 +60,7 @@ public class Config {
 	@ConfigEntry public static                boolean                 player_rotate_with_camera_when_not_aiming = false;
 	@ConfigEntry public static                boolean                 render_crosshair_when_not_aiming          = true;
 	@ConfigEntry public static                boolean                 render_crosshair_when_aiming              = true;
+	@ConfigEntry public static                boolean                 center_offset_when_flying                 = true;
 	@ConfigEntry public static                boolean                 rotate_to_moving_direction                = true;
 	@ConfigEntry public static                boolean                 lock_camera_pitch_angle                   = false;
 	@ConfigEntry public static                boolean                 turn_with_camera_when_enter_first_person  = true;
@@ -159,15 +160,19 @@ public class Config {
 			.category(ConfigCategory.createBuilder()
 				.name(ConfigBuilders.getText("option_category.misc"))
 				.tooltip(ConfigBuilders.getText("option_category.misc.desc"))
+				.option(ConfigBuilders.<Boolean>option("center_offset_when_flying")
+					.binding(true, () -> center_offset_when_flying, v -> center_offset_when_flying = v)
+					.controller(TickBoxControllerBuilder::create)
+					.build())
+				.option(ConfigBuilders.<Boolean>option("turn_with_camera_when_enter_first_person")
+					.binding(true, () -> turn_with_camera_when_enter_first_person, v -> turn_with_camera_when_enter_first_person = v)
+					.controller(TickBoxControllerBuilder::create)
+					.build())
 				.option(ConfigBuilders.<Double>option("camera_ray_trace_length")
 					.binding(256d, () -> camera_ray_trace_length, v -> camera_ray_trace_length = v)
 					.controller(opt -> DoubleSliderControllerBuilder.create(opt)
 						.range(10d, 1024d)
 						.step(1d))
-					.build())
-				.option(ConfigBuilders.<Boolean>option("turn_with_camera_when_enter_first_person")
-					.binding(true, () -> turn_with_camera_when_enter_first_person, v -> turn_with_camera_when_enter_first_person = v)
-					.controller(TickBoxControllerBuilder::create)
 					.build())
 				.group(ConfigBuilders.group("behavior_interacting")
 					.option(ConfigBuilders.<Boolean>option("auto_rotate_interacting")
