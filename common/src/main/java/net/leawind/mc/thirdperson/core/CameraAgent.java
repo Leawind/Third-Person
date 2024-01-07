@@ -5,6 +5,7 @@ import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.util.Vectors;
@@ -215,7 +216,14 @@ public class CameraAgent {
 
 	public static void updateSmoothOffsetRatio (double period) {
 		CameraOffsetMode mode = Config.cameraOffsetScheme.getMode();
-		smoothOffsetRatio.setSmoothFactor(ModReferee.isAdjustingCameraOffset() ? new Vector2d(Config.adjusting_camera_offset_smooth_factor): mode.getOffsetSmoothFactor());
+		if (ModKeys.ADJUST_POSITION.isDown()) {
+			int i = 1 + 1;
+		}
+		if (ModReferee.isAdjustingCameraOffset()) {
+			smoothOffsetRatio.setSmoothFactor(Config.adjusting_camera_offset_smooth_factor);
+		} else {
+			smoothOffsetRatio.setSmoothFactor(mode.getOffsetSmoothFactor());
+		}
 		smoothOffsetRatio.setTarget(mode.getOffsetRatio());
 		smoothOffsetRatio.update(period);
 	}

@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
@@ -24,7 +25,7 @@ public class ModReferee {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return isAdjustingCameraDistance() && !isAttachedEntityInvisible();
+		return isAdjustingCameraDistance() && !CameraAgent.wasAttachedEntityInvisible;
 	}
 
 	public static boolean isAdjustingCameraDistance () {
@@ -51,6 +52,8 @@ public class ModReferee {
 	 * 是否完全隐藏玩家实体
 	 * <p>
 	 * 当启用假的第一人称或相机距离玩家足够近时隐藏
+	 * <p>
+	 * 需要借助相机坐标和玩家眼睛坐标来判断
 	 */
 	public static boolean isAttachedEntityInvisible () {
 		Minecraft mc = Minecraft.getInstance();
