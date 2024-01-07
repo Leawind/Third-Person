@@ -18,21 +18,12 @@ configurations {
 dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 	modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}+${minecraft_version}"
-	// Remove the next line if you don't want to depend on the API
+	// Architectury-api
 	modApi "dev.architectury:architectury-fabric:${architectury_version}"
-	common(project(path: ":common", configuration: "namedElements")) {
-		transitive false
-	}
-	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
-		transitive false
-	}
-	
 	// ModMenu
-	// modApi("com.terraformersmc:modmenu:${modmenu_version}") { transitive(false) }
-	// modLocalRuntime("com.terraformersmc:modmenu:${modmenu_version}") { transitive(false) }
-	
-	// YACL
-	modImplementation "dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}"
+	modApi("com.terraformersmc:modmenu:${modmenu_version}") { transitive(false) }
+	common(project(path: ":common", configuration: "namedElements")) { transitive false }
+	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 processResources {
 	inputs.property "version", project.version

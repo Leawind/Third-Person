@@ -1,6 +1,7 @@
 package net.leawind.mc.util;
 
 
+import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2d;
@@ -144,6 +145,10 @@ public class Vectors {
 
 	public static Vector3d toVector3d (Vec3 v) {
 		return new Vector3d(v.x, v.y, v.z);
+	}
+
+	public static Vector3d toVector3d (Vector3f v) {
+		return new Vector3d(v.x(), v.y(), v.z());
 	}
 
 	public static Vec3 toVec3 (Vector3d v) {

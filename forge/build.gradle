@@ -23,15 +23,9 @@ configurations {
 }
 dependencies {
 	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-	modApi "dev.architectury:architectury-forge:${architectury_version}"
-	common(project(path: ":common", configuration: "namedElements")) {
-		transitive false
-	}
-	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
-		transitive = false
-	}
-	// YACL
-	modImplementation "dev.isxander.yacl:yet-another-config-lib-forge:${yacl_mc_version}"
+	modApi "dev.architectury:architectury-forge:${architectury_version}" // Architectury-api
+	common(project(path: ":common", configuration: "namedElements")) { transitive false }
+	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 processResources {
 	inputs.property "version", project.version

@@ -30,8 +30,7 @@
 	"depends": {
 		"fabric": "*",
 		"minecraft": ">=${minecraft_version}",
-		"architectury": ">=${architectury_version}",
-		"yet_another_config_lib_v3": ">=${yacl_version}"
+		"architectury": ">=${architectury_version}"
 	},
 	"custom": {
 		"modmenu": {

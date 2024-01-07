@@ -40,8 +40,8 @@ public class MixinProxy {
 			double    cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
 			double    cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);
 			// 方向向量 != 0
-			Vector3d lookImpulse        = new Vector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
-			Vector3d leftImpulse        = new Vector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
+			Vector3d lookImpulse        = Vectors.toVector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
+			Vector3d leftImpulse        = Vectors.toVector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
 			Vector2d lookImpulseHorizon = new Vector2d(lookImpulse.x, lookImpulse.z).normalize();
 			Vector2d leftImpulseHorizon = new Vector2d(leftImpulse.x, leftImpulse.z).normalize();
 			// 乘上 impulse

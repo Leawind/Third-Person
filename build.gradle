@@ -13,7 +13,7 @@ subprojects {
 	dependencies {
 		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 		mappings loom.officialMojangMappings()
-		// mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
+		implementation 'org.joml:joml:1.10.5'
 	}
 }
 
@@ -33,11 +33,9 @@ allprojects {
 		maven { url 'https://maven.aliyun.com/repository/public' }
 		maven { url 'https://maven.aliyun.com/repository/google' }
 		
-		// YACL
-		maven { url "https://maven.isxander.dev/releases" }
+		maven { url "https://jitpack.io" }
 		maven { url "https://maven.terraformersmc.com/releases" }
 		maven { url "https://maven.quiltmc.org/repository/release" }
-		maven { url "https://jitpack.io" }
 		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
 		
 	}
