@@ -12,8 +12,6 @@ import net.minecraft.world.item.Items;
 import org.joml.Vector3d;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 public class ModReferee {
 	/**
@@ -71,13 +69,6 @@ public class ModReferee {
 		}
 	}
 
-	public static final HashSet<String> AUTO_AIM_ITEMS = new HashSet<>(List.of("item.minecraft.ender_pearl",
-																			   "item.minecraft.snowball",
-																			   "item.minecraft.egg",
-																			   "item.minecraft.splash_potion",
-																			   "item.minecraft.lingering_potion",
-																			   "item.minecraft.experience_bottle"));
-
 	/**
 	 * 判断当前是否在瞄准<br/>
 	 * <p>
@@ -105,7 +96,7 @@ public class ModReferee {
 			for (ItemStack stack: Arrays.asList(mainHandItem, offhandItem)) {
 				if (stack.is(Items.CROSSBOW) && CrossbowItem.isCharged(stack)) {
 					return true;    // 上了弦的弩
-				} else if (AUTO_AIM_ITEMS.contains(stack.getItem().getDescriptionId())) {
+				} else if (ModConstants.AUTO_AIM_ITEMS.contains(stack.getItem().getDescriptionId())) {
 					return true;
 				}
 			}

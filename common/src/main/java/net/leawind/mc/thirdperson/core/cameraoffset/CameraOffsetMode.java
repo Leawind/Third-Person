@@ -34,13 +34,12 @@ public class CameraOffsetMode {
 	/**
 	 * 当切换到头顶视角时的y偏移量（x偏移固定为0）
 	 */
-	private       double             centerOffsetRatio    = 0.25;
+	private       double             centerOffsetRatio    = 0;
 
 	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, double x, double y) {
 		this.cameraOffsetScheme = scheme;
 		setMaxDistance(maxDist);
 		setSideOffsetRatio(x, y);
-		setCenterOffsetRatio(0.6);
 	}
 
 	public Vector3d getEyeSmoothFactor () {

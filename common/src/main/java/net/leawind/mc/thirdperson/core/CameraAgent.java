@@ -31,12 +31,6 @@ import org.slf4j.LoggerFactory;
 public class CameraAgent {
 	@SuppressWarnings("unused")
 	public static final Logger            LOGGER                     = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	/**
-	 * 成像平面到相机的距离，这是一个固定值，硬编码在Minecraft源码中。
-	 * <p>
-	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
-	 */
-	public static final double            NEAR_PLANE_DISTANCE        = 0.05;
 	@Nullable
 	public static       BlockGetter       level;
 	@Nullable
@@ -60,15 +54,15 @@ public class CameraAgent {
 	/**
 	 * 相机偏移量
 	 */
-	public static final ExpSmoothVector2d smoothOffsetRatio          = new ExpSmoothVector2d().setSmoothFactorWeight(10).set(new Vector2d(0));
+	public static final ExpSmoothVector2d smoothOffsetRatio          = new ExpSmoothVector2d().setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT).set(new Vector2d(0));
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static final ExpSmoothVector3d smoothEyePosition          = new ExpSmoothVector3d().setSmoothFactorWeight(8);
+	public static final ExpSmoothVector3d smoothEyePosition          = new ExpSmoothVector3d().setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final ExpSmoothDouble   smoothDistanceToEye        = new ExpSmoothDouble().setSmoothFactorWeight(4).set(0D);
+	public static final ExpSmoothDouble   smoothDistanceToEye        = new ExpSmoothDouble().setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT).set(0D);
 
 	/**
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
@@ -106,7 +100,7 @@ public class CameraAgent {
 			x *= Config.lock_camera_pitch_angle ? 0: -0.15;
 			if (y != 0 || x != 0) {
 				lastCameraTurnTimeStamp = Blaze3D.getTime();
-				relativeRotation.set(Mth.clamp(relativeRotation.x + x, -89.8, 89.8), (relativeRotation.y + y) % 360f);
+				relativeRotation.set(Mth.clamp(relativeRotation.x + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (relativeRotation.y + y) % 360f);
 			}
 		}
 	}
@@ -255,7 +249,7 @@ public class CameraAgent {
 		// 垂直视野角度一半(弧度制）
 		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
 		// 成像平面宽高
-		double heightHalf = Math.tan(verticalRadianHalf) * NEAR_PLANE_DISTANCE;
+		double heightHalf = Math.tan(verticalRadianHalf) * ModConstants.NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
 		//		// 水平视野角度一半(弧度制）
 		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
@@ -264,7 +258,7 @@ public class CameraAgent {
 		double   smoothVirtualDistanceValue = smoothDistanceToEye.get();
 		// 偏移量
 		double upOffset   = smoothOffsetRatioValue.y * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
-		double leftOffset = smoothOffsetRatioValue.x * smoothVirtualDistanceValue * widthHalf / NEAR_PLANE_DISTANCE;
+		double leftOffset = smoothOffsetRatioValue.x * smoothVirtualDistanceValue * widthHalf / ModConstants.NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
 		Vector3d positionWithoutOffset = getPositionWithoutOffset();
 		// 应用到假相机
@@ -277,7 +271,6 @@ public class CameraAgent {
 	 * 为防止穿墙，重新计算 smoothVirtualDistance 的值
 	 */
 	public static void preventThroughWall () {
-		final double offset = 0.18;
 		// 防止穿墙
 		Vec3   cameraPosition    = fakeCamera.getPosition();
 		Vec3   smoothEyePosition = Vectors.toVec3(getSmoothEyePositionValue());
@@ -289,9 +282,9 @@ public class CameraAgent {
 			double offsetX = (i & 1) * 2 - 1;
 			double offsetY = (i >> 1 & 1) * 2 - 1;
 			double offsetZ = (i >> 2 & 1) * 2 - 1;
-			offsetX *= offset;
-			offsetY *= offset;
-			offsetZ *= offset;
+			offsetX *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
+			offsetY *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
+			offsetZ *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			HitResult hitresult = level.clip(new ClipContext(pickStart, pickStart.add(smoothEyeToCamera), ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));
 			if (hitresult.getType() != HitResult.Type.MISS) {
