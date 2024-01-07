@@ -79,7 +79,7 @@
 	"leawind_third_person.option.turn_with_camera_when_enter_first_person.desc": "When entering first-person view, make the player face in the same direction as the camera in the just-ended third-person view.",
 	"leawind_third_person.option.projectile_auto_aim": "Auto-Aim While Shooting",
 	"leawind_third_person.option.projectile_auto_aim.desc": "Automatically adjust the shooting angle to hit the target when aiming at blocks or entities.",
-	"key.categories.leawind_third_person": "Leawind Third Person",
+	"key.categories.leawind_third_person": "Leawind's Third Person",
 	"key.leawind_third_person.open_config_menu": "Open Configuration Menu",
 	"key.leawind_third_person.toggle_mod_enable": "Toggle Mod Enable",
 	"key.leawind_third_person.toggle_side": "Toggle Camera to the Other Side",
