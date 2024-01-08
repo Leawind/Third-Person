@@ -267,7 +267,7 @@ ij_java_wrap_comments                                           = true
 ij_java_wrap_first_method_in_call_chain                         = false
 ij_java_wrap_long_lines                                         = true
 
-[Config.java]
+[ConfigBuilders.java]
 max_line_length                                         = 256
 ij_java_use_relative_indents                            = false
 ij_java_wrap_first_method_in_call_chain                 = false

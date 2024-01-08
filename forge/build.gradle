@@ -23,7 +23,11 @@ configurations {
 }
 dependencies {
 	forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-	modApi "dev.architectury:architectury-forge:${architectury_version}" // Architectury-api
+	// Architectury-api
+	modApi "dev.architectury:architectury-forge:${architectury_version}"
+	// Cloth Config API
+	api "me.shedaniel.cloth:cloth-config-forge:${cloth_config_api_version}"
+	//
 	common(project(path: ":common", configuration: "namedElements")) { transitive false }
 	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }

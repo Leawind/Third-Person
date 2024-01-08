@@ -42,7 +42,7 @@ public class ModReferee {
 	 * 当前是否显示准星
 	 */
 	public static boolean shouldRenderCrosshair () {
-		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? Config.render_crosshair_when_aiming: Config.render_crosshair_when_not_aiming);
+		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? Config.get().render_crosshair_when_aiming: Config.get().render_crosshair_when_not_aiming);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class ModReferee {
 	 */
 	public static boolean isAttachedEntityInvisible () {
 		Minecraft mc = Minecraft.getInstance();
-		if (!Config.player_fade_out_enabled) {
+		if (!Config.get().player_fade_out_enabled) {
 			return false;
 		} else if (mc.cameraEntity == null || CameraAgent.camera == null) {
 			return false;
@@ -64,10 +64,10 @@ public class ModReferee {
 		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
 		Vector3d eyePosition    = CameraAgent.getSmoothEyePositionValue();
 		Vector3d cameraPosition = Vectors.toVector3d(CameraAgent.camera.getPosition());
-		if (Config.cameraOffsetScheme.getMode().getMaxDistance() <= Config.distanceMonoList.get(0)) {
+		if (Config.get().cameraOffsetScheme.getMode().getMaxDistance() <= Config.get().distanceMonoList.get(0)) {
 			return true;
 		} else {
-			return eyePosition.distance(cameraPosition) <= Config.distanceMonoList.get(0);
+			return eyePosition.distance(cameraPosition) <= Config.get().distanceMonoList.get(0);
 		}
 	}
 

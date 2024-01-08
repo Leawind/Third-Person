@@ -8,6 +8,7 @@ import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
@@ -32,7 +33,7 @@ public class ModEvents {
 		CameraAgent.updateSmoothEyePosition(0.05);
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
-		Config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
+		Config.get().cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
 	}
 
 	private static void onClientStarted (Minecraft minecraft) {
@@ -64,9 +65,9 @@ public class ModEvents {
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
 		if (ModReferee.isAdjustingCameraDistance()) {
-			double dist = Config.cameraOffsetScheme.getMode().getMaxDistance();
-			dist = Config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
-			Config.cameraOffsetScheme.getMode().setMaxDistance(dist);
+			double dist = Config.get().cameraOffsetScheme.getMode().getMaxDistance();
+			dist = Config.get().distanceMonoList.offset(dist, (int)-Math.signum(amount));
+			Config.get().cameraOffsetScheme.getMode().setMaxDistance(dist);
 			return EventResult.interruptFalse();
 		} else {
 			return EventResult.pass();
@@ -77,8 +78,8 @@ public class ModEvents {
 	}
 
 	public static void onStopAdjustingCameraOffset () {
-		Config.loadFromCameraOffsetScheme();
-		Config.save();
+		Config.get().loadFromCameraOffsetScheme();
+		ConfigManager.get().save();
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class ModEvents {
 			return;
 		}
 		Minecraft          mc     = Minecraft.getInstance();
-		CameraOffsetScheme scheme = Config.cameraOffsetScheme;
+		CameraOffsetScheme scheme = Config.get().cameraOffsetScheme;
 		if (scheme.isCenter()) {
 			// 相机在头顶，只能上下调整
 			double topOffset = scheme.getMode().getCenterOffsetRatio();

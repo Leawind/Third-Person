@@ -64,8 +64,8 @@ public class CameraOffsetScheme {
 	}
 
 	public void onModify () {
-		if (Config.cameraOffsetScheme == this) {
-			Config.loadFromCameraOffsetScheme();
+		if (Config.get() != null && Config.get().cameraOffsetScheme == this) {
+			Config.get().loadFromCameraOffsetScheme();
 		}
 	}
 

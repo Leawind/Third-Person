@@ -32,11 +32,14 @@ allprojects {
 		mavenCentral()
 		maven { url 'https://maven.aliyun.com/repository/public' }
 		maven { url 'https://maven.aliyun.com/repository/google' }
-		
+		//
 		maven { url "https://jitpack.io" }
 		maven { url "https://maven.terraformersmc.com/releases" }
 		maven { url "https://maven.quiltmc.org/repository/release" }
 		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+		// Cloth Config API
+		maven { url "https://maven.shedaniel.me/" }
+		maven { url "https://maven.terraformersmc.com/releases/" }
 		
 	}
 	tasks.withType(JavaCompile) {

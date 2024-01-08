@@ -30,7 +30,7 @@ public class PlayerAgent {
 	public static void onServerAiStep () {
 		Minecraft mc = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
-		if (!Config.rotate_to_moving_direction) {
+		if (!Config.get().rotate_to_moving_direction) {
 			return;
 		} else if (wasInterecting) {
 			return;
@@ -63,10 +63,10 @@ public class PlayerAgent {
 			turnToCameraRotation(true);
 			//			} else if (CameraAgent.wasAttachedEntityInvisible) {
 			//				turnToCameraRotation(true);
-		} else if (Config.player_rotate_with_camera_when_not_aiming) {
+		} else if (Config.get().player_rotate_with_camera_when_not_aiming) {
 			turnToCameraRotation(true);
-		} else if (wasInterecting && Config.auto_rotate_interacting) {
-			if (Config.rotate_interacting_type) {
+		} else if (wasInterecting && Config.get().auto_rotate_interacting) {
+			if (Config.get().rotate_interacting_type) {
 				turnToCameraHitResult(true);
 			} else {
 				turnToCameraRotation(true);

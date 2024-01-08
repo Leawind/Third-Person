@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
@@ -28,13 +29,14 @@ public class ModKeys {
 	 */
 	public static final  KeyMapping FORCE_AIMING      = new ThirdPersonKeyMapping("force_aiming", InputConstants.UNKNOWN.getValue());
 	private static final KeyMapping TOOGLE_MOD_ENABLE = new ThirdPersonKeyMapping("toggle_mod_enable").onDown(() -> {
+		Config config = Config.get();
 		if (CameraAgent.isThirdPerson()) {
-			if (Config.is_mod_enable) {
+			if (config.is_mod_enable) {
 				PlayerAgent.turnToCameraRotation(true);
 			} else {
 				CameraAgent.onEnterThirdPerson();
 			}
-			Config.is_mod_enable = !Config.is_mod_enable;
+			config.is_mod_enable = !config.is_mod_enable;
 		}
 	});
 	/**
@@ -43,23 +45,23 @@ public class ModKeys {
 	private static final KeyMapping OPEN_CONFIG_MENU  = new ThirdPersonKeyMapping("open_config_menu").onDown(() -> {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.screen == null) {
-			mc.setScreen(Config.getConfigScreen(null));
+			mc.setScreen(ConfigManager.get().getConfigScreen(null));
 		}
 	});
 	/**
 	 * 切换左右
 	 */
 	private static final KeyMapping TOGGLE_SIDE       = new ThirdPersonKeyMapping("toggle_side", InputConstants.KEY_CAPSLOCK).onDown(() -> {
-		if (Config.cameraOffsetScheme.isCenter()) {
-			Config.cameraOffsetScheme.nextSide();
+		if (Config.get().cameraOffsetScheme.isCenter()) {
+			Config.get().cameraOffsetScheme.nextSide();
 			return true;
 		} else {
 			return false;
 		}
 	}).onHold(() -> {
-		Config.cameraOffsetScheme.setToCenter();
+		Config.get().cameraOffsetScheme.setToCenter();
 	}).onPress(() -> {
-		Config.cameraOffsetScheme.nextSide();
+		Config.get().cameraOffsetScheme.nextSide();
 	});
 	/**
 	 * 切换瞄准状态
