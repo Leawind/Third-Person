@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +22,15 @@ public class CameraOffsetScheme {
 	public              CameraOffsetMode   normalMode;
 	public              boolean            isAiming = false;
 	protected           boolean            isCenter = false;
+	@Nullable
+	private             Config             config;
 
 	private CameraOffsetScheme () {
+	}
+
+	public CameraOffsetScheme bindConfig (Config config) {
+		this.config = config;
+		return this;
 	}
 
 	public static CameraOffsetScheme create (double normalMaxDist, double normalOffsetX, double normalOffsetY, double aimingMaxDist, double aimingOffsetX, double aimingOffsetY) {
@@ -64,8 +72,8 @@ public class CameraOffsetScheme {
 	}
 
 	public void onModify () {
-		if (Config.get() != null && Config.get().cameraOffsetScheme == this) {
-			Config.get().loadFromCameraOffsetScheme();
+		if (config != null && config.cameraOffsetScheme == this) {
+			config.updateFromCameraOffsetScheme();
 		}
 	}
 

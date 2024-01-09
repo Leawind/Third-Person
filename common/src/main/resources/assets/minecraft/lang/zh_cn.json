@@ -1,8 +1,8 @@
 {
 	"leawind_third_person.text.title": "Leawind的第三人称",
 	"leawind_third_person.text.description": "提供更好的第三人称视角",
-	"leawind_third_person.option_category.common": "常用",
-	"leawind_third_person.option_category.common.desc": "一些常用的配置",
+	"leawind_third_person.option_category.general": "通用",
+	"leawind_third_person.option_category.general.desc": "一些常用的配置",
 	"leawind_third_person.option_category.camera_offset": "相机偏移",
 	"leawind_third_person.option_category.camera_offset.desc": "调整玩家在屏幕上的位置等参数。!你不需要手动调整此页的选项们，因为可以在游戏中按住Z后用鼠标调整。",
 	"leawind_third_person.option_category.smooth_factors": "平滑系数",

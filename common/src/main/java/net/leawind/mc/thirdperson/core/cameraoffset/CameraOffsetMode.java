@@ -38,8 +38,8 @@ public class CameraOffsetMode {
 
 	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, double x, double y) {
 		this.cameraOffsetScheme = scheme;
-		setMaxDistance(maxDist);
-		setSideOffsetRatio(x, y);
+		maxDistance             = maxDist;
+		sideOffsetRatio.set(x, y);
 	}
 
 	public Vector3d getEyeSmoothFactor () {

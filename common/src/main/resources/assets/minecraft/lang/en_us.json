@@ -1,8 +1,8 @@
 {
 	"leawind_third_person.text.title": "Leawind's Third Person",
 	"leawind_third_person.text.description": "Provides a better third-person perspective.",
-	"leawind_third_person.option_category.common": "Common",
-	"leawind_third_person.option_category.common.desc": "Some common configurations.",
+	"leawind_third_person.option_category.general": "Common",
+	"leawind_third_person.option_category.general.desc": "Some general configurations.",
 	"leawind_third_person.option_category.camera_offset": "Camera Offset",
 	"leawind_third_person.option_category.camera_offset.desc": "Adjust parameters like player position on the screen. You don't need to manually adjust options on this page, as you can hold Z in the game and use the mouse to adjust.",
 	"leawind_third_person.option_category.smooth_factors": "Smooth Factors",

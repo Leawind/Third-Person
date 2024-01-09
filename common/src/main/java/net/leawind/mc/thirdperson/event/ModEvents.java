@@ -78,7 +78,7 @@ public class ModEvents {
 	}
 
 	public static void onStopAdjustingCameraOffset () {
-		Config.get().loadFromCameraOffsetScheme();
+		Config.get().updateFromCameraOffsetScheme();
 		ConfigManager.get().save();
 	}
 

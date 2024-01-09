@@ -13,6 +13,7 @@ public class ThirdPersonMod {
 	public static final ConfigManager CONFIG_MANAGER = new ConfigManager();
 
 	public static void init () {
+		CONFIG_MANAGER.init();
 		ModKeys.register();
 		ModEvents.register();
 	}

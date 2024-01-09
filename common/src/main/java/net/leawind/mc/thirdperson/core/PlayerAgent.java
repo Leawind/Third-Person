@@ -6,7 +6,6 @@ import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.world.entity.LivingEntity;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
