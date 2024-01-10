@@ -3,13 +3,13 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
-import net.leawind.mc.util.Vectors;
+import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
+import net.leawind.mc.util.vector.Vector2d;
+import net.leawind.mc.util.vector.Vector3d;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**

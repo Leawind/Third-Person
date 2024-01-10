@@ -1,8 +1,8 @@
 package net.leawind.mc.util.smoothvalue;
 
 
-import net.leawind.mc.util.Vectors;
-import org.joml.Vector3d;
+import net.leawind.mc.util.vector.Vector3d;
+import net.leawind.mc.util.vector.Vectors;
 
 @SuppressWarnings("unused")
 public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {

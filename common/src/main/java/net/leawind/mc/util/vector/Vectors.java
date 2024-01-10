@@ -1,11 +1,9 @@
-package net.leawind.mc.util;
+package net.leawind.mc.util.vector;
 
 
 import com.mojang.math.Vector3f;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
 
 @SuppressWarnings("unused")
 public class Vectors {
@@ -137,10 +135,6 @@ public class Vectors {
 
 	public static Vector2d pow (Vector2d v, Vector2d p) {
 		return new Vector2d(Math.pow(v.x, p.x), Math.pow(v.y, p.y));
-	}
-
-	public static Vector3d sigmoid (Vector3d v) {
-		return new Vector3d(1 / (1 + Math.exp(-v.x)), 1 / (1 + Math.exp(-v.y)), 1 / (1 + Math.exp(-v.z)));
 	}
 
 	public static Vector3d toVector3d (Vec3 v) {

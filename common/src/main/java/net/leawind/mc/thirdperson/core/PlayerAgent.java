@@ -3,13 +3,13 @@ package net.leawind.mc.thirdperson.core;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.Vectors;
+import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
+import net.leawind.mc.util.vector.Vector2d;
+import net.leawind.mc.util.vector.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

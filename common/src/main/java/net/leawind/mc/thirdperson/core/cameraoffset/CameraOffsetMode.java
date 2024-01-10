@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import org.joml.Vector2d;
-import org.joml.Vector3d;
+import net.leawind.mc.util.vector.Vector2d;
+import net.leawind.mc.util.vector.Vector3d;
 
 /**
  * 相机偏移模式

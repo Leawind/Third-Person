@@ -3,7 +3,7 @@ plugins {
 	id "dev.architectury.loom" version "1.3-SNAPSHOT" apply false
 }
 architectury {
-	minecraft = rootProject.minecraft_version
+	minecraft = minecraft_version
 }
 subprojects {
 	apply plugin: "dev.architectury.loom"
@@ -11,9 +11,8 @@ subprojects {
 		silentMojangMappingsLicense()
 	}
 	dependencies {
-		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+		minecraft "com.mojang:minecraft:${minecraft_version}"
 		mappings loom.officialMojangMappings()
-		implementation 'org.joml:joml:1.10.5'
 	}
 }
 
@@ -22,10 +21,10 @@ allprojects {
 	apply plugin: "architectury-plugin"
 	apply plugin: "maven-publish"
 	base {
-		archivesName = rootProject.mod_id
+		archivesName = mod_id
 	}
-	version = rootProject.mod_version
-	group = rootProject.mod_group_id
+	version = mod_version
+	group = mod_group_id
 	repositories {
 		mavenLocal()
 		
@@ -51,7 +50,9 @@ allprojects {
 	}
 	tasks.withType(Jar).configureEach {
 		setDuplicatesStrategy DuplicatesStrategy.INCLUDE
-		from rootProject.file("LICENSE.txt")
+		from {
+			rootProject.file("LICENSE.txt")
+		}
 	}
 }
 
