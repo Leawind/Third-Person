@@ -65,6 +65,7 @@
 	"leawind_third_person.option.max_distance.desc": "",
 	"leawind_third_person.option.offset_x": "X Offset",
 	"leawind_third_person.option.is_centered": "Centered player",
+	"leawind_third_person.option.is_centered.desc": "Is player at the center of screen",
 	"leawind_third_person.option.offset_x.desc": "",
 	"leawind_third_person.option.offset_y": "Y Offset",
 	"leawind_third_person.option.offset_y.desc": "",

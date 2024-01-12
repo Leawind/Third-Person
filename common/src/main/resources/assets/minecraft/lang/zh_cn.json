@@ -65,6 +65,7 @@
 	"leawind_third_person.option.max_distance.desc": "",
 	"leawind_third_person.option.offset_x": "X偏移",
 	"leawind_third_person.option.is_centered": "玩家居中",
+	"leawind_third_person.option.is_centered.desc": "玩家是否位于屏幕中央",
 	"leawind_third_person.option.offset_x.desc": "",
 	"leawind_third_person.option.offset_y": "Y偏移",
 	"leawind_third_person.option.offset_y.desc": "",
