@@ -71,8 +71,8 @@ public class CameraOffsetModeAiming extends CameraOffsetMode {
 	}
 
 	@Override
-	public CameraOffsetMode setSide (boolean isLeft) {
-		if (isLeft ^ isCameraLeftOfPlayer()) {
+	public CameraOffsetMode setSide (boolean isCameraLeftOfPlayer) {
+		if (isCameraLeftOfPlayer ^ isCameraLeftOfPlayer()) {
 			toNextSide();
 			setCentered(false);
 		}
@@ -81,6 +81,9 @@ public class CameraOffsetModeAiming extends CameraOffsetMode {
 
 	@Override
 	public void toNextSide () {
+		if (isCentered()) {
+			setCentered(false);
+		}
 		config.aiming_offset_x = -config.aiming_offset_x;
 	}
 

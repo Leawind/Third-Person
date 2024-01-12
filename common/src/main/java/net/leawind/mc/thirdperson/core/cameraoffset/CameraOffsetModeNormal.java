@@ -71,8 +71,8 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public CameraOffsetMode setSide (boolean isLeft) {
-		if (isLeft ^ isCameraLeftOfPlayer()) {
+	public CameraOffsetMode setSide (boolean isCameraLeftOfPlayer) {
+		if (isCameraLeftOfPlayer ^ isCameraLeftOfPlayer()) {
 			toNextSide();
 			setCentered(false);
 		}
@@ -81,6 +81,9 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 
 	@Override
 	public void toNextSide () {
+		if (isCentered()) {
+			setCentered(false);
+		}
 		config.normal_offset_x = -config.normal_offset_x;
 	}
 
