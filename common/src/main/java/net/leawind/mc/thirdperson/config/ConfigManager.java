@@ -64,6 +64,7 @@ public class ConfigManager {
 	public void save () {
 		try {
 			FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
+			ThirdPersonMod.LOGGER.info("Config is saved.");
 		} catch (IOException e) {
 			ThirdPersonMod.LOGGER.error("Failed to save config.", e);
 		}

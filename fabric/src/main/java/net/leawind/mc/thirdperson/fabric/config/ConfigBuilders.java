@@ -27,7 +27,7 @@ public class ConfigBuilders {
 		final ConfigCategory CATEGORY_GENERAL = builder.getOrCreateCategory(ConfigManager.getText("option_category.general"));
 		{
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_mod_enable", true, config.is_mod_enable, v -> config.is_mod_enable = v, config, entryBuilder));
-			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", true, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, config, entryBuilder));
+			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", false, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, config, entryBuilder));
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = entryBuilder.startSubCategory(ConfigManager.getText("option_group.player_rotation"));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", false, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, config, entryBuilder));
@@ -95,9 +95,9 @@ public class ConfigBuilders {
 		{
 			// SubCategory: Normal Mode
 			final SubCategoryBuilder SUBCATEGORY_NORMAL_MODE = buildSubCategory("normal_mode", entryBuilder);
-			SUBCATEGORY_NORMAL_MODE.add(buildDoubleEntry("max_distance", 2.5, 1, 32, config.normal_max_distance, v -> {
+			SUBCATEGORY_NORMAL_MODE.add(buildDoubleEntry("max_distance", 2.5, 0.5, 32, config.normal_max_distance, v -> {
 				config.normal_max_distance = v;
-				config.updateToCameraDistances();
+				config.updateToCameraOffsetScheme();
 			}, config, entryBuilder));
 			SUBCATEGORY_NORMAL_MODE.add(buildOffsetRatioEntry("offset_x", -0.28, config.normal_offset_x, v -> config.normal_offset_x = v, config, entryBuilder));
 			SUBCATEGORY_NORMAL_MODE.add(buildOffsetRatioEntry("offset_y", 0.31, config.normal_offset_x, v -> config.normal_offset_x = v, config, entryBuilder));
@@ -105,9 +105,9 @@ public class ConfigBuilders {
 			CATEGORY_CAMERA_OFFSET.addEntry(SUBCATEGORY_NORMAL_MODE.build());
 			// SubCategory: Aiming Mode
 			final SubCategoryBuilder SUBCATEGORY_AIMING_MODE = buildSubCategory("aiming_mode", entryBuilder);
-			SUBCATEGORY_AIMING_MODE.add(buildDoubleEntry("max_distance", 0.89, 1, 32, config.aiming_max_distance, v -> {
+			SUBCATEGORY_AIMING_MODE.add(buildDoubleEntry("max_distance", 0.89, 0.5, 32, config.aiming_max_distance, v -> {
 				config.aiming_max_distance = v;
-				config.updateToCameraDistances();
+				config.updateToCameraOffsetScheme();
 			}, config, entryBuilder));
 			SUBCATEGORY_AIMING_MODE.add(buildOffsetRatioEntry("offset_x", -0.47, config.aiming_offset_x, v -> config.aiming_offset_x = v, config, entryBuilder));
 			SUBCATEGORY_AIMING_MODE.add(buildOffsetRatioEntry("offset_y", -0.09, config.aiming_offset_x, v -> config.aiming_offset_x = v, config, entryBuilder));
@@ -156,7 +156,7 @@ public class ConfigBuilders {
 	public static DoubleListEntry buildOffsetRatioEntry (String name, double defaultValue, double currentValue, Consumer<Double> rawSetter, Config config, ConfigEntryBuilder entryBuilder) {
 		return buildDoubleEntry(name, defaultValue, -1, 1, currentValue, v -> {
 			rawSetter.accept(v);
-			config.updateFromCameraOffsetScheme();
+			config.updateToCameraOffsetScheme();
 		}, config, entryBuilder);
 	}
 }

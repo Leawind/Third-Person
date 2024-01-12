@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
  * 第三人称下，相机会根据其当前所处的模式来确定相机的行为。例如如何跟随玩家、如何旋转、与玩家的相对位置如何确定等。
  * <p>
  * 默认有两种模式，按F5在第一人称和两种模式间切换
+ *
+ * TODO 直接从 Config 读取偏移量，而非存储在此对象中
  */
 public class CameraOffsetScheme {
 	public static final CameraOffsetScheme DEFAULT  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);

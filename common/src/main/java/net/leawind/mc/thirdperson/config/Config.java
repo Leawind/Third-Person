@@ -112,7 +112,7 @@ public class Config {
 	 * <p>
 	 * 当玩家调整偏移量等选项时，会直接修改 CameraOffsetScheme 对象，而不是直接修改 Config
 	 * <p>
-	 * 所以修改完后需要立即将改动应用到 Config
+	 * 修改完 CameraOffsetScheme 后将改动应用到 Config
 	 */
 	public void updateFromCameraOffsetScheme () {
 		// Normal mode //
