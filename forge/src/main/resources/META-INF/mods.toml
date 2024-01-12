@@ -32,9 +32,9 @@ versionRange = "[${architectury_version},)"
 ordering = "AFTER"
 side = "BOTH"
 
-[[dependencies."${mod_id}"]]
-modId = "cloth_config"
-mandatory = true
-versionRange = "[${cloth_config_api_version},)"
-ordering = "NONE"
-side = "CLIENT"
+#[[dependencies."${mod_id}"]]
+#modId = "cloth_config"
+#mandatory = true
+#versionRange = "[${cloth_config_api_version},)"
+#ordering = "NONE"
+#side = "CLIENT"

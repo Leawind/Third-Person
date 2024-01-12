@@ -15,9 +15,6 @@ import net.minecraft.client.gui.screens.Screen;
 import java.util.function.Consumer;
 
 public class ConfigBuilders {
-	/**
-	 * DOITNOW fabric build screen
-	 */
 	public static Screen buildConfigScreen (Config config, Screen parent) {
 		final ConfigBuilder builder = ConfigBuilder.create()
 			.setParentScreen(parent)
