@@ -54,7 +54,6 @@ public class ConfigManager {
 			assert ModConstants.CONFIG_FILE.getParentFile().mkdirs();
 			if (ModConstants.CONFIG_FILE.exists()) {
 				config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
-				config.update();
 			} else {
 				LOGGER.info("Config not found, creating one.");
 				save();
@@ -62,6 +61,7 @@ public class ConfigManager {
 		} catch (IOException e) {
 			LOGGER.error("Failed to load config.", e);
 		}
+		config.update();
 	}
 
 	public void save () {
