@@ -9,7 +9,7 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
 description = "${mod_description}"
-logoFile = "${mod_icon}"
+logoFile = "TODO"
 
 [[dependencies."${mod_id}"]]
 modId = "forge"
