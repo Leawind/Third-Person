@@ -64,6 +64,7 @@
 	"leawind_third_person.option.max_distance": "相机到玩家的最大距离",
 	"leawind_third_person.option.max_distance.desc": "",
 	"leawind_third_person.option.offset_x": "X偏移",
+	"leawind_third_person.option.is_centered": "玩家居中",
 	"leawind_third_person.option.offset_x.desc": "",
 	"leawind_third_person.option.offset_y": "Y偏移",
 	"leawind_third_person.option.offset_y.desc": "",
