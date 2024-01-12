@@ -3,10 +3,7 @@ package net.leawind.mc.util.monolist;
 
 import net.minecraft.util.Mth;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -128,7 +125,6 @@ public class StaticMonoList {
 	public double adsorption (double value) {
 		return list[iadsorption(value)];
 	}
-
 
 	public static StaticMonoList linear (int length) {
 		return new StaticMonoList(length, d -> (double)d);

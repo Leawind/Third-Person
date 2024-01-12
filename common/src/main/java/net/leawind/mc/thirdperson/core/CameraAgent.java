@@ -2,16 +2,17 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.blaze3d.Blaze3D;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
-import net.leawind.mc.util.vector.Vectors;
 import net.leawind.mc.util.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.util.smoothvalue.ExpSmoothVector3d;
+import net.leawind.mc.util.vector.Vector2d;
+import net.leawind.mc.util.vector.Vector3d;
+import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -24,46 +25,36 @@ import net.minecraft.world.phys.*;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.leawind.mc.util.vector.Vector2d;
-import net.leawind.mc.util.vector.Vector3d;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CameraAgent {
-	@SuppressWarnings("unused")
-	public static final Logger            LOGGER                     = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
-	@Nullable
-	public static       BlockGetter       level;
-	@Nullable
-	public static       Camera            camera;
-	@NotNull
-	public static final Camera            fakeCamera                 = new Camera();
+	@Nullable public static      BlockGetter       level;
+	@Nullable public static      Camera            camera;
+	@NotNull public static final Camera            fakeCamera                 = new Camera();
 	/**
 	 * renderTick 中更新
 	 */
-	public static       boolean           wasAttachedEntityInvisible = false;
+	public static                boolean           wasAttachedEntityInvisible = false;
 	/**
 	 * 上一次 render tick 的时间戳
 	 */
-	public static       double            lastRenderTickTimeStamp    = 0;
+	public static                double            lastRenderTickTimeStamp    = 0;
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	public static       double            lastCameraTurnTimeStamp    = 0;
-	@NotNull
-	public static final Vector2d          relativeRotation           = new Vector2d(0);
+	public static                double            lastCameraTurnTimeStamp    = 0;
+	@NotNull public static final Vector2d          relativeRotation           = new Vector2d(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static final ExpSmoothVector2d smoothOffsetRatio          = new ExpSmoothVector2d().setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT).set(new Vector2d(0));
+	public static final          ExpSmoothVector2d smoothOffsetRatio          = new ExpSmoothVector2d().setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT).set(new Vector2d(0));
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static final ExpSmoothVector3d smoothEyePosition          = new ExpSmoothVector3d().setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+	public static final          ExpSmoothVector3d smoothEyePosition          = new ExpSmoothVector3d().setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final ExpSmoothDouble   smoothDistanceToEye        = new ExpSmoothDouble().setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT).set(0D);
+	public static final          ExpSmoothDouble   smoothDistanceToEye        = new ExpSmoothDouble().setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT).set(0D);
 
 	/**
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化

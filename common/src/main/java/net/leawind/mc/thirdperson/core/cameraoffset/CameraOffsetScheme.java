@@ -1,11 +1,8 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 第三人称相机的偏移方案
@@ -15,15 +12,12 @@ import org.slf4j.LoggerFactory;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetScheme {
-	@SuppressWarnings("unused")
-	public static final Logger             LOGGER   = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static final CameraOffsetScheme DEFAULT  = CameraOffsetScheme.create(1.6, -0.372f, 0.2f, 0.8, -0.5f, 0f);
 	public              CameraOffsetMode   aimingMode;
 	public              CameraOffsetMode   normalMode;
 	public              boolean            isAiming = false;
 	protected           boolean            isCenter = false;
-	@Nullable
-	private             Config             config;
+	@Nullable private   Config             config;
 
 	private CameraOffsetScheme () {
 	}

@@ -1,21 +1,16 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.util.vector.Vector2d;
+import net.leawind.mc.util.vector.Vector3d;
 import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
-import net.leawind.mc.util.vector.Vector2d;
-import net.leawind.mc.util.vector.Vector3d;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PlayerAgent {
-	@SuppressWarnings("unused")
-	public static final Logger   LOGGER          = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	public static final Vector2d impulseHorizon  = new Vector2d(0);
 	public static final Vector3d impulse         = new Vector3d(0);
 	public static       boolean  wasInterecting  = false;

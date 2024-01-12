@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson.event;
 
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
@@ -10,12 +9,9 @@ import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("unused")
 public class ModKeys {
-	public static final  Logger     LOGGER            = LoggerFactory.getLogger(ThirdPersonMod.MOD_ID);
 	/**
 	 * 按住后进入调整相机位置的模式
 	 * <p>

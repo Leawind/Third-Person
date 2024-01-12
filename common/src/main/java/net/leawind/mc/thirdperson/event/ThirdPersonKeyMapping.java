@@ -30,14 +30,10 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 	private              long                                   pressLength  = 300;
 	private              long                                   keyDownTime  = 0;
 	private              Timer                                  timer        = null;
-	@Nullable
-	private              Supplier<Boolean>                      ondown       = null;
-	@Nullable
-	private              Supplier<Boolean>                      onup         = null;
-	@Nullable
-	private              Supplier<Boolean>                      onhold       = null;
-	@Nullable
-	private              Supplier<Boolean>                      onpress      = null;
+	@Nullable private    Supplier<Boolean>                      ondown       = null;
+	@Nullable private    Supplier<Boolean>                      onup         = null;
+	@Nullable private    Supplier<Boolean>                      onhold       = null;
+	@Nullable private    Supplier<Boolean>                      onpress      = null;
 
 	public ThirdPersonKeyMapping (String name) {
 		this(name, InputConstants.UNKNOWN.getValue());
