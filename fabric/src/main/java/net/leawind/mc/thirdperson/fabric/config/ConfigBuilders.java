@@ -95,20 +95,14 @@ public class ConfigBuilders {
 		{
 			// SubCategory: Normal Mode
 			final SubCategoryBuilder SUBCATEGORY_NORMAL_MODE = buildSubCategory("normal_mode", entryBuilder);
-			SUBCATEGORY_NORMAL_MODE.add(buildDoubleEntry("max_distance", 2.5, 0.5, 32, config.normal_max_distance, v -> {
-				config.normal_max_distance = v;
-				config.updateToCameraOffsetScheme();
-			}, config, entryBuilder));
+			SUBCATEGORY_NORMAL_MODE.add(buildDoubleEntry("max_distance", 2.5, 0.5, 32, config.normal_max_distance, v -> config.normal_max_distance = v, config, entryBuilder));
 			SUBCATEGORY_NORMAL_MODE.add(buildOffsetRatioEntry("offset_x", -0.28, config.normal_offset_x, v -> config.normal_offset_x = v, config, entryBuilder));
 			SUBCATEGORY_NORMAL_MODE.add(buildOffsetRatioEntry("offset_y", 0.31, config.normal_offset_x, v -> config.normal_offset_x = v, config, entryBuilder));
 			SUBCATEGORY_NORMAL_MODE.add(buildOffsetRatioEntry("offset_center", 0.24, config.normal_offset_x, v -> config.normal_offset_x = v, config, entryBuilder));
 			CATEGORY_CAMERA_OFFSET.addEntry(SUBCATEGORY_NORMAL_MODE.build());
 			// SubCategory: Aiming Mode
 			final SubCategoryBuilder SUBCATEGORY_AIMING_MODE = buildSubCategory("aiming_mode", entryBuilder);
-			SUBCATEGORY_AIMING_MODE.add(buildDoubleEntry("max_distance", 0.89, 0.5, 32, config.aiming_max_distance, v -> {
-				config.aiming_max_distance = v;
-				config.updateToCameraOffsetScheme();
-			}, config, entryBuilder));
+			SUBCATEGORY_AIMING_MODE.add(buildDoubleEntry("max_distance", 0.89, 0.5, 32, config.aiming_max_distance, v -> config.aiming_max_distance = v, config, entryBuilder));
 			SUBCATEGORY_AIMING_MODE.add(buildOffsetRatioEntry("offset_x", -0.47, config.aiming_offset_x, v -> config.aiming_offset_x = v, config, entryBuilder));
 			SUBCATEGORY_AIMING_MODE.add(buildOffsetRatioEntry("offset_y", -0.09, config.aiming_offset_x, v -> config.aiming_offset_x = v, config, entryBuilder));
 			SUBCATEGORY_AIMING_MODE.add(buildOffsetRatioEntry("offset_center", 0.48, config.aiming_offset_x, v -> config.aiming_offset_x = v, config, entryBuilder));
@@ -153,10 +147,7 @@ public class ConfigBuilders {
 		return buildDoubleEntry(name, defaultValue, 0, 1, currentValue, setter, config, entryBuilder);
 	}
 
-	public static DoubleListEntry buildOffsetRatioEntry (String name, double defaultValue, double currentValue, Consumer<Double> rawSetter, Config config, ConfigEntryBuilder entryBuilder) {
-		return buildDoubleEntry(name, defaultValue, -1, 1, currentValue, v -> {
-			rawSetter.accept(v);
-			config.updateToCameraOffsetScheme();
-		}, config, entryBuilder);
+	public static DoubleListEntry buildOffsetRatioEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, Config config, ConfigEntryBuilder entryBuilder) {
+		return buildDoubleEntry(name, defaultValue, -1, 1, currentValue, setter, config, entryBuilder);
 	}
 }

@@ -12,6 +12,7 @@ import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;
@@ -33,7 +34,7 @@ public class ModEvents {
 		CameraAgent.updateSmoothEyePosition(0.05);
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
-		Config.get().cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
+		Config.get().cameraOffsetScheme.setIsAiming(PlayerAgent.wasAiming);
 	}
 
 	private static void onClientStarted (Minecraft minecraft) {
@@ -78,7 +79,6 @@ public class ModEvents {
 	}
 
 	public static void onStopAdjustingCameraOffset () {
-		Config.get().updateFromCameraOffsetScheme();
 		ConfigManager.get().save();
 	}
 
@@ -94,22 +94,23 @@ public class ModEvents {
 		}
 		Minecraft          mc     = Minecraft.getInstance();
 		CameraOffsetScheme scheme = Config.get().cameraOffsetScheme;
-		if (scheme.isCenter()) {
+		CameraOffsetMode   mode   = scheme.getMode();
+		if (mode.isCentered()) {
 			// 相机在头顶，只能上下调整
-			double topOffset = scheme.getMode().getCenterOffsetRatio();
+			double topOffset = mode.getCenterOffsetRatio();
 			topOffset += -yMove / mc.getWindow().getScreenHeight();
 			topOffset = Vectors.clamp(topOffset, -1, 1);
-			scheme.getMode().setCenterOffsetRatio(topOffset);
+			mode.setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
-			double offsetX = scheme.getMode().getSideOffsetRatio().x;
-			double offsetY = scheme.getMode().getSideOffsetRatio().y;
+			double offsetX = mode.getSideOffsetRatio().x;
+			double offsetY = mode.getSideOffsetRatio().y;
 			offsetX += -xMove / mc.getWindow().getScreenWidth();
 			offsetY += -yMove / mc.getWindow().getScreenHeight();
 			offsetX = Vectors.clamp(offsetX, -1, 1);
 			offsetY = Vectors.clamp(offsetY, -1, 1);
 			scheme.setSide(Math.signum(offsetX));
-			scheme.getMode().setSideOffsetRatio(offsetX, offsetY);
+			mode.setSideOffsetRatio(offsetX, offsetY);
 		}
 	}
 

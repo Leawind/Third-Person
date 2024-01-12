@@ -1,116 +1,51 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
+import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.vector.Vector2d;
 import net.leawind.mc.util.vector.Vector3d;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * 相机偏移模式
- */
-public class CameraOffsetMode {
-	public        CameraOffsetScheme cameraOffsetScheme;
-	/**
-	 * 眼睛位置的平滑系数
-	 */
-	private final Vector3d           eyeSmoothFactor      = new Vector3d(0);
-	/**
-	 * 距离的平滑系数
-	 */
-	private       double             distanceSmoothFactor = 0;
-	/**
-	 * 相机偏移量的平滑系数
-	 */
-	private final Vector2d           offsetSmoothFactor   = new Vector2d(0);
-	/**
-	 * 到平滑眼睛的最大距离
-	 */
-	private       double             maxDistance          = 4.0;
-	/**
-	 * 相机偏移值
-	 * <p>
-	 * 表示玩家眼睛在屏幕上的位置，x 和 y 的范围都是 [-1, 1]
-	 */
-	private final Vector2d           sideOffsetRatio      = new Vector2d(0);
-	/**
-	 * 当切换到头顶视角时的y偏移量（x偏移固定为0）
-	 */
-	private       double             centerOffsetRatio    = 0;
+public abstract class CameraOffsetMode {
+	public @NotNull Config config;
 
-	public CameraOffsetMode (CameraOffsetScheme scheme, double maxDist, double x, double y) {
-		this.cameraOffsetScheme = scheme;
-		maxDistance             = maxDist;
-		sideOffsetRatio.set(x, y);
+	public CameraOffsetMode (@NotNull Config config) {
+		this.config = config;
 	}
 
-	public Vector3d getEyeSmoothFactor () {
-		return new Vector3d(eyeSmoothFactor);
-	}
+	abstract public Vector3d getEyeSmoothFactor ();
 
-	public CameraOffsetMode setEyeSmoothFactor (double horizon, double vertical) {
-		eyeSmoothFactor.set(horizon, vertical, horizon);
-		cameraOffsetScheme.onModify();
-		return this;
-	}
+	abstract public CameraOffsetMode setEyeSmoothFactor (double horizon, double vertical);
 
-	public double getDistanceSmoothFactor () {
-		return distanceSmoothFactor;
-	}
+	abstract public double getDistanceSmoothFactor ();
 
-	public CameraOffsetMode setDistanceSmoothFactor (double smoothFactor) {
-		distanceSmoothFactor = smoothFactor;
-		cameraOffsetScheme.onModify();
-		return this;
-	}
+	abstract public CameraOffsetMode setDistanceSmoothFactor (double smoothFactor);
 
-	public Vector2d getOffsetSmoothFactor () {
-		return new Vector2d(offsetSmoothFactor);
-	}
+	abstract public Vector2d getOffsetSmoothFactor ();
 
-	public CameraOffsetMode setOffsetSmoothFactor (double d) {
-		offsetSmoothFactor.set(d, d);
-		cameraOffsetScheme.onModify();
-		return this;
-	}
+	abstract public CameraOffsetMode setOffsetSmoothFactor (double d);
 
-	public double getMaxDistance () {
-		return maxDistance;
-	}
+	abstract public double getMaxDistance ();
 
-	public void setMaxDistance (double distance) {
-		maxDistance = distance;
-		cameraOffsetScheme.onModify();
-	}
+	abstract public CameraOffsetMode setMaxDistance (double distance);
 
-	public void setSide (boolean isLeft) {
-		if (isLeft ^ (sideOffsetRatio.x > 0)) {
-			sideOffsetRatio.set(-sideOffsetRatio.x, sideOffsetRatio.y);
-		}
-		cameraOffsetScheme.onModify();
-	}
+	abstract public boolean isCentered ();
 
-	public void nextSide () {
-		sideOffsetRatio.x = -sideOffsetRatio.x;
-	}
+	abstract public CameraOffsetMode setCentered (boolean isCentered);
 
-	public Vector2d getOffsetRatio () {
-		return cameraOffsetScheme.isCenter ? new Vector2d(0, getCenterOffsetRatio()): getSideOffsetRatio();
-	}
+	abstract public boolean isCameraLeftOfPlayer ();
 
-	public void setSideOffsetRatio (double x, double y) {
-		sideOffsetRatio.set(x, y);
-		cameraOffsetScheme.onModify();
-	}
+	abstract public CameraOffsetMode setSide (boolean isLeft);
 
-	public double getCenterOffsetRatio () {
-		return centerOffsetRatio;
-	}
+	abstract public void toNextSide ();
 
-	public Vector2d getSideOffsetRatio () {
-		return new Vector2d(sideOffsetRatio);
-	}
+	abstract public Vector2d getOffsetRatio ();
 
-	public void setCenterOffsetRatio (double offset) {
-		centerOffsetRatio = offset;
-		cameraOffsetScheme.onModify();
-	}
+	abstract public CameraOffsetMode setSideOffsetRatio (double x, double y);
+
+	abstract public double getCenterOffsetRatio ();
+
+	abstract public Vector2d getSideOffsetRatio ();
+
+	abstract public CameraOffsetMode setCenterOffsetRatio (double offset);
 }

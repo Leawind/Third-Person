@@ -48,16 +48,16 @@ public class ModKeys {
 	 * 切换左右
 	 */
 	private static final KeyMapping TOGGLE_SIDE       = new ThirdPersonKeyMapping("toggle_side", InputConstants.KEY_CAPSLOCK).onDown(() -> {
-		if (Config.get().cameraOffsetScheme.isCenter()) {
-			Config.get().cameraOffsetScheme.nextSide();
+		if (Config.get().cameraOffsetScheme.isCentered()) {
+			Config.get().cameraOffsetScheme.toNextSide();
 			return true;
 		} else {
 			return false;
 		}
 	}).onHold(() -> {
-		Config.get().cameraOffsetScheme.setToCenter();
+		Config.get().cameraOffsetScheme.setCentered(true);
 	}).onPress(() -> {
-		Config.get().cameraOffsetScheme.nextSide();
+		Config.get().cameraOffsetScheme.toNextSide();
 	});
 	/**
 	 * 切换瞄准状态

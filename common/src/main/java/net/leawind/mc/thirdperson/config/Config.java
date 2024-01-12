@@ -46,6 +46,7 @@ public class Config {
 	@Expose public int                available_distance_count                  = 16;
 	@Expose public double             camera_distance_min                       = 0.5;
 	@Expose public double             camera_distance_max                       = 8;
+	// Smooth factors
 	@Expose public double             flying_smooth_factor                      = 0.5;
 	@Expose public double             adjusting_camera_offset_smooth_factor     = 0.100;
 	@Expose public double             adjusting_distance_smooth_factor          = 0.100;
@@ -57,17 +58,20 @@ public class Config {
 	@Expose public double             aiming_smooth_factor_vertical             = 0.002;
 	@Expose public double             aiming_camera_offset_smooth_factor        = 0.100;
 	@Expose public double             aiming_distance_smooth_factor             = 0.110;
+	// Camera offsets
+	@Expose public boolean            normal_is_centered                        = false;
 	@Expose public double             normal_max_distance                       = 2.5;
 	@Expose public double             normal_offset_x                           = -0.28;
 	@Expose public double             normal_offset_y                           = 0.31;
 	@Expose public double             normal_offset_center                      = 0.24D;
+	@Expose public boolean            aiming_is_centered                        = false;
 	@Expose public double             aiming_max_distance                       = 0.89;
 	@Expose public double             aiming_offset_x                           = -0.47;
 	@Expose public double             aiming_offset_y                           = -0.09;
 	@Expose public double             aiming_offset_center                      = 0.48;
 	// ============================================================ //
 	public         StaticMonoList     distanceMonoList;
-	public         CameraOffsetScheme cameraOffsetScheme                        = CameraOffsetScheme.DEFAULT.bindConfig(this);
+	public         CameraOffsetScheme cameraOffsetScheme                        = new CameraOffsetScheme(this);
 	// ============================================================ //
 
 	/**
@@ -77,7 +81,6 @@ public class Config {
 	 */
 	public void update () {
 		updateToCameraDistances();
-		updateToCameraOffsetScheme();
 	}
 
 	/**
@@ -85,45 +88,5 @@ public class Config {
 	 */
 	public void updateToCameraDistances () {
 		distanceMonoList = StaticMonoList.of(available_distance_count, camera_distance_min, camera_distance_max, i -> i * i, Math::sqrt);
-	}
-
-	/**
-	 * 更新相机偏移方案
-	 */
-	public void updateToCameraOffsetScheme () {
-		// maxDist, offsetValue
-		CameraOffsetScheme scheme = CameraOffsetScheme.create(normal_max_distance, normal_offset_x, normal_offset_y, aiming_max_distance, aiming_offset_x, aiming_offset_y);
-		// Normal mode //
-		scheme.normalMode.setDistanceSmoothFactor(normal_distance_smooth_factor)    //
-						 .setOffsetSmoothFactor(normal_camera_offset_smooth_factor)    //
-						 .setEyeSmoothFactor(normal_smooth_factor_horizon, normal_smooth_factor_vertical)    //
-						 .setCenterOffsetRatio(normal_offset_center);
-		// Aiming mode //
-		scheme.aimingMode.setDistanceSmoothFactor(aiming_distance_smooth_factor)    //
-						 .setOffsetSmoothFactor(aiming_camera_offset_smooth_factor)    //
-						 .setEyeSmoothFactor(aiming_smooth_factor_horizon, aiming_smooth_factor_vertical)    //
-						 .setCenterOffsetRatio(aiming_offset_center);
-		// apply
-		cameraOffsetScheme = scheme;
-	}
-
-	/**
-	 * 从相机偏移方案对象加载配置项
-	 * <p>
-	 * 当玩家调整偏移量等选项时，会直接修改 CameraOffsetScheme 对象，而不是直接修改 Config
-	 * <p>
-	 * 修改完 CameraOffsetScheme 后将改动应用到 Config
-	 */
-	public void updateFromCameraOffsetScheme () {
-		// Normal mode //
-		normal_max_distance  = cameraOffsetScheme.normalMode.getMaxDistance();
-		normal_offset_x      = cameraOffsetScheme.normalMode.getSideOffsetRatio().x;
-		normal_offset_y      = cameraOffsetScheme.normalMode.getSideOffsetRatio().y;
-		normal_offset_center = cameraOffsetScheme.normalMode.getCenterOffsetRatio();
-		// Aiming mode //
-		aiming_max_distance  = cameraOffsetScheme.aimingMode.getMaxDistance();
-		aiming_offset_x      = cameraOffsetScheme.aimingMode.getSideOffsetRatio().x;
-		aiming_offset_y      = cameraOffsetScheme.aimingMode.getSideOffsetRatio().y;
-		aiming_offset_center = cameraOffsetScheme.aimingMode.getCenterOffsetRatio();
 	}
 }
