@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.event;
 
 
+import com.mojang.blaze3d.Blaze3D;
 import dev.architectury.event.EventResult;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
@@ -10,6 +10,7 @@ import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.core.ModConstants;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
@@ -17,11 +18,11 @@ import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Mth;
 
 public class ModEvents {
 	public static void register () {
 		ClientTickEvent.CLIENT_PRE.register(ModEvents::onClientTickPre);
-		ClientLifecycleEvent.CLIENT_STARTED.register(ModEvents::onClientStarted);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ModEvents::onMouseScrolled);
@@ -32,12 +33,9 @@ public class ModEvents {
 			return;
 		}
 		CameraAgent.updateSmoothEyePosition(0.05);
-		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
-		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
-		Config.get().cameraOffsetScheme.setIsAiming(PlayerAgent.wasAiming);
-	}
-
-	private static void onClientStarted (Minecraft minecraft) {
+		PlayerAgent.wasInterecting               = PlayerAgent.isInterecting();
+		PlayerAgent.wasAiming                    = ModReferee.isCameraEntityAiming();
+		Config.get().cameraOffsetScheme.isAiming = PlayerAgent.wasAiming;
 	}
 
 	/**
@@ -121,6 +119,43 @@ public class ModEvents {
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		if (PlayerAgent.wasInterecting) {
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
+		}
+	}
+
+	/**
+	 * 退出第三人称视角
+	 */
+	public static void onLeaveThirdPerson () {
+		if (Config.get().turn_with_camera_when_enter_first_person) {
+			PlayerAgent.turnToCameraRotation(true);
+		}
+	}
+
+	/**
+	 * 进入第三人称视角时触发
+	 */
+	public static void onEnterThirdPerson () {
+		CameraAgent.reset();
+		PlayerAgent.reset();
+		PlayerAgent.wasAiming               = false;
+		ModReferee.isToggleToAiming         = false;
+		CameraAgent.lastRenderTickTimeStamp = Blaze3D.getTime();
+	}
+
+	/**
+	 * 鼠标移动导致的相机旋转
+	 *
+	 * @param y 偏航角变化量
+	 * @param x 俯仰角变化量
+	 */
+	public static void onCameraTurn (double y, double x) {
+		if (Config.get().is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
+			y *= 0.15;
+			x *= Config.get().lock_camera_pitch_angle ? 0: -0.15;
+			if (y != 0 || x != 0) {
+				CameraAgent.lastCameraTurnTimeStamp = Blaze3D.getTime();
+				CameraAgent.relativeRotation.set(Mth.clamp(CameraAgent.relativeRotation.x + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (CameraAgent.relativeRotation.y + y) % 360f);
+			}
 		}
 	}
 }

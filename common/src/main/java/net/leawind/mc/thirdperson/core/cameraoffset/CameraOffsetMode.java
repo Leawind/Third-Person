@@ -31,14 +31,26 @@ public abstract class CameraOffsetMode {
 
 	abstract public boolean isCentered ();
 
+	/**
+	 * 设置是否居中
+	 */
 	abstract public CameraOffsetMode setCentered (boolean isCentered);
 
 	abstract public boolean isCameraLeftOfPlayer ();
 
-	abstract public CameraOffsetMode setSide (boolean isLeft);
+	/**
+	 * 设置相机在玩家的左边还是右边
+	 */
+	abstract public CameraOffsetMode setSide (boolean isCameraLeftOfPlayer);
 
+	/**
+	 * 切换到另一边，如果当前居中，则退出居中
+	 */
 	abstract public void toNextSide ();
 
+	/**
+	 * 根据当前是否居中自动计算偏移量
+	 */
 	abstract public Vector2d getOffsetRatio ();
 
 	abstract public CameraOffsetMode setSideOffsetRatio (double x, double y);

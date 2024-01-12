@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.event.ModEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -30,9 +31,9 @@ public abstract class CameraMixin {
 		if (CameraAgent.isAvailable()) {
 			boolean isFirstPerson = Minecraft.getInstance().options.getCameraType().isFirstPerson();
 			if (l3p$wasFirstPerson && !isFirstPerson) {
-				CameraAgent.onEnterThirdPerson();
+				ModEvents.onEnterThirdPerson();
 			} else if (!l3p$wasFirstPerson && isFirstPerson) {
-				CameraAgent.onLeaveThirdPerson();
+				ModEvents.onLeaveThirdPerson();
 			}
 			l3p$wasFirstPerson = isFirstPerson;
 		}

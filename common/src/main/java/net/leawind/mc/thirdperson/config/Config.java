@@ -22,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
  * 所以原本的3个选项不必被外界访问，可以使用private。
  */
 public class Config {
+	/**
+	 * 获取配置实例
+	 */
 	@NotNull
 	public static Config get () {
 		return ConfigManager.get().getConfig();
-	}
-
-	public Config () {
 	}
 
 	// ============================================================ //
@@ -67,13 +67,13 @@ public class Config {
 	@Expose public double             aiming_camera_offset_smooth_factor        = 0.100;
 	@Expose public double             aiming_distance_smooth_factor             = 0.110;
 	//-------------------------------------------------------------
-	@Expose public boolean            normal_is_centered                        = false;//TODO
+	@Expose public boolean            normal_is_centered                        = false;
 	@Expose public double             normal_max_distance                       = 2.5;
 	@Expose public double             normal_offset_x                           = -0.28;
 	@Expose public double             normal_offset_y                           = 0.31;
 	@Expose public double             normal_offset_center                      = 0.24D;
 	//
-	@Expose public boolean            aiming_is_centered                        = false;//TODO
+	@Expose public boolean            aiming_is_centered                        = false;
 	@Expose public double             aiming_max_distance                       = 0.89;
 	@Expose public double             aiming_offset_x                           = -0.47;
 	@Expose public double             aiming_offset_y                           = -0.09;

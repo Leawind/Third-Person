@@ -26,11 +26,11 @@ public class ModKeys {
 	public static final  KeyMapping FORCE_AIMING      = new ThirdPersonKeyMapping("force_aiming", InputConstants.UNKNOWN.getValue());
 	private static final KeyMapping TOOGLE_MOD_ENABLE = new ThirdPersonKeyMapping("toggle_mod_enable").onDown(() -> {
 		Config config = Config.get();
-		if (CameraAgent.isThirdPerson()) {
+		if (ModReferee.isThirdPerson()) {
 			if (config.is_mod_enable) {
 				PlayerAgent.turnToCameraRotation(true);
 			} else {
-				CameraAgent.onEnterThirdPerson();
+				ModEvents.onEnterThirdPerson();
 			}
 			config.is_mod_enable = !config.is_mod_enable;
 		}
@@ -63,7 +63,7 @@ public class ModKeys {
 	 * 切换瞄准状态
 	 */
 	private static final KeyMapping TOGGLE_AIMING     = new ThirdPersonKeyMapping("toggle_aiming").onDown(() -> {
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
+		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
 			ModReferee.isToggleToAiming = !ModReferee.isToggleToAiming;
 		}
 	});

@@ -16,7 +16,6 @@ import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.BlockGetter;
@@ -81,34 +80,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 鼠标移动导致的相机旋转
-	 *
-	 * @param y 偏航角变化量
-	 * @param x 俯仰角变化量
-	 */
-	public static void onCameraTurn (double y, double x) {
-		if (Config.get().is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
-			y *= 0.15;
-			x *= Config.get().lock_camera_pitch_angle ? 0: -0.15;
-			if (y != 0 || x != 0) {
-				lastCameraTurnTimeStamp = Blaze3D.getTime();
-				relativeRotation.set(Mth.clamp(relativeRotation.x + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (relativeRotation.y + y) % 360f);
-			}
-		}
-	}
-
-	/**
-	 * 进入第三人称视角时触发
-	 */
-	public static void onEnterThirdPerson () {
-		reset();
-		PlayerAgent.reset();
-		PlayerAgent.wasAiming       = false;
-		ModReferee.isToggleToAiming = false;
-		lastRenderTickTimeStamp     = Blaze3D.getTime();
-	}
-
-	/**
 	 * 重置玩家对象，重置相机的位置、角度等参数
 	 */
 	public static void reset () {
@@ -119,15 +90,6 @@ public class CameraAgent {
 		smoothDistanceToEye.set(Config.get().distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
 			relativeRotation.set(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick), mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
-		}
-	}
-
-	/**
-	 * 退出第三人称视角
-	 */
-	public static void onLeaveThirdPerson () {
-		if (Config.get().turn_with_camera_when_enter_first_person) {
-			PlayerAgent.turnToCameraRotation(true);
 		}
 	}
 
@@ -149,7 +111,7 @@ public class CameraAgent {
 		double now    = Blaze3D.getTime();
 		double period = now - lastRenderTickTimeStamp;
 		lastRenderTickTimeStamp = now;
-		if (isThirdPerson()) {
+		if (ModReferee.isThirdPerson()) {
 			if (!mc.isPaused()) {
 				// 平滑更新距离
 				updateSmoothVirtualDistance(period);
@@ -236,10 +198,6 @@ public class CameraAgent {
 			}
 			smoothEyePosition.setTarget(eyePosition).update(period);
 		}
-	}
-
-	public static boolean isThirdPerson () {
-		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 
 	/**

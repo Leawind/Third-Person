@@ -19,6 +19,9 @@ public class ConfigManager {
 	private final Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
 	private       Config config = new Config();
 
+	/**
+	 * 获取配置管理器实例
+	 */
 	@NotNull
 	public static ConfigManager get () {
 		return ThirdPersonMod.CONFIG_MANAGER;
@@ -35,9 +38,6 @@ public class ConfigManager {
 	}
 
 	public ConfigManager () {
-	}
-
-	public void init () {
 		load();
 	}
 
@@ -61,6 +61,10 @@ public class ConfigManager {
 		config.update();
 	}
 
+	/**
+	 * 保存配置文件
+	 * TODO delay saving
+	 */
 	public void save () {
 		try {
 			FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);

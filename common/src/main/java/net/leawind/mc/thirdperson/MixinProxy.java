@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson;
 
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.util.vector.Vector2d;
 import net.leawind.mc.util.vector.Vector3d;
@@ -21,7 +22,7 @@ public class MixinProxy {
 		if (mc.player == null) {
 			return viewVectorFake;
 		}
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson()) {
+		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
 			Vec3      eyePosition    = mc.player.getEyePosition(1);
 			HitResult hr             = CameraAgent.pick();
 			Vec3      eyeToHitResult = eyePosition.vectorTo(hr.getLocation());
@@ -35,7 +36,7 @@ public class MixinProxy {
 		//				//					PlayerAgent.turnToDirection(PlayerAgent.absoluteImpulse, true);
 		//				//					that.forwardImpulse = (float)PlayerAgent.absoluteImpulse.length();
 		//				//				} else {
-		if (CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && CameraAgent.isControlledCamera()) {
+		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson() && CameraAgent.isControlledCamera()) {
 			Minecraft mc                = Minecraft.getInstance();
 			double    cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
 			double    cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);

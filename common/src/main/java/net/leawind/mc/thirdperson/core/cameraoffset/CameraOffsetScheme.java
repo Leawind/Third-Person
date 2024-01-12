@@ -12,15 +12,13 @@ import org.jetbrains.annotations.NotNull;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetScheme {
-	private @NotNull Config           config;
-	public           boolean          isAiming = false;
-	public           CameraOffsetMode normalMode;
-	public           CameraOffsetMode aimingMode;
+	public        boolean          isAiming = false;
+	private final CameraOffsetMode normalMode;
+	private final CameraOffsetMode aimingMode;
 
 	public CameraOffsetScheme (@NotNull Config config) {
-		this.config = config;
-		normalMode  = new CameraOffsetModeNormal(config);
-		aimingMode  = new CameraOffsetModeAiming(config);
+		normalMode = new CameraOffsetModeNormal(config);
+		aimingMode = new CameraOffsetModeAiming(config);
 	}
 
 	/**
@@ -71,10 +69,6 @@ public class CameraOffsetScheme {
 
 	public void setCentered (boolean isCentered) {
 		getMode().setCentered(isCentered);
-		getAnotherMode().setCentered(isCentered);//TODO add config: is seperated centered or not
-	}
-
-	public void setIsAiming (boolean isAiming) {
-		this.isAiming = isAiming;
+		getAnotherMode().setCentered(isCentered);
 	}
 }

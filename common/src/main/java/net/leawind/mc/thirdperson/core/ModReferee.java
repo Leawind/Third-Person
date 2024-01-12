@@ -28,7 +28,7 @@ public class ModReferee {
 	}
 
 	public static boolean isAdjustingCameraDistance () {
-		return CameraAgent.isAvailable() && CameraAgent.isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();
+		return CameraAgent.isAvailable() && isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();
 	}
 
 	/**
@@ -115,5 +115,12 @@ public class ModReferee {
 			return livingEntity.isFallFlying();
 		}
 		return false;
+	}
+
+	/**
+	 * 当前是否是第三人称
+	 */
+	public static boolean isThirdPerson () {
+		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 }
