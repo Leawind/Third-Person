@@ -89,13 +89,13 @@ public class Config {
 	 * 更新次生配置
 	 */
 	public void update () {
-		updateToCameraDistances();
+		updateCameraDistances();
 	}
 
 	/**
 	 * 更新相机到玩家的距离的可调挡位们
 	 */
-	public void updateToCameraDistances () {
+	public void updateCameraDistances () {
 		distanceMonoList = StaticMonoList.of(available_distance_count, camera_distance_min, camera_distance_max, i -> i * i, Math::sqrt);
 	}
 }

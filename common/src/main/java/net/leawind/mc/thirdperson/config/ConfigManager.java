@@ -51,6 +51,7 @@ public class ConfigManager {
 			assert ModConstants.CONFIG_FILE.getParentFile().mkdirs();
 			if (ModConstants.CONFIG_FILE.exists()) {
 				config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
+				ThirdPersonMod.LOGGER.info("Config is loaded from {}", ModConstants.CONFIG_FILE);
 			} else {
 				ThirdPersonMod.LOGGER.info("Config not found, creating one.");
 				save();

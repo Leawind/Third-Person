@@ -3,11 +3,14 @@ package net.leawind.mc.thirdperson.forge.config;
 
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.minecraft.client.gui.screens.Screen;
 
 public class ConfigBuilders {
 	public static Screen buildConfigScreen (Config config, Screen parent) {
-		ThirdPersonMod.LOGGER.warn("Sorry, this mod has no config screen for forge 1.19.2 by now. But you can still modify config file manually");
+		ThirdPersonMod.LOGGER.warn("Sorry, this mod has no config screen for forge 1.19.2 by now. But you can still modify config file manually. Config will be reload from file when you try to open config screen.");
+		ConfigManager.get()
+			.load();
 		return parent;
 		//		final ConfigBuilder builder = ConfigBuilder.create()
 		//			.setParentScreen(parent)
