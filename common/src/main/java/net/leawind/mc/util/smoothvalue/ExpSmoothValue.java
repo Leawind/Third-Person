@@ -7,7 +7,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	public    T smoothFactorWeight;// factor ^ weight
 	protected T value;
 	protected T lastValue;
-	protected T target;
+	public    T target;
 
 	@Override
 	abstract public ExpSmoothValue<T> setTarget (T target);

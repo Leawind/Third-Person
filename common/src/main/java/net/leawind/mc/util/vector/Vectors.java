@@ -2,21 +2,9 @@ package net.leawind.mc.util.vector;
 
 
 import com.mojang.math.Vector3f;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-@SuppressWarnings("unused")
 public class Vectors {
-	/**
-	 * 将一个向量旋转到另一个向量的方向上
-	 *
-	 * @param vec       原向量
-	 * @param direction 表示目标方向的向量
-	 */
-	public static Vector3d rotateTo (Vector3d vec, Vector3d direction) {
-		return direction.normalize(vec.length());
-	}
-
 	/**
 	 * 将一个向量相对原本方向旋转一定弧度
 	 *
@@ -101,40 +89,6 @@ public class Vectors {
 		double x = Math.sin(yRot * 0.017453292519943295 + Math.PI);
 		double z = -Math.cos(yRot * 0.017453292519943295 + Math.PI);
 		return new Vector2d(x, z);
-	}
-
-	/**
-	 * 各分量分别线性插值
-	 *
-	 * @param src 源向量
-	 * @param dst 目标向量
-	 * @param k   各分量插值系数
-	 */
-	public static Vector3d lerp (Vector3d src, Vector3d dst, Vector3d k) {
-		return new Vector3d(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y), Mth.lerp(k.z, src.z, dst.z));
-	}
-
-	public static Vector2d lerp (Vector2d src, Vector2d dst, Vector2d k) {
-		return new Vector2d(Mth.lerp(k.x, src.x, dst.x), Mth.lerp(k.y, src.y, dst.y));
-	}
-
-	public static Vector2d lerp (Vector2d src, Vector2d dst, double k) {
-		return new Vector2d(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y));
-	}
-
-	public static Vector3d lerp (Vector3d src, Vector3d dst, double k) {
-		return new Vector3d(Mth.lerp(k, src.x, dst.x), Mth.lerp(k, src.y, dst.y), Mth.lerp(k, src.z, dst.z));
-	}
-
-	/**
-	 * 各分量分别求幂
-	 */
-	public static Vector3d pow (Vector3d v, Vector3d p) {
-		return new Vector3d(Math.pow(v.x, p.x), Math.pow(v.y, p.y), Math.pow(v.z, p.z));
-	}
-
-	public static Vector2d pow (Vector2d v, Vector2d p) {
-		return new Vector2d(Math.pow(v.x, p.x), Math.pow(v.y, p.y));
 	}
 
 	public static Vector3d toVector3d (Vec3 v) {

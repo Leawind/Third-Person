@@ -18,6 +18,6 @@ public class KeyboardInputMixin {
 	@PerformanceSensitive
 	public void tick_inject_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
-		MixinProxy.tick_KeyboardInputMixin(that, isMoveSlowly, sneakingSpeedBonus, ci);
+		MixinProxy.recalculateImpulse(that, isMoveSlowly, sneakingSpeedBonus, ci);
 	}
 }

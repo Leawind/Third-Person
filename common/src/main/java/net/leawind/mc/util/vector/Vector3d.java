@@ -24,6 +24,10 @@ public class Vector3d {
 		this.z = z;
 	}
 
+	public Vector3d set (double d) {
+		return set(d, d, d);
+	}
+
 	public Vector3d set (Vector3d v) {
 		return set(v.x, v.y, v.z);
 	}
@@ -35,15 +39,23 @@ public class Vector3d {
 		return this;
 	}
 
+	public Vector3d add (Vector3d v, Vector3d dest) {
+		return add(v.x, v.y, v.z, dest);
+	}
+
+	public Vector3d add (double x, double y, double z, Vector3d dest) {
+		dest.x = this.x + x;
+		dest.y = this.y + y;
+		dest.z = this.z + z;
+		return dest;
+	}
+
 	public Vector3d add (Vector3d v) {
 		return add(v.x, v.y, v.z);
 	}
 
-	public Vector3d add (Vector3d v, Vector3d dest) {
-		dest.x = x + v.x;
-		dest.y = y + v.y;
-		dest.z = z + v.z;
-		return dest;
+	public Vector3d add (double d) {
+		return add(d, d, d);
 	}
 
 	public Vector3d add (double x, double y, double z) {
@@ -51,6 +63,17 @@ public class Vector3d {
 		this.y += y;
 		this.z += z;
 		return this;
+	}
+
+	public Vector3d sub (Vector3d v, Vector3d dest) {
+		return sub(v.x, v.y, v.z, dest);
+	}
+
+	public Vector3d sub (double x, double y, double z, Vector3d dest) {
+		dest.x = this.x - x;
+		dest.y = this.y - y;
+		dest.z = this.z - z;
+		return dest;
 	}
 
 	public Vector3d sub (Vector3d v) {
@@ -62,6 +85,17 @@ public class Vector3d {
 		this.y -= y;
 		this.z -= z;
 		return this;
+	}
+
+	public Vector3d mul (Vector3d v, Vector3d dest) {
+		return mul(v.x, v.y, v.z, dest);
+	}
+
+	public Vector3d mul (double x, double y, double z, Vector3d dest) {
+		dest.x = this.x * x;
+		dest.y = this.y * y;
+		dest.z = this.z * z;
+		return dest;
 	}
 
 	public Vector3d mul (Vector3d v) {
@@ -79,6 +113,17 @@ public class Vector3d {
 		return this;
 	}
 
+	public Vector3d div (Vector3d v, Vector3d dest) {
+		return div(v.x, v.y, v.z, dest);
+	}
+
+	public Vector3d div (double x, double y, double z, Vector3d dest) {
+		dest.x = this.x / x;
+		dest.y = this.y / y;
+		dest.z = this.z / z;
+		return dest;
+	}
+
 	public Vector3d div (Vector3d v) {
 		return div(v.x, v.y, v.z);
 	}
@@ -91,6 +136,36 @@ public class Vector3d {
 		this.x /= x;
 		this.y /= y;
 		this.z /= z;
+		return this;
+	}
+
+	public Vector3d pow (Vector3d v, Vector3d dest) {
+		return pow(v.x, v.y, v.z, dest);
+	}
+
+	public Vector3d pow (double d, Vector3d dest) {
+		return pow(d, d, d, dest);
+	}
+
+	public Vector3d pow (double x, double y, double z, Vector3d dest) {
+		dest.x = Math.pow(this.x, x);
+		dest.y = Math.pow(this.y, y);
+		dest.z = Math.pow(this.z, z);
+		return dest;
+	}
+
+	public Vector3d pow (Vector3d v) {
+		return pow(v.x, v.y, v.z);
+	}
+
+	public Vector3d pow (double d) {
+		return pow(d, d, d);
+	}
+
+	public Vector3d pow (double x, double y, double z) {
+		this.x = Math.pow(this.x, x);
+		this.y = Math.pow(this.y, y);
+		this.z = Math.pow(this.z, z);
 		return this;
 	}
 
@@ -158,6 +233,10 @@ public class Vector3d {
 		return this;
 	}
 
+	public Vector3d rotateTo (Vector3d direction) {
+		return direction.normalize(length());
+	}
+
 	public Vector3d zero () {
 		x = y = z = 0;
 		return this;
@@ -174,10 +253,31 @@ public class Vector3d {
 		return x * v.x + y * v.y + z * v.z;
 	}
 
-	public Vector3d lerp (Vector3d v, double t) {
-		x += (v.x - x) * t;
-		y += (v.y - y) * t;
-		z += (v.z - z) * t;
+	public Vector3d clamp (double min, double max) {
+		x = x < min ? min: Math.min(x, max);
+		y = y < min ? min: Math.min(y, max);
+		z = z < min ? min: Math.min(z, max);
+		return this;
+	}
+
+	public Vector3d clamp (Vector3d min, Vector3d max) {
+		x = x < min.x ? min.x: Math.min(x, max.x);
+		y = y < min.y ? min.y: Math.min(y, max.y);
+		z = z < min.z ? min.z: Math.min(z, max.z);
+		return this;
+	}
+
+	public Vector3d lerp (Vector3d dst, double t) {
+		x += (dst.x - x) * t;
+		y += (dst.y - y) * t;
+		z += (dst.z - z) * t;
+		return this;
+	}
+
+	public Vector3d lerp (Vector3d dst, Vector3d t) {
+		x += (dst.x - x) * t.x;
+		y += (dst.y - y) * t.y;
+		z += (dst.z - z) * t.z;
 		return this;
 	}
 
@@ -226,5 +326,9 @@ public class Vector3d {
 			return false;
 		}
 		return Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z);
+	}
+
+	public Vector3d copy () {
+		return new Vector3d(x, y, z);
 	}
 }

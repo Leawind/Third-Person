@@ -2,7 +2,6 @@ package net.leawind.mc.util.smoothvalue;
 
 
 import net.leawind.mc.util.vector.Vector2d;
-import net.leawind.mc.util.vector.Vectors;
 
 @SuppressWarnings("unused")
 public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
@@ -32,7 +31,8 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	@Override
 	public ExpSmoothVector2d update (double period) {
 		super.preUpdate();
-		value = Vectors.lerp(value, target, Vectors.pow(smoothFactor, new Vector2d(smoothFactorWeight).mul(period)).negate().add(1, 1));
+		Vector2d t = smoothFactor.copy().pow(smoothFactorWeight.copy().mul(period)).negate().add(1);
+		value = value.copy().lerp(target, t);
 		return this;
 	}
 
@@ -56,7 +56,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 
 	@Override
 	public Vector2d get (double delta) {
-		return Vectors.lerp(lastValue, value, delta);
+		return lastValue.copy().lerp(value, delta);
 	}
 
 	@Override

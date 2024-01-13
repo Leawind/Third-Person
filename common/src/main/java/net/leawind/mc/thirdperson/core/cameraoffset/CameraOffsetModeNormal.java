@@ -12,15 +12,8 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public Vector3d getEyeSmoothFactor () {
-		return new Vector3d(config.normal_smooth_factor_horizon, config.normal_smooth_factor_vertical, config.normal_smooth_factor_horizon);
-	}
-
-	@Override
-	public CameraOffsetMode setEyeSmoothFactor (double horizon, double vertical) {
-		config.normal_smooth_factor_horizon  = horizon;
-		config.normal_smooth_factor_vertical = vertical;
-		return this;
+	public void getEyeSmoothFactor (@NotNull Vector3d v) {
+		v.set(config.normal_smooth_factor_horizon, config.normal_smooth_factor_vertical, config.normal_smooth_factor_horizon);
 	}
 
 	@Override
@@ -29,20 +22,8 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public CameraOffsetMode setDistanceSmoothFactor (double smoothFactor) {
-		config.normal_distance_smooth_factor = smoothFactor;
-		return this;
-	}
-
-	@Override
-	public Vector2d getOffsetSmoothFactor () {
-		return new Vector2d(config.normal_camera_offset_smooth_factor);
-	}
-
-	@Override
-	public CameraOffsetMode setOffsetSmoothFactor (double smoothFactor) {
-		config.normal_camera_offset_smooth_factor = smoothFactor;
-		return this;
+	public void getOffsetSmoothFactor (@NotNull Vector2d v) {
+		v.set(config.normal_camera_offset_smooth_factor);
 	}
 
 	@Override
@@ -51,9 +32,8 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public CameraOffsetMode setMaxDistance (double distance) {
+	public void setMaxDistance (double distance) {
 		config.normal_max_distance = distance;
-		return this;
 	}
 
 	@Override
@@ -61,9 +41,8 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 		return config.normal_is_centered;
 	}
 
-	public CameraOffsetMode setCentered (boolean isCentered) {
+	public void setCentered (boolean isCentered) {
 		config.normal_is_centered = isCentered;
-		return this;
 	}
 
 	public boolean isCameraLeftOfPlayer () {
@@ -71,12 +50,11 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public CameraOffsetMode setSide (boolean isCameraLeftOfPlayer) {
+	public void setSide (boolean isCameraLeftOfPlayer) {
 		if (isCameraLeftOfPlayer ^ isCameraLeftOfPlayer()) {
 			toNextSide();
 			setCentered(false);
 		}
-		return this;
 	}
 
 	@Override
@@ -88,15 +66,18 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public Vector2d getOffsetRatio () {
-		return isCentered() ? new Vector2d(0, getCenterOffsetRatio()): getSideOffsetRatio();
+	public void getOffsetRatio (@NotNull Vector2d v) {
+		if (isCentered()) {
+			v.set(0, getCenterOffsetRatio());
+		} else {
+			getSideOffsetRatio(v);
+		}
 	}
 
 	@Override
-	public CameraOffsetMode setSideOffsetRatio (double x, double y) {
-		config.normal_offset_x = x;
-		config.normal_offset_y = y;
-		return this;
+	public void setSideOffsetRatio (Vector2d v) {
+		config.normal_offset_x = v.x;
+		config.normal_offset_y = v.y;
 	}
 
 	@Override
@@ -110,8 +91,12 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	}
 
 	@Override
-	public CameraOffsetMode setCenterOffsetRatio (double offset) {
+	public void getSideOffsetRatio (@NotNull Vector2d v) {
+		v.set(config.normal_offset_x, config.normal_offset_y);
+	}
+
+	@Override
+	public void setCenterOffsetRatio (double offset) {
 		config.normal_offset_center = offset;
-		return this;
 	}
 }

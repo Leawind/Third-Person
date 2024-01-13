@@ -22,6 +22,10 @@ public class Vector2d {
 		this.y = y;
 	}
 
+	public Vector2d set (double d) {
+		return set(d, d);
+	}
+
 	public Vector2d set (Vector2d v) {
 		return set(v.x, v.y);
 	}
@@ -32,20 +36,38 @@ public class Vector2d {
 		return this;
 	}
 
+	public Vector2d add (Vector2d v, Vector2d dest) {
+		return add(v.x, v.y, dest);
+	}
+
+	public Vector2d add (double x, double y, Vector2d dest) {
+		dest.x = this.x + x;
+		dest.y = this.y + y;
+		return dest;
+	}
+
 	public Vector2d add (Vector2d v) {
 		return add(v.x, v.y);
 	}
 
-	public Vector2d add (Vector2d v, Vector2d dest) {
-		dest.x = x + v.x;
-		dest.y = y + v.y;
-		return dest;
+	public Vector2d add (double d) {
+		return add(d, d);
 	}
 
 	public Vector2d add (double x, double y) {
 		this.x += x;
 		this.y += y;
 		return this;
+	}
+
+	public Vector2d sub (Vector2d v, Vector2d dest) {
+		return sub(v.x, v.y, dest);
+	}
+
+	public Vector2d sub (double x, double y, Vector2d dest) {
+		dest.x = this.x - x;
+		dest.y = this.y - y;
+		return dest;
 	}
 
 	public Vector2d sub (Vector2d v) {
@@ -58,18 +80,38 @@ public class Vector2d {
 		return this;
 	}
 
-	public Vector2d mul (Vector2d v) {
-		return mul(v.x, v.y);
+	public Vector2d mul (Vector2d v, Vector2d dest) {
+		return mul(v.x, v.y, dest);
 	}
 
-	public Vector2d mul (double d) {
-		return mul(d, d);
+	public Vector2d mul (double x, double y, Vector2d dest) {
+		dest.x = this.x * x;
+		dest.y = this.y * y;
+		return dest;
+	}
+
+	public Vector2d mul (Vector2d v) {
+		return mul(v.x, v.y);
 	}
 
 	public Vector2d mul (double x, double y) {
 		this.x *= x;
 		this.y *= y;
 		return this;
+	}
+
+	public Vector2d mul (double d) {
+		return mul(d, d);
+	}
+
+	public Vector2d div (Vector2d v, Vector2d dest) {
+		return div(v.x, v.y, dest);
+	}
+
+	public Vector2d div (double x, double y, Vector2d dest) {
+		dest.x = this.x / x;
+		dest.y = this.y / y;
+		return dest;
 	}
 
 	public Vector2d div (Vector2d v) {
@@ -79,6 +121,34 @@ public class Vector2d {
 	public Vector2d div (double x, double y) {
 		this.x /= x;
 		this.y /= y;
+		return this;
+	}
+
+	public Vector2d pow (Vector2d v, Vector2d dest) {
+		return pow(v.x, v.y, dest);
+	}
+
+	public Vector2d pow (double d, Vector2d dest) {
+		return pow(d, d, dest);
+	}
+
+	public Vector2d pow (double x, double y, Vector2d dest) {
+		dest.x = Math.pow(this.x, x);
+		dest.y = Math.pow(this.y, y);
+		return dest;
+	}
+
+	public Vector2d pow (Vector2d v) {
+		return pow(v.x, v.y);
+	}
+
+	public Vector2d pow (double d) {
+		return pow(d, d);
+	}
+
+	public Vector2d pow (double x, double y) {
+		this.x = Math.pow(this.x, x);
+		this.y = Math.pow(this.y, y);
 		return this;
 	}
 
@@ -140,6 +210,10 @@ public class Vector2d {
 		return this;
 	}
 
+	public Vector2d rotateTo (Vector2d direction) {
+		return direction.normalize(length());
+	}
+
 	public Vector2d zero () {
 		x = y = 0;
 		return this;
@@ -155,9 +229,27 @@ public class Vector2d {
 		return x * v.x + y * v.y;
 	}
 
-	public Vector2d lerp (Vector2d v, double t) {
-		x += (v.x - x) * t;
-		y += (v.y - y) * t;
+	public Vector2d clamp (double min, double max) {
+		x = x < min ? min: Math.min(x, max);
+		y = y < min ? min: Math.min(y, max);
+		return this;
+	}
+
+	public Vector2d clamp (Vector2d min, Vector2d max) {
+		x = x < min.x ? min.x: Math.min(x, max.x);
+		y = y < min.y ? min.y: Math.min(y, max.y);
+		return this;
+	}
+
+	public Vector2d lerp (Vector2d dst, double t) {
+		x += (dst.x - x) * t;
+		y += (dst.y - y) * t;
+		return this;
+	}
+
+	public Vector2d lerp (Vector2d dst, Vector2d t) {
+		x += (dst.x - x) * t.x;
+		y += (dst.y - y) * t.y;
 		return this;
 	}
 
@@ -198,5 +290,9 @@ public class Vector2d {
 			return false;
 		}
 		return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
+	}
+
+	public Vector2d copy () {
+		return new Vector2d(x, y);
 	}
 }

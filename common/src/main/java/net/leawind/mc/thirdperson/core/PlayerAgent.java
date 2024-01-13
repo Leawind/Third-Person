@@ -49,8 +49,6 @@ public class PlayerAgent {
 		Minecraft mc = Minecraft.getInstance();
 		if (!CameraAgent.isControlledCamera()) {
 			return;
-			//		} else if (mc.cameraEntity != null && mc.cameraEntity.isSwimming()) {
-			//			turnToDirection(impulse, false);
 		} else if (wasAiming) {
 			turnToCameraHitResult(true);
 		} else if (mc.player != null && mc.player.isFallFlying()) {
@@ -100,11 +98,12 @@ public class PlayerAgent {
 	/**
 	 * 让玩家朝向世界中的特定点
 	 *
-	 * @param target 目标位置
+	 * @param pos 目标位置
 	 */
-	public static void turnToPosition (@NotNull Vector3d target, boolean isInstantly) {
+	public static void turnToPosition (@NotNull Vector3d pos, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
-		Vector3d playerViewVector = target.sub(Vectors.toVector3d(Minecraft.getInstance().player.getEyePosition(lastPartialTick)));
+		Vector3d eyePosition      = Vectors.toVector3d(Minecraft.getInstance().player.getEyePosition(lastPartialTick));
+		Vector3d playerViewVector = pos.copy().sub(eyePosition);
 		turnToDirection(playerViewVector, isInstantly);
 	}
 

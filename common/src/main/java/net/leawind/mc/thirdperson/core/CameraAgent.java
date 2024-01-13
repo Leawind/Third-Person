@@ -143,7 +143,7 @@ public class CameraAgent {
 		assert mc.cameraEntity != null;
 		Vector3d eyePosition      = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
 		double   dist             = smoothEyePositionValue.distance(eyePosition);
-		Vector3d sf               = smoothEyePosition.smoothFactor;
+		Vector3d sf               = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero = sf.x * sf.z == 0;
 		boolean  isVerticalZero   = sf.y == 0;
 		if (isHorizontalZero || isVerticalZero) {
@@ -152,7 +152,7 @@ public class CameraAgent {
 		return smoothEyePositionValue;
 	}
 
-	public static Vector3d getPositionWithoutOffset () {
+	public static Vector3d calculatePositionWithoutOffset () {
 		return getSmoothEyePositionValue().add(Vectors.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
@@ -160,7 +160,8 @@ public class CameraAgent {
 		boolean          isAdjusting = ModReferee.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = Config.get().cameraOffsetScheme.getMode();
 		smoothDistanceToEye.setSmoothFactor(isAdjusting ? Config.get().adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
-		smoothDistanceToEye.setTarget(mode.getMaxDistance()).update(period);
+		smoothDistanceToEye.setTarget(mode.getMaxDistance());
+		smoothDistanceToEye.update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
 		if (!Config.get().cameraOffsetScheme.isAiming && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
@@ -175,12 +176,12 @@ public class CameraAgent {
 		if (ModReferee.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setSmoothFactor(Config.get().adjusting_camera_offset_smooth_factor);
 		} else {
-			smoothOffsetRatio.setSmoothFactor(mode.getOffsetSmoothFactor());
+			mode.getOffsetSmoothFactor(smoothOffsetRatio.smoothFactor);
 		}
 		if (Config.get().center_offset_when_flying && ModReferee.isAttachedEntityFallFlying()) {
 			smoothOffsetRatio.setTarget(0, 0);
 		} else {
-			smoothOffsetRatio.setTarget(mode.getOffsetRatio());
+			mode.getOffsetRatio(smoothOffsetRatio.target);
 		}
 		smoothOffsetRatio.update(period);
 	}
@@ -194,9 +195,10 @@ public class CameraAgent {
 			if (ModReferee.isAttachedEntityFallFlying()) {
 				smoothEyePosition.setSmoothFactor(Config.get().flying_smooth_factor);
 			} else {
-				smoothEyePosition.setSmoothFactor(mode.getEyeSmoothFactor());
+				mode.getEyeSmoothFactor(smoothEyePosition.smoothFactor);
 			}
-			smoothEyePosition.setTarget(eyePosition).update(period);
+			smoothEyePosition.setTarget(eyePosition);
+			smoothEyePosition.update(period);
 		}
 	}
 
@@ -221,7 +223,7 @@ public class CameraAgent {
 		double upOffset   = smoothOffsetRatioValue.y * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
 		double leftOffset = smoothOffsetRatioValue.x * smoothVirtualDistanceValue * widthHalf / ModConstants.NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
-		Vector3d positionWithoutOffset = getPositionWithoutOffset();
+		Vector3d positionWithoutOffset = calculatePositionWithoutOffset();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y + 180), (float)-relativeRotation.x);
 		((CameraInvoker)fakeCamera).invokeSetPosition(Vectors.toVec3(positionWithoutOffset));
@@ -247,9 +249,10 @@ public class CameraAgent {
 			offsetY *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
 			offsetZ *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
-			HitResult hitresult = level.clip(new ClipContext(pickStart, pickStart.add(smoothEyeToCamera), ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));
-			if (hitresult.getType() != HitResult.Type.MISS) {
-				minDistance = Math.min(minDistance, hitresult.getLocation().distanceTo(pickStart));
+			Vec3      pickEnd   = pickStart.add(smoothEyeToCamera);
+			HitResult hitResult = level.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));
+			if (hitResult.getType() != HitResult.Type.MISS) {
+				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickStart));
 			}
 		}
 		smoothDistanceToEye.setValue(smoothDistanceToEye.get() * minDistance / initDistance);
@@ -305,10 +308,10 @@ public class CameraAgent {
 			return null;
 		}
 		Vec3 viewVector = new Vec3(camera.getLookVector());
-		Vec3 viewEnd    = viewVector.scale(pickRange).add(camera.getPosition());
+		Vec3 pickEnd    = viewVector.scale(pickRange).add(camera.getPosition());
 		AABB aabb       = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
 		aabb = aabb.move(cameraEntity.getEyePosition(1).vectorTo(camera.getPosition()));
-		return ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), viewEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange);
+		return ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), pickEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange);
 	}
 
 	/**
@@ -318,11 +321,11 @@ public class CameraAgent {
 	 */
 	private static @NotNull BlockHitResult pickBlock (double pickRange) {
 		assert (camera != null);
-		Vec3   viewStart    = camera.getPosition();
+		Vec3   pickStart    = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
-		Vec3   viewEnd      = viewVector.scale(pickRange).add(viewStart);
+		Vec3   pickEnd      = viewVector.scale(pickRange).add(pickStart);
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		assert cameraEntity != null;
-		return cameraEntity.level.clip(new ClipContext(viewStart, viewEnd, PlayerAgent.wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
+		return cameraEntity.level.clip(new ClipContext(pickStart, pickEnd, PlayerAgent.wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
 	}
 }

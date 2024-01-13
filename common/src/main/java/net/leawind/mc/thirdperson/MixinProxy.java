@@ -31,7 +31,7 @@ public class MixinProxy {
 		return viewVectorFake;
 	}
 
-	public static void tick_KeyboardInputMixin (KeyboardInput that, boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
+	public static void recalculateImpulse (KeyboardInput that, boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		//				//				if (mc.player.isSwimming()) {
 		//				//					PlayerAgent.turnToDirection(PlayerAgent.absoluteImpulse, true);
 		//				//					that.forwardImpulse = (float)PlayerAgent.absoluteImpulse.length();
