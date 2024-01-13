@@ -118,6 +118,7 @@ public class ModEvents {
 	public static void onBeforeHandleKeybinds () {
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		if (PlayerAgent.wasInterecting) {
+			// 该方法中使用了mixin，修改了 viewVector
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
 	}

@@ -304,11 +304,11 @@ public class CameraAgent {
 		if (camera == null || cameraEntity == null) {
 			return null;
 		}
-		Vec3 viewStart  = camera.getPosition();
 		Vec3 viewVector = new Vec3(camera.getLookVector());
-		Vec3 viewEnd    = viewVector.scale(pickRange).add(viewStart);
+		Vec3 viewEnd    = viewVector.scale(pickRange).add(camera.getPosition());
 		AABB aabb       = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-		return ProjectileUtil.getEntityHitResult(cameraEntity, viewStart, viewEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange);
+		aabb = aabb.move(cameraEntity.getEyePosition(1).vectorTo(camera.getPosition()));
+		return ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), viewEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange);
 	}
 
 	/**
