@@ -1,21 +1,11 @@
 pluginManagement {
 	repositories {
 		mavenLocal()
-		maven {
-			url 'https://maven.aliyun.com/repository/public'
-		}
-		maven {
-			url 'https://maven.aliyun.com/repository/google'
-		}
-		maven {
-			url "https://maven.fabricmc.net/"
-		}
-		maven {
-			url "https://maven.architectury.dev/"
-		}
-		maven {
-			url "https://maven.minecraftforge.net/"
-		}
+		maven { url 'https://maven.aliyun.com/repository/public' }
+		maven { url 'https://maven.aliyun.com/repository/google' }
+		maven { url "https://maven.fabricmc.net/" }
+		maven { url "https://maven.architectury.dev/" }
+		maven { url "https://maven.minecraftforge.net/" }
 		gradlePluginPortal()
 	}
 }
@@ -23,4 +13,3 @@ include("common")
 include("fabric")
 include("forge")
 rootProject.name = mod_name
-

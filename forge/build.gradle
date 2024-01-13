@@ -31,12 +31,6 @@ dependencies {
 	common(project(path: ":common", configuration: "namedElements")) { transitive false }
 	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
-processResources {
-	inputs.property "version", project.version
-	eachFile {
-		expand rootProject.properties
-	}
-}
 shadowJar {
 	exclude "fabric.mod.json"
 	exclude "architectury.common.json"
@@ -71,8 +65,6 @@ publishing {
 		}
 	}
 	
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// Add repositories to publish to here.
 	}
 }
