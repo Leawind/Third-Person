@@ -37,6 +37,8 @@
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming.desc": "未瞄准时强制玩家视线和相机视线保持平行",
 	"leawind_third_person.option.rotate_to_moving_direction": "玩家移动时自动转向前进的方向",
 	"leawind_third_person.option.rotate_to_moving_direction.desc": "玩家移动时自动转向前进的方向",
+	"leawind_third_person.option.auto_turn_body_drawing_a_bow": "Auto turn sideways drawing the bow",
+	"leawind_third_person.option.auto_turn_body_drawing_a_bow.desc": "拉弓时自动侧身，让持弓的手在前，拉弦的手在后",
 	"leawind_third_person.option.render_crosshair_when_aiming": "瞄准时显示准星",
 	"leawind_third_person.option.render_crosshair_when_aiming.desc": "在瞄准状态下显示准星",
 	"leawind_third_person.option.render_crosshair_when_not_aiming": "未瞄准时显示准星",

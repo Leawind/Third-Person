@@ -38,6 +38,7 @@ public class Config {
 	@Expose public boolean            rotate_to_moving_direction                = true;
 	@Expose public boolean            auto_rotate_interacting                   = true;
 	@Expose public boolean            rotate_interacting_type                   = true;
+	@Expose public boolean            auto_turn_body_drawing_a_bow              = false;
 	//
 	@Expose public int                available_distance_count                  = 16;
 	@Expose public double             camera_distance_min                       = 0.5;

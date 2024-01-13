@@ -7,6 +7,9 @@ import net.leawind.mc.util.vector.Vector3d;
 import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +54,17 @@ public class PlayerAgent {
 			return;
 		} else if (wasAiming) {
 			turnToCameraHitResult(true);
+			// 侧身拉弓
+			if (Config.get().auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
+				assert mc.player != null;
+				if (mc.player.isUsingItem() && mc.player.getUseItem().is(Items.BOW)) {
+					double k = mc.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
+					if (mc.options.mainHand().get() == HumanoidArm.LEFT) {
+						k = -k;
+					}
+					mc.player.yBodyRotO = mc.player.yBodyRot = (float)(k * 45 + mc.player.getYRot());
+				}
+			}
 		} else if (mc.player != null && mc.player.isFallFlying()) {
 			turnToCameraRotation(true);
 			//			} else if (CameraAgent.wasAttachedEntityInvisible) {
@@ -133,8 +147,13 @@ public class PlayerAgent {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
-				mc.player.setYRot((float)y);
 				mc.player.setXRot((float)x);
+				mc.player.setYRot((float)y);
+				//				mc.player.yHeadRot = (float)y;
+				// TODO
+				mc.player.xRotO = (float)x;
+				mc.player.yRotO = (float)y;
+				//				mc.player.yHeadRotO = (float)y;
 			} else {
 				double previousY = mc.player.getViewYRot(lastPartialTick);
 				double dy        = ((y - previousY) % 360 + 360) % 360;
