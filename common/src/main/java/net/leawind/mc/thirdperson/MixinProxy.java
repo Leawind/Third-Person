@@ -55,7 +55,7 @@ public class MixinProxy {
 			lookImpulseHorizon.add(leftImpulseHorizon, PlayerAgent.impulseHorizon);
 			if (PlayerAgent.impulseHorizon.length() > 1E-5 && mc.player != null) {
 				PlayerAgent.impulseHorizon.normalize();
-				float    playerYRot        = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
+				float    playerYRot        = mc.player.getViewYRot(ThirdPersonMod.lastPartialTick);
 				Vector2d playerLookHorizon = Vectors.directionFromRotationDegree(playerYRot).normalize();
 				Vector2d playerLeftHorizon = Vectors.directionFromRotationDegree(playerYRot - 90).normalize();
 				that.forwardImpulse = (float)(PlayerAgent.impulseHorizon.dot(playerLookHorizon));

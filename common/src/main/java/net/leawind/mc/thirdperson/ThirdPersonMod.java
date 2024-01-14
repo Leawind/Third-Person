@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ThirdPersonMod {
-	public static final  Logger        LOGGER         = LoggerFactory.getLogger(ModConstants.MOD_ID);
-	private static final ConfigManager CONFIG_MANAGER = new ConfigManager();
+	public static final  Logger        LOGGER                   = LoggerFactory.getLogger(ModConstants.MOD_ID);
+	private static final ConfigManager CONFIG_MANAGER           = new ConfigManager();
+	public static        float         lastPartialTick          = 1;
+	public static        double        lastCameraSetupTimeStamp = 0;
 
 	public static void init () {
 		CONFIG_MANAGER.tryLoad();

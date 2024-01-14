@@ -7,19 +7,21 @@ import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.math.vector.Vectors;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.util.ModConstants;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.math.vector.Vector2d;
-import net.leawind.mc.math.vector.Vectors;
+import net.leawind.mc.thirdperson.util.ModConstants;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
 
 public class ModEvents {
 	public static void register () {
@@ -35,9 +37,36 @@ public class ModEvents {
 		}
 		Config config = ThirdPersonMod.getConfig();
 		CameraAgent.updateSmoothEyePosition(0.05);
+		PlayerAgent.updateSmoothRotations(0.05);
 		PlayerAgent.wasInterecting         = PlayerAgent.isInterecting();
 		PlayerAgent.wasAiming              = ModReferee.isCameraEntityAiming();
 		config.cameraOffsetScheme.isAiming = PlayerAgent.wasAiming;
+	}
+
+	/**
+	 * 调用Camera.setup时触发
+	 * <p>
+	 * 该调用位于真正渲染画面之前。
+	 * <p>
+	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
+	 */
+	public static void onCameraSetup (BlockGetter level, float partialTick) {
+		ThirdPersonMod.lastPartialTick = partialTick;
+		CameraAgent.level              = level;
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null) {
+			return;
+		}
+		double now    = Blaze3D.getTime();
+		double period = now - ThirdPersonMod.lastCameraSetupTimeStamp;
+		ThirdPersonMod.lastCameraSetupTimeStamp = now;
+		if (ModReferee.isThirdPerson()) {
+			CameraAgent.onCameraSetup(period);
+		}
+		PlayerAgent.onCameraSetup(period);
+		if (mc.options.getCameraType().isMirrored()) {
+			mc.options.setCameraType(CameraType.FIRST_PERSON);
+		}
 	}
 
 	/**
@@ -141,8 +170,8 @@ public class ModEvents {
 		CameraAgent.reset();
 		PlayerAgent.reset();
 		PlayerAgent.wasAiming               = false;
-		ModReferee.isToggleToAiming         = false;
-		CameraAgent.lastRenderTickTimeStamp = Blaze3D.getTime();
+		ModReferee.isToggleToAiming             = false;
+		ThirdPersonMod.lastCameraSetupTimeStamp = Blaze3D.getTime();
 	}
 
 	/**

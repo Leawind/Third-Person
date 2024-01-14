@@ -26,7 +26,7 @@ public class ModReferee {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return isAdjustingCameraDistance() && !CameraAgent.wasAttachedEntityInvisible;
+		return isAdjustingCameraDistance() && !CameraAgent.wasCameraCloseToEntity;
 	}
 
 	public static boolean isAdjustingCameraDistance () {
@@ -57,7 +57,7 @@ public class ModReferee {
 	 * <p>
 	 * 需要借助相机坐标和玩家眼睛坐标来判断
 	 */
-	public static boolean isAttachedEntityInvisible () {
+	public static boolean wasCameraCloseToEntity () {
 		Minecraft mc     = Minecraft.getInstance();
 		Config    config = ThirdPersonMod.getConfig();
 		if (!config.player_fade_out_enabled) {

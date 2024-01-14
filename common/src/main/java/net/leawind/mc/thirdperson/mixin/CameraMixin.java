@@ -15,8 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value=net.minecraft.client.Camera.class, priority=2000)
 public abstract class CameraMixin {
-	@Unique
-	private boolean l3p$wasFirstPerson = true;
+	@Unique private boolean l3p$wasFirstPerson = true;
 
 	/**
 	 * 如果刚 进入/退出 第三人称视角，则调用相应的事件处理函数
@@ -43,18 +42,20 @@ public abstract class CameraMixin {
 	 * 插入到 setup 方法中的第一个 move(DDD)V 调用之前
 	 * <p>
 	 * 调用咱相机代理的 tick 方法，更新相机的朝向、位置等信息
-	 *
-	 * @param entity 相机附着的实体，即玩家正在操控的实体或旁观者正在观察的实体
+	 * <p>
+	 * 该调用位于真正渲染画面之前。
+	 * <p>
+	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE), cancellable=true)
-	public void setup_invoke (BlockGetter level, Entity entity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
+	public void setup_invoke (BlockGetter level, Entity attachedEntity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
 		if (CameraAgent.isAvailable()) {
 			if (reversedView) {
 				// 咱给它转回去
 				Camera camera = (Camera)(Object)this;
 				((CameraInvoker)camera).invokeSetRotation(camera.getYRot() + 180.0f, -camera.getXRot());
 			}
-			CameraAgent.onRenderTick(level, entity, partialTick);
+			ModEvents.onCameraSetup(level, partialTick);
 			ci.cancel();
 		}
 	}

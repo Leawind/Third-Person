@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.math.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
@@ -16,7 +15,6 @@ import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.thirdperson.util.ModConstants;
 import net.minecraft.client.Camera;
-import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -30,32 +28,28 @@ import org.jetbrains.annotations.Nullable;
 public class CameraAgent {
 	@Nullable public static      BlockGetter       level;
 	@Nullable public static      Camera            camera;
-	@NotNull public static final Camera            fakeCamera                 = new Camera();
+	@NotNull public static final Camera            fakeCamera              = new Camera();
 	/**
 	 * renderTick 中更新
 	 */
-	public static                boolean           wasAttachedEntityInvisible = false;
-	/**
-	 * 上一次 render tick 的时间戳
-	 */
-	public static                double            lastRenderTickTimeStamp    = 0;
+	public static                boolean           wasCameraCloseToEntity  = false;
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	public static                double            lastCameraTurnTimeStamp    = 0;
-	@NotNull public static final Vector2d          relativeRotation           = new Vector2d(0);
+	public static                double            lastCameraTurnTimeStamp = 0;
+	@NotNull public static final Vector2d          relativeRotation        = new Vector2d(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static final          ExpSmoothVector2d smoothOffsetRatio          = new ExpSmoothVector2d().setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT).set(new Vector2d(0));
+	public static final          ExpSmoothVector2d smoothOffsetRatio       = new ExpSmoothVector2d().setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT).set(new Vector2d(0));
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static final          ExpSmoothVector3d smoothEyePosition          = new ExpSmoothVector3d().setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+	public static final          ExpSmoothVector3d smoothEyePosition       = new ExpSmoothVector3d().setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final          ExpSmoothDouble   smoothDistanceToEye        = new ExpSmoothDouble().setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT).set(0D);
+	public static final          ExpSmoothDouble   smoothDistanceToEye     = new ExpSmoothDouble().setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT).set(0D);
 
 	/**
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
@@ -86,12 +80,12 @@ public class CameraAgent {
 	 */
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		camera                      = mc.gameRenderer.getMainCamera();
-		PlayerAgent.lastPartialTick = mc.getFrameTime();
+		camera                         = mc.gameRenderer.getMainCamera();
+		ThirdPersonMod.lastPartialTick = mc.getFrameTime();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(ThirdPersonMod.getConfig().distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
-			relativeRotation.set(-mc.cameraEntity.getViewXRot(PlayerAgent.lastPartialTick), mc.cameraEntity.getViewYRot(PlayerAgent.lastPartialTick) - 180);
+			relativeRotation.set(-mc.cameraEntity.getViewXRot(ThirdPersonMod.lastPartialTick), mc.cameraEntity.getViewYRot(ThirdPersonMod.lastPartialTick) - 180);
 		}
 	}
 
@@ -102,48 +96,33 @@ public class CameraAgent {
 	 * @param attachedEntity 附着的实体
 	 */
 	@PerformanceSensitive
-	public static void onRenderTick (BlockGetter level, Entity attachedEntity, float partialTick) {
-		PlayerAgent.lastPartialTick = partialTick;
-		CameraAgent.level           = level;
+	public static void onCameraSetup (double period) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null) {
-			return;
+		if (!mc.isPaused()) {
+			// 平滑更新距离
+			updateSmoothVirtualDistance(period);
+			// 平滑更新相机偏移量
+			updateSmoothOffsetRatio(period);
 		}
-		// 时间
-		double now    = Blaze3D.getTime();
-		double period = now - lastRenderTickTimeStamp;
-		lastRenderTickTimeStamp = now;
-		if (ModReferee.isThirdPerson()) {
-			if (!mc.isPaused()) {
-				// 平滑更新距离
-				updateSmoothVirtualDistance(period);
-				// 平滑更新相机偏移量
-				updateSmoothOffsetRatio(period);
-			}
-			// 设置相机朝向和位置
-			updateFakeCameraRotationPosition();
-			preventThroughWall();
-			updateFakeCameraRotationPosition();
-			applyCamera();
-			wasAttachedEntityInvisible = ModReferee.isAttachedEntityInvisible();
-			//			if (wasAttachedEntityInvisible) {
-			//				// 假的第一人称，强制将相机放在玩家眼睛处
-			//				Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
-			//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
-			//				applyCamera();
-			//			}
-		}
-		PlayerAgent.onRenderTick(period);
-		if (mc.options.getCameraType().isMirrored()) {
-			mc.options.setCameraType(CameraType.FIRST_PERSON);
-		}
+		// 设置相机朝向和位置
+		updateFakeCameraRotationPosition();
+		preventThroughWall();
+		updateFakeCameraRotationPosition();
+		applyCamera();
+		wasCameraCloseToEntity = ModReferee.wasCameraCloseToEntity();
+		//			if (wasCameraCloseToEntity) {
+		//				// 假的第一人称，强制将相机放在玩家眼睛处
+		//				Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
+		//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
+		//				applyCamera();
+		//			}
 	}
 
 	public static Vector3d getSmoothEyePositionValue () {
-		Vector3d  smoothEyePositionValue = smoothEyePosition.get(PlayerAgent.lastPartialTick);
+		Vector3d  smoothEyePositionValue = smoothEyePosition.get(ThirdPersonMod.lastPartialTick);
 		Minecraft mc                     = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
-		Vector3d eyePosition      = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
+		Vector3d eyePosition      = Vectors.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
 		double   dist             = smoothEyePositionValue.distance(eyePosition);
 		Vector3d sf               = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero = sf.x * sf.z == 0;
@@ -195,7 +174,7 @@ public class CameraAgent {
 		Minecraft mc     = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
-			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick));
+			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
 			// 飞行时使用专用的平滑系数
 			if (ModReferee.isAttachedEntityFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);

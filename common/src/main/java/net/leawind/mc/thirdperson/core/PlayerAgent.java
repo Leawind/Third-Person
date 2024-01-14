@@ -17,12 +17,11 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerAgent {
-	public static final Vector2d        impulseHorizon  = new Vector2d(0);
-	public static final Vector3d        impulse         = new Vector3d(0);
-	public static final ExpSmoothDouble smoothXRot      = new ExpSmoothDouble().setHalflife(ModConstants.PLAYER_ROTATION_HALFLIFE);
-	public static       boolean         wasInterecting  = false;
-	public static       float           lastPartialTick = 1F;
-	public static       boolean         wasAiming       = false;
+	public static final Vector2d        impulseHorizon = new Vector2d(0);
+	public static final Vector3d        impulse        = new Vector3d(0);
+	public static final ExpSmoothDouble smoothXRot     = new ExpSmoothDouble().setHalflife(ModConstants.PLAYER_ROTATION_HALFLIFE);
+	public static       boolean         wasInterecting = false;
+	public static       boolean         wasAiming      = false;
 
 	// TODO smooth rotation for: yRot, yRotHead, yRotBody
 	public static void resetSmoothRotations () {
@@ -39,7 +38,7 @@ public class PlayerAgent {
 	public static void applySmoothRotations () {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null) {
-			mc.player.setXRot(mc.player.xRotO = smoothXRot.get().floatValue());
+			mc.player.setXRot(mc.player.xRotO = smoothXRot.get(ThirdPersonMod.lastPartialTick).floatValue());
 		}
 	}
 
@@ -54,10 +53,10 @@ public class PlayerAgent {
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		lastPartialTick = mc.getFrameTime();
+		ThirdPersonMod.lastPartialTick = mc.getFrameTime();
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
-			CameraAgent.smoothEyePosition.set(Vectors.toVector3d(mc.cameraEntity.getEyePosition(lastPartialTick)));
+			CameraAgent.smoothEyePosition.set(Vectors.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick)));
 			if (mc.player != null) {
 				resetSmoothRotations();
 			}
@@ -82,7 +81,7 @@ public class PlayerAgent {
 			return;
 		} else if (mc.cameraEntity.isSwimming()) {
 			turnToDirection(impulse, false);
-		} else if (CameraAgent.wasAttachedEntityInvisible) {
+		} else if (CameraAgent.wasCameraCloseToEntity) {
 			return;
 		} else if (ModReferee.isAttachedEntityFallFlying()) {
 			return;
@@ -93,7 +92,7 @@ public class PlayerAgent {
 		}
 	}
 
-	public static void onRenderTick (double period) {
+	public static void onCameraSetup (double period) {
 		Minecraft mc     = Minecraft.getInstance();
 		Config    config = ThirdPersonMod.getConfig();
 		if (!CameraAgent.isControlledCamera()) {
@@ -124,7 +123,6 @@ public class PlayerAgent {
 				turnToCameraRotation(true);
 			}
 		}
-		updateSmoothRotations(period);
 		applySmoothRotations();
 	}
 
@@ -155,7 +153,7 @@ public class PlayerAgent {
 	 */
 	public static void turnToPosition (@NotNull Vector3d pos, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
-		Vector3d eyePosition      = Vectors.toVector3d(Minecraft.getInstance().player.getEyePosition(lastPartialTick));
+		Vector3d eyePosition      = Vectors.toVector3d(Minecraft.getInstance().player.getEyePosition(ThirdPersonMod.lastPartialTick));
 		Vector3d playerViewVector = pos.copy().sub(eyePosition);
 		turnToDirection(playerViewVector, isInstantly);
 	}
@@ -189,7 +187,7 @@ public class PlayerAgent {
 				mc.player.setYRot(mc.player.yRotO = (float)y);
 				smoothXRot.set(x);
 			} else {
-				double previousY = mc.player.getViewYRot(lastPartialTick);
+				double previousY = mc.player.getViewYRot(ThirdPersonMod.lastPartialTick);
 				double dy        = ((y - previousY) % 360 + 360) % 360;
 				if (dy > 180) {
 					dy -= 360;

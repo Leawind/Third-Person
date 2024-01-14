@@ -22,7 +22,7 @@ public class LivingEntityRendererMixin {
 	@Inject(method="render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;" + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at=@At(value="HEAD"), cancellable=true)
 	public void render (LivingEntity entity, float f, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
 		if (entity == Minecraft.getInstance().cameraEntity) {
-			if (CameraAgent.wasAttachedEntityInvisible) {
+			if (CameraAgent.wasCameraCloseToEntity) {
 				ci.cancel();
 			}
 		}
