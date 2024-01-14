@@ -94,14 +94,14 @@ public class Vector2d {
 		return mul(v.x, v.y);
 	}
 
+	public Vector2d mul (double d) {
+		return mul(d, d);
+	}
+
 	public Vector2d mul (double x, double y) {
 		this.x *= x;
 		this.y *= y;
 		return this;
-	}
-
-	public Vector2d mul (double d) {
-		return mul(d, d);
 	}
 
 	public Vector2d div (Vector2d v, Vector2d dest) {
@@ -230,14 +230,14 @@ public class Vector2d {
 	}
 
 	public Vector2d clamp (double min, double max) {
-		x = x < min ? min: Math.min(x, max);
-		y = y < min ? min: Math.min(y, max);
+		x = Math.min(Math.max(x, min), max);
+		y = Math.min(Math.max(y, min), max);
 		return this;
 	}
 
 	public Vector2d clamp (Vector2d min, Vector2d max) {
-		x = x < min.x ? min.x: Math.min(x, max.x);
-		y = y < min.y ? min.y: Math.min(y, max.y);
+		x = Math.min(Math.max(x, min.x), max.x);
+		y = Math.min(Math.max(y, min.y), max.y);
 		return this;
 	}
 
@@ -250,12 +250,6 @@ public class Vector2d {
 	public Vector2d lerp (Vector2d dst, Vector2d t) {
 		x += (dst.x - x) * t.x;
 		y += (dst.y - y) * t.y;
-		return this;
-	}
-
-	public Vector2d fma (Vector2d a, Vector2d b) {
-		x += a.x * b.x;
-		y += a.y * b.y;
 		return this;
 	}
 
@@ -290,6 +284,10 @@ public class Vector2d {
 			return false;
 		}
 		return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
+	}
+
+	public String toString () {
+		return String.format("Vector2d(%f, %f)", x, y);
 	}
 
 	public Vector2d copy () {

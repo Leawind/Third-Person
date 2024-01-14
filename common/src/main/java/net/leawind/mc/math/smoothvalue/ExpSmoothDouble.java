@@ -81,13 +81,18 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
 	@Override
 	public ExpSmoothDouble setMT (Double multiplier, Double time) {
-		this.smoothFactor = Math.pow(multiplier, 1 / time);
+		if (multiplier < 0 || multiplier > 1) {
+			throw new IllegalArgumentException("Multiplier should in [0,1]: " + multiplier);
+		} else if (time < 0) {
+			throw new IllegalArgumentException("Invalid time, non-negative required, but got " + time);
+		}
+		setSmoothFactor(time == 0 ? 0: Math.pow(multiplier, 1 / time));
 		return this;
 	}
 
 	@Override
 	public ExpSmoothDouble setHalflife (Double halflife) {
-		return setMT(0.5, (double)halflife);
+		return setMT(0.5, halflife);
 	}
 
 	@Override

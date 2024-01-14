@@ -26,7 +26,9 @@ public class ModConstants {
 	 * <p>
 	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
 	 */
-	public static final double          NEAR_PLANE_DISTANCE           = 0.05;
-	public static final double          CAMERA_PITCH_DEGREE_LIMIT     = 89.8;
-	public static final double          CAMERA_THROUGH_WALL_DETECTION = 0.18;
+	public static final double          NEAR_PLANE_DISTANCE           = 0.050;
+	public static final double          CAMERA_PITCH_DEGREE_LIMIT     = 89.800;
+	public static final double          CAMERA_THROUGH_WALL_DETECTION = 0.180;
+	// Player rotation
+	public static final double          PLAYER_ROTATION_HALFLIFE      = 0.06;
 }

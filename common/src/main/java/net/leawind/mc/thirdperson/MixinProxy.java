@@ -1,12 +1,12 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModReferee;
-import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.math.vector.Vectors;
+import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.core.ModReferee;
+import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.phys.HitResult;
@@ -55,9 +55,9 @@ public class MixinProxy {
 			lookImpulseHorizon.add(leftImpulseHorizon, PlayerAgent.impulseHorizon);
 			if (PlayerAgent.impulseHorizon.length() > 1E-5 && mc.player != null) {
 				PlayerAgent.impulseHorizon.normalize();
-				float    playerRotation    = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
-				Vector2d playerLookHorizon = Vectors.directionFromRotationDegree(playerRotation).normalize();
-				Vector2d playerLeftHorizon = Vectors.directionFromRotationDegree(playerRotation - 90).normalize();
+				float    playerYRot        = mc.player.getViewYRot(PlayerAgent.lastPartialTick);
+				Vector2d playerLookHorizon = Vectors.directionFromRotationDegree(playerYRot).normalize();
+				Vector2d playerLeftHorizon = Vectors.directionFromRotationDegree(playerYRot - 90).normalize();
 				that.forwardImpulse = (float)(PlayerAgent.impulseHorizon.dot(playerLookHorizon));
 				that.leftImpulse    = (float)(PlayerAgent.impulseHorizon.dot(playerLeftHorizon));
 				if (isMoveSlowly) {

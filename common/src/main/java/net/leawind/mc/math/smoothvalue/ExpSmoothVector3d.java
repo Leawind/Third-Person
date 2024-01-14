@@ -71,7 +71,18 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 
 	@Override
 	public ExpSmoothVector3d setMT (Vector3d multiplier, Vector3d time) {
-		this.smoothFactor.set(Math.pow(multiplier.x, 1 / time.x), Math.pow(multiplier.y, 1 / time.y), Math.pow(multiplier.z, 1 / time.z));
+		if (multiplier.x < 0 || multiplier.x > 1) {
+			throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x);
+		} else if (multiplier.y < 0 || multiplier.y > 1) {
+			throw new IllegalArgumentException("Multiplier.y should in [0,1]: " + multiplier.y);
+		} else if (multiplier.z < 0 || multiplier.z > 1) {
+			throw new IllegalArgumentException("Multiplier.z should in [0,1]: " + multiplier.z);
+		} else if (time.x < 0 || time.y < 0 || time.z < 0) {
+			throw new IllegalArgumentException("Invalid time, non-negative required, but got " + time);
+		}
+		this.smoothFactor.set(time.x == 0 ? 0: Math.pow(multiplier.x, 1 / time.x),//
+							  time.y == 0 ? 0: Math.pow(multiplier.y, 1 / time.y),//
+							  time.z == 0 ? 0: Math.pow(multiplier.z, 1 / time.z));
 		return this;
 	}
 

@@ -254,16 +254,16 @@ public class Vector3d {
 	}
 
 	public Vector3d clamp (double min, double max) {
-		x = x < min ? min: Math.min(x, max);
-		y = y < min ? min: Math.min(y, max);
-		z = z < min ? min: Math.min(z, max);
+		x = Math.min(Math.max(x, min), max);
+		y = Math.min(Math.max(y, min), max);
+		z = Math.min(Math.max(z, min), max);
 		return this;
 	}
 
 	public Vector3d clamp (Vector3d min, Vector3d max) {
-		x = x < min.x ? min.x: Math.min(x, max.x);
-		y = y < min.y ? min.y: Math.min(y, max.y);
-		z = z < min.z ? min.z: Math.min(z, max.z);
+		x = Math.min(Math.max(x, min.x), max.x);
+		y = Math.min(Math.max(y, min.y), max.y);
+		z = Math.min(Math.max(z, min.z), max.z);
 		return this;
 	}
 
@@ -278,13 +278,6 @@ public class Vector3d {
 		x += (dst.x - x) * t.x;
 		y += (dst.y - y) * t.y;
 		z += (dst.z - z) * t.z;
-		return this;
-	}
-
-	public Vector3d fma (Vector3d a, Vector3d b) {
-		x += a.x * b.x;
-		y += a.y * b.y;
-		z += a.z * b.z;
 		return this;
 	}
 
@@ -326,6 +319,10 @@ public class Vector3d {
 			return false;
 		}
 		return Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z);
+	}
+
+	public String toString () {
+		return String.format("Vector3d(%f, %f, %f)", x, y, z);
 	}
 
 	public Vector3d copy () {

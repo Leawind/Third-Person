@@ -1,11 +1,13 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.math.vector.Vectors;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.world.InteractionHand;
@@ -15,11 +17,52 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerAgent {
-	public static final Vector2d impulseHorizon  = new Vector2d(0);
-	public static final Vector3d impulse         = new Vector3d(0);
-	public static       boolean  wasInterecting  = false;
-	public static       float    lastPartialTick = 1F;
-	public static       boolean  wasAiming       = false;
+	public static final Vector2d        impulseHorizon  = new Vector2d(0);
+	public static final Vector3d        impulse         = new Vector3d(0);
+	public static final ExpSmoothDouble smoothXRot      = new ExpSmoothDouble().setHalflife(ModConstants.PLAYER_ROTATION_HALFLIFE);
+	public static       boolean         wasInterecting  = false;
+	public static       float           lastPartialTick = 1F;
+	public static       boolean         wasAiming       = false;
+
+	// TODO smooth rotation for: yRot, yRotHead, yRotBody
+	public static void resetSmoothRotations () {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null) {
+			smoothXRot.set((double)mc.player.getXRot());
+		}
+	}
+
+	public static void updateSmoothRotations (double period) {
+		smoothXRot.update(period);
+	}
+
+	public static void applySmoothRotations () {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null) {
+			mc.player.setXRot(mc.player.xRotO = smoothXRot.get().floatValue());
+		}
+	}
+
+	/**
+	 * 获取玩家当前朝向
+	 */
+	public static Vector2d getRotation () {
+		Minecraft mc = Minecraft.getInstance();
+		assert mc.player != null;
+		return new Vector2d(mc.player.getXRot(), mc.player.getYRot());
+	}
+
+	public static void reset () {
+		Minecraft mc = Minecraft.getInstance();
+		lastPartialTick = mc.getFrameTime();
+		if (mc.cameraEntity != null) {
+			// 将虚拟球心放在实体眼睛处
+			CameraAgent.smoothEyePosition.set(Vectors.toVector3d(mc.cameraEntity.getEyePosition(lastPartialTick)));
+			if (mc.player != null) {
+				resetSmoothRotations();
+			}
+		}
+	}
 
 	/**
 	 * 玩家移动时自动转向移动方向
@@ -50,7 +93,7 @@ public class PlayerAgent {
 		}
 	}
 
-	public static void onRenderTick () {
+	public static void onRenderTick (double period) {
 		Minecraft mc     = Minecraft.getInstance();
 		Config    config = ThirdPersonMod.getConfig();
 		if (!CameraAgent.isControlledCamera()) {
@@ -81,15 +124,8 @@ public class PlayerAgent {
 				turnToCameraRotation(true);
 			}
 		}
-	}
-
-	public static void reset () {
-		Minecraft mc = Minecraft.getInstance();
-		lastPartialTick = mc.getFrameTime();
-		if (mc.cameraEntity != null) {
-			// 将虚拟球心放在实体眼睛处
-			CameraAgent.smoothEyePosition.set(Vectors.toVector3d(mc.cameraEntity.getEyePosition(lastPartialTick)));
-		}
+		updateSmoothRotations(period);
+		applySmoothRotations();
 	}
 
 	/**
@@ -150,22 +186,16 @@ public class PlayerAgent {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
-				mc.player.setXRot((float)x);
-				mc.player.setYRot((float)y);
-				//				mc.player.yHeadRot = (float)y;
-				// TODO
-				mc.player.xRotO = (float)x;
-				mc.player.yRotO = (float)y;
-				//				mc.player.yHeadRotO = (float)y;
+				mc.player.setYRot(mc.player.yRotO = (float)y);
+				smoothXRot.set(x);
 			} else {
 				double previousY = mc.player.getViewYRot(lastPartialTick);
 				double dy        = ((y - previousY) % 360 + 360) % 360;
 				if (dy > 180) {
 					dy -= 360;
 				}
-				double previousX = mc.player.getViewXRot(lastPartialTick);
-				double dx        = x - previousX;
-				mc.player.turn(dy, dx);
+				mc.player.turn(dy, 0);
+				smoothXRot.setTarget(x);
 			}
 		}
 	}

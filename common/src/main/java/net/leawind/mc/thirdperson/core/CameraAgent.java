@@ -2,6 +2,12 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.mojang.blaze3d.Blaze3D;
+import net.leawind.mc.math.smoothvalue.ExpSmoothDouble;
+import net.leawind.mc.math.smoothvalue.ExpSmoothVector2d;
+import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
+import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.math.vector.Vector3d;
+import net.leawind.mc.math.vector.Vectors;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
@@ -9,12 +15,6 @@ import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.thirdperson.util.ModConstants;
-import net.leawind.mc.math.smoothvalue.ExpSmoothDouble;
-import net.leawind.mc.math.smoothvalue.ExpSmoothVector2d;
-import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
-import net.leawind.mc.math.vector.Vector2d;
-import net.leawind.mc.math.vector.Vector3d;
-import net.leawind.mc.math.vector.Vectors;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -133,7 +133,7 @@ public class CameraAgent {
 			//				applyCamera();
 			//			}
 		}
-		PlayerAgent.onRenderTick();
+		PlayerAgent.onRenderTick(period);
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
 		}
