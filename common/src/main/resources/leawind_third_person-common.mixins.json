@@ -14,7 +14,8 @@
 		"LocalPlayerMixin",
 		"MouseHandlerMixin",
 		"EntityMixin",
-		"GameRendererMixin"
+		"GameRendererMixin",
+		"MouseHandlerMixin"
 	],
 	"mixins": [],
 	"injectors": {

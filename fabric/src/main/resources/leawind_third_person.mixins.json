@@ -3,9 +3,7 @@
 	"package": "net.leawind.mc.thirdperson.fabric.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"minVersion": "0.8",
-	"client": [
-		"MouseHandlerMixin"
-	],
+	"client": [],
 	"mixins": [],
 	"injectors": {
 		"defaultRequire": 1
