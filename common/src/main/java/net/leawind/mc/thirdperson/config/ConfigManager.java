@@ -9,23 +9,19 @@ import net.leawind.mc.thirdperson.core.ModConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+/**
+ * 配置管理器
+ * <p>
+ * 负则配置的加载与保存
+ */
 public class ConfigManager {
 	private final Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
 	private       Config config = new Config();
-
-	/**
-	 * 获取配置管理器实例
-	 */
-	@NotNull
-	public static ConfigManager get () {
-		return ThirdPersonMod.CONFIG_MANAGER;
-	}
 
 	/**
 	 * 在可翻译文本的键前加上modid前缀
@@ -34,7 +30,7 @@ public class ConfigManager {
 	 * @return ${MODID}.${name}
 	 */
 	public static Component getText (String name) {
-		return Component.translatable(ThirdPersonMod.MOD_ID + "." + name);
+		return Component.translatable(ModConstants.MOD_ID + "." + name);
 	}
 
 	public ConfigManager () {

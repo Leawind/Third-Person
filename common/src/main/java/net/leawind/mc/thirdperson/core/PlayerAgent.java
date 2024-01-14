@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.vector.Vector2d;
 import net.leawind.mc.util.vector.Vector3d;
@@ -25,9 +26,10 @@ public class PlayerAgent {
 	 */
 	@PerformanceSensitive
 	public static void onServerAiStep () {
-		Minecraft mc = Minecraft.getInstance();
+		Minecraft mc     = Minecraft.getInstance();
+		Config    config = ThirdPersonMod.getConfig();
 		assert mc.cameraEntity != null;
-		if (!Config.get().rotate_to_moving_direction) {
+		if (!config.rotate_to_moving_direction) {
 			return;
 		} else if (wasInterecting) {
 			return;
@@ -49,13 +51,14 @@ public class PlayerAgent {
 	}
 
 	public static void onRenderTick () {
-		Minecraft mc = Minecraft.getInstance();
+		Minecraft mc     = Minecraft.getInstance();
+		Config    config = ThirdPersonMod.getConfig();
 		if (!CameraAgent.isControlledCamera()) {
 			return;
 		} else if (wasAiming) {
 			turnToCameraHitResult(true);
 			// 侧身拉弓
-			if (Config.get().auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
+			if (config.auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
 				assert mc.player != null;
 				if (mc.player.isUsingItem() && mc.player.getUseItem().is(Items.BOW)) {
 					double k = mc.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
@@ -69,10 +72,10 @@ public class PlayerAgent {
 			turnToCameraRotation(true);
 			//			} else if (CameraAgent.wasAttachedEntityInvisible) {
 			//				turnToCameraRotation(true);
-		} else if (Config.get().player_rotate_with_camera_when_not_aiming) {
+		} else if (config.player_rotate_with_camera_when_not_aiming) {
 			turnToCameraRotation(true);
-		} else if (wasInterecting && Config.get().auto_rotate_interacting) {
-			if (Config.get().rotate_interacting_type) {
+		} else if (wasInterecting && config.auto_rotate_interacting) {
+			if (config.rotate_interacting_type) {
 				turnToCameraHitResult(true);
 			} else {
 				turnToCameraRotation(true);

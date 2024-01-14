@@ -9,7 +9,6 @@ import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModConstants;
 import net.leawind.mc.thirdperson.core.ModReferee;
@@ -34,10 +33,11 @@ public class ModEvents {
 		if (mc.isPaused()) {
 			return;
 		}
+		Config config = ThirdPersonMod.getConfig();
 		CameraAgent.updateSmoothEyePosition(0.05);
-		PlayerAgent.wasInterecting               = PlayerAgent.isInterecting();
-		PlayerAgent.wasAiming                    = ModReferee.isCameraEntityAiming();
-		Config.get().cameraOffsetScheme.isAiming = PlayerAgent.wasAiming;
+		PlayerAgent.wasInterecting         = PlayerAgent.isInterecting();
+		PlayerAgent.wasAiming              = ModReferee.isCameraEntityAiming();
+		config.cameraOffsetScheme.isAiming = PlayerAgent.wasAiming;
 	}
 
 	/**
@@ -65,10 +65,11 @@ public class ModEvents {
 	 * @param amount    向前滚是+1，向后滚是-1
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
+		Config config = ThirdPersonMod.getConfig();
 		if (ModReferee.isAdjustingCameraDistance()) {
-			double dist = Config.get().cameraOffsetScheme.getMode().getMaxDistance();
-			dist = Config.get().distanceMonoList.offset(dist, (int)-Math.signum(amount));
-			Config.get().cameraOffsetScheme.getMode().setMaxDistance(dist);
+			double dist = config.cameraOffsetScheme.getMode().getMaxDistance();
+			dist = config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
+			config.cameraOffsetScheme.getMode().setMaxDistance(dist);
 			return EventResult.interruptFalse();
 		} else {
 			return EventResult.pass();
@@ -79,7 +80,7 @@ public class ModEvents {
 	}
 
 	public static void onStopAdjustingCameraOffset () {
-		ConfigManager.get().save();
+		ThirdPersonMod.getConfigManager().save();
 	}
 
 	/**
@@ -92,9 +93,10 @@ public class ModEvents {
 		if (movement.lengthSquared() == 0) {
 			return;
 		}
+		Config             config     = ThirdPersonMod.getConfig();
 		Window             window     = Minecraft.getInstance().getWindow();
 		Vector2d           screenSize = new Vector2d(window.getScreenWidth(), window.getScreenHeight());
-		CameraOffsetScheme scheme     = Config.get().cameraOffsetScheme;
+		CameraOffsetScheme scheme     = config.cameraOffsetScheme;
 		CameraOffsetMode   mode       = scheme.getMode();
 		if (mode.isCentered()) {
 			// 相机在头顶，只能上下调整
@@ -127,7 +129,7 @@ public class ModEvents {
 	 * 退出第三人称视角
 	 */
 	public static void onLeaveThirdPerson () {
-		if (Config.get().turn_with_camera_when_enter_first_person) {
+		if (ThirdPersonMod.getConfig().turn_with_camera_when_enter_first_person) {
 			PlayerAgent.turnToCameraRotation(true);
 		}
 	}
@@ -150,9 +152,10 @@ public class ModEvents {
 	 * @param x 俯仰角变化量
 	 */
 	public static void onCameraTurn (double y, double x) {
-		if (Config.get().is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
+		Config config = ThirdPersonMod.getConfig();
+		if (config.is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
 			y *= 0.15;
-			x *= Config.get().lock_camera_pitch_angle ? 0: -0.15;
+			x *= config.lock_camera_pitch_angle ? 0: -0.15;
 			if (y != 0 || x != 0) {
 				CameraAgent.lastCameraTurnTimeStamp = Blaze3D.getTime();
 				CameraAgent.relativeRotation.set(Mth.clamp(CameraAgent.relativeRotation.x + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (CameraAgent.relativeRotation.y + y) % 360f);

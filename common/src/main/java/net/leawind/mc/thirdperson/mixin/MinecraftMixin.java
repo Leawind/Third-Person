@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * handleKeybinds 方法中会处理各种按键事件， 其中包括鼠标使用、攻击、选取按键
  * <p>
- * 在这之前，我要立即将玩家转向准星所指的方向， 并通过调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
+ * 在这之前，要立即调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
+ * <p>
+ * 这个 pick 方法也被使用 mixin 修改了 pick 的方向，使玩家朝向相机准星的落点。
  */
 @Mixin(value=net.minecraft.client.Minecraft.class, priority=2000)
 public class MinecraftMixin {

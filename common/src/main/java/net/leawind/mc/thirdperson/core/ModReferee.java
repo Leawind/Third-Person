@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.util.vector.Vector3d;
@@ -42,7 +43,8 @@ public class ModReferee {
 	 * 当前是否显示准星
 	 */
 	public static boolean shouldRenderCrosshair () {
-		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? Config.get().render_crosshair_when_aiming: Config.get().render_crosshair_when_not_aiming);
+		Config config = ThirdPersonMod.getConfig();
+		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming);
 	}
 
 	/**
@@ -55,8 +57,9 @@ public class ModReferee {
 	 * 需要借助相机坐标和玩家眼睛坐标来判断
 	 */
 	public static boolean isAttachedEntityInvisible () {
-		Minecraft mc = Minecraft.getInstance();
-		if (!Config.get().player_fade_out_enabled) {
+		Minecraft mc     = Minecraft.getInstance();
+		Config    config = ThirdPersonMod.getConfig();
+		if (!config.player_fade_out_enabled) {
 			return false;
 		} else if (mc.cameraEntity == null || CameraAgent.camera == null) {
 			return false;
@@ -64,10 +67,10 @@ public class ModReferee {
 		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
 		Vector3d eyePosition    = CameraAgent.getSmoothEyePositionValue();
 		Vector3d cameraPosition = Vectors.toVector3d(CameraAgent.camera.getPosition());
-		if (Config.get().cameraOffsetScheme.getMode().getMaxDistance() <= Config.get().distanceMonoList.get(0)) {
+		if (config.cameraOffsetScheme.getMode().getMaxDistance() <= config.distanceMonoList.get(0)) {
 			return true;
 		} else {
-			return eyePosition.distance(cameraPosition) <= Config.get().distanceMonoList.get(0);
+			return eyePosition.distance(cameraPosition) <= config.distanceMonoList.get(0);
 		}
 	}
 

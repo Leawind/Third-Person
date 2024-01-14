@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.event;
 
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
@@ -25,7 +26,7 @@ public class ModKeys {
 	 */
 	public static final  KeyMapping FORCE_AIMING      = new ThirdPersonKeyMapping("force_aiming", InputConstants.UNKNOWN.getValue());
 	private static final KeyMapping TOOGLE_MOD_ENABLE = new ThirdPersonKeyMapping("toggle_mod_enable").onDown(() -> {
-		Config config = Config.get();
+		Config config = ThirdPersonMod.getConfig();
 		if (ModReferee.isThirdPerson()) {
 			if (config.is_mod_enable) {
 				PlayerAgent.turnToCameraRotation(true);
@@ -41,23 +42,24 @@ public class ModKeys {
 	private static final KeyMapping OPEN_CONFIG_MENU  = new ThirdPersonKeyMapping("open_config_menu").onDown(() -> {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.screen == null) {
-			mc.setScreen(ConfigManager.get().getConfigScreen(null));
+			mc.setScreen(ThirdPersonMod.getConfigManager().getConfigScreen(null));
 		}
 	});
 	/**
 	 * 切换左右
 	 */
 	private static final KeyMapping TOGGLE_SIDE       = new ThirdPersonKeyMapping("toggle_side", InputConstants.KEY_CAPSLOCK).onDown(() -> {
-		if (Config.get().cameraOffsetScheme.isCentered()) {
-			Config.get().cameraOffsetScheme.toNextSide();
+		Config config = ThirdPersonMod.getConfig();
+		if (config.cameraOffsetScheme.isCentered()) {
+			config.cameraOffsetScheme.toNextSide();
 			return true;
 		} else {
 			return false;
 		}
 	}).onHold(() -> {
-		Config.get().cameraOffsetScheme.setCentered(true);
+		ThirdPersonMod.getConfig().cameraOffsetScheme.setCentered(true);
 	}).onPress(() -> {
-		Config.get().cameraOffsetScheme.toNextSide();
+		ThirdPersonMod.getConfig().cameraOffsetScheme.toNextSide();
 	});
 	/**
 	 * 切换瞄准状态

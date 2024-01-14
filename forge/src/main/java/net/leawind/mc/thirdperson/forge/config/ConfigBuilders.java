@@ -8,6 +8,7 @@ import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.DoubleListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,7 +20,7 @@ public class ConfigBuilders {
 		final ConfigBuilder builder = ConfigBuilder.create()
 			.setParentScreen(parent)
 			.setTitle(ConfigManager.getText("text.title"))
-			.setSavingRunnable(ConfigManager.get()::save);
+			.setSavingRunnable(ThirdPersonMod.getConfigManager()::save);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		//==============================//
 		// Category: general

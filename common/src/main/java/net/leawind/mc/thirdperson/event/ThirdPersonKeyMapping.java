@@ -4,7 +4,7 @@ package net.leawind.mc.thirdperson.event;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.core.ModConstants;
 import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unused")
 public final class ThirdPersonKeyMapping extends KeyMapping {
-	private static final String                                 CATEGORY_KEY = "key.categories." + ThirdPersonMod.MOD_ID;
+	private static final String                                 CATEGORY_KEY = "key.categories." + ModConstants.MOD_ID;
 	private static final HashMap<String, ThirdPersonKeyMapping> mappings     = new HashMap<>();
 	/**
 	 * 按下后经过 holdLength 则触发 hold 事件
@@ -49,7 +49,7 @@ public final class ThirdPersonKeyMapping extends KeyMapping {
 	}
 
 	private static String getId (String name) {
-		return "key." + ThirdPersonMod.MOD_ID + "." + name;
+		return "key." + ModConstants.MOD_ID + "." + name;
 	}
 
 	public static void registerAll () {

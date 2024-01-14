@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.thirdperson.ExpectPlatform;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 
 import java.io.File;
 import java.util.HashSet;
@@ -26,6 +25,7 @@ public class ModConstants {
 	public static final double          NEAR_PLANE_DISTANCE           = 0.05;
 	public static final double          CAMERA_PITCH_DEGREE_LIMIT     = 89.8;
 	public static final double          CAMERA_THROUGH_WALL_DETECTION = 0.18;
+	public static final String        MOD_ID         = "leawind_third_person";
 	// 配置文件
-	public static final File            CONFIG_FILE                   = ExpectPlatform.getConfigDirectory().resolve(ThirdPersonMod.MOD_ID + ".json").toFile();
+	public static final File            CONFIG_FILE                   = ExpectPlatform.getConfigDirectory().resolve(MOD_ID + ".json").toFile();
 }
