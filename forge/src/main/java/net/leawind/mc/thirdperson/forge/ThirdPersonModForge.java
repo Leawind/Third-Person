@@ -10,11 +10,13 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 @Mod(ModConstants.MOD_ID)
 public class ThirdPersonModForge {
 	public ThirdPersonModForge () {
 		// 仅在客户端运行
+		ThreadGroup tg = Thread.currentThread().getThreadGroup();
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			EventBuses.registerModEventBus(ModConstants.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
 			ThirdPersonMod.init();

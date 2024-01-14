@@ -1,12 +1,12 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.math.vector.Vector3d;
+import net.leawind.mc.math.vector.Vectors;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.util.ModConstants;
-import net.leawind.mc.math.vector.Vector3d;
-import net.leawind.mc.math.vector.Vectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;

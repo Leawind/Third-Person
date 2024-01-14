@@ -33,24 +33,22 @@ public class ConfigManager {
 		return Component.translatable(ModConstants.MOD_ID + "." + name);
 	}
 
-	public ConfigManager () {
-		load();
-	}
-
 	/**
 	 * 加载配置
 	 * <p>
 	 * 如果找不到文件，则保存一份。
+	 * <p>
+	 * 如果失败，则记录错误到日志
 	 */
-	public void load () {
+	public void tryLoad () {
 		try {
 			assert ModConstants.CONFIG_FILE.getParentFile().mkdirs();
 			if (ModConstants.CONFIG_FILE.exists()) {
-				config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
+				load();
 				ThirdPersonMod.LOGGER.info("Config is loaded from {}", ModConstants.CONFIG_FILE);
 			} else {
 				ThirdPersonMod.LOGGER.info("Config not found, creating one.");
-				save();
+				trySave();
 			}
 		} catch (IOException e) {
 			ThirdPersonMod.LOGGER.error("Failed to load config.", e);
@@ -59,15 +57,35 @@ public class ConfigManager {
 	}
 
 	/**
-	 * 保存配置文件
+	 * 尝试保存配置文件
+	 * <p>
+	 * 如果失败，则记录错误到日志
 	 */
-	public void save () {
+	public void trySave () {
 		try {
-			FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
+			save();
 			ThirdPersonMod.LOGGER.info("Config is saved.");
 		} catch (IOException e) {
 			ThirdPersonMod.LOGGER.error("Failed to save config.", e);
 		}
+	}
+
+	/**
+	 * 直接读取配置文件
+	 *
+	 * @throws IOException
+	 */
+	public void load () throws IOException {
+		config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
+	}
+
+	/**
+	 * 直接保存配置文件
+	 *
+	 * @throws IOException
+	 */
+	public void save () throws IOException {
+		FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
 	}
 
 	/**

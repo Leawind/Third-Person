@@ -80,7 +80,7 @@ public class ModEvents {
 	}
 
 	public static void onStopAdjustingCameraOffset () {
-		ThirdPersonMod.getConfigManager().save();
+		ThirdPersonMod.getConfigManager().trySave();
 	}
 
 	/**

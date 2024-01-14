@@ -20,7 +20,7 @@ public class ConfigBuilders {
 		final ConfigBuilder builder = ConfigBuilder.create()
 			.setParentScreen(parent)
 			.setTitle(ConfigManager.getText("text.title"))
-			.setSavingRunnable(ThirdPersonMod.getConfigManager()::save);
+			.setSavingRunnable(ThirdPersonMod.getConfigManager()::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		//==============================//
 		// Category: general
