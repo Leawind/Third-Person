@@ -60,7 +60,6 @@ public class ConfigManager {
 
 	/**
 	 * 保存配置文件
-	 * TODO delay saving
 	 */
 	public void save () {
 		try {

@@ -1,4 +1,4 @@
-package net.leawind.mc.util.monolist;
+package net.leawind.mc.math.monolist;
 
 
 import net.minecraft.util.Mth;

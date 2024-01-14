@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.util;
 
 
-import net.leawind.mc.thirdperson.ExpectPlatform;
+import net.minecraft.client.Minecraft;
 
 import java.io.File;
 import java.util.HashSet;
@@ -10,6 +10,8 @@ import java.util.List;
 public class ModConstants {
 	public static final String          MOD_ID                        = "leawind_third_person";
 	public static final String          KEY_CATEGORY                  = "key.categories." + MOD_ID;
+	public static final File            CONFIG_FILE                   = Minecraft.getInstance().gameDirectory.toPath().resolve("config/" + MOD_ID + ".json").toFile();
+	// TODO auto aim items
 	public static final HashSet<String> AUTO_AIM_ITEMS                = new HashSet<>(List.of("item.minecraft.ender_pearl",
 																							  "item.minecraft.snowball",
 																							  "item.minecraft.egg",
@@ -27,6 +29,4 @@ public class ModConstants {
 	public static final double          NEAR_PLANE_DISTANCE           = 0.05;
 	public static final double          CAMERA_PITCH_DEGREE_LIMIT     = 89.8;
 	public static final double          CAMERA_THROUGH_WALL_DETECTION = 0.18;
-	// 配置文件
-	public static final File            CONFIG_FILE                   = ExpectPlatform.getConfigDirectory().resolve(MOD_ID + ".json").toFile();
 }

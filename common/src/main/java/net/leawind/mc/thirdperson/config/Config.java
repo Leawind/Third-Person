@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.config;
 
 import com.google.gson.annotations.Expose;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.util.monolist.StaticMonoList;
+import net.leawind.mc.math.monolist.StaticMonoList;
 
 /**
  * 模组配置

@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.vector.Vector2d;
-import net.leawind.mc.util.vector.Vector3d;
+import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.math.vector.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CameraOffsetMode {
