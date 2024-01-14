@@ -61,8 +61,9 @@ public class CameraOffsetModeNormal extends CameraOffsetMode {
 	public void toNextSide () {
 		if (isCentered()) {
 			setCentered(false);
+		} else {
+			config.normal_offset_x = -config.normal_offset_x;
 		}
-		config.normal_offset_x = -config.normal_offset_x;
 	}
 
 	@Override

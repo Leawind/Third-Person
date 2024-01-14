@@ -61,8 +61,9 @@ public class CameraOffsetModeAiming extends CameraOffsetMode {
 	public void toNextSide () {
 		if (isCentered()) {
 			setCentered(false);
+		} else {
+			config.aiming_offset_x = -config.aiming_offset_x;
 		}
-		config.aiming_offset_x = -config.aiming_offset_x;
 	}
 
 	@Override
