@@ -92,5 +92,6 @@
 	"key.leawind_third_person.adjust_position": "Hold to Adjust Camera Position",
 	"key.leawind_third_person.force_aiming": "Hold to Force Aiming",
 	"key.leawind_third_person.toggle_aiming": "Short Press to Toggle Aiming State",
+	"key.leawind_third_person.toggle_pitch_lock": "Toggle Pitch Lock",
 	"leawind_third_person.text.placeholder": ""
 }

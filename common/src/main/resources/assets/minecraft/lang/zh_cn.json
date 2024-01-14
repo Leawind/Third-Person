@@ -92,5 +92,6 @@
 	"key.leawind_third_person.adjust_position": "按住调节相机位置",
 	"key.leawind_third_person.force_aiming": "按住强制瞄准",
 	"key.leawind_third_person.toggle_aiming": "短按切换瞄准状态",
+	"key.leawind_third_person.toggle_pitch_lock": "切换俯仰角锁定",
 	"leawind_third_person.text.placeholder": ""
 }

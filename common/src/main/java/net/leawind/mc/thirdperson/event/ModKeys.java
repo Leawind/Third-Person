@@ -74,6 +74,13 @@ public class ModKeys {
 			ModReferee.isToggleToAiming = !ModReferee.isToggleToAiming;
 		}
 	});
+	/**
+	 * 切换俯仰角锁定
+	 */
+	private static final KeyMapping TOGGLE_PITCH_LOCK = new ModKeyMapping(getId("toggle_pitch_lock"), ModConstants.KEY_CATEGORY).onDown(() -> {
+		Config config = ThirdPersonMod.getConfig();
+		config.lock_camera_pitch_angle = !config.lock_camera_pitch_angle;
+	});
 
 	public static void register () {
 		ModKeyMapping.registerAll();
