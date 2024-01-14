@@ -70,9 +70,19 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	}
 
 	@Override
-	public ExpSmoothVector3d setSmoothFactor (Vector3d k, Vector3d t) {
-		this.smoothFactor.set(Math.pow(k.x, 1 / t.x), Math.pow(k.y, 1 / t.y), Math.pow(k.z, 1 / t.z));
+	public ExpSmoothVector3d setMT (Vector3d multiplier, Vector3d time) {
+		this.smoothFactor.set(Math.pow(multiplier.x, 1 / time.x), Math.pow(multiplier.y, 1 / time.y), Math.pow(multiplier.z, 1 / time.z));
 		return this;
+	}
+
+	@Override
+	public ExpSmoothVector3d setHalflife (Vector3d halflife) {
+		return setMT(new Vector3d(0.5), halflife);
+	}
+
+	@Override
+	public ExpSmoothVector3d setHalflife (double halflife) {
+		return setMT(new Vector3d(0.5), new Vector3d(halflife));
 	}
 
 	public ExpSmoothVector3d setSmoothFactorWeight (double w) {

@@ -70,9 +70,19 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public ExpSmoothVector2d setSmoothFactor (Vector2d multiplier, Vector2d deltaTime) {
-		this.smoothFactor.set(Math.pow(multiplier.x, 1 / deltaTime.x), Math.pow(multiplier.y, 1 / deltaTime.y));
+	public ExpSmoothVector2d setMT (Vector2d multiplier, Vector2d time) {
+		this.smoothFactor.set(Math.pow(multiplier.x, 1 / time.x), Math.pow(multiplier.y, 1 / time.y));
 		return this;
+	}
+
+	@Override
+	public ExpSmoothVector2d setHalflife (Vector2d halflife) {
+		return setMT(new Vector2d(0.5), halflife);
+	}
+
+	@Override
+	public ExpSmoothVector2d setHalflife (double halflife) {
+		return setMT(new Vector2d(0.5), new Vector2d(halflife));
 	}
 
 	public ExpSmoothVector2d setSmoothFactorWeight (double w) {

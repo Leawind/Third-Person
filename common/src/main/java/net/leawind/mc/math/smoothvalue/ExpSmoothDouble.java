@@ -74,14 +74,24 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public ExpSmoothValue<Double> setSmoothFactor (double smoothFactor) {
+	public ExpSmoothDouble setSmoothFactor (double smoothFactor) {
 		this.smoothFactor = smoothFactor;
 		return this;
 	}
 
 	@Override
-	public ExpSmoothDouble setSmoothFactor (Double k, Double t) {
-		this.smoothFactor = Math.pow(k, 1 / t);
+	public ExpSmoothDouble setMT (Double multiplier, Double time) {
+		this.smoothFactor = Math.pow(multiplier, 1 / time);
 		return this;
+	}
+
+	@Override
+	public ExpSmoothDouble setHalflife (Double halflife) {
+		return setMT(0.5, (double)halflife);
+	}
+
+	@Override
+	public ExpSmoothDouble setHalflife (double halflife) {
+		return setMT(0.5, halflife);
 	}
 }

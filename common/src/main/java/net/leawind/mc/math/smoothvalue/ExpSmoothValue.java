@@ -42,9 +42,19 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	abstract ExpSmoothValue<T> setSmoothFactor (double smoothFactor);
 
 	/**
-	 * 每隔 deltaTime 秒，value 变为原来的 multiplier 倍
+	 * 每隔 time 秒，value 变为原来的 multiplier 倍
 	 */
-	abstract ExpSmoothValue<T> setSmoothFactor (T multiplier, T deltaTime);
+	abstract ExpSmoothValue<T> setMT (T multiplier, T time);
+
+	/**
+	 * 通过半衰期设置平滑系数
+	 */
+	abstract ExpSmoothValue<T> setHalflife (T halflife);
+
+	/**
+	 * 通过半衰期设置平滑系数
+	 */
+	abstract ExpSmoothValue<T> setHalflife (double halflife);
 
 	abstract ExpSmoothValue<T> setSmoothFactorWeight (double smoothFactorWeight);
 
