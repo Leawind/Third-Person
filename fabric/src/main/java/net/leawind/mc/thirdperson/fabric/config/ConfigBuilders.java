@@ -59,6 +59,7 @@ public class ConfigBuilders {
 			// SubCategory: Crosshair
 			final SubCategoryBuilder SUBCATEGORY_CROSSHAIR = buildSubCategory("crosshair", entryBuilder);
 			SUBCATEGORY_CROSSHAIR.add(buildBooleanEntry(true, "render_crosshair_when_not_aiming", config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v, entryBuilder));
+			SUBCATEGORY_CROSSHAIR.add(buildBooleanEntry(true, "render_crosshair_when_aiming", config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v, entryBuilder));
 			category_misc.addEntry(SUBCATEGORY_CROSSHAIR.build());
 		}
 		//==============================//
