@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
+import net.leawind.mc.thirdperson.util.ModConstants;
 import net.leawind.mc.util.vector.Vector3d;
 import net.leawind.mc.util.vector.Vectors;
 import net.minecraft.client.Minecraft;

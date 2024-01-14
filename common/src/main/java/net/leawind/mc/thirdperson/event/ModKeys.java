@@ -4,15 +4,20 @@ package net.leawind.mc.thirdperson.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.thirdperson.util.ModConstants;
+import net.leawind.mc.util.ModKeyMapping;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
 @SuppressWarnings("unused")
 public class ModKeys {
+	private static String getId (String name) {
+		return "key." + ModConstants.MOD_ID + "." + name;
+	}
+
 	/**
 	 * 按住后进入调整相机位置的模式
 	 * <p>
@@ -20,12 +25,12 @@ public class ModKeys {
 	 * <p>
 	 * 鼠标滚轮调整相机到玩家的距离（调整幅度随距离指数增长）
 	 */
-	public static final  KeyMapping ADJUST_POSITION   = new ThirdPersonKeyMapping("adjust_position", InputConstants.KEY_Z).onDown(ModEvents::onStartAdjustingCameraOffset).onUp(ModEvents::onStopAdjustingCameraOffset);
+	public static final  KeyMapping ADJUST_POSITION   = new ModKeyMapping(getId("adjust_position"), InputConstants.KEY_Z, ModConstants.KEY_CATEGORY).onDown(ModEvents::onStartAdjustingCameraOffset).onUp(ModEvents::onStopAdjustingCameraOffset);
 	/**
 	 * 按住强制瞄准
 	 */
-	public static final  KeyMapping FORCE_AIMING      = new ThirdPersonKeyMapping("force_aiming", InputConstants.UNKNOWN.getValue());
-	private static final KeyMapping TOOGLE_MOD_ENABLE = new ThirdPersonKeyMapping("toggle_mod_enable").onDown(() -> {
+	public static final  KeyMapping FORCE_AIMING      = new ModKeyMapping(getId("force_aiming"), InputConstants.UNKNOWN.getValue(), ModConstants.KEY_CATEGORY);
+	private static final KeyMapping TOOGLE_MOD_ENABLE = new ModKeyMapping(getId("toggle_mod_enable"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		Config config = ThirdPersonMod.getConfig();
 		if (ModReferee.isThirdPerson()) {
 			if (config.is_mod_enable) {
@@ -39,7 +44,7 @@ public class ModKeys {
 	/**
 	 * 按下打开配置菜单
 	 */
-	private static final KeyMapping OPEN_CONFIG_MENU  = new ThirdPersonKeyMapping("open_config_menu").onDown(() -> {
+	private static final KeyMapping OPEN_CONFIG_MENU  = new ModKeyMapping(getId("open_config_menu"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.screen == null) {
 			mc.setScreen(ThirdPersonMod.getConfigManager().getConfigScreen(null));
@@ -48,7 +53,7 @@ public class ModKeys {
 	/**
 	 * 切换左右
 	 */
-	private static final KeyMapping TOGGLE_SIDE       = new ThirdPersonKeyMapping("toggle_side", InputConstants.KEY_CAPSLOCK).onDown(() -> {
+	private static final KeyMapping TOGGLE_SIDE       = new ModKeyMapping(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ModConstants.KEY_CATEGORY).onDown(() -> {
 		Config config = ThirdPersonMod.getConfig();
 		if (config.cameraOffsetScheme.isCentered()) {
 			config.cameraOffsetScheme.toNextSide();
@@ -64,13 +69,13 @@ public class ModKeys {
 	/**
 	 * 切换瞄准状态
 	 */
-	private static final KeyMapping TOGGLE_AIMING     = new ThirdPersonKeyMapping("toggle_aiming").onDown(() -> {
+	private static final KeyMapping TOGGLE_AIMING     = new ModKeyMapping(getId("toggle_aiming"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
 			ModReferee.isToggleToAiming = !ModReferee.isToggleToAiming;
 		}
 	});
 
 	public static void register () {
-		ThirdPersonKeyMapping.registerAll();
+		ModKeyMapping.registerAll();
 	}
 }

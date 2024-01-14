@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.forge;
 
 import dev.architectury.platform.forge.EventBuses;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.core.ModConstants;
+import net.leawind.mc.thirdperson.util.ModConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.DistExecutor;

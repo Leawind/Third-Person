@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
-import net.leawind.mc.thirdperson.core.ModConstants;
+import net.leawind.mc.thirdperson.util.ModConstants;
 import net.leawind.mc.thirdperson.event.ModEvents;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import org.slf4j.Logger;
