@@ -8,7 +8,7 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.math.vector.Vector2d;
-import net.leawind.mc.math.vector.Vectors;
+import net.leawind.mc.math.LMath;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
@@ -131,7 +131,7 @@ public class ModEvents {
 			// 相机在头顶，只能上下调整
 			double topOffset = mode.getCenterOffsetRatio();
 			topOffset += -movement.y / screenSize.y;
-			topOffset = Vectors.clamp(topOffset, -1, 1);
+			topOffset = LMath.clamp(topOffset, -1, 1);
 			mode.setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整

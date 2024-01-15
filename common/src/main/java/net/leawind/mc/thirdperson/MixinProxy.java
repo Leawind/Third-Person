@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
-import net.leawind.mc.math.vector.Vectors;
+import net.leawind.mc.math.LMath;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
@@ -41,8 +41,8 @@ public class MixinProxy {
 			double    cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
 			double    cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);
 			// 方向向量 != 0
-			Vector3d lookImpulse        = Vectors.toVector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
-			Vector3d leftImpulse        = Vectors.toVector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
+			Vector3d lookImpulse        = LMath.toVector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
+			Vector3d leftImpulse        = LMath.toVector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
 			Vector2d lookImpulseHorizon = new Vector2d(lookImpulse.x, lookImpulse.z).normalize();
 			Vector2d leftImpulseHorizon = new Vector2d(leftImpulse.x, leftImpulse.z).normalize();
 			// 乘上 impulse
@@ -56,8 +56,8 @@ public class MixinProxy {
 			if (PlayerAgent.impulseHorizon.length() > 1E-5 && mc.player != null) {
 				PlayerAgent.impulseHorizon.normalize();
 				float    playerYRot        = mc.player.getViewYRot(ThirdPersonMod.lastPartialTick);
-				Vector2d playerLookHorizon = Vectors.directionFromRotationDegree(playerYRot).normalize();
-				Vector2d playerLeftHorizon = Vectors.directionFromRotationDegree(playerYRot - 90).normalize();
+				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
+				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
 				that.forwardImpulse = (float)(PlayerAgent.impulseHorizon.dot(playerLookHorizon));
 				that.leftImpulse    = (float)(PlayerAgent.impulseHorizon.dot(playerLeftHorizon));
 				if (isMoveSlowly) {

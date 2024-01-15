@@ -3,37 +3,36 @@ package net.leawind.mc.math.smoothvalue;
 
 import com.mojang.blaze3d.Blaze3D;
 
+import java.util.function.Function;
+
 @SuppressWarnings("unused")
 public class FuncSmoothDouble extends FuncSmoothValue<Double> {
-	public FuncSmoothDouble () {
+	public FuncSmoothDouble (Function<Double, Double> func) {
+		super(func);
 		value       = 0d;
 		startValue  = 0d;
 		targetValue = 0d;
 	}
 
-	public FuncSmoothDouble setStartValue (double startValue) {
+	public void setStartValue (double startValue) {
 		this.startValue = startValue;
-		return this;
 	}
 
-	public FuncSmoothDouble start (double startValue) {
-		return start(startValue, Blaze3D.getTime());
+	public void start (double startValue) {
+		start(startValue, Blaze3D.getTime());
 	}
 
-	public FuncSmoothDouble start (double startValue, double startTime) {
+	public void start (double startValue, double startTime) {
 		this.startValue = startValue;
 		this.startTime  = startTime;
-		return this;
 	}
 
-	public FuncSmoothDouble setTarget (double target) {
+	public void setTarget (double target) {
 		targetValue = target;
-		return this;
 	}
 
 	@Override
-	public FuncSmoothDouble update (double now) {
+	public void update (double now) {
 		value = func.apply((now - startTime) / duration) * (targetValue - startValue) + startValue;
-		return this;
 	}
 }

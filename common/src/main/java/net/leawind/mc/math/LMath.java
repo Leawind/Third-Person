@@ -1,10 +1,12 @@
-package net.leawind.mc.math.vector;
+package net.leawind.mc.math;
 
 
 import com.mojang.math.Vector3f;
+import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.math.vector.Vector3d;
 import net.minecraft.world.phys.Vec3;
 
-public class Vectors {
+public class LMath {
 	/**
 	 * 将一个向量相对原本方向旋转一定弧度
 	 *
@@ -109,5 +111,29 @@ public class Vectors {
 
 	public static void clamp (Vector2d v, double min, double max) {
 		v.set(clamp(v.x, min, max), clamp(v.y, min, max));
+	}
+
+	public static double lerp (double src, double dst, double t) {
+		return src + t * (dst - src);
+	}
+
+	public static double floorMod (double x, double y) {
+		return ((x % y) + y) % y;
+	}
+
+	public static float floorMod (float x, float y) {
+		return ((x % y) + y) % y;
+	}
+
+	public static int floorMod (int x, int y) {
+		return Math.floorMod(x, y);
+	}
+
+	public static int floorMod (long x, int y) {
+		return Math.floorMod(x, y);
+	}
+
+	public static long floorMod (long x, long y) {
+		return Math.floorMod(x, y);
 	}
 }

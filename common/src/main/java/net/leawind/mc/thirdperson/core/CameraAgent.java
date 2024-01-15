@@ -1,12 +1,12 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.math.LMath;
 import net.leawind.mc.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.math.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
-import net.leawind.mc.math.vector.Vectors;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
@@ -41,15 +41,24 @@ public class CameraAgent {
 	/**
 	 * 相机偏移量
 	 */
-	public static final          ExpSmoothVector2d smoothOffsetRatio       = new ExpSmoothVector2d().setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT).set(new Vector2d(0));
+	public static final          ExpSmoothVector2d smoothOffsetRatio;
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static final          ExpSmoothVector3d smoothEyePosition       = new ExpSmoothVector3d().setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+	public static final          ExpSmoothVector3d smoothEyePosition;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final          ExpSmoothDouble   smoothDistanceToEye     = new ExpSmoothDouble().setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT).set(0D);
+	public static final          ExpSmoothDouble   smoothDistanceToEye;
+
+	static {
+		smoothOffsetRatio = new ExpSmoothVector2d();
+		smoothOffsetRatio.setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT);
+		smoothEyePosition = new ExpSmoothVector3d();
+		smoothEyePosition.setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+		smoothDistanceToEye = new ExpSmoothDouble();
+		smoothDistanceToEye.setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT);
+	}
 
 	/**
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
@@ -122,7 +131,7 @@ public class CameraAgent {
 		Vector3d  smoothEyePositionValue = smoothEyePosition.get(ThirdPersonMod.lastPartialTick);
 		Minecraft mc                     = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
-		Vector3d eyePosition      = Vectors.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
+		Vector3d eyePosition      = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
 		double   dist             = smoothEyePositionValue.distance(eyePosition);
 		Vector3d sf               = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero = sf.x * sf.z == 0;
@@ -134,7 +143,7 @@ public class CameraAgent {
 	}
 
 	public static Vector3d calculatePositionWithoutOffset () {
-		return getSmoothEyePositionValue().add(Vectors.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
+		return getSmoothEyePositionValue().add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
@@ -174,7 +183,7 @@ public class CameraAgent {
 		Minecraft mc     = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
-			Vector3d         eyePosition = Vectors.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
+			Vector3d         eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
 			// 飞行时使用专用的平滑系数
 			if (ModReferee.isAttachedEntityFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
@@ -210,7 +219,7 @@ public class CameraAgent {
 		Vector3d positionWithoutOffset = calculatePositionWithoutOffset();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y + 180), (float)-relativeRotation.x);
-		((CameraInvoker)fakeCamera).invokeSetPosition(Vectors.toVec3(positionWithoutOffset));
+		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(positionWithoutOffset));
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
@@ -220,7 +229,7 @@ public class CameraAgent {
 	public static void preventThroughWall () {
 		// 防止穿墙
 		Vec3   cameraPosition    = fakeCamera.getPosition();
-		Vec3   smoothEyePosition = Vectors.toVec3(getSmoothEyePositionValue());
+		Vec3   smoothEyePosition = LMath.toVec3(getSmoothEyePositionValue());
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		double minDistance       = initDistance;
@@ -272,7 +281,7 @@ public class CameraAgent {
 	 */
 	public static @Nullable Vector3d getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
-		return hitResult.getType() == HitResult.Type.MISS ? null: Vectors.toVector3d(hitResult.getLocation());
+		return hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation());
 	}
 
 	public static @NotNull HitResult pick () {

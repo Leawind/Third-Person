@@ -10,13 +10,13 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	public    T target;
 
 	@Override
-	abstract public ExpSmoothValue<T> setTarget (T target);
+	abstract public void setTarget (T target);
 
 	/**
 	 * @param period 经过的时间（s）
 	 */
 	@Override
-	abstract public ExpSmoothValue<T> update (double period);
+	abstract public void update (double period);
 
 	@Override
 	final public T get () {
@@ -27,38 +27,44 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		return lastValue;
 	}
 
+	/**
+	 * 记录下更新前的值，存储在 lastValue 中。
+	 */
 	final protected void preUpdate () {
 		lastValue = value;
 	}
 
-	abstract public ExpSmoothValue<T> setValue (T value);
+	abstract public void setValue (T value);
 
-	abstract public ExpSmoothValue<T> set (T value);
+	abstract public void set (T value);
 
-	abstract public ExpSmoothValue<T> setSmoothFactor (T smoothFactor);
+	abstract public void setSmoothFactor (T smoothFactor);
 
-	abstract public T get (double delta);
+	/**
+	 * lerp(lastValue, value, t)
+	 */
+	abstract public T get (double t);
 
-	abstract ExpSmoothValue<T> setSmoothFactor (double smoothFactor);
+	abstract void setSmoothFactor (double smoothFactor);
 
 	/**
 	 * 根据以下规则设置平滑系数：
 	 * <p>
 	 * 每隔 time 秒，value 变为原来的 multiplier 倍。
 	 */
-	abstract ExpSmoothValue<T> setMT (T multiplier, T time);
+	abstract void setMT (T multiplier, T time);
 
 	/**
 	 * 根据半衰期设置平滑系数
 	 */
-	abstract ExpSmoothValue<T> setHalflife (T halflife);
+	abstract  void setHalflife (T halflife);
 
 	/**
 	 * 根据半衰期设置平滑系数
 	 */
-	abstract ExpSmoothValue<T> setHalflife (double halflife);
+	abstract  void  setHalflife (double halflife);
 
-	abstract ExpSmoothValue<T> setSmoothFactorWeight (double smoothFactorWeight);
+	abstract  void setSmoothFactorWeight (double smoothFactorWeight);
 
-	abstract ExpSmoothValue<T> setSmoothFactorWeight (T smoothFactorWeight);
+	abstract  void  setSmoothFactorWeight (T smoothFactorWeight);
 }

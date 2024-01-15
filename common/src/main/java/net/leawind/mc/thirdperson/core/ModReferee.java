@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.math.vector.Vector3d;
-import net.leawind.mc.math.vector.Vectors;
+import net.leawind.mc.math.LMath;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
@@ -67,7 +67,7 @@ public class ModReferee {
 		}
 		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
 		Vector3d eyePosition    = CameraAgent.getSmoothEyePositionValue();
-		Vector3d cameraPosition = Vectors.toVector3d(CameraAgent.camera.getPosition());
+		Vector3d cameraPosition = LMath.toVector3d(CameraAgent.camera.getPosition());
 		if (config.cameraOffsetScheme.getMode().getMaxDistance() <= config.distanceMonoList.get(0)) {
 			return true;
 		} else {

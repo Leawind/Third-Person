@@ -1,10 +1,17 @@
 package net.leawind.mc.math.smoothvalue;
 
 
+import net.leawind.mc.math.LMath;
 import net.minecraft.util.Mth;
 
 @SuppressWarnings("unused")
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
+	public static ExpSmoothDouble createWithHalflife (double halflife) {
+		ExpSmoothDouble v = new ExpSmoothDouble();
+		v.setHalflife(halflife);
+		return v;
+	}
+
 	public ExpSmoothDouble () {
 		value              = 0d;
 		target             = 0d;
@@ -12,91 +19,79 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		smoothFactorWeight = 1d;
 	}
 
-	public ExpSmoothDouble setValue (double value) {
-		this.value = value;
-		return this;
-	}
-
-	public ExpSmoothDouble setTarget (double target) {
+	public void setTarget (double target) {
 		this.target = target;
-		return this;
 	}
 
-	public ExpSmoothDouble setSmoothFactor (double k, double t) {
+	public void setSmoothFactor (double k, double t) {
 		this.smoothFactor = Math.pow(k, 1 / t);
-		return this;
 	}
 
-	public ExpSmoothDouble setSmoothFactorWeight (double weight) {
+	public void setSmoothFactorWeight (double weight) {
 		this.smoothFactorWeight = weight;
-		return this;
 	}
 
-	public ExpSmoothDouble setSmoothFactorWeight (Double weight) {
+	public void setSmoothFactorWeight (Double weight) {
 		this.smoothFactorWeight = weight;
-		return this;
 	}
 
 	@Override
-	public ExpSmoothDouble setTarget (Double target) {
+	public void setTarget (Double target) {
 		this.target = target;
-		return this;
 	}
 
 	@Override
-	public ExpSmoothDouble update (double period) {
+	public void update (double period) {
 		super.preUpdate();
-		value = Mth.lerp(1 - Math.pow(smoothFactor, smoothFactorWeight * period), value, target);
-		return this;
+		value = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
 	}
 
 	@Override
-	public ExpSmoothDouble set (Double v) {
-		value = target = v;
-		return this;
+	public void set (Double d) {
+		value = target = d;
+	}
+
+	public void setValue (double d) {
+		value = d;
 	}
 
 	@Override
-	public ExpSmoothDouble setValue (Double v) {
-		value = v;
-		return this;
+	public void setValue (Double d) {
+		value = d;
 	}
 
 	@Override
-	public ExpSmoothDouble setSmoothFactor (Double smoothFactor) {
+	public void setSmoothFactor (Double smoothFactor) {
 		this.smoothFactor = smoothFactor;
-		return this;
 	}
 
 	@Override
-	public Double get (double delta) {
-		return Mth.lerp(delta, lastValue, value);
+	public Double get (double t) {
+		return Mth.lerp(t, lastValue, value);
 	}
 
 	@Override
-	public ExpSmoothDouble setSmoothFactor (double smoothFactor) {
+	public void setSmoothFactor (double smoothFactor) {
 		this.smoothFactor = smoothFactor;
-		return this;
 	}
 
 	@Override
-	public ExpSmoothDouble setMT (Double multiplier, Double time) {
+	public void setMT (Double multiplier, Double time) {
 		if (multiplier < 0 || multiplier > 1) {
 			throw new IllegalArgumentException("Multiplier should in [0,1]: " + multiplier);
 		} else if (time < 0) {
 			throw new IllegalArgumentException("Invalid time, non-negative required, but got " + time);
 		}
 		setSmoothFactor(time == 0 ? 0: Math.pow(multiplier, 1 / time));
-		return this;
 	}
 
 	@Override
-	public ExpSmoothDouble setHalflife (Double halflife) {
-		return setMT(0.5, halflife);
+	public void setHalflife (Double halflife) {
+		setMT(0.5, halflife);
 	}
 
 	@Override
-	public ExpSmoothDouble setHalflife (double halflife) {
-		return setMT(0.5, halflife);
+	public void setHalflife (double halflife) {
+		setMT(0.5, halflife);
 	}
 }
