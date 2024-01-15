@@ -1,15 +1,17 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.math.LMath;
+import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.util.ModConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -90,11 +92,14 @@ public class ModReferee {
 		Minecraft mc = Minecraft.getInstance();
 		// 只有 LivingEntity 才有可能手持物品瞄准
 		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
+			//			NbtUtils.compareNbt()
 			if (livingEntity.isUsingItem()) {
 				// 正在使用（瞄准）
-				ItemStack itemStack = livingEntity.getUseItem();
-				if (itemStack.is(Items.BOW) || itemStack.is(Items.TRIDENT)) {
-					return true;// 正在使用弓或三叉戟瞄准
+				ItemStack   stack = livingEntity.getUseItem();
+				Item        item  = stack.getItem();
+
+				if (ModConstants.USE_AIM_ITEM_LIST.contains(item.getDescriptionId())) {
+					return true;
 				}
 			}
 			ItemStack mainHandItem = livingEntity.getMainHandItem();
@@ -102,7 +107,7 @@ public class ModReferee {
 			for (ItemStack stack: Arrays.asList(mainHandItem, offhandItem)) {
 				if (stack.is(Items.CROSSBOW) && CrossbowItem.isCharged(stack)) {
 					return true;    // 上了弦的弩
-				} else if (ModConstants.AUTO_AIM_ITEMS.contains(stack.getItem().getDescriptionId())) {
+				} else if (ModConstants.AIM_ITEM_LIST.contains(stack.getItem().getDescriptionId())) {
 					return true;
 				}
 			}

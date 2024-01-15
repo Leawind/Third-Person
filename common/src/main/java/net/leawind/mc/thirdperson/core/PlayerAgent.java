@@ -26,7 +26,6 @@ public class PlayerAgent {
 	public static       boolean            wasInterecting = false;
 	public static       boolean            wasAiming      = false;
 
-	// DOITNOW smooth rotation for: yRot, yRotHead, yRotBody
 	public static void resetSmoothRotations () {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null) {
