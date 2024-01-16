@@ -68,6 +68,7 @@ public class ConfigManager {
 		} catch (IOException e) {
 			ThirdPersonMod.LOGGER.error("Failed to save config.", e);
 		}
+		config.update();
 	}
 
 	/**
