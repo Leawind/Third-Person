@@ -54,6 +54,7 @@ public class AbstractConfig {
 	@Expose public double   aiming_offset_y;
 	@Expose public double   aiming_offset_center;
 	//-------------------------------------------------------------
+	@Expose public boolean  enable_buildin_aim_item_patterns;
 	@Expose public String[] aim_item_list;
 	@Expose public String[] use_aim_item_list;
 
@@ -111,7 +112,8 @@ public class AbstractConfig {
 		aiming_offset_y      = -0.09;
 		aiming_offset_center = 0.48;
 		//---------------------------------------
-		aim_item_list     = new String[]{};
-		use_aim_item_list = new String[]{};
+		enable_buildin_aim_item_patterns = true;
+		aim_item_list                    = new String[]{};
+		use_aim_item_list                   = new String[]{};
 	}
 }

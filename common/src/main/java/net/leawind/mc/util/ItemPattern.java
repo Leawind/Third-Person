@@ -16,9 +16,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * 物品模板
+ * 物品模式
  * <p>
- * 用于根据物品 id 和 nbt 标签匹配物品
+ * 可用于根据物品 id 和 nbt 标签匹配物品
  */
 public class ItemPattern {
 	/**

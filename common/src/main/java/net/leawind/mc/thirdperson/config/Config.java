@@ -2,10 +2,12 @@ package net.leawind.mc.thirdperson.config;
 
 
 import net.leawind.mc.math.monolist.StaticMonoList;
+import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.util.ModConstants;
 import net.leawind.mc.util.ItemPattern;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,9 +45,14 @@ public class Config extends AbstractConfig {
 	 * aiming_item_tags 是解析好的nbt标签集合，用于匹配玩家手持物品
 	 */
 	public void updateItemSet () {
-		aim_item_patterns = ItemPattern.parseToSet(ModConstants.BUILDIN_AIM_ITEMS);
+		aim_item_patterns     = new HashSet<>();
+		use_aim_item_patterns = new HashSet<>();
 		ItemPattern.mergeToSet(aim_item_patterns, List.of(aim_item_list));
-		use_aim_item_patterns = ItemPattern.parseToSet(ModConstants.BUILDIN_USE_AIM_ITEMS);
 		ItemPattern.mergeToSet(use_aim_item_patterns, List.of(use_aim_item_list));
+		// 内置物品模式
+		if (ThirdPersonMod.getConfig().enable_buildin_aim_item_patterns) {
+			ItemPattern.mergeToSet(aim_item_patterns, ModConstants.BUILDIN_AIM_ITEMS);
+			ItemPattern.mergeToSet(use_aim_item_patterns, ModConstants.BUILDIN_USE_AIM_ITEMS);
+		}
 	}
 }
