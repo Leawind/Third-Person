@@ -6,16 +6,10 @@ import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
-import net.leawind.mc.thirdperson.util.ModConstants;
+import net.leawind.mc.util.ItemPattern;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-
-import java.util.Arrays;
 
 public class ModReferee {
 	/**
@@ -78,38 +72,20 @@ public class ModReferee {
 	}
 
 	/**
-	 * 判断当前是否在瞄准<br/>
+	 * 判断相机实体当前是否在瞄准<br/>
 	 * <p>
-	 * 如果正在使用弓或三叉戟瞄准，返回true
-	 * <p>
-	 * 如果正在手持上了弦的弩|鸡蛋|末影珍珠|雪球，返回true
-	 * <p>
-	 * 如果按住了相应按键，返回true
-	 * <p>
-	 * 如果通过按相应按键切换到了持续瞄准状态，返回true
+	 * 根据实体手持物品判断
 	 */
 	public static boolean isCameraEntityAiming () {
-		Minecraft mc = Minecraft.getInstance();
-		// 只有 LivingEntity 才有可能手持物品瞄准
-		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
-			//			NbtUtils.compareNbt()
-			if (livingEntity.isUsingItem()) {
-				// 正在使用（瞄准）
-				ItemStack   stack = livingEntity.getUseItem();
-				Item        item  = stack.getItem();
-
-				if (ModConstants.USE_AIM_ITEM_LIST.contains(item.getDescriptionId())) {
-					return true;
-				}
-			}
-			ItemStack mainHandItem = livingEntity.getMainHandItem();
-			ItemStack offhandItem  = livingEntity.getOffhandItem();
-			for (ItemStack stack: Arrays.asList(mainHandItem, offhandItem)) {
-				if (stack.is(Items.CROSSBOW) && CrossbowItem.isCharged(stack)) {
-					return true;    // 上了弦的弩
-				} else if (ModConstants.AIM_ITEM_LIST.contains(stack.getItem().getDescriptionId())) {
-					return true;
-				}
+		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		Config config       = ThirdPersonMod.getConfig();
+		if (cameraEntity instanceof LivingEntity livingEntity) {
+			if (livingEntity.isUsingItem() && ItemPattern.anyMatch(config.use_aim_item_patterns, livingEntity.getUseItem())) {
+				return true;
+			} else if (ItemPattern.anyMatch(config.aim_item_patterns, livingEntity.getMainHandItem())) {
+				return true;
+			} else if (ItemPattern.anyMatch(config.aim_item_patterns, livingEntity.getOffhandItem())) {
+				return true;
 			}
 		}
 		return doesPlayerWantToAim();
