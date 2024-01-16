@@ -13,7 +13,7 @@ import java.util.TimerTask;
 import java.util.function.Supplier;
 
 /**
- * 按键绑定处理器
+ * 按键映射处理器
  * <p>
  * 会自动使用 Architectury API 注册按键绑定
  */
@@ -21,17 +21,14 @@ import java.util.function.Supplier;
 public final class ModKeyMapping extends KeyMapping {
 	private static final HashMap<String, ModKeyMapping> mappings = new HashMap<>();
 
+	/**
+	 * 使用 Architectury API 注册所有已实例化的按键映射
+	 */
 	public static void registerAll () {
 		mappings.values().forEach(KeyMappingRegistry::register);
 	}
 
-	/**
-	 * 按下后经过 holdLength 则触发 hold 事件
-	 */
 	private           long              holdLength  = 300;
-	/**
-	 * 按下->抬起 经过时长小于 pressLength 将触发 press 事件
-	 */
 	private           long              pressLength = 300;
 	private           long              keyDownTime = 0;
 	private           Timer             timer       = null;
@@ -40,25 +37,55 @@ public final class ModKeyMapping extends KeyMapping {
 	@Nullable private Supplier<Boolean> onhold      = null;
 	@Nullable private Supplier<Boolean> onpress     = null;
 
+	/**
+	 * 不设置默认按键
+	 * <p>
+	 * 需要用户自行设置按键
+	 *
+	 * @param id          按键映射的标识符，用于可翻译文本
+	 * @param categoryKey 类别标识符，用于可翻译文本
+	 */
 	public ModKeyMapping (String id, String categoryKey) {
 		this(id, InputConstants.UNKNOWN.getValue(), categoryKey);
 	}
 
+	/**
+	 * @param id           按键映射的标识符，用于可翻译文本
+	 * @param defaultValue 默认按键
+	 * @param categoryKey  类别标识符，用于可翻译文本
+	 */
 	public ModKeyMapping (String id, int defaultValue, String categoryKey) {
 		super(id, defaultValue, categoryKey);
 		mappings.put(id, this);
 	}
 
+	/**
+	 * 长按时长
+	 * <p>
+	 * 按住一个按键足够长时间后触发长按事件
+	 *
+	 * @param holdLength 长按时长，单位是 ms
+	 */
 	public ModKeyMapping holdLength (long holdLength) {
 		this.holdLength = holdLength;
 		return this;
 	}
 
+	/**
+	 * 短按时长
+	 * <p>
+	 * 按下一个按键，并在足够短的时间内松开，就会触发短按事件。
+	 *
+	 * @param pressLength 短按时长，单位是 ms
+	 */
 	public ModKeyMapping pressLength (long pressLength) {
 		this.pressLength = pressLength;
 		return this;
 	}
 
+	/**
+	 * 当按键被按下时立即触发
+	 */
 	public ModKeyMapping onDown (Runnable handler) {
 		return onDown(() -> {
 			handler.run();
@@ -66,11 +93,19 @@ public final class ModKeyMapping extends KeyMapping {
 		});
 	}
 
+	/**
+	 * 当按键被按下时立即触发
+	 *
+	 * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 或 onHold 事件
+	 */
 	public ModKeyMapping onDown (Supplier<Boolean> handler) {
 		ondown = handler;
 		return this;
 	}
 
+	/**
+	 * 当按键松开时立即触发，位于 onPress 之前
+	 */
 	public ModKeyMapping onUp (Runnable handler) {
 		return onUp(() -> {
 			handler.run();
@@ -78,11 +113,19 @@ public final class ModKeyMapping extends KeyMapping {
 		});
 	}
 
+	/**
+	 * 当按键松开时立即触发，位于 onPress 之前
+	 *
+	 * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 事件
+	 */
 	public ModKeyMapping onUp (Supplier<Boolean> handler) {
 		onup = handler;
 		return this;
 	}
 
+	/**
+	 * 按下一个按键后经过足够短的时间后抬起时触发
+	 */
 	public ModKeyMapping onPress (Runnable handler) {
 		return onPress(() -> {
 			handler.run();
@@ -90,11 +133,17 @@ public final class ModKeyMapping extends KeyMapping {
 		});
 	}
 
+	/**
+	 * 按下一个按键后经过足够短的时间后抬起时触发
+	 */
 	public ModKeyMapping onPress (Supplier<Boolean> handler) {
 		onpress = handler;
 		return this;
 	}
 
+	/**
+	 * 当按住一个按键时间足够长时触发
+	 */
 	public ModKeyMapping onHold (Runnable handler) {
 		return onHold(() -> {
 			handler.run();
@@ -102,6 +151,9 @@ public final class ModKeyMapping extends KeyMapping {
 		});
 	}
 
+	/**
+	 * 当按住一个按键时间足够长时触发
+	 */
 	public ModKeyMapping onHold (Supplier<Boolean> handler) {
 		onhold = handler;
 		return this;
