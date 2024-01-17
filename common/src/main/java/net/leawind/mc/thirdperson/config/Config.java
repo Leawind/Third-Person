@@ -2,13 +2,11 @@ package net.leawind.mc.thirdperson.config;
 
 
 import net.leawind.mc.math.monolist.StaticMonoList;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.util.ModConstants;
 import net.leawind.mc.util.ItemPattern;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -47,12 +45,12 @@ public class Config extends AbstractConfig {
 	public void updateItemSet () {
 		aim_item_patterns     = new HashSet<>();
 		use_aim_item_patterns = new HashSet<>();
-		ItemPattern.mergeToSet(aim_item_patterns, List.of(aim_item_list));
-		ItemPattern.mergeToSet(use_aim_item_patterns, List.of(use_aim_item_list));
-		// 内置物品模式
-		if (ThirdPersonMod.getConfig().enable_buildin_aim_item_patterns) {
-			ItemPattern.mergeToSet(aim_item_patterns, ModConstants.BUILDIN_AIM_ITEMS);
-			ItemPattern.mergeToSet(use_aim_item_patterns, ModConstants.BUILDIN_USE_AIM_ITEMS);
+		ItemPattern.mergeToSet(aim_item_patterns, aim_item_rules);
+		ItemPattern.mergeToSet(use_aim_item_patterns, use_aim_item_rules);
+		// 内置物品匹配规则
+		if (enable_buildin_aim_item_rules) {
+			ItemPattern.mergeToSet(aim_item_patterns, ModConstants.BUILDIN_AIM_ITEM_RULES);
+			ItemPattern.mergeToSet(use_aim_item_patterns, ModConstants.BUILDIN_USE_AIM_ITEM_RULES);
 		}
 	}
 }

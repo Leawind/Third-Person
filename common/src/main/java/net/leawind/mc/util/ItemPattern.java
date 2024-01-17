@@ -7,18 +7,29 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * 物品模式
  * <p>
  * 可用于根据物品 id 和 nbt 标签匹配物品
+ * <p>
+ * 使用 {@link ItemPattern#of(String)} 或 {@link ItemPattern#of(String, String)} 构建实例
+ * <p>
+ * 示例：
+ * <pre>
+ * ItemPattern ip          = ItemPattern.of("crossbow{Charged:1b}");
+ * LocalPlayer player      = Minecraft.getInstance().player;
+ * boolean     matchResult = ip.match(player.getMainHandItem());
+ * </pre>
  */
 public class ItemPattern {
 	/**
@@ -26,29 +37,28 @@ public class ItemPattern {
 	 * <p>
 	 * 可通过 {@link net.minecraft.world.item.ItemStack#getDescriptionId()} 获取
 	 */
-	@Nullable public final String      descriptionId;
+	@Nullable private final String      descriptionId;
 	/**
 	 * 用于匹配物品的NBT标签
 	 * <p>
 	 * null 表示匹配任意标签
 	 */
-	@Nullable public final CompoundTag patternTag;
-	/**
-	 * 用于标识 patternTag
-	 */
-	public final           int         tagHashCode;
+	@Nullable private final CompoundTag patternTag;
+	@Nullable private final String      tagExp;
+	private final           int         hashCode;
 
 	/**
 	 * @param descriptionId 正规的 descriptionId
-	 * @param patternTag    NBT标签
+	 * @param patternTag    NBT模式标签
 	 */
-	private ItemPattern (@Nullable String descriptionId, @Nullable CompoundTag patternTag) {
-		if (descriptionId != null && !descriptionId.matches(RGX_REGULAR_ID)) {
-			throw new IllegalArgumentException("Irregular item description id: " + descriptionId);
+	private ItemPattern (@Nullable String descriptionId, @Nullable CompoundTag patternTag) throws IllegalArgumentException {
+		if (!(descriptionId == null || RGX_REGULAR_ID.matcher(descriptionId).matches())) {
+			throw new IllegalArgumentException(String.format("Irregular item description id: %s", descriptionId));
 		}
 		this.descriptionId = descriptionId;
 		this.patternTag    = patternTag;
-		this.tagHashCode   = patternTag == null ? 0: patternTag.getAsString().hashCode();
+		this.tagExp        = patternTag == null ? null: patternTag.getAsString();
+		this.hashCode      = Objects.hashCode(descriptionId) ^ Objects.hashCode(tagExp);
 	}
 
 	/**
@@ -58,15 +68,15 @@ public class ItemPattern {
 	 * <p>
 	 * 否则只有当id相同时才匹配成功
 	 *
-	 * @param stack 物品槽
+	 * @param itemStack 物品槽
 	 */
-	public boolean matchId (@Nullable ItemStack stack) {
+	public boolean matchId (@Nullable ItemStack itemStack) {
 		if (descriptionId == null) {
 			return true;
-		} else if (stack == null) {
+		} else if (itemStack == null) {
 			return false;
 		} else {
-			return descriptionId.equals(stack.getDescriptionId());
+			return descriptionId.equals(itemStack.getDescriptionId());
 		}
 	}
 
@@ -75,10 +85,10 @@ public class ItemPattern {
 	 * <p>
 	 * 使用 {@link NbtUtils#compareNbt(Tag, Tag, boolean)} 进行匹配
 	 *
-	 * @param stack 物品槽
+	 * @param itemStack 物品槽
 	 */
-	public boolean matchNbt (@Nullable ItemStack stack) {
-		CompoundTag tag = stack == null ? null: stack.getTag();
+	public boolean matchNbt (@Nullable ItemStack itemStack) {
+		CompoundTag tag = itemStack == null ? null: itemStack.getTag();
 		return NbtUtils.compareNbt(patternTag, tag, true);
 	}
 
@@ -87,10 +97,15 @@ public class ItemPattern {
 	 * <p>
 	 * 仅当 id 和 nbt 都匹配成功时，才匹配成功
 	 *
-	 * @param stack 物品槽
+	 * @param itemStack 物品槽
 	 */
-	public boolean match (@Nullable ItemStack stack) {
-		return matchId(stack) && matchNbt(stack);
+	public boolean match (@Nullable ItemStack itemStack) {
+		return matchId(itemStack) && matchNbt(itemStack);
+	}
+
+	@Override
+	public String toString () {
+		return (descriptionId == null ? "": descriptionId) + (tagExp == null ? "": tagExp);
 	}
 
 	@Override
@@ -103,17 +118,17 @@ public class ItemPattern {
 			return false;
 		}
 		ItemPattern ip = (ItemPattern)obj;
-		return Objects.equals(descriptionId, ip.descriptionId) && tagHashCode == obj.hashCode();
+		return Objects.equals(descriptionId, ip.descriptionId) && Objects.equals(tagExp, ip.tagExp);
 	}
 
 	@Override
 	public int hashCode () {
-		return Objects.hashCode(descriptionId) ^ tagHashCode;
+		return hashCode;
 	}
 
-	public static boolean anyMatch (Set<ItemPattern> patterns, ItemStack stack) {
-		for (ItemPattern ip: patterns) {
-			if (ip.match(stack)) {
+	public static boolean anyMatch (Iterable<ItemPattern> itemPatterns, ItemStack itemStack) {
+		for (ItemPattern ip: itemPatterns) {
+			if (ip.match(itemStack)) {
 				return true;
 			}
 		}
@@ -137,42 +152,34 @@ public class ItemPattern {
 	 * <p>
 	 * minecraft:snowball
 	 */
-	public static @Nullable String parseDescriptionId (@Nullable String id) throws IllegalArgumentException {
-		if (id == null) {
+	public static @Nullable String parseDescriptionId (@Nullable String idExp) throws IllegalArgumentException {
+		if (idExp == null || idExp.isEmpty()) {
 			return null;
-		} else if (id.matches(RGX_REGULAR_ID)) {
-			return id;
-		} else if (id.matches(RGX_PURE_ID)) {
-			return "item.minecraft." + id;
-		} else if (id.matches(RGX_NAMESPACE_ID)) {
-			return "item." + id.replace(':', '.');
+		} else if (RGX_REGULAR_ID.matcher(idExp).matches()) {
+			return idExp;
+		} else if (RGX_PURE_ID.matcher(idExp).matches()) {
+			return "item.minecraft." + idExp;
+		} else if (RGX_NAMESPACE_ID.matcher(idExp).matches()) {
+			return "item." + idExp.replace(':', '.');
 		} else {
-			throw new IllegalArgumentException("Invalid item description id: " + id);
+			throw new IllegalArgumentException("Invalid item description id: " + idExp);
 		}
 	}
 
-	/**
-	 * 将字符串数组解析为 ItemPattern 集合
-	 *
-	 * @param patternExpressions 包含物品模板表达式的数组
-	 */
-	public static @NotNull Set<ItemPattern> parseToSet (@Nullable Iterable<String> patternExpressions) {
-		HashSet<ItemPattern> set = new HashSet<>();
-		if (patternExpressions != null) {
-			for (String nbtSrc: patternExpressions) {
-				try {
-					set.add(ItemPattern.of(nbtSrc));
-				} catch (IllegalArgumentException e) {
-					ThirdPersonMod.LOGGER.error("Skip invalid id-nbt expression: {}", nbtSrc);
-				}
-			}
+	public static @Nullable CompoundTag parsePatternTag (@Nullable String tagExp) throws IllegalArgumentException {
+		if (tagExp == null) {
+			return null;
 		}
-		return set;
+		try {
+			return TagParser.parseTag(tagExp);
+		} catch (CommandSyntaxException e) {
+			throw new IllegalArgumentException(String.format("Invalid NBT expression: %s\n%s", tagExp, e.getMessage()));
+		}
 	}
 
-	public static void mergeToSet (@NotNull Set<ItemPattern> set, @Nullable Iterable<String> patternExpressions) {
-		if (patternExpressions != null) {
-			for (String nbtSrc: patternExpressions) {
+	public static void mergeToSet (@NotNull Set<ItemPattern> set, @Nullable Iterable<String> ruleExpressions) {
+		if (ruleExpressions != null) {
+			for (String nbtSrc: ruleExpressions) {
 				try {
 					set.add(ItemPattern.of(nbtSrc));
 				} catch (IllegalArgumentException e) {
@@ -193,37 +200,49 @@ public class ItemPattern {
 	 * <p>
 	 * item.minecraft.crossbow{Charged:1b}
 	 */
-	public static @NotNull ItemPattern of (@Nullable String idNbt) {
-		if (idNbt == null) {
+	public static @NotNull ItemPattern of (@Nullable String ruleExpression) throws IllegalArgumentException {
+		if (ruleExpression == null) {
 			return ANY;
+		} else if (RGX_ID.matcher(ruleExpression).matches()) {
+			return of(ruleExpression, null);
+		} else if (RGX_ID_NBT.matcher(ruleExpression).matches()) {
+			int i = ruleExpression.indexOf('{');
+			return of(ruleExpression.substring(0, i), ruleExpression.substring(i));
+		} else if (RGX_NBT.matcher(ruleExpression).matches()) {
+			return of(null, ruleExpression);
 		} else {
-			if (idNbt.matches(RGX_ID_NBT)) {
-				int i = idNbt.indexOf('{');
-				return of(idNbt.substring(0, i), idNbt.substring(i));
-			} else {
-				String descriptionId = parseDescriptionId(idNbt);
-				return of(descriptionId, null);
-			}
+			throw new IllegalArgumentException(String.format("Invalid item pattern expression: %s", ruleExpression));
 		}
 	}
 
 	/**
-	 * @param id     宽松规则的 descriptionId
-	 * @param tagSrc Nbt 复合标签表达式
+	 * @param idExp  宽松规则的 descriptionId
+	 * @param tagExp NBT复合标签表达式
 	 */
-	public static @NotNull ItemPattern of (@Nullable String id, @Nullable String tagSrc) {
+	public static @NotNull ItemPattern of (@Nullable String idExp, @Nullable String tagExp) throws IllegalArgumentException {
+		return new ItemPattern(parseDescriptionId(idExp), parsePatternTag(tagExp));
+	}
+
+	/**
+	 * 提供错误信息
+	 *
+	 * @param ruleExpression 表达式
+	 * @return 错误信息，null 表示没有错误
+	 */
+	public static Optional<Component> supplyError (@Nullable String ruleExpression) {
 		try {
-			String      descriptionId = parseDescriptionId(id);
-			CompoundTag tag           = tagSrc == null ? null: TagParser.parseTag(tagSrc);
-			return new ItemPattern(descriptionId, tag);
-		} catch (CommandSyntaxException e) {
-			throw new IllegalArgumentException("Invalid NBT tag: " + tagSrc);
+			of(ruleExpression);
+			return Optional.empty();
+		} catch (IllegalArgumentException e) {
+			return Optional.of(Component.literal(e.getMessage()));
 		}
 	}
 
 	public static final    ItemPattern ANY              = new ItemPattern(null, null);
-	protected static final String      RGX_REGULAR_ID   = "^item\\.[a-z_]+\\.[a-z_]+$";
-	protected static final String      RGX_PURE_ID      = "^[a-z_]+$";
-	protected static final String      RGX_NAMESPACE_ID = "^[a-z_]+[.:][a-z_]+$";
-	protected static final String      RGX_ID_NBT       = "^[a-z.:_]+\\{.*}$";
+	protected static final Pattern     RGX_REGULAR_ID   = Pattern.compile("^item\\.[a-z_]+\\.[a-z_]+$");
+	protected static final Pattern     RGX_PURE_ID      = Pattern.compile("^[a-z_]+$");
+	protected static final Pattern     RGX_NAMESPACE_ID = Pattern.compile("^[a-z_]+[.:][a-z_]+$");
+	protected static final Pattern     RGX_ID_NBT       = Pattern.compile("^[a-z.:_]+\\{.*}$");
+	protected static final Pattern     RGX_ID           = Pattern.compile("^[a-z.:_]+$");
+	protected static final Pattern     RGX_NBT          = Pattern.compile("^\\{.*}$");
 }

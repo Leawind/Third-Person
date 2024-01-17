@@ -7,13 +7,16 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.DoubleListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
+import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.config.DefaultConfig;
+import net.leawind.mc.util.ItemPattern;
 import net.minecraft.client.gui.screens.Screen;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ConfigBuilders {
@@ -117,9 +120,22 @@ public class ConfigBuilders {
 		//==============================//
 		final ConfigCategory CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
-			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("enable_buildin_aim_item_patterns", defaults.enable_buildin_aim_item_patterns, config.enable_buildin_aim_item_patterns, v -> config.enable_buildin_aim_item_patterns = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("enable_buildin_aim_item_rules", defaults.enable_buildin_aim_item_rules, config.enable_buildin_aim_item_rules, v -> config.enable_buildin_aim_item_rules = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("aim_item_rules", defaults.aim_item_rules, config.aim_item_rules, v -> config.aim_item_rules = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_aim_item_rules", defaults.use_aim_item_rules, config.use_aim_item_rules, v -> config.use_aim_item_rules = v, entryBuilder));
 		}
 		return builder.build();
+	}
+
+	public static StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<java.util.List<String>> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startStrList(ConfigManager.getText("option." + name), currentValue)
+			.setTooltip(ConfigManager.getText("option." + name + ".desc"))
+			.setSaveConsumer(setter)
+			.setDefaultValue(defaultValue)
+			.setDeleteButtonEnabled(true)
+			.setCellErrorSupplier(ItemPattern::supplyError)
+			.setExpanded(true)
+			.build();
 	}
 
 	public static SubCategoryBuilder buildSubCategory (String name, ConfigEntryBuilder entryBuilder) {
