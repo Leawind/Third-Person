@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.forge;
 
 
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.forge.config.ConfigBuilders;
 import net.minecraft.client.gui.screens.Screen;
 

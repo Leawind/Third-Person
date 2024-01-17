@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.fabric;
 
 
 import net.leawind.mc.thirdperson.ExpectPlatform;
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.fabric.config.ConfigBuilders;
 import net.minecraft.client.gui.screens.Screen;
 

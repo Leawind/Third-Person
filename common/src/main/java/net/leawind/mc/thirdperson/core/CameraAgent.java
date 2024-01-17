@@ -8,11 +8,11 @@ import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
-import net.leawind.mc.thirdperson.util.ModConstants;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -152,7 +152,7 @@ public class CameraAgent {
 		smoothDistanceToEye.setTarget(mode.getMaxDistance());
 		smoothDistanceToEye.update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
-		if (!config.cameraOffsetScheme.isAiming && !isAdjusting) {
+		if (!config.cameraOffsetScheme.isAiming() && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
 		}
 	}

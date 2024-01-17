@@ -1,7 +1,9 @@
-package net.leawind.mc.thirdperson.core.cameraoffset;
+package net.leawind.mc.thirdperson.impl.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,64 +13,61 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
-public class CameraOffsetScheme {
-	public                 boolean          isAiming = false;
+public class CameraOffsetSchemeImpl implements CameraOffsetScheme {
+	private                boolean          isAiming = false;
 	private final @NotNull CameraOffsetMode normalMode;
 	private final @NotNull CameraOffsetMode aimingMode;
 
-	public CameraOffsetScheme (@NotNull Config config) {
+	public CameraOffsetSchemeImpl (@NotNull Config config) {
 		normalMode = new CameraOffsetModeNormal(config);
 		aimingMode = new CameraOffsetModeAiming(config);
 	}
 
-	/**
-	 * 获取当前模式
-	 */
+	@Override
 	public @NotNull CameraOffsetMode getMode () {
-		return isAiming ? aimingMode: normalMode;
+		return isAiming() ? aimingMode: normalMode;
 	}
 
-	/**
-	 * 获取当前未启用的模式
-	 */
+	@Override
 	public @NotNull CameraOffsetMode getAnotherMode () {
-		return isAiming ? normalMode: aimingMode;
+		return isAiming() ? normalMode: aimingMode;
 	}
 
-	/**
-	 * 设置相机相对于玩家的方向
-	 * <p>
-	 *
-	 * @param side 大于0表示相机在玩家左侧
-	 */
+	@Override
 	public void setSide (double side) {
 		setSide(side > 0);
 	}
 
-	/**
-	 * 设置相机相对于玩家的方向
-	 *
-	 * @param isCameraLeftOfPlayer 相机是否在玩家左侧
-	 */
+	@Override
 	public void setSide (boolean isCameraLeftOfPlayer) {
 		aimingMode.setSide(isCameraLeftOfPlayer);
 		normalMode.setSide(isCameraLeftOfPlayer);
 	}
 
-	/**
-	 * 切换到另一边
-	 */
+	@Override
 	public void toNextSide () {
 		aimingMode.toNextSide();
 		normalMode.toNextSide();
 	}
 
+	@Override
 	public boolean isCentered () {
 		return getMode().isCentered();
 	}
 
+	@Override
 	public void setCentered (boolean isCentered) {
 		getMode().setCentered(isCentered);
 		getAnotherMode().setCentered(isCentered);
+	}
+
+	@Override
+	public boolean isAiming () {
+		return isAiming;
+	}
+
+	@Override
+	public void setAiming (boolean aiming) {
+		isAiming = aiming;
 	}
 }

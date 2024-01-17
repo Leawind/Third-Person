@@ -1,12 +1,13 @@
-package net.leawind.mc.thirdperson.core.cameraoffset;
+package net.leawind.mc.thirdperson.impl.cameraoffset;
 
 
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.api.cameraoffset.AbstractCameraOffsetMode;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import org.jetbrains.annotations.NotNull;
 
-public class CameraOffsetModeAiming extends CameraOffsetMode {
+public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 	public CameraOffsetModeAiming (@NotNull Config config) {
 		super(config);
 	}
@@ -41,20 +42,14 @@ public class CameraOffsetModeAiming extends CameraOffsetMode {
 		return config.aiming_is_centered;
 	}
 
+	@Override
 	public void setCentered (boolean isCentered) {
 		config.aiming_is_centered = isCentered;
 	}
 
+	@Override
 	public boolean isCameraLeftOfPlayer () {
 		return config.aiming_offset_x > 0;
-	}
-
-	@Override
-	public void setSide (boolean isCameraLeftOfPlayer) {
-		if (isCameraLeftOfPlayer ^ isCameraLeftOfPlayer()) {
-			toNextSide();
-			setCentered(false);
-		}
 	}
 
 	@Override
@@ -63,15 +58,6 @@ public class CameraOffsetModeAiming extends CameraOffsetMode {
 			setCentered(false);
 		} else {
 			config.aiming_offset_x = -config.aiming_offset_x;
-		}
-	}
-
-	@Override
-	public void getOffsetRatio (@NotNull Vector2d v) {
-		if (isCentered()) {
-			v.set(0, getCenterOffsetRatio());
-		} else {
-			getSideOffsetRatio(v);
 		}
 	}
 

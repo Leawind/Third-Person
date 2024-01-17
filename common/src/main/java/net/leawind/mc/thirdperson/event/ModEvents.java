@@ -7,24 +7,24 @@ import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
-import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.LMath;
+import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.util.ModConstants;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
 
-public class ModEvents {
-	public static void register () {
+public interface ModEvents {
+	static void register () {
 		ClientTickEvent.CLIENT_PRE.register(ModEvents::onClientTickPre);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ModEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ModEvents::onClientPlayerJoin);
@@ -38,9 +38,9 @@ public class ModEvents {
 		Config config = ThirdPersonMod.getConfig();
 		CameraAgent.updateSmoothEyePosition(0.05);
 		PlayerAgent.updateSmoothRotations(0.05);
-		PlayerAgent.wasInterecting         = PlayerAgent.isInterecting();
-		PlayerAgent.wasAiming              = ModReferee.isCameraEntityAiming();
-		config.cameraOffsetScheme.isAiming = PlayerAgent.wasAiming;
+		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
+		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
+		config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class ModEvents {
 	 * <p>
 	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
 	 */
-	public static void onCameraSetup (BlockGetter level, float partialTick) {
+	static void onCameraSetup (BlockGetter level, float partialTick) {
 		ThirdPersonMod.lastPartialTick = partialTick;
 		CameraAgent.level              = level;
 		Minecraft mc = Minecraft.getInstance();
@@ -105,10 +105,10 @@ public class ModEvents {
 		}
 	}
 
-	public static void onStartAdjustingCameraOffset () {
+	static void onStartAdjustingCameraOffset () {
 	}
 
-	public static void onStopAdjustingCameraOffset () {
+	static void onStopAdjustingCameraOffset () {
 		ThirdPersonMod.getConfigManager().trySave();
 	}
 
@@ -118,7 +118,7 @@ public class ModEvents {
 	 * @param xMove 水平移动的像素
 	 * @param yMove 垂直移动的像素
 	 */
-	public static void onAdjustingCameraOffset (Vector2d movement) {
+	static void onAdjustingCameraOffset (Vector2d movement) {
 		if (movement.lengthSquared() == 0) {
 			return;
 		}
@@ -146,7 +146,7 @@ public class ModEvents {
 	/**
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
-	public static void onBeforeHandleKeybinds () {
+	static void onBeforeHandleKeybinds () {
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		if (PlayerAgent.wasInterecting) {
 			// 该方法中使用了mixin，修改了 viewVector
@@ -157,7 +157,7 @@ public class ModEvents {
 	/**
 	 * 退出第三人称视角
 	 */
-	public static void onLeaveThirdPerson () {
+	static void onLeaveThirdPerson () {
 		if (ThirdPersonMod.getConfig().turn_with_camera_when_enter_first_person) {
 			PlayerAgent.turnToCameraRotation(true);
 		}
@@ -166,10 +166,10 @@ public class ModEvents {
 	/**
 	 * 进入第三人称视角时触发
 	 */
-	public static void onEnterThirdPerson () {
+	static void onEnterThirdPerson () {
 		CameraAgent.reset();
 		PlayerAgent.reset();
-		PlayerAgent.wasAiming               = false;
+		PlayerAgent.wasAiming                   = false;
 		ModReferee.isToggleToAiming             = false;
 		ThirdPersonMod.lastCameraSetupTimeStamp = Blaze3D.getTime();
 	}
@@ -180,7 +180,7 @@ public class ModEvents {
 	 * @param y 偏航角变化量
 	 * @param x 俯仰角变化量
 	 */
-	public static void onCameraTurn (double y, double x) {
+	static void onCameraTurn (double y, double x) {
 		Config config = ThirdPersonMod.getConfig();
 		if (config.is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
 			y *= 0.15;

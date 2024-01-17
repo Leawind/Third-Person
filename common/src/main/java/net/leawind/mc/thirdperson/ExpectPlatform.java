@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.minecraft.client.gui.screens.Screen;
 
 public class ExpectPlatform {

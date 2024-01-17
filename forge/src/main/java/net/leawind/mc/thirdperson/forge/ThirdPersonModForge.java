@@ -3,14 +3,13 @@ package net.leawind.mc.thirdperson.forge;
 
 import dev.architectury.platform.forge.EventBuses;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.util.ModConstants;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 @Mod(ModConstants.MOD_ID)
 public class ThirdPersonModForge {

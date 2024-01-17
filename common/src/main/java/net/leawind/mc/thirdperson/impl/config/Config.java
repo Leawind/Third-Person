@@ -1,10 +1,11 @@
-package net.leawind.mc.thirdperson.config;
+package net.leawind.mc.thirdperson.impl.config;
 
 
 import net.leawind.mc.math.monolist.StaticMonoList;
-import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.util.ModConstants;
-import net.leawind.mc.util.ItemPattern;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
+import net.leawind.mc.thirdperson.api.config.AbstractConfig;
+import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.util.api.ItemPattern;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -19,9 +20,10 @@ public class Config extends AbstractConfig {
 	public @NotNull Set<ItemPattern>   aim_item_patterns;
 	public @NotNull Set<ItemPattern>   use_aim_item_patterns;
 	// ============================================================ //
-	public @NotNull CameraOffsetScheme cameraOffsetScheme = new CameraOffsetScheme(this);
+	public @NotNull CameraOffsetScheme cameraOffsetScheme = CameraOffsetScheme.create(this);
 
 	public Config () {
+		DefaultConfig.setToDefault(this);
 		distanceMonoList      = StaticMonoList.of(available_distance_count, camera_distance_min, camera_distance_max, i -> i * i, Math::sqrt);
 		aim_item_patterns     = new HashSet<>();
 		use_aim_item_patterns = new HashSet<>();
@@ -52,12 +54,12 @@ public class Config extends AbstractConfig {
 	public void updateItemSet () {
 		aim_item_patterns     = new HashSet<>();
 		use_aim_item_patterns = new HashSet<>();
-		ItemPattern.mergeToSet(aim_item_patterns, aim_item_rules);
-		ItemPattern.mergeToSet(use_aim_item_patterns, use_aim_item_rules);
+		ItemPattern.addToSet(aim_item_patterns, aim_item_rules);
+		ItemPattern.addToSet(use_aim_item_patterns, use_aim_item_rules);
 		// 内置物品匹配规则
 		if (enable_buildin_aim_item_rules) {
-			ItemPattern.mergeToSet(aim_item_patterns, ModConstants.BUILDIN_AIM_ITEM_RULES);
-			ItemPattern.mergeToSet(use_aim_item_patterns, ModConstants.BUILDIN_USE_AIM_ITEM_RULES);
+			ItemPattern.addToSet(aim_item_patterns, ModConstants.BUILDIN_AIM_ITEM_RULES);
+			ItemPattern.addToSet(use_aim_item_patterns, ModConstants.BUILDIN_USE_AIM_ITEM_RULES);
 		}
 	}
 }

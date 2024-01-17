@@ -1,13 +1,13 @@
-package net.leawind.mc.thirdperson.config;
+package net.leawind.mc.thirdperson.impl.config;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ExpectPlatform;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.util.ModConstants;
+import net.leawind.mc.thirdperson.api.config.ConfigManager;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,32 +16,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-/**
- * 配置管理器
- * <p>
- * 负则配置的加载与保存
- */
-public class ConfigManager {
+public class ConfigManagerImpl implements ConfigManager {
 	private final @NotNull Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
 	private @NotNull       Config config = new Config();
 
-	/**
-	 * 在可翻译文本的键前加上modid前缀
-	 *
-	 * @param name 键名
-	 * @return ${MODID}.${name}
-	 */
-	public static Component getText (String name) {
-		return Component.translatable(ModConstants.MOD_ID + "." + name);
+	public ConfigManagerImpl () {
 	}
 
-	/**
-	 * 加载配置
-	 * <p>
-	 * 如果找不到文件，则保存一份。
-	 * <p>
-	 * 如果失败，则记录错误到日志
-	 */
+	@Override
 	public void tryLoad () {
 		try {
 			assert ModConstants.CONFIG_FILE.getParentFile().mkdirs();
@@ -58,11 +40,7 @@ public class ConfigManager {
 		config.update();
 	}
 
-	/**
-	 * 尝试保存配置文件
-	 * <p>
-	 * 如果失败，则记录错误到日志
-	 */
+	@Override
 	public void trySave () {
 		try {
 			save();
@@ -73,29 +51,22 @@ public class ConfigManager {
 		config.update();
 	}
 
-	/**
-	 * 直接读取配置文件
-	 */
+	@Override
 	public void load () throws IOException {
 		config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
 	}
 
-	/**
-	 * 直接保存配置文件
-	 */
+	@Override
 	public void save () throws IOException {
 		FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
 	}
 
-	/**
-	 * 获取配置屏幕
-	 * <p>
-	 * 提供给 ModMenu
-	 */
+	@Override
 	public @Nullable Screen getConfigScreen (Screen parent) {
 		return ExpectPlatform.buildConfigScreen(config, parent);
 	}
 
+	@Override
 	public @NotNull Config getConfig () {
 		return this.config;
 	}

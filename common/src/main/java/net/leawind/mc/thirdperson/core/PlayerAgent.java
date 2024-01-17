@@ -6,7 +6,7 @@ import net.leawind.mc.math.smoothvalue.SmoothDouble;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
