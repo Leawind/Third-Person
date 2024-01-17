@@ -2,6 +2,7 @@ package net.leawind.mc.math.monolist;
 
 
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -21,7 +22,7 @@ public class StaticMonoList {
 	 * @param length 列表长度
 	 * @param getter 值与下标的对应关系
 	 */
-	private StaticMonoList (int length, Function<Integer, Double> getter) {
+	private StaticMonoList (int length, @NotNull Function<Integer, Double> getter) {
 		this.list = new double[length];
 		for (int i = 0; i < length; i++) {
 			list[i] = getter.apply(i);

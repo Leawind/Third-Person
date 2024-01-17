@@ -31,11 +31,11 @@ public final class ModKeyMapping extends KeyMapping {
 	private           long              holdLength  = 300;
 	private           long              pressLength = 300;
 	private           long              keyDownTime = 0;
-	private           Timer             timer       = null;
-	@Nullable private Supplier<Boolean> ondown      = null;
-	@Nullable private Supplier<Boolean> onup        = null;
-	@Nullable private Supplier<Boolean> onhold      = null;
-	@Nullable private Supplier<Boolean> onpress     = null;
+	private @Nullable Timer             timer       = null;
+	private @Nullable Supplier<Boolean> ondown      = null;
+	private @Nullable Supplier<Boolean> onup        = null;
+	private @Nullable Supplier<Boolean> onhold      = null;
+	private @Nullable Supplier<Boolean> onpress     = null;
 
 	/**
 	 * 不设置默认按键

@@ -6,6 +6,7 @@ import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.thirdperson.event.ModEvents;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.util.ModConstants;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +22,11 @@ public class ThirdPersonMod {
 		ModEvents.register();
 	}
 
-	public static ConfigManager getConfigManager () {
+	public static @NotNull ConfigManager getConfigManager () {
 		return CONFIG_MANAGER;
 	}
 
-	public static Config getConfig () {
+	public static @NotNull Config getConfig () {
 		return CONFIG_MANAGER.getConfig();
 	}
 }

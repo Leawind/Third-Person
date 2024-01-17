@@ -229,7 +229,7 @@ public class ItemPattern {
 	 * @param ruleExpression 表达式
 	 * @return 错误信息，null 表示没有错误
 	 */
-	public static Optional<Component> supplyError (@Nullable String ruleExpression) {
+	public static @NotNull Optional<Component> supplyError (@Nullable String ruleExpression) {
 		try {
 			of(ruleExpression);
 			return Optional.empty();

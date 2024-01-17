@@ -2,14 +2,12 @@ package net.leawind.mc.math.smoothvalue;
 
 
 import net.leawind.mc.math.vector.Vector2d;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	public ExpSmoothVector2d () {
-		value              = new Vector2d(0);
-		target             = new Vector2d(0);
-		smoothFactor       = new Vector2d(0);
-		smoothFactorWeight = new Vector2d(1);
+		super(new Vector2d(0), new Vector2d(1), new Vector2d(0), new Vector2d(0), new Vector2d(0));
 	}
 
 	public void setTarget (double x, double y) {
@@ -17,7 +15,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setTarget (Vector2d v) {
+	public void setEndValue (@NotNull Vector2d v) {
 		this.target.set(v);
 	}
 

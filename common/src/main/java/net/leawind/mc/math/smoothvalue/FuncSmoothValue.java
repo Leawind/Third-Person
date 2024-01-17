@@ -2,6 +2,7 @@ package net.leawind.mc.math.smoothvalue;
 
 
 import com.mojang.blaze3d.Blaze3D;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -35,22 +36,25 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 	 * <p>
 	 * 可导
 	 */
-	protected Function<Double, Double> func;
-	protected T                        value;
-	protected double                   duration  = 0;
-	protected double                   startTime = 0;
-	protected T                        startValue;
-	protected T                        targetValue;
+	protected @NotNull Function<Double, Double> func;
+	protected @NotNull T                        value;
+	protected          double                   duration  = 0;
+	protected          double                   startTime = 0;
+	protected @NotNull T                        startValue;
+	protected @NotNull T                        endValue;
 
-	public FuncSmoothValue (Function<Double, Double> func) {
+	public FuncSmoothValue (@NotNull Function<Double, Double> func, @NotNull T value, @NotNull T startValue, @NotNull T endValue) {
+		this.func       = func;
+		this.value      = value;
+		this.startValue = startValue;
+		this.endValue   = endValue;
+	}
+
+	public void setFunc (@NotNull Function<Double, Double> func) {
 		this.func = func;
 	}
 
-	public void setFunc (Function<Double, Double> func) {
-		this.func = func;
-	}
-
-	final public void setStartValue (T startValue) {
+	final public void setStartValue (@NotNull T startValue) {
 		this.startValue = startValue;
 	}
 
@@ -58,22 +62,22 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 		this.duration = duration;
 	}
 
-	final public void start (T startValue) {
+	final public void start (@NotNull T startValue) {
 		start(startValue, Blaze3D.getTime());
 	}
 
-	final public void start (T startValue, double startTime) {
+	final public void start (@NotNull T startValue, double startTime) {
 		this.startValue = startValue;
 		this.startTime  = startTime;
 	}
 
-	final public void setTarget (T target) {
-		targetValue = target;
+	final public void setEndValue (@NotNull T endValue) {
+		this.endValue = endValue;
 	}
 
 	abstract public void update (double now);
 
-	final public T get () {
+	final public @NotNull T get () {
 		return value;
 	}
 

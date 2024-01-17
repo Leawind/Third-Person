@@ -1,16 +1,26 @@
 package net.leawind.mc.math.smoothvalue;
 
 
+import org.jetbrains.annotations.NotNull;
+
 @SuppressWarnings("unused")
 public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
-	public    T smoothFactor;
-	public    T smoothFactorWeight;// factor ^ weight
-	protected T value;
-	protected T lastValue;
-	public    T target;
+	public @NotNull    T smoothFactor;
+	public @NotNull    T smoothFactorWeight;// factor ^ weight
+	protected @NotNull T value;
+	protected @NotNull T lastValue;
+	public @NotNull    T target;
+
+	protected ExpSmoothValue (@NotNull T sf, @NotNull T sw, @NotNull T v, @NotNull T lv, @NotNull T t) {
+		smoothFactor       = sf;
+		smoothFactorWeight = sw;
+		value              = v;
+		lastValue          = lv;
+		target             = t;
+	}
 
 	@Override
-	abstract public void setTarget (T target);
+	abstract public void setEndValue (@NotNull T endValue);
 
 	/**
 	 * @param period 经过的时间（s）
@@ -19,7 +29,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	abstract public void update (double period);
 
 	@Override
-	final public T get () {
+	final public @NotNull T get () {
 		return value;
 	}
 
@@ -57,14 +67,14 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	/**
 	 * 根据半衰期设置平滑系数
 	 */
-	abstract  void setHalflife (T halflife);
+	abstract void setHalflife (T halflife);
 
 	/**
 	 * 根据半衰期设置平滑系数
 	 */
-	abstract  void  setHalflife (double halflife);
+	abstract void setHalflife (double halflife);
 
-	abstract  void setSmoothFactorWeight (double smoothFactorWeight);
+	abstract void setSmoothFactorWeight (double smoothFactorWeight);
 
-	abstract  void  setSmoothFactorWeight (T smoothFactorWeight);
+	abstract void setSmoothFactorWeight (T smoothFactorWeight);
 }

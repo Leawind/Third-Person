@@ -9,6 +9,8 @@ import net.leawind.mc.thirdperson.util.ModConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,8 +22,8 @@ import java.nio.file.Files;
  * 负则配置的加载与保存
  */
 public class ConfigManager {
-	private final Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
-	private       Config config = new Config();
+	private final @NotNull Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
+	private @NotNull       Config config = new Config();
 
 	/**
 	 * 在可翻译文本的键前加上modid前缀
@@ -73,8 +75,6 @@ public class ConfigManager {
 
 	/**
 	 * 直接读取配置文件
-	 *
-	 * @throws IOException
 	 */
 	public void load () throws IOException {
 		config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
@@ -82,8 +82,6 @@ public class ConfigManager {
 
 	/**
 	 * 直接保存配置文件
-	 *
-	 * @throws IOException
 	 */
 	public void save () throws IOException {
 		FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
@@ -94,11 +92,11 @@ public class ConfigManager {
 	 * <p>
 	 * 提供给 ModMenu
 	 */
-	public Screen getConfigScreen (Screen parent) {
+	public @Nullable Screen getConfigScreen (Screen parent) {
 		return ExpectPlatform.buildConfigScreen(config, parent);
 	}
 
-	public Config getConfig () {
+	public @NotNull Config getConfig () {
 		return this.config;
 	}
 }

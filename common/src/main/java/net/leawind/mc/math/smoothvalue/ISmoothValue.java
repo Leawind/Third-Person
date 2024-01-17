@@ -1,11 +1,13 @@
 package net.leawind.mc.math.smoothvalue;
 
 
+import org.jetbrains.annotations.NotNull;
+
 @SuppressWarnings("unused")
 public interface ISmoothValue<T> {
-	void setTarget (T target);
+	void setEndValue (@NotNull T endValue);
 
 	void update (double time);
 
-	T get ();
+	@NotNull T get ();
 }

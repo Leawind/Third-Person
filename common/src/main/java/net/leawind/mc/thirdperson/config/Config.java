@@ -5,6 +5,7 @@ import net.leawind.mc.math.monolist.StaticMonoList;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.util.ModConstants;
 import net.leawind.mc.util.ItemPattern;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,11 +15,17 @@ import java.util.Set;
  */
 public class Config extends AbstractConfig {
 	// ============================================================ //
-	public StaticMonoList     distanceMonoList;
-	public Set<ItemPattern>   aim_item_patterns;
-	public Set<ItemPattern>   use_aim_item_patterns;
+	public @NotNull StaticMonoList     distanceMonoList;
+	public @NotNull Set<ItemPattern>   aim_item_patterns;
+	public @NotNull Set<ItemPattern>   use_aim_item_patterns;
 	// ============================================================ //
-	public CameraOffsetScheme cameraOffsetScheme = new CameraOffsetScheme(this);
+	public @NotNull CameraOffsetScheme cameraOffsetScheme = new CameraOffsetScheme(this);
+
+	public Config () {
+		distanceMonoList      = StaticMonoList.of(available_distance_count, camera_distance_min, camera_distance_max, i -> i * i, Math::sqrt);
+		aim_item_patterns     = new HashSet<>();
+		use_aim_item_patterns = new HashSet<>();
+	}
 
 	/**
 	 * 配置项发生变化时更新

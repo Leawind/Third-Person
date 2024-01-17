@@ -2,19 +2,20 @@ package net.leawind.mc.math.smoothvalue;
 
 
 import net.leawind.mc.math.LMath;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
 public class SmoothDouble {
-	private double                   value;
-	private double                   lastValue;
-	private Function<Double, Double> func;
+	private          double                   value;
+	private          double                   lastValue;
+	private @NotNull Function<Double, Double> func;
 
-	public SmoothDouble (Function<Double, Double> func) {
-		setFunc(func);
+	public SmoothDouble (@NotNull Function<Double, Double> func) {
+		this.func = func;
 	}
 
-	public void setFunc (Function<Double, Double> func) {
+	public void setFunc (@NotNull Function<Double, Double> func) {
 		this.func = func;
 	}
 

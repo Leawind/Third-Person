@@ -3,6 +3,7 @@ package net.leawind.mc.math.smoothvalue;
 
 import net.leawind.mc.math.LMath;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
@@ -13,10 +14,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	public ExpSmoothDouble () {
-		value              = 0d;
-		target             = 0d;
-		smoothFactor       = 0d;
-		smoothFactorWeight = 1d;
+		super(0D, 1D, 0D, 0D, 0D);
 	}
 
 	public void setTarget (double target) {
@@ -36,8 +34,8 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public void setTarget (Double target) {
-		this.target = target;
+	public void setEndValue (@NotNull Double endValue) {
+		this.target = endValue;
 	}
 
 	@Override

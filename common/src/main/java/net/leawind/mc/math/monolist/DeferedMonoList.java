@@ -2,6 +2,7 @@ package net.leawind.mc.math.monolist;
 
 
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -14,27 +15,27 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unused")
 public class DeferedMonoList {
-	public    int                       length;
-	protected Function<Integer, Double> getter;
+	public             int                       length;
+	protected @NotNull Function<Integer, Double> getter;
 
 	/**
 	 * @param length 列表长度
 	 * @param getter 值与下标的对应关系
 	 */
-	private DeferedMonoList (int length, Function<Integer, Double> getter) {
+	private DeferedMonoList (int length, @NotNull Function<Integer, Double> getter) {
 		this.length = length;
 		this.getter = getter;
 	}
 
-	public static DeferedMonoList exp (int length) {
+	public static @NotNull DeferedMonoList exp (int length) {
 		return new DeferedMonoList(length, Math::exp);
 	}
 
-	public static DeferedMonoList squared (int length) {
+	public static @NotNull DeferedMonoList squared (int length) {
 		return new DeferedMonoList(length, i -> (double)(i * i));
 	}
 
-	public static DeferedMonoList of (int length, Function<Integer, Double> getter) {
+	public static @NotNull DeferedMonoList of (int length, @NotNull Function<Integer, Double> getter) {
 		return new DeferedMonoList(length, getter);
 	}
 

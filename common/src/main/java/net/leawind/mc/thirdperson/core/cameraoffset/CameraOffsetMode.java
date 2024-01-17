@@ -1,9 +1,9 @@
 package net.leawind.mc.thirdperson.core.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
+import net.leawind.mc.thirdperson.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CameraOffsetMode {
@@ -44,11 +44,11 @@ public abstract class CameraOffsetMode {
 
 	abstract public void getOffsetRatio (@NotNull Vector2d v);
 
-	abstract public void setSideOffsetRatio (Vector2d v);
+	abstract public void setSideOffsetRatio (@NotNull Vector2d v);
 
 	abstract public double getCenterOffsetRatio ();
 
-	abstract public Vector2d getSideOffsetRatio ();
+	abstract public @NotNull Vector2d getSideOffsetRatio ();
 
 	abstract public void getSideOffsetRatio (@NotNull Vector2d v);
 

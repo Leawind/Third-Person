@@ -10,7 +10,6 @@ import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.cameraoffset.CameraOffsetMode;
-import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
 import net.leawind.mc.thirdperson.util.ModConstants;
@@ -26,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CameraAgent {
-	@Nullable public static      BlockGetter       level;
-	@Nullable public static      Camera            camera;
-	@NotNull public static final Camera            fakeCamera              = new Camera();
+	public static @Nullable      BlockGetter       level;
+	public static @Nullable      Camera            camera;
+	public static final @NotNull Camera            fakeCamera              = new Camera();
 	/**
 	 * renderTick 中更新
 	 */
@@ -37,19 +36,19 @@ public class CameraAgent {
 	 * 上次玩家操控转动视角的时间
 	 */
 	public static                double            lastCameraTurnTimeStamp = 0;
-	@NotNull public static final Vector2d          relativeRotation        = new Vector2d(0);
+	public static final @NotNull Vector2d          relativeRotation        = new Vector2d(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static final          ExpSmoothVector2d smoothOffsetRatio;
+	public static final @NotNull ExpSmoothVector2d smoothOffsetRatio;
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static final          ExpSmoothVector3d smoothEyePosition;
+	public static final @NotNull ExpSmoothVector3d smoothEyePosition;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final          ExpSmoothDouble   smoothDistanceToEye;
+	public static final @NotNull ExpSmoothDouble   smoothDistanceToEye;
 
 	static {
 		smoothOffsetRatio = new ExpSmoothVector2d();
@@ -101,8 +100,7 @@ public class CameraAgent {
 	/**
 	 * 计算并更新相机的朝向和坐标
 	 *
-	 * @param level          维度
-	 * @param attachedEntity 附着的实体
+	 * @param period 维度
 	 */
 	@PerformanceSensitive
 	public static void onCameraSetup (double period) {
@@ -127,7 +125,7 @@ public class CameraAgent {
 		//			}
 	}
 
-	public static Vector3d getSmoothEyePositionValue () {
+	public static @NotNull Vector3d getSmoothEyePositionValue () {
 		Vector3d  smoothEyePositionValue = smoothEyePosition.get(ThirdPersonMod.lastPartialTick);
 		Minecraft mc                     = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
@@ -142,7 +140,7 @@ public class CameraAgent {
 		return smoothEyePositionValue;
 	}
 
-	public static Vector3d calculatePositionWithoutOffset () {
+	public static @NotNull Vector3d calculatePositionWithoutOffset () {
 		return getSmoothEyePositionValue().add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
@@ -162,9 +160,6 @@ public class CameraAgent {
 	public static void updateSmoothOffsetRatio (double period) {
 		Config           config = ThirdPersonMod.getConfig();
 		CameraOffsetMode mode   = config.cameraOffsetScheme.getMode();
-		if (ModKeys.ADJUST_POSITION.isDown()) {
-			int i = 1 + 1;
-		}
 		if (ModReferee.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setSmoothFactor(config.adjusting_camera_offset_smooth_factor);
 		} else {
@@ -190,7 +185,7 @@ public class CameraAgent {
 			} else {
 				mode.getEyeSmoothFactor(smoothEyePosition.smoothFactor);
 			}
-			smoothEyePosition.setTarget(eyePosition);
+			smoothEyePosition.setEndValue(eyePosition);
 			smoothEyePosition.update(period);
 		}
 	}
@@ -263,7 +258,7 @@ public class CameraAgent {
 	/**
 	 * 根据相对角度计算相机朝向
 	 */
-	public static Vector2d calculateRotation () {
+	public static @NotNull Vector2d calculateRotation () {
 		return new Vector2d(relativeRotation.y + 180, -relativeRotation.x);
 	}
 

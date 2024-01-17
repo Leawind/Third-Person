@@ -17,11 +17,11 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerAgent {
-	public static final Vector2d     impulseHorizon = new Vector2d(0);
-	public static final Vector3d     impulse        = new Vector3d(0);
-	public static final SmoothDouble smoothXRot     = new SmoothDouble(d -> d);
-	public static       boolean      wasInterecting = false;
-	public static       boolean      wasAiming      = false;
+	public static final @NotNull Vector2d     impulseHorizon = new Vector2d(0);
+	public static final @NotNull Vector3d     impulse        = new Vector3d(0);
+	public static final @NotNull SmoothDouble smoothXRot     = new SmoothDouble(d -> d);
+	public static                boolean      wasInterecting = false;
+	public static                boolean      wasAiming      = false;
 
 	public static void resetSmoothRotations () {
 		Minecraft mc = Minecraft.getInstance();
@@ -61,19 +61,13 @@ public class PlayerAgent {
 		Config    config = ThirdPersonMod.getConfig();
 		assert mc.cameraEntity != null;
 		if (!config.rotate_to_moving_direction) {
-			return;
 		} else if (wasInterecting) {
-			return;
 		} else if (wasAiming) {
-			return;
 		} else if (impulseHorizon.length() <= 1e-5) {
-			return;
 		} else if (mc.cameraEntity.isSwimming()) {
 			turnToDirection(impulse, true);
 		} else if (CameraAgent.wasCameraCloseToEntity) {
-			return;
 		} else if (ModReferee.isAttachedEntityFallFlying()) {
-			return;
 		} else {
 			// 键盘控制的移动方向
 			double absoluteRotDegree = LMath.rotationDegreeFromDirection(impulseHorizon);
@@ -81,6 +75,7 @@ public class PlayerAgent {
 		}
 	}
 
+	@PerformanceSensitive
 	public static void onCameraSetup (double period) {
 		Minecraft mc     = Minecraft.getInstance();
 		Config    config = ThirdPersonMod.getConfig();
