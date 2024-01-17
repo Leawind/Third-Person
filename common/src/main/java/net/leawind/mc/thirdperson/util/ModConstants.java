@@ -21,7 +21,6 @@ public class ModConstants {
 	public static final double       NEAR_PLANE_DISTANCE           = 0.050;
 	public static final double       CAMERA_PITCH_DEGREE_LIMIT     = 89.800;
 	public static final double       CAMERA_THROUGH_WALL_DETECTION = 0.180;
-	public static final double       PLAYER_ROTATION_HALFLIFE   = 0.06;
-	public static final List<String> BUILDIN_AIM_ITEM_RULES     = List.of("crossbow{Charged:1b}", "ender_pearl", "snowball", "egg", "splash_potion", "lingering_potion", "experience_bottle");
-	public static final List<String> BUILDIN_USE_AIM_ITEM_RULES = List.of("bow", "trident");
+	public static final List<String> BUILDIN_AIM_ITEM_RULES        = List.of("crossbow{Charged:1b}", "ender_pearl", "snowball", "egg", "splash_potion", "lingering_potion", "experience_bottle");
+	public static final List<String> BUILDIN_USE_AIM_ITEM_RULES    = List.of("bow", "trident");
 }

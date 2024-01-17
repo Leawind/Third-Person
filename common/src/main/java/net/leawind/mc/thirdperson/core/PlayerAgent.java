@@ -2,13 +2,11 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.math.LMath;
-import net.leawind.mc.math.smoothvalue.ExpRotSmoothDouble;
 import net.leawind.mc.math.smoothvalue.SmoothDouble;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
@@ -19,29 +17,25 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerAgent {
-	public static final Vector2d           impulseHorizon = new Vector2d(0);
-	public static final Vector3d           impulse        = new Vector3d(0);
-	public static final SmoothDouble       smoothXRot     = new SmoothDouble(d -> d);
-	public static final ExpRotSmoothDouble smoothYRot     = ExpRotSmoothDouble.createWithHalflife(360, ModConstants.PLAYER_ROTATION_HALFLIFE);
-	public static       boolean            wasInterecting = false;
-	public static       boolean            wasAiming      = false;
+	public static final Vector2d     impulseHorizon = new Vector2d(0);
+	public static final Vector3d     impulse        = new Vector3d(0);
+	public static final SmoothDouble smoothXRot     = new SmoothDouble(d -> d);
+	public static       boolean      wasInterecting = false;
+	public static       boolean      wasAiming      = false;
 
 	public static void resetSmoothRotations () {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null) {
-			smoothYRot.set((double)mc.player.getYRot());
 			smoothXRot.set(mc.player.getXRot());
 		}
 	}
 
 	public static void updateSmoothRotations (double period) {
-		smoothYRot.update(period);
 	}
 
 	public static void applySmoothRotations () {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player != null) {
-			player.setYRot(player.yRotO = smoothYRot.get(ThirdPersonMod.lastPartialTick).floatValue());
 			player.setXRot(player.xRotO = (float)smoothXRot.get(ThirdPersonMod.lastPartialTick));
 		}
 	}
@@ -132,10 +126,15 @@ public class PlayerAgent {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player != null && CameraAgent.isControlledCamera()) {
 			if (isInstantly) {
-				smoothYRot.set(y);
+				mc.player.setYRot((float)y);
 				smoothXRot.update(x);
 			} else {
-				smoothYRot.setTarget(y);
+				double previousY = mc.player.getViewYRot(ThirdPersonMod.lastPartialTick);
+				double deltaY    = ((y - previousY) % 360 + 360) % 360;
+				if (deltaY > 180) {
+					deltaY -= 360;
+				}
+				mc.player.turn(deltaY, 0);
 				smoothXRot.update(x);
 			}
 		}
