@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson.forge.config;
 
 
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
@@ -19,12 +18,12 @@ import net.minecraft.client.gui.screens.Screen;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ConfigBuilders {
-	public static Screen buildConfigScreen (Config config, Screen parent) {
-		final ConfigBuilder builder = ConfigBuilder.create()
-			.setParentScreen(parent)
-			.setTitle(ConfigManager.getText("text.title"))
-			.setSavingRunnable(ThirdPersonMod.getConfigManager()::trySave);
+public interface ConfigBuilder {
+	static Screen buildConfigScreen (Config config, Screen parent) {
+		final me.shedaniel.clothconfig2.api.ConfigBuilder builder = me.shedaniel.clothconfig2.api.ConfigBuilder.create()    //
+																											   .setParentScreen(parent)    //
+																											   .setTitle(ConfigManager.getText("text.title"))    //
+																											   .setSavingRunnable(ThirdPersonMod.getConfigManager()::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		DefaultConfig            defaults     = DefaultConfig.get();
 		//==============================//
@@ -36,7 +35,11 @@ public class ConfigBuilders {
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
-			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));
+			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming",
+															  defaults.player_rotate_with_camera_when_not_aiming,
+															  config.player_rotate_with_camera_when_not_aiming,
+															  v -> config.player_rotate_with_camera_when_not_aiming = v,
+															  entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_to_moving_direction", defaults.rotate_to_moving_direction, config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("auto_rotate_interacting", defaults.auto_rotate_interacting, config.auto_rotate_interacting, v -> config.auto_rotate_interacting = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_interacting_type", defaults.rotate_interacting_type, config.rotate_interacting_type, v -> config.rotate_interacting_type = v, entryBuilder));
@@ -55,7 +58,11 @@ public class ConfigBuilders {
 		final ConfigCategory CATEGORY_MISC = builder.getOrCreateCategory(ConfigManager.getText("option_category.misc"));
 		{
 			CATEGORY_MISC.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
-			CATEGORY_MISC.addEntry(buildBooleanEntry("turn_with_camera_when_enter_first_person", defaults.turn_with_camera_when_enter_first_person, config.turn_with_camera_when_enter_first_person, v -> config.turn_with_camera_when_enter_first_person = v, entryBuilder));
+			CATEGORY_MISC.addEntry(buildBooleanEntry("turn_with_camera_when_enter_first_person",
+													 defaults.turn_with_camera_when_enter_first_person,
+													 config.turn_with_camera_when_enter_first_person,
+													 v -> config.turn_with_camera_when_enter_first_person = v,
+													 entryBuilder));
 			CATEGORY_MISC.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
 			// SubCategory: Player Fade out
 			final SubCategoryBuilder Subcategory_Player_Fade_Out = buildSubCategory("player_fade_out", entryBuilder);
@@ -75,7 +82,11 @@ public class ConfigBuilders {
 			CATEGORY_MISC.addEntry(buildSmoothFactorEntry("flying_smooth_factor", defaults.flying_smooth_factor, config.flying_smooth_factor, v -> config.flying_smooth_factor = v, entryBuilder));
 			// SubCategory: Adjusting Camera
 			final SubCategoryBuilder Subcategory_Adjusting_Camera = buildSubCategory("adjusting_camera", entryBuilder);
-			Subcategory_Adjusting_Camera.add(buildSmoothFactorEntry("adjusting_camera_offset_smooth_factor", defaults.adjusting_camera_offset_smooth_factor, config.adjusting_camera_offset_smooth_factor, v -> config.adjusting_camera_offset_smooth_factor = v, entryBuilder));
+			Subcategory_Adjusting_Camera.add(buildSmoothFactorEntry("adjusting_camera_offset_smooth_factor",
+																	defaults.adjusting_camera_offset_smooth_factor,
+																	config.adjusting_camera_offset_smooth_factor,
+																	v -> config.adjusting_camera_offset_smooth_factor = v,
+																	entryBuilder));
 			Subcategory_Adjusting_Camera.add(buildSmoothFactorEntry("adjusting_distance_smooth_factor", defaults.adjusting_distance_smooth_factor, config.adjusting_distance_smooth_factor, v -> config.adjusting_distance_smooth_factor = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Adjusting_Camera.build());
 			// SubCategory: Normal Mode
@@ -127,50 +138,34 @@ public class ConfigBuilders {
 		return builder.build();
 	}
 
-	public static StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<java.util.List<String>> setter, ConfigEntryBuilder entryBuilder) {
+	static StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<java.util.List<String>> setter, ConfigEntryBuilder entryBuilder) {
 		return entryBuilder.startStrList(ConfigManager.getText("option." + name), currentValue)
-			.setTooltip(ConfigManager.getText("option." + name + ".desc"))
-			.setSaveConsumer(setter)
-			.setDefaultValue(defaultValue)
-			.setDeleteButtonEnabled(true)
-			.setCellErrorSupplier(ItemPattern::supplyError)
-			.setExpanded(true)
-			.build();
+						   .setTooltip(ConfigManager.getText("option." + name + ".desc"))
+						   .setSaveConsumer(setter)
+						   .setDefaultValue(defaultValue)
+						   .setDeleteButtonEnabled(true)
+						   .setCellErrorSupplier(ItemPattern::supplyError)
+						   .setExpanded(true)
+						   .build();
 	}
 
-	public static SubCategoryBuilder buildSubCategory (String name, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startSubCategory(ConfigManager.getText("option_group." + name))
-			.setExpanded(true)
-			.setTooltip(ConfigManager.getText("option_group." + name + ".desc"));
+	static SubCategoryBuilder buildSubCategory (String name, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startSubCategory(ConfigManager.getText("option_group." + name)).setExpanded(true).setTooltip(ConfigManager.getText("option_group." + name + ".desc"));
 	}
 
-	public static BooleanListEntry buildBooleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startBooleanToggle(ConfigManager.getText("option." + name), currentValue)
-			.setTooltip(ConfigManager.getText("option." + name + ".desc"))
-			.setDefaultValue(defaultValue)
-			.setSaveConsumer(setter)
-			.build();
+	static BooleanListEntry buildBooleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startBooleanToggle(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
 	}
 
-	public static DoubleListEntry buildDoubleEntry (String name, double min, double max, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startDoubleField(ConfigManager.getText("option." + name), currentValue)
-			.setTooltip(ConfigManager.getText("option." + name + ".desc"))
-			.setDefaultValue(defaultValue)
-			.setSaveConsumer(setter)
-			.setMin(min)
-			.setMax(max)
-			.build();
+	static DoubleListEntry buildDoubleEntry (String name, double min, double max, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startDoubleField(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).setMin(min).setMax(max).build();
 	}
 
-	public static IntegerSliderEntry buildIntSliderEntry (String name, int min, int max, int defaultValue, int currentValue, Consumer<Integer> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startIntSlider(ConfigManager.getText("option." + name), currentValue, min, max)
-			.setTooltip(ConfigManager.getText("option." + name + ".desc"))
-			.setDefaultValue(defaultValue)
-			.setSaveConsumer(setter)
-			.build();
+	static IntegerSliderEntry buildIntSliderEntry (String name, int min, int max, int defaultValue, int currentValue, Consumer<Integer> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startIntSlider(ConfigManager.getText("option." + name), currentValue, min, max).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
 	}
 
-	public static DoubleListEntry buildSmoothFactorEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
+	static DoubleListEntry buildSmoothFactorEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
 		return buildDoubleEntry(name, 0, 1, defaultValue, currentValue, setter, entryBuilder);
 	}
 }

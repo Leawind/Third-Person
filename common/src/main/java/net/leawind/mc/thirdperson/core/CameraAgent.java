@@ -1,12 +1,12 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.math.LMath;
-import net.leawind.mc.math.smoothvalue.ExpSmoothDouble;
-import net.leawind.mc.math.smoothvalue.ExpSmoothVector2d;
-import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
-import net.leawind.mc.math.vector.Vector2d;
-import net.leawind.mc.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
+import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
+import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
+import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;

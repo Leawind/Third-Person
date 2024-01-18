@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.api.cameraoffset;
 
 
-import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,7 @@
-package net.leawind.mc.math.smoothvalue;
+package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.math.LMath;
+import net.leawind.mc.util.math.LMath;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 

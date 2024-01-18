@@ -1,10 +1,10 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.math.LMath;
-import net.leawind.mc.math.smoothvalue.SmoothDouble;
-import net.leawind.mc.math.vector.Vector2d;
-import net.leawind.mc.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.smoothvalue.SmoothDouble;
+import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.minecraft.client.Minecraft;

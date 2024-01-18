@@ -1,4 +1,4 @@
-package net.leawind.mc.math.vector;
+package net.leawind.mc.util.math.vector;
 
 
 public class Vector2d {

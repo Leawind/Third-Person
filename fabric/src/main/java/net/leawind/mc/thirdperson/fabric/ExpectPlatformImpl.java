@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.fabric;
 
 import net.leawind.mc.thirdperson.ExpectPlatform;
 import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.thirdperson.fabric.config.ConfigBuilders;
+import net.leawind.mc.thirdperson.fabric.config.ConfigBuilder;
 import net.minecraft.client.gui.screens.Screen;
 
 /**
@@ -11,6 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
  */
 public class ExpectPlatformImpl {
 	public static Screen buildConfigScreen (Config config, Screen parent) {
-		return ConfigBuilders.buildConfigScreen(config, parent);
+		return ConfigBuilder.buildConfigScreen(config, parent);
 	}
 }

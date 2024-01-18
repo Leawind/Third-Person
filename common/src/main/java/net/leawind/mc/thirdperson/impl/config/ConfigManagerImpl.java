@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ExpectPlatform;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.minecraft.client.gui.screens.Screen;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +63,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public @Nullable Screen getConfigScreen (Screen parent) {
+		//		return ConfigBuilder.buildConfigScreen(config, parent);
 		return ExpectPlatform.buildConfigScreen(config, parent);
 	}
 

@@ -1,7 +1,7 @@
-package net.leawind.mc.math.smoothvalue;
+package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector2d;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")

@@ -1,7 +1,8 @@
-package net.leawind.mc.math.monolist;
+package net.leawind.mc.util.impl.math.monolist;
 
 
-import net.minecraft.util.Mth;
+import net.leawind.mc.util.api.math.MonoList;
+import net.leawind.mc.util.math.LMath;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -11,20 +12,22 @@ import java.util.function.Function;
  * <p>
  * 列表项是下标的单调函数
  * <p>
- * 数列中每一项的值会在 使用时 而非 实例化时 计算
+ * 数列中每一项的值只有在被访问时才计算
  */
 @SuppressWarnings("unused")
-public class DeferedMonoList {
-	public             int                       length;
-	protected @NotNull Function<Integer, Double> getter;
+public class DeferedMonoList implements MonoList {
+	private final          int                       length;
+	private final @NotNull Function<Integer, Double> getter;
+	private final          int                       sgn;
 
 	/**
 	 * @param length 列表长度
 	 * @param getter 值与下标的对应关系
 	 */
-	private DeferedMonoList (int length, @NotNull Function<Integer, Double> getter) {
+	protected DeferedMonoList (int length, @NotNull Function<Integer, Double> getter) {
 		this.length = length;
 		this.getter = getter;
+		this.sgn    = getter.apply(1) > getter.apply(0) ? 1: -1;
 	}
 
 	public static @NotNull DeferedMonoList exp (int length) {
@@ -41,17 +44,14 @@ public class DeferedMonoList {
 
 	public double offset (double value, int offset) {
 		int i = iadsorption(value) + offset;
-		i = Mth.clamp(i, 0, length - 1);
+		i = LMath.clamp(i, 0, length() - 1);
 		return get(i);
 	}
 
-	/**
-	 * 取最接近的一个值的下标
-	 */
 	public int iadsorption (double value) {
 		int ileft   = 0;
-		int iright  = length - 1;
-		int icenter = length / 2;
+		int iright  = length() - 1;
+		int icenter = length() / 2;
 		while (true) {
 			double vi = get(icenter);
 			if (vi < value) {
@@ -79,10 +79,26 @@ public class DeferedMonoList {
 		return getter.apply(i);
 	}
 
-	/**
-	 * 找最近的一个值
-	 */
 	public double adsorption (double value) {
 		return get(iadsorption(value));
+	}
+
+	@Override
+	public int sgn () {
+		return sgn;
+	}
+
+	public int length () {
+		return length;
+	}
+
+	@Override
+	public double getNext (double value) {
+		return offset(value, 1);
+	}
+
+	@Override
+	public double getLast (double value) {
+		return offset(value, -1);
 	}
 }

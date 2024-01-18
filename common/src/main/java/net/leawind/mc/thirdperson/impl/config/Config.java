@@ -1,11 +1,12 @@
 package net.leawind.mc.thirdperson.impl.config;
 
 
-import net.leawind.mc.math.monolist.StaticMonoList;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.AbstractConfig;
-import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.util.api.ItemPattern;
+import net.leawind.mc.util.api.math.MonoList;
+import net.leawind.mc.util.impl.math.monolist.StaticMonoList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.Set;
  */
 public class Config extends AbstractConfig {
 	// ============================================================ //
-	public @NotNull StaticMonoList     distanceMonoList;
+	public @NotNull MonoList           distanceMonoList;
 	public @NotNull Set<ItemPattern>   aim_item_patterns;
 	public @NotNull Set<ItemPattern>   use_aim_item_patterns;
 	// ============================================================ //

@@ -1,4 +1,4 @@
-package net.leawind.mc.math.smoothvalue;
+package net.leawind.mc.util.math.smoothvalue;
 
 
 import com.mojang.blaze3d.Blaze3D;

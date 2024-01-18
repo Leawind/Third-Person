@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.math.LMath;
-import net.leawind.mc.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.event.ModKeys;
 import net.leawind.mc.thirdperson.impl.config.Config;

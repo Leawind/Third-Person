@@ -4,7 +4,7 @@ package net.leawind.mc.thirdperson.mixin;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.event.ModEvents;
-import net.leawind.mc.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
