@@ -1,10 +1,11 @@
 package net.leawind.mc.thirdperson.impl.cameraoffset;
 
 
-import net.leawind.mc.util.math.vector.Vector2d;
-import net.leawind.mc.util.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.api.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
 public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
@@ -63,8 +64,13 @@ public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 
 	@Override
 	public void setSideOffsetRatio (@NotNull Vector2d v) {
-		config.aiming_offset_x = v.x;
-		config.aiming_offset_y = v.y;
+		config.aiming_offset_x = LMath.clamp(v.x, -1, 1);
+		config.aiming_offset_y = LMath.clamp(v.y, -1, 1);
+	}
+
+	@Override
+	public Vector2d getSideOffsetRatio (@NotNull Vector2d v) {
+		return v.set(config.aiming_offset_x, config.aiming_offset_y);
 	}
 
 	@Override
@@ -73,17 +79,7 @@ public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 	}
 
 	@Override
-	public @NotNull Vector2d getSideOffsetRatio () {
-		return new Vector2d(config.aiming_offset_x, config.aiming_offset_y);
-	}
-
-	@Override
-	public void getSideOffsetRatio (@NotNull Vector2d v) {
-		v.set(config.aiming_offset_x, config.aiming_offset_y);
-	}
-
-	@Override
 	public void setCenterOffsetRatio (double offset) {
-		config.aiming_offset_center = offset;
+		config.aiming_offset_center = LMath.clamp(offset, -1, 1);
 	}
 }

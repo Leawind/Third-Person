@@ -135,7 +135,7 @@ public interface ModEvents {
 			mode.setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
-			Vector2d offset = mode.getSideOffsetRatio();
+			Vector2d offset = mode.getSideOffsetRatio(new Vector2d());
 			offset.sub(movement.div(screenSize));
 			offset.clamp(-1, 1);
 			scheme.setSide(Math.signum(offset.x));
