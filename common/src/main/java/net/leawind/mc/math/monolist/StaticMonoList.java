@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 /**
- * <p>
  * 单调递增列表
  * <p>
  * 列表中每一项的值会在列表对象被实例化时创建。

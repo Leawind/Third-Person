@@ -8,11 +8,11 @@ import net.leawind.mc.math.smoothvalue.ExpSmoothVector3d;
 import net.leawind.mc.math.vector.Vector2d;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
-import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +24,7 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CameraAgent {
+public final class CameraAgent {
 	public static @Nullable      BlockGetter       level;
 	public static @Nullable      Camera            camera;
 	public static final @NotNull Camera            fakeCamera              = new Camera();

@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerAgent {
+public final class PlayerAgent {
 	public static final @NotNull Vector2d     impulseHorizon = new Vector2d(0);
 	public static final @NotNull Vector3d     impulse        = new Vector3d(0);
 	public static final @NotNull SmoothDouble smoothXRot     = new SmoothDouble(d -> d);

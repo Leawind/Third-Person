@@ -4,14 +4,14 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.math.LMath;
 import net.leawind.mc.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.event.ModKeys;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.util.api.ItemPattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-public class ModReferee {
+public final class ModReferee {
 	/**
 	 * 是否通过按键切换到了瞄准模式
 	 */
