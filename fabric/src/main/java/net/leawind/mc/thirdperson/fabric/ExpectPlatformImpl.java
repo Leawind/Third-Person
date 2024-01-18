@@ -9,8 +9,6 @@ import net.minecraft.client.gui.screens.Screen;
 /**
  * 在 {@link ExpectPlatform} 中申明，在此处实现
  */
+@SuppressWarnings("unused")
 public class ExpectPlatformImpl {
-	public static Screen buildConfigScreen (Config config, Screen parent) {
-		return ConfigBuilder.buildConfigScreen(config, parent);
-	}
 }

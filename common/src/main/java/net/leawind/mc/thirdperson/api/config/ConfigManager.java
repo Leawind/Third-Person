@@ -1,9 +1,9 @@
 package net.leawind.mc.thirdperson.api.config;
 
 
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
-import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -59,10 +59,11 @@ public interface ConfigManager {
 
 	/**
 	 * 获取配置屏幕
-	 * <p>
-	 * 提供给 ModMenu
 	 */
 	@Nullable Screen getConfigScreen (Screen parent);
 
+	/**
+	 * 获取配置对象
+	 */
 	@NotNull Config getConfig ();
 }

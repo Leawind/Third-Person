@@ -5,6 +5,9 @@ import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * 相机偏移模式
+ */
 public interface CameraOffsetMode {
 	void getEyeSmoothFactor (@NotNull Vector3d v);
 
