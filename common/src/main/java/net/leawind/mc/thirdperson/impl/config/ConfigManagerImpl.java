@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.impl.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
@@ -29,13 +29,13 @@ public class ConfigManagerImpl implements ConfigManager {
 			assert ModConstants.CONFIG_FILE.getParentFile().mkdirs();
 			if (ModConstants.CONFIG_FILE.exists()) {
 				load();
-				ThirdPersonMod.LOGGER.info("Config is loaded from {}", ModConstants.CONFIG_FILE);
+				ThirdPerson.LOGGER.info("Config is loaded from {}", ModConstants.CONFIG_FILE);
 			} else {
-				ThirdPersonMod.LOGGER.info("Config not found, creating one.");
+				ThirdPerson.LOGGER.info("Config not found, creating one.");
 				trySave();
 			}
 		} catch (IOException e) {
-			ThirdPersonMod.LOGGER.error("Failed to load config.", e);
+			ThirdPerson.LOGGER.error("Failed to load config.", e);
 		}
 		config.update();
 	}
@@ -44,9 +44,9 @@ public class ConfigManagerImpl implements ConfigManager {
 	public void trySave () {
 		try {
 			save();
-			ThirdPersonMod.LOGGER.info("Config is saved.");
+			ThirdPerson.LOGGER.info("Config is saved.");
 		} catch (IOException e) {
-			ThirdPersonMod.LOGGER.error("Failed to save config.", e);
+			ThirdPerson.LOGGER.error("Failed to save config.", e);
 		}
 		config.update();
 	}

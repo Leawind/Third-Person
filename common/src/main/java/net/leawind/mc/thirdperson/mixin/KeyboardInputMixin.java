@@ -1,7 +1,14 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.MixinProxy;
+import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.core.ModReferee;
+import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector3d;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +25,35 @@ public class KeyboardInputMixin {
 	@PerformanceSensitive
 	public void tick_inject_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
-		MixinProxy.recalculateImpulse(that, isMoveSlowly, sneakingSpeedBonus, ci);
+		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson() && CameraAgent.isControlledCamera()) {
+			Minecraft mc                = Minecraft.getInstance();
+			double    cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
+			double    cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);
+			// 方向向量 != 0
+			Vector3d lookImpulse        = LMath.toVector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
+			Vector3d leftImpulse        = LMath.toVector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
+			Vector2d lookImpulseHorizon = new Vector2d(lookImpulse.x, lookImpulse.z).normalize();
+			Vector2d leftImpulseHorizon = new Vector2d(leftImpulse.x, leftImpulse.z).normalize();
+			// 乘上 impulse
+			lookImpulse.mul(cameraLookImpulse);
+			leftImpulse.mul(cameraLeftImpulse);
+			lookImpulseHorizon.mul(cameraLookImpulse);
+			leftImpulseHorizon.mul(cameraLeftImpulse);
+			//求和
+			lookImpulse.add(leftImpulse, PlayerAgent.impulse);
+			lookImpulseHorizon.add(leftImpulseHorizon, PlayerAgent.impulseHorizon);
+			if (PlayerAgent.impulseHorizon.length() > 1E-5 && mc.player != null) {
+				PlayerAgent.impulseHorizon.normalize();
+				float    playerYRot        = mc.player.getViewYRot(ThirdPerson.lastPartialTick);
+				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
+				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
+				that.forwardImpulse = (float)(PlayerAgent.impulseHorizon.dot(playerLookHorizon));
+				that.leftImpulse    = (float)(PlayerAgent.impulseHorizon.dot(playerLeftHorizon));
+				if (isMoveSlowly) {
+					that.forwardImpulse *= sneakingSpeedBonus;
+					that.leftImpulse *= sneakingSpeedBonus;
+				}
+			}
+		}
 	}
 }

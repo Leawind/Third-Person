@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.forge;
 
 
 import dev.architectury.platform.forge.EventBuses;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
@@ -12,15 +12,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(ModConstants.MOD_ID)
-public class ThirdPersonModForge {
-	public ThirdPersonModForge () {
+public class ThirdPersonForge {
+	public ThirdPersonForge () {
 		// 仅在客户端运行
 		ThreadGroup tg = Thread.currentThread().getThreadGroup();
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			EventBuses.registerModEventBus(ModConstants.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-			ThirdPersonMod.init();
+			ThirdPerson.init();
 			// 配置屏幕
-			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> ThirdPersonMod.getConfigManager().getConfigScreen(screen)));
+			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> ThirdPerson.getConfigManager().getConfigScreen(screen)));
 		});
 	}
 }

@@ -2,7 +2,7 @@ package net.leawind.mc.util.api;
 
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.util.impl.ItemPatternImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -147,7 +147,7 @@ public interface ItemPattern {
 				try {
 					set.add(of(nbtSrc));
 				} catch (IllegalArgumentException e) {
-					ThirdPersonMod.LOGGER.error("Skip invalid id-nbt expression: {}", nbtSrc);
+					ThirdPerson.LOGGER.error("Skip invalid id-nbt expression: {}", nbtSrc);
 				}
 			}
 		}

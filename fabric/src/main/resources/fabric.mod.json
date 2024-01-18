@@ -17,10 +17,10 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"${mod_group_id}.fabric.ThirdPersonModFabric"
+			"${mod_group_id}.fabric.ThirdPersonFabric"
 		],
 		"modmenu": [
-			"${mod_group_id}.fabric.config.ModmenuEntry"
+			"${mod_group_id}.fabric.ModMenuEntry"
 		]
 	},
 	"mixins": [

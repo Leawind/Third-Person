@@ -1,17 +1,17 @@
-package net.leawind.mc.thirdperson.fabric.config;
+package net.leawind.mc.thirdperson.fabric;
 
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.ThirdPerson;
 
 /**
  * Modmenu 入口
  */
 @SuppressWarnings("unused")
-public class ModmenuEntry implements ModMenuApi {
+public class ModMenuEntry implements ModMenuApi {
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory () {
-		return ThirdPersonMod.getConfigManager()::getConfigScreen;
+		return ThirdPerson.getConfigManager()::getConfigScreen;
 	}
 }

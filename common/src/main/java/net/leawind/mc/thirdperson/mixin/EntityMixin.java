@@ -1,7 +1,10 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.MixinProxy;
+import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.core.ModReferee;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,6 +22,16 @@ public class EntityMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
 	private Vec3 storeViewVector (Vec3 viewVectorFake) {
-		return MixinProxy.storeViewVector(viewVectorFake);
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player == null) {
+			return viewVectorFake;
+		}
+		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
+			Vec3      eyePosition    = mc.player.getEyePosition(1);
+			HitResult hr             = CameraAgent.pick();
+			Vec3      eyeToHitResult = eyePosition.vectorTo(hr.getLocation());
+			return eyeToHitResult.normalize();
+		}
+		return viewVectorFake;
 	}
 }

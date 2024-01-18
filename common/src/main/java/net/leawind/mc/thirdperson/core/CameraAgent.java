@@ -1,13 +1,13 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.impl.config.Config;
@@ -64,7 +64,7 @@ public final class CameraAgent {
 	 */
 	public static boolean isAvailable () {
 		Minecraft mc = Minecraft.getInstance();
-		if (!ThirdPersonMod.getConfig().is_mod_enable) {
+		if (!ThirdPerson.getConfig().is_mod_enable) {
 			return false;
 		} else if (!mc.gameRenderer.getMainCamera().isInitialized()) {
 			return false;
@@ -88,12 +88,12 @@ public final class CameraAgent {
 	 */
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		camera                         = mc.gameRenderer.getMainCamera();
-		ThirdPersonMod.lastPartialTick = mc.getFrameTime();
+		camera                      = mc.gameRenderer.getMainCamera();
+		ThirdPerson.lastPartialTick = mc.getFrameTime();
 		smoothOffsetRatio.setValue(0, 0);
-		smoothDistanceToEye.set(ThirdPersonMod.getConfig().distanceMonoList.get(0));
+		smoothDistanceToEye.set(ThirdPerson.getConfig().distanceMonoList.get(0));
 		if (mc.cameraEntity != null) {
-			relativeRotation.set(-mc.cameraEntity.getViewXRot(ThirdPersonMod.lastPartialTick), mc.cameraEntity.getViewYRot(ThirdPersonMod.lastPartialTick) - 180);
+			relativeRotation.set(-mc.cameraEntity.getViewXRot(ThirdPerson.lastPartialTick), mc.cameraEntity.getViewYRot(ThirdPerson.lastPartialTick) - 180);
 		}
 	}
 
@@ -126,10 +126,10 @@ public final class CameraAgent {
 	}
 
 	public static @NotNull Vector3d getSmoothEyePositionValue () {
-		Vector3d  smoothEyePositionValue = smoothEyePosition.get(ThirdPersonMod.lastPartialTick);
+		Vector3d  smoothEyePositionValue = smoothEyePosition.get(ThirdPerson.lastPartialTick);
 		Minecraft mc                     = Minecraft.getInstance();
 		assert mc.cameraEntity != null;
-		Vector3d eyePosition      = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
+		Vector3d eyePosition      = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
 		double   dist             = smoothEyePositionValue.distance(eyePosition);
 		Vector3d sf               = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero = sf.x * sf.z == 0;
@@ -145,7 +145,7 @@ public final class CameraAgent {
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
-		Config           config      = ThirdPersonMod.getConfig();
+		Config           config      = ThirdPerson.getConfig();
 		boolean          isAdjusting = ModReferee.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
 		smoothDistanceToEye.setSmoothFactor(isAdjusting ? config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
@@ -158,7 +158,7 @@ public final class CameraAgent {
 	}
 
 	public static void updateSmoothOffsetRatio (double period) {
-		Config           config = ThirdPersonMod.getConfig();
+		Config           config = ThirdPerson.getConfig();
 		CameraOffsetMode mode   = config.cameraOffsetScheme.getMode();
 		if (ModReferee.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setSmoothFactor(config.adjusting_camera_offset_smooth_factor);
@@ -174,11 +174,11 @@ public final class CameraAgent {
 	}
 
 	public static void updateSmoothEyePosition (double period) {
-		Config    config = ThirdPersonMod.getConfig();
+		Config    config = ThirdPerson.getConfig();
 		Minecraft mc     = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
-			Vector3d         eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick));
+			Vector3d         eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
 			// 飞行时使用专用的平滑系数
 			if (ModReferee.isAttachedEntityFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
@@ -266,7 +266,7 @@ public final class CameraAgent {
 	 * 获取相机视线落点坐标
 	 */
 	public static @Nullable Vector3d getPickPosition () {
-		return getPickPosition(smoothDistanceToEye.get() + ThirdPersonMod.getConfig().camera_ray_trace_length);
+		return getPickPosition(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	/**
@@ -280,7 +280,7 @@ public final class CameraAgent {
 	}
 
 	public static @NotNull HitResult pick () {
-		return pick(smoothDistanceToEye.get() + ThirdPersonMod.getConfig().camera_ray_trace_length);
+		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	public static @NotNull HitResult pick (double pickRange) {

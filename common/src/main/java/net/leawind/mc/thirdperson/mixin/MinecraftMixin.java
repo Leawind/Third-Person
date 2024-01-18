@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
-import net.leawind.mc.thirdperson.event.ModEvents;
+import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +24,7 @@ public class MinecraftMixin {
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
 	private void handleKeybinds_inject_head (CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
-			ModEvents.onBeforeHandleKeybinds();
+			ThirdPersonEvents.onBeforeHandleKeybinds();
 		}
 	}
 }

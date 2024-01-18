@@ -1,10 +1,10 @@
 package net.leawind.mc.thirdperson.core;
 
 
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector3d;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
-import net.leawind.mc.thirdperson.event.ModKeys;
+import net.leawind.mc.thirdperson.event.ThirdPersonKeys;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.util.api.ItemPattern;
 import net.minecraft.client.Minecraft;
@@ -26,21 +26,21 @@ public final class ModReferee {
 	}
 
 	public static boolean isAdjustingCameraDistance () {
-		return CameraAgent.isAvailable() && isThirdPerson() && ModKeys.ADJUST_POSITION.isDown();
+		return CameraAgent.isAvailable() && isThirdPerson() && ThirdPersonKeys.ADJUST_POSITION.isDown();
 	}
 
 	/**
 	 * 根据玩家的按键判断玩家是否想瞄准
 	 */
 	public static boolean doesPlayerWantToAim () {
-		return isToggleToAiming || ModKeys.FORCE_AIMING.isDown();
+		return isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
 	}
 
 	/**
 	 * 当前是否显示准星
 	 */
 	public static boolean shouldRenderCrosshair () {
-		Config config = ThirdPersonMod.getConfig();
+		Config config = ThirdPerson.getConfig();
 		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming);
 	}
 
@@ -55,7 +55,7 @@ public final class ModReferee {
 	 */
 	public static boolean wasCameraCloseToEntity () {
 		Minecraft mc     = Minecraft.getInstance();
-		Config    config = ThirdPersonMod.getConfig();
+		Config    config = ThirdPerson.getConfig();
 		if (!config.player_fade_out_enabled) {
 			return false;
 		} else if (mc.cameraEntity == null || CameraAgent.camera == null) {
@@ -78,7 +78,7 @@ public final class ModReferee {
 	 */
 	public static boolean isCameraEntityAiming () {
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		Config config       = ThirdPersonMod.getConfig();
+		Config config       = ThirdPerson.getConfig();
 		if (cameraEntity instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem() && ItemPattern.anyMatch(config.use_aim_item_patterns, livingEntity.getUseItem())) {
 				return true;

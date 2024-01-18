@@ -9,7 +9,7 @@ import me.shedaniel.clothconfig2.gui.entries.DoubleListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.leawind.mc.thirdperson.impl.config.Config;
@@ -25,7 +25,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		final ConfigBuilder builder = me.shedaniel.clothconfig2.api.ConfigBuilder.create()    //
 																				 .setParentScreen(parent)    //
 																				 .setTitle(ConfigManager.getText("text.title"))    //
-																				 .setSavingRunnable(ThirdPersonMod.getConfigManager()::trySave);
+																				 .setSavingRunnable(ThirdPerson.getConfigManager()::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		DefaultConfig            defaults     = DefaultConfig.get();
 		//==============================//

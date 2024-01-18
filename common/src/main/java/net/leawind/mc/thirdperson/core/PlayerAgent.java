@@ -5,7 +5,7 @@ import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.SmoothDouble;
 import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;
-import net.leawind.mc.thirdperson.ThirdPersonMod;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -36,16 +36,16 @@ public final class PlayerAgent {
 	public static void applySmoothRotations () {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if (player != null) {
-			player.setXRot(player.xRotO = (float)smoothXRot.get(ThirdPersonMod.lastPartialTick));
+			player.setXRot(player.xRotO = (float)smoothXRot.get(ThirdPerson.lastPartialTick));
 		}
 	}
 
 	public static void reset () {
 		Minecraft mc = Minecraft.getInstance();
-		ThirdPersonMod.lastPartialTick = mc.getFrameTime();
+		ThirdPerson.lastPartialTick = mc.getFrameTime();
 		if (mc.cameraEntity != null) {
 			// 将虚拟球心放在实体眼睛处
-			CameraAgent.smoothEyePosition.set(LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPersonMod.lastPartialTick)));
+			CameraAgent.smoothEyePosition.set(LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick)));
 			if (mc.player != null) {
 				resetSmoothRotations();
 			}
@@ -58,7 +58,7 @@ public final class PlayerAgent {
 	@PerformanceSensitive
 	public static void onServerAiStep () {
 		Minecraft mc     = Minecraft.getInstance();
-		Config    config = ThirdPersonMod.getConfig();
+		Config    config = ThirdPerson.getConfig();
 		assert mc.cameraEntity != null;
 		if (!config.rotate_to_moving_direction) {
 		} else if (wasInterecting) {
@@ -78,7 +78,7 @@ public final class PlayerAgent {
 	@PerformanceSensitive
 	public static void onCameraSetup (double period) {
 		Minecraft mc     = Minecraft.getInstance();
-		Config    config = ThirdPersonMod.getConfig();
+		Config    config = ThirdPerson.getConfig();
 		if (!CameraAgent.isControlledCamera()) {
 			return;
 		} else if (wasAiming) {
@@ -124,7 +124,7 @@ public final class PlayerAgent {
 				mc.player.setYRot((float)y);
 				smoothXRot.update(x);
 			} else {
-				double previousY = mc.player.getViewYRot(ThirdPersonMod.lastPartialTick);
+				double previousY = mc.player.getViewYRot(ThirdPerson.lastPartialTick);
 				double deltaY    = ((y - previousY) % 360 + 360) % 360;
 				if (deltaY > 180) {
 					deltaY -= 360;
@@ -162,7 +162,7 @@ public final class PlayerAgent {
 	 */
 	public static void turnToPosition (@NotNull Vector3d pos, boolean isInstantly) {
 		assert Minecraft.getInstance().player != null;
-		Vector3d eyePosition      = LMath.toVector3d(Minecraft.getInstance().player.getEyePosition(ThirdPersonMod.lastPartialTick));
+		Vector3d eyePosition      = LMath.toVector3d(Minecraft.getInstance().player.getEyePosition(ThirdPerson.lastPartialTick));
 		Vector3d playerViewVector = pos.copy().sub(eyePosition);
 		turnToDirection(playerViewVector, isInstantly);
 	}
