@@ -28,9 +28,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 																				 .setSavingRunnable(ThirdPerson.getConfigManager()::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		DefaultConfig            defaults     = DefaultConfig.get();
-		//==============================//
+		//==================================================================================================================================================//
+		//==================================================================================================================================================//
 		// Category: general
-		//==============================//
 		final ConfigCategory CATEGORY_GENERAL = builder.getOrCreateCategory(ConfigManager.getText("option_category.general"));
 		{
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_mod_enable", defaults.is_mod_enable, config.is_mod_enable, v -> config.is_mod_enable = v, entryBuilder));
@@ -54,9 +54,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_max", 2.0, 16D, defaults.camera_distance_max, config.camera_distance_max, v -> config.camera_distance_max = v, entryBuilder));
 			CATEGORY_GENERAL.addEntry(Subcategory_Camera_Distance_Adjustment.build());
 		}
-		//==============================//
+		//==================================================================================================================================================//
+		//==================================================================================================================================================//
 		// Category: misc
-		//==============================
 		final ConfigCategory CATEGORY_MISC = builder.getOrCreateCategory(ConfigManager.getText("option_category.misc"));
 		{
 			CATEGORY_MISC.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
@@ -76,9 +76,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v, entryBuilder));
 			CATEGORY_MISC.addEntry(Subcategory_Crosshair.build());
 		}
-		//==============================//
+		//==================================================================================================================================================//
+		//==================================================================================================================================================//
 		// Category: smooth factors
-		//==============================//
 		final ConfigCategory CATEGORY_SMOOTH_FACTORS = builder.getOrCreateCategory(ConfigManager.getText("option_category.smooth_factors"));
 		{
 			CATEGORY_MISC.addEntry(buildSmoothFactorEntry("flying_smooth_factor", defaults.flying_smooth_factor, config.flying_smooth_factor, v -> config.flying_smooth_factor = v, entryBuilder));
@@ -106,9 +106,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			Subcategory_Aiming_Mode.add(buildSmoothFactorEntry("distance_smooth_factor", defaults.aiming_distance_smooth_factor, config.aiming_distance_smooth_factor, v -> config.aiming_distance_smooth_factor = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Aiming_Mode.build());
 		}
-		//==============================//
+		//==================================================================================================================================================//
+		//==================================================================================================================================================//
 		// Category: camera offset
-		//==============================//
 		final ConfigCategory CATEGORY_CAMERA_OFFSET = builder.getOrCreateCategory(ConfigManager.getText("option_category.camera_offset"));
 		{
 			// SubCategory: Normal Mode
@@ -128,9 +128,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			Subcategory_Aiming_Mode.add(buildDoubleEntry("offset_center", -1, +1, defaults.aiming_offset_center, config.aiming_offset_center, v -> config.aiming_offset_center = v, entryBuilder));
 			CATEGORY_CAMERA_OFFSET.addEntry(Subcategory_Aiming_Mode.build());
 		}
-		//==============================//
+		//==================================================================================================================================================//
+		//==================================================================================================================================================//
 		// Category: Aiming Check
-		//==============================//
 		final ConfigCategory CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
 			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("enable_buildin_aim_item_rules", defaults.enable_buildin_aim_item_rules, config.enable_buildin_aim_item_rules, v -> config.enable_buildin_aim_item_rules = v, entryBuilder));
@@ -138,6 +138,26 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_aim_item_rules", defaults.use_aim_item_rules, config.use_aim_item_rules, v -> config.use_aim_item_rules = v, entryBuilder));
 		}
 		return builder.build();
+	}
+
+	private BooleanListEntry buildBooleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startBooleanToggle(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
+	}
+
+	private SubCategoryBuilder buildSubCategory (String name, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startSubCategory(ConfigManager.getText("option_group." + name)).setExpanded(true).setTooltip(ConfigManager.getText("option_group." + name + ".desc"));
+	}
+
+	private IntegerSliderEntry buildIntSliderEntry (String name, int min, int max, int defaultValue, int currentValue, Consumer<Integer> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startIntSlider(ConfigManager.getText("option." + name), currentValue, min, max).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
+	}
+
+	private DoubleListEntry buildDoubleEntry (String name, double min, double max, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startDoubleField(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).setMin(min).setMax(max).build();
+	}
+
+	private DoubleListEntry buildSmoothFactorEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
+		return buildDoubleEntry(name, 0, 1, defaultValue, currentValue, setter, entryBuilder);
 	}
 
 	private StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<List<String>> setter, ConfigEntryBuilder entryBuilder) {
@@ -149,25 +169,5 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 						   .setCellErrorSupplier(ItemPattern::supplyError)
 						   .setExpanded(true)
 						   .build();
-	}
-
-	private SubCategoryBuilder buildSubCategory (String name, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startSubCategory(ConfigManager.getText("option_group." + name)).setExpanded(true).setTooltip(ConfigManager.getText("option_group." + name + ".desc"));
-	}
-
-	private BooleanListEntry buildBooleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startBooleanToggle(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
-	}
-
-	private DoubleListEntry buildDoubleEntry (String name, double min, double max, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startDoubleField(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).setMin(min).setMax(max).build();
-	}
-
-	private IntegerSliderEntry buildIntSliderEntry (String name, int min, int max, int defaultValue, int currentValue, Consumer<Integer> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startIntSlider(ConfigManager.getText("option." + name), currentValue, min, max).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
-	}
-
-	private DoubleListEntry buildSmoothFactorEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
-		return buildDoubleEntry(name, 0, 1, defaultValue, currentValue, setter, entryBuilder);
 	}
 }

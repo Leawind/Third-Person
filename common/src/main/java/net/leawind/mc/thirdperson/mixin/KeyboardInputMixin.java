@@ -5,9 +5,9 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.vector.Vector2d;
-import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import org.apache.logging.log4j.util.PerformanceSensitive;
@@ -32,8 +32,8 @@ public class KeyboardInputMixin {
 			// 方向向量 != 0
 			Vector3d lookImpulse        = LMath.toVector3d(CameraAgent.fakeCamera.getLookVector()).normalize();
 			Vector3d leftImpulse        = LMath.toVector3d(CameraAgent.fakeCamera.getLeftVector()).normalize();
-			Vector2d lookImpulseHorizon = new Vector2d(lookImpulse.x, lookImpulse.z).normalize();
-			Vector2d leftImpulseHorizon = new Vector2d(leftImpulse.x, leftImpulse.z).normalize();
+			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize();
+			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize();
 			// 乘上 impulse
 			lookImpulse.mul(cameraLookImpulse);
 			leftImpulse.mul(cameraLeftImpulse);

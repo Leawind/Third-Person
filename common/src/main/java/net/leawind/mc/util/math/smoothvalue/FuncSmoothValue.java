@@ -13,14 +13,6 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unused")
 public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
-	public static final class Functions {
-		public static final Function<Double, Double> linear = x -> x;
-		public static final Function<Double, Double> sqrt   = Math::sqrt;
-		public static final Function<Double, Double> arc    = x -> Math.sqrt(x * (2 - x));
-		public static final Function<Double, Double> sin    = x -> Math.sin(Math.PI * x * 0.5);
-		public static final Function<Double, Double> arctan = x -> Math.atan(Math.PI * x * 0.5);
-	}
-
 	/**
 	 * func 必须在 [0,1] 上有定义
 	 * <p>
@@ -42,7 +34,6 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 	protected          double                   startTime = 0;
 	protected @NotNull T                        startValue;
 	protected @NotNull T                        endValue;
-
 	public FuncSmoothValue (@NotNull Function<Double, Double> func, @NotNull T value, @NotNull T startValue, @NotNull T endValue) {
 		this.func       = func;
 		this.value      = value;
@@ -83,5 +74,13 @@ public abstract class FuncSmoothValue<T> implements ISmoothValue<T> {
 
 	final public void update () {
 		update(Blaze3D.getTime());
+	}
+
+	public static final class Functions {
+		public static final Function<Double, Double> linear = x -> x;
+		public static final Function<Double, Double> sqrt   = Math::sqrt;
+		public static final Function<Double, Double> arc    = x -> Math.sqrt(x * (2 - x));
+		public static final Function<Double, Double> sin    = x -> Math.sin(Math.PI * x * 0.5);
+		public static final Function<Double, Double> arctan = x -> Math.atan(Math.PI * x * 0.5);
 	}
 }

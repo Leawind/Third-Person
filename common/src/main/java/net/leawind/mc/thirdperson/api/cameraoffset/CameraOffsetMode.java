@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.api.cameraoffset;
 
 
-import net.leawind.mc.util.math.vector.Vector2d;
-import net.leawind.mc.util.math.vector.Vector3d;
+import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.api.math.vector.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -74,15 +74,15 @@ public interface CameraOffsetMode {
 	double getCenterOffsetRatio ();
 
 	/**
+	 * 设置当相机居中时的，垂直偏移量
+	 */
+	void setCenterOffsetRatio (double offset);
+
+	/**
 	 * 获取当相机位于两侧，而非居中时的偏移量。
 	 *
 	 * @param v 将取得的数据存入该向量
 	 * @return 与传入参数是同一个对象
 	 */
 	Vector2d getSideOffsetRatio (@NotNull Vector2d v);
-
-	/**
-	 * 设置当相机居中时的，垂直偏移量
-	 */
-	void setCenterOffsetRatio (double offset);
 }

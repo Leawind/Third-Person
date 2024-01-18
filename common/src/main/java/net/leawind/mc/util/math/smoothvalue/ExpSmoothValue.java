@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	public @NotNull    T smoothFactor;
 	public @NotNull    T smoothFactorWeight;// factor ^ weight
+	public @NotNull    T target;
 	protected @NotNull T value;
 	protected @NotNull T lastValue;
-	public @NotNull    T target;
 
 	protected ExpSmoothValue (@NotNull T sf, @NotNull T sw, @NotNull T v, @NotNull T lv, @NotNull T t) {
 		smoothFactor       = sf;

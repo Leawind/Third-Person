@@ -15,16 +15,6 @@ public class StaticMonoList implements MonoList {
 	private final int      sgn;
 	private final double[] list;
 
-	private boolean isMono () {
-		double lastValue = list[0];
-		for (double value: list) {
-			if (value != lastValue && Math.signum(value - lastValue) != sgn) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	/**
 	 * 根据列表直接创建
 	 *
@@ -36,6 +26,46 @@ public class StaticMonoList implements MonoList {
 		if (!isMono()) {
 			throw new IllegalArgumentException("Invalid list");
 		}
+	}
+
+	private boolean isMono () {
+		double lastValue = list[0];
+		for (double value: list) {
+			if (value != lastValue && Math.signum(value - lastValue) != sgn) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static StaticMonoList linear (int length) {
+		return of(length, d -> (double)d);
+	}
+
+	public static StaticMonoList of (int length, Function<Integer, Double> getter) throws IllegalArgumentException {
+		double[] list = new double[length];
+		for (int i = 0; i < length; i++) {
+			list[i] = getter.apply(i);
+		}
+		return of(list);
+	}
+
+	public static StaticMonoList of (double[] list) throws IllegalArgumentException {
+		return new StaticMonoList(list);
+	}
+
+	public static StaticMonoList exp (int length) {
+		return of(length, Math::exp);
+	}
+
+	public static StaticMonoList squared (int length) {
+		return of(length, i -> (double)(i * i));
+	}
+
+	public static StaticMonoList of (int length, double min, double max, Function<Double, Double> f, Function<Double, Double> fInv) throws IllegalArgumentException {
+		double xmin   = fInv.apply(min);
+		double xrange = fInv.apply(max) - xmin;
+		return of(length, i -> f.apply(i * xrange / length + xmin));
 	}
 
 	@Override
@@ -82,13 +112,13 @@ public class StaticMonoList implements MonoList {
 	}
 
 	@Override
-	public double getLast (double value) {
-		return offset(value, -1);
+	public double getNext (double value) {
+		return offset(value, 1);
 	}
 
 	@Override
-	public double getNext (double value) {
-		return offset(value, 1);
+	public double getLast (double value) {
+		return offset(value, -1);
 	}
 
 	@Override
@@ -99,35 +129,5 @@ public class StaticMonoList implements MonoList {
 	@Override
 	public int length () {
 		return list.length;
-	}
-
-	public static StaticMonoList linear (int length) {
-		return of(length, d -> (double)d);
-	}
-
-	public static StaticMonoList exp (int length) {
-		return of(length, Math::exp);
-	}
-
-	public static StaticMonoList squared (int length) {
-		return of(length, i -> (double)(i * i));
-	}
-
-	public static StaticMonoList of (int length, double min, double max, Function<Double, Double> f, Function<Double, Double> fInv) throws IllegalArgumentException {
-		double xmin   = fInv.apply(min);
-		double xrange = fInv.apply(max) - xmin;
-		return of(length, i -> f.apply(i * xrange / length + xmin));
-	}
-
-	public static StaticMonoList of (int length, Function<Integer, Double> getter) throws IllegalArgumentException {
-		double[] list = new double[length];
-		for (int i = 0; i < length; i++) {
-			list[i] = getter.apply(i);
-		}
-		return of(list);
-	}
-
-	public static StaticMonoList of (double[] list) throws IllegalArgumentException {
-		return new StaticMonoList(list);
 	}
 }

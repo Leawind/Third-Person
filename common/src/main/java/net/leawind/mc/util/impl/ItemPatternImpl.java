@@ -1,6 +1,7 @@
 package net.leawind.mc.util.impl;
 
 
+import net.leawind.mc.util.api.ItemPattern;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class ItemPatternImpl implements net.leawind.mc.util.api.ItemPattern {
+public class ItemPatternImpl implements ItemPattern {
 	/**
 	 * 物品描述标识符
 	 * <p>
@@ -39,6 +40,11 @@ public class ItemPatternImpl implements net.leawind.mc.util.api.ItemPattern {
 	}
 
 	@Override
+	public boolean match (@Nullable ItemStack itemStack) {
+		return matchId(itemStack) && matchNbt(itemStack);
+	}
+
+	@Override
 	public boolean matchId (@Nullable ItemStack itemStack) {
 		if (descriptionId == null) {
 			return true;
@@ -56,13 +62,8 @@ public class ItemPatternImpl implements net.leawind.mc.util.api.ItemPattern {
 	}
 
 	@Override
-	public boolean match (@Nullable ItemStack itemStack) {
-		return matchId(itemStack) && matchNbt(itemStack);
-	}
-
-	@Override
-	public String toString () {
-		return (descriptionId == null ? "": descriptionId) + (tagExp == null ? "": tagExp);
+	public int hashCode () {
+		return hashCode;
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class ItemPatternImpl implements net.leawind.mc.util.api.ItemPattern {
 	}
 
 	@Override
-	public int hashCode () {
-		return hashCode;
+	public String toString () {
+		return (descriptionId == null ? "": descriptionId) + (tagExp == null ? "": tagExp);
 	}
 }

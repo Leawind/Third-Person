@@ -4,12 +4,6 @@ package net.leawind.mc.util.math.smoothvalue;
 import net.leawind.mc.util.math.LMath;
 
 public class ExpRotSmoothDouble extends ExpSmoothDouble {
-	public static ExpRotSmoothDouble createWithHalflife (double cycle, double halflife) {
-		ExpRotSmoothDouble v = new ExpRotSmoothDouble(cycle);
-		v.setHalflife(halflife);
-		return v;
-	}
-
 	private double cycle;
 
 	/**
@@ -18,6 +12,12 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	public ExpRotSmoothDouble (double cycle) {
 		super();
 		setCycle(cycle);
+	}
+
+	public static ExpRotSmoothDouble createWithHalflife (double cycle, double halflife) {
+		ExpRotSmoothDouble v = new ExpRotSmoothDouble(cycle);
+		v.setHalflife(halflife);
+		return v;
 	}
 
 	public double getCycle () {
@@ -29,15 +29,22 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	@Override
-	public void setValue (double d) {
-		d = LMath.floorMod(d, cycle);
-		super.setValue(d);
-	}
-
-	@Override
 	public void setTarget (double d) {
 		d = LMath.floorMod(d, cycle);
 		super.setTarget(d);
+	}
+
+	@Override
+	public void update (double period) {
+		super.preUpdate();
+		value  = LMath.floorMod(value, cycle);
+		target = LMath.floorMod(target, cycle);
+		double delta = LMath.floorMod(target - value, cycle);
+		if (delta > cycle / 2) {
+			delta -= cycle;
+		}
+		target = value + delta;
+		value  = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
 	}
 
 	@Override
@@ -59,20 +66,13 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	@Override
-	public void update (double period) {
-		super.preUpdate();
-		value  = LMath.floorMod(value, cycle);
-		target = LMath.floorMod(target, cycle);
-		double delta = LMath.floorMod(target - value, cycle);
-		if (delta > cycle / 2) {
-			delta -= cycle;
-		}
-		target = value + delta;
-		value  = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
+	public void setHalflife (double halflife) {
+		super.setHalflife(halflife);
 	}
 
 	@Override
-	public void setHalflife (double halflife) {
-		super.setHalflife(halflife);
+	public void setValue (double d) {
+		d = LMath.floorMod(d, cycle);
+		super.setValue(d);
 	}
 }

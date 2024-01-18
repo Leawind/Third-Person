@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetSchemeImpl implements CameraOffsetScheme {
-	private                boolean          isAiming = false;
 	private final @NotNull CameraOffsetMode normalMode;
 	private final @NotNull CameraOffsetMode aimingMode;
+	private                boolean          isAiming = false;
 
 	public CameraOffsetSchemeImpl (@NotNull Config config) {
 		normalMode = new CameraOffsetModeNormal(config);

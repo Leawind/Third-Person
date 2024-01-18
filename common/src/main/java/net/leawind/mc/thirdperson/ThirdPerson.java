@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 
 public class ThirdPerson {
 	public static final  Logger        LOGGER                   = LoggerFactory.getLogger(ModConstants.MOD_ID);
+	private static final ConfigManager CONFIG_MANAGER           = ConfigManager.create();
 	public static        float         lastPartialTick          = 1;
 	public static        double        lastCameraSetupTimeStamp = 0;
-	private static final ConfigManager CONFIG_MANAGER           = ConfigManager.create();
 
 	public static void init () {
 		CONFIG_MANAGER.tryLoad();

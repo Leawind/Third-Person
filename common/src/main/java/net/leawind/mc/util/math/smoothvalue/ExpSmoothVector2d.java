@@ -1,13 +1,13 @@
 package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.api.math.vector.Vector2d;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	public ExpSmoothVector2d () {
-		super(new Vector2d(0), new Vector2d(1), new Vector2d(0), new Vector2d(0), new Vector2d(0));
+		super(Vector2d.of(0), Vector2d.of(1), Vector2d.of(0), Vector2d.of(0), Vector2d.of(0));
 	}
 
 	public void setTarget (double x, double y) {
@@ -19,10 +19,6 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 		this.target.set(v);
 	}
 
-	public void setValue (double x, double y) {
-		this.value.set(x, y);
-	}
-
 	@Override
 	public void update (double period) {
 		super.preUpdate();
@@ -31,8 +27,8 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setSmoothFactor (Vector2d s) {
-		this.smoothFactor.set(s);
+	public void setValue (Vector2d v) {
+		value = v;
 	}
 
 	@Override
@@ -41,8 +37,8 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setValue (Vector2d v) {
-		value = v;
+	public void setSmoothFactor (Vector2d s) {
+		this.smoothFactor.set(s);
 	}
 
 	@Override
@@ -61,25 +57,25 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 
 	@Override
 	public void setMT (Vector2d multiplier, Vector2d time) {
-		if (multiplier.x < 0 || multiplier.x > 1) {
-			throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x);
-		} else if (multiplier.y < 0 || multiplier.y > 1) {
-			throw new IllegalArgumentException("Multiplier.y should in [0,1]: " + multiplier.y);
-		} else if (time.x < 0 || time.y < 0) {
+		if (multiplier.x() < 0 || multiplier.x() > 1) {
+			throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x());
+		} else if (multiplier.y() < 0 || multiplier.y() > 1) {
+			throw new IllegalArgumentException("Multiplier.y should in [0,1]: " + multiplier.y());
+		} else if (time.x() < 0 || time.y() < 0) {
 			throw new IllegalArgumentException("Invalid time, non-negative required, but got " + time);
 		}
-		this.smoothFactor.set(time.x == 0 ? 0: Math.pow(multiplier.x, 1 / time.x),//
-							  time.y == 0 ? 0: Math.pow(multiplier.y, 1 / time.y));
+		this.smoothFactor.set(time.x() == 0 ? 0: Math.pow(multiplier.x(), 1 / time.x()),//
+							  time.y() == 0 ? 0: Math.pow(multiplier.y(), 1 / time.y()));
 	}
 
 	@Override
 	public void setHalflife (Vector2d halflife) {
-		setMT(new Vector2d(0.5), halflife);
+		setMT(Vector2d.of(0.5), halflife);
 	}
 
 	@Override
 	public void setHalflife (double halflife) {
-		setMT(new Vector2d(0.5), new Vector2d(halflife));
+		setMT(Vector2d.of(0.5), Vector2d.of(halflife));
 	}
 
 	public void setSmoothFactorWeight (double w) {
@@ -92,5 +88,9 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 
 	public void setSmoothFactorWeight (double x, double y) {
 		this.smoothFactorWeight.set(x, y);
+	}
+
+	public void setValue (double x, double y) {
+		this.value.set(x, y);
 	}
 }

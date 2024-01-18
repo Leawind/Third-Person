@@ -3,21 +3,17 @@ package net.leawind.mc.thirdperson.event;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.util.api.ModKeyMapping;
 import net.minecraft.client.Minecraft;
 
 @SuppressWarnings("unused")
 public interface ThirdPersonKeys {
-	private static String getId (String name) {
-		return "key." + ModConstants.MOD_ID + "." + name;
-	}
-
 	ModKeyMapping ADJUST_POSITION   = ModKeyMapping.of(getId("adjust_position"), InputConstants.KEY_Z, ModConstants.KEY_CATEGORY)    //
 												   .onDown(ThirdPersonEvents::onStartAdjustingCameraOffset)    //
 												   .onUp(ThirdPersonEvents::onStopAdjustingCameraOffset);
@@ -61,6 +57,10 @@ public interface ThirdPersonKeys {
 		Config config = ThirdPerson.getConfig();
 		config.lock_camera_pitch_angle = !config.lock_camera_pitch_angle;
 	});
+
+	private static String getId (String name) {
+		return "key." + ModConstants.MOD_ID + "." + name;
+	}
 
 	static void register () {
 		ModKeyMapping.registerAll();

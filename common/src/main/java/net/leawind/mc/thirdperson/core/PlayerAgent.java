@@ -1,12 +1,12 @@
 package net.leawind.mc.thirdperson.core;
 
 
-import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.smoothvalue.SmoothDouble;
-import net.leawind.mc.util.math.vector.Vector2d;
-import net.leawind.mc.util.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.smoothvalue.SmoothDouble;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,18 +17,11 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 public final class PlayerAgent {
-	public static final @NotNull Vector2d     impulseHorizon = new Vector2d(0);
-	public static final @NotNull Vector3d     impulse        = new Vector3d(0);
+	public static final @NotNull Vector2d     impulseHorizon = Vector2d.of(0);
+	public static final @NotNull Vector3d     impulse        = Vector3d.of(0);
 	public static final @NotNull SmoothDouble smoothXRot     = new SmoothDouble(d -> d);
 	public static                boolean      wasInterecting = false;
 	public static                boolean      wasAiming      = false;
-
-	public static void resetSmoothRotations () {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.player != null) {
-			smoothXRot.set(mc.player.getXRot());
-		}
-	}
 
 	public static void updateSmoothRotations (double period) {
 	}
@@ -49,6 +42,13 @@ public final class PlayerAgent {
 			if (mc.player != null) {
 				resetSmoothRotations();
 			}
+		}
+	}
+
+	public static void resetSmoothRotations () {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null) {
+			smoothXRot.set(mc.player.getXRot());
 		}
 	}
 
@@ -73,6 +73,46 @@ public final class PlayerAgent {
 			double absoluteRotDegree = LMath.rotationDegreeFromDirection(impulseHorizon);
 			turnToRotation(absoluteRotDegree, 0, mc.options.keySprint.isDown());
 		}
+	}
+
+	public static void turnToDirection (Vector3d v, boolean isInstantly) {
+		Vector2d rotation = LMath.rotationDegreeFromDirection(v);
+		turnToRotation(rotation, isInstantly);
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param y           偏航角
+	 * @param x           俯仰角
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnToRotation (double y, double x, boolean isInstantly) {
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null && CameraAgent.isControlledCamera()) {
+			if (isInstantly) {
+				mc.player.setYRot((float)y);
+				smoothXRot.update(x);
+			} else {
+				double previousY = mc.player.getViewYRot(ThirdPerson.lastPartialTick);
+				double deltaY    = ((y - previousY) % 360 + 360) % 360;
+				if (deltaY > 180) {
+					deltaY -= 360;
+				}
+				mc.player.turn(deltaY, 0);
+				smoothXRot.update(x);
+			}
+		}
+	}
+
+	/**
+	 * 设置玩家朝向
+	 *
+	 * @param rot         朝向
+	 * @param isInstantly 是否瞬间转动
+	 */
+	public static void turnToRotation (Vector2d rot, boolean isInstantly) {
+		turnToRotation(rot.y(), rot.x(), isInstantly);
 	}
 
 	@PerformanceSensitive
@@ -111,31 +151,6 @@ public final class PlayerAgent {
 	}
 
 	/**
-	 * 设置玩家朝向
-	 *
-	 * @param y           偏航角
-	 * @param x           俯仰角
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnToRotation (double y, double x, boolean isInstantly) {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.player != null && CameraAgent.isControlledCamera()) {
-			if (isInstantly) {
-				mc.player.setYRot((float)y);
-				smoothXRot.update(x);
-			} else {
-				double previousY = mc.player.getViewYRot(ThirdPerson.lastPartialTick);
-				double deltaY    = ((y - previousY) % 360 + 360) % 360;
-				if (deltaY > 180) {
-					deltaY -= 360;
-				}
-				mc.player.turn(deltaY, 0);
-				smoothXRot.update(x);
-			}
-		}
-	}
-
-	/**
 	 * 让玩家朝向相机的落点
 	 */
 	public static void turnToCameraHitResult (boolean isInstantly) {
@@ -152,7 +167,7 @@ public final class PlayerAgent {
 	 * 让玩家朝向与相机相同
 	 */
 	public static void turnToCameraRotation (boolean isInstantly) {
-		turnToRotation(CameraAgent.relativeRotation.y + 180, -CameraAgent.relativeRotation.x, isInstantly);
+		turnToRotation(CameraAgent.relativeRotation.y() + 180, -CameraAgent.relativeRotation.x(), isInstantly);
 	}
 
 	/**
@@ -165,21 +180,6 @@ public final class PlayerAgent {
 		Vector3d eyePosition      = LMath.toVector3d(Minecraft.getInstance().player.getEyePosition(ThirdPerson.lastPartialTick));
 		Vector3d playerViewVector = pos.copy().sub(eyePosition);
 		turnToDirection(playerViewVector, isInstantly);
-	}
-
-	public static void turnToDirection (Vector3d v, boolean isInstantly) {
-		Vector2d rotation = LMath.rotationDegreeFromDirection(v);
-		turnToRotation(rotation, isInstantly);
-	}
-
-	/**
-	 * 设置玩家朝向
-	 *
-	 * @param rot         朝向
-	 * @param isInstantly 是否瞬间转动
-	 */
-	public static void turnToRotation (Vector2d rot, boolean isInstantly) {
-		turnToRotation(rot.y, rot.x, isInstantly);
 	}
 
 	/**

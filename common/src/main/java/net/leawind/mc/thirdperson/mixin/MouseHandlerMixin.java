@@ -4,7 +4,7 @@ package net.leawind.mc.thirdperson.mixin;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
-import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +29,7 @@ public class MouseHandlerMixin {
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && ModReferee.isAdjustingCameraOffset()) {
-			ThirdPersonEvents.onAdjustingCameraOffset(new Vector2d(accumulatedDX, accumulatedDY));
+			ThirdPersonEvents.onAdjustingCameraOffset(Vector2d.of(accumulatedDX, accumulatedDY));
 			accumulatedDX = 0;
 			accumulatedDY = 0;
 			ci.cancel();

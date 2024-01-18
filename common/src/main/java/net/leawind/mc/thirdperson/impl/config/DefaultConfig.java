@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public final class DefaultConfig extends AbstractConfig {
+	private static final DefaultConfig instance = (DefaultConfig)setToDefault(new DefaultConfig());
+
 	public static AbstractConfig setToDefault (AbstractConfig config) {
 		config.is_mod_enable           = true;
 		config.lock_camera_pitch_angle = false;
@@ -62,8 +64,6 @@ public final class DefaultConfig extends AbstractConfig {
 		config.use_aim_item_rules            = new ArrayList<>();
 		return config;
 	}
-
-	private static final DefaultConfig instance = (DefaultConfig)setToDefault(new DefaultConfig());
 
 	public static @NotNull DefaultConfig get () {
 		return instance;

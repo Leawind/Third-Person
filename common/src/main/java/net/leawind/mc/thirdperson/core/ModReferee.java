@@ -2,11 +2,11 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.vector.Vector3d;
 import net.leawind.mc.thirdperson.event.ThirdPersonKeys;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.util.api.ItemPattern;
+import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,10 +30,10 @@ public final class ModReferee {
 	}
 
 	/**
-	 * 根据玩家的按键判断玩家是否想瞄准
+	 * 当前是否是第三人称
 	 */
-	public static boolean doesPlayerWantToAim () {
-		return isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
+	public static boolean isThirdPerson () {
+		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 
 	/**
@@ -92,6 +92,13 @@ public final class ModReferee {
 	}
 
 	/**
+	 * 根据玩家的按键判断玩家是否想瞄准
+	 */
+	public static boolean doesPlayerWantToAim () {
+		return isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
+	}
+
+	/**
 	 * 判断是否在飞行
 	 */
 	public static boolean isAttachedEntityFallFlying () {
@@ -100,12 +107,5 @@ public final class ModReferee {
 			return livingEntity.isFallFlying();
 		}
 		return false;
-	}
-
-	/**
-	 * 当前是否是第三人称
-	 */
-	public static boolean isThirdPerson () {
-		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 }

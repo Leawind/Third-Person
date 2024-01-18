@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.api.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.cameraoffset.CameraOffsetSchemeImpl;
+import net.leawind.mc.thirdperson.impl.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 public interface CameraOffsetScheme {

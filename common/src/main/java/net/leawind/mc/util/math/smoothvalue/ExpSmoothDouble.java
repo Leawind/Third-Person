@@ -7,14 +7,14 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
+	public ExpSmoothDouble () {
+		super(0D, 1D, 0D, 0D, 0D);
+	}
+
 	public static ExpSmoothDouble createWithHalflife (double halflife) {
 		ExpSmoothDouble v = new ExpSmoothDouble();
 		v.setHalflife(halflife);
 		return v;
-	}
-
-	public ExpSmoothDouble () {
-		super(0D, 1D, 0D, 0D, 0D);
 	}
 
 	public void setTarget (double target) {
@@ -23,14 +23,6 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
 	public void setSmoothFactor (double k, double t) {
 		this.smoothFactor = Math.pow(k, 1 / t);
-	}
-
-	public void setSmoothFactorWeight (double weight) {
-		this.smoothFactorWeight = weight;
-	}
-
-	public void setSmoothFactorWeight (Double weight) {
-		this.smoothFactorWeight = weight;
 	}
 
 	@Override
@@ -45,17 +37,13 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public void set (Double d) {
-		value = target = d;
-	}
-
-	public void setValue (double d) {
+	public void setValue (Double d) {
 		value = d;
 	}
 
 	@Override
-	public void setValue (Double d) {
-		value = d;
+	public void set (Double d) {
+		value = target = d;
 	}
 
 	@Override
@@ -91,5 +79,17 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	@Override
 	public void setHalflife (double halflife) {
 		setMT(0.5, halflife);
+	}
+
+	public void setSmoothFactorWeight (double weight) {
+		this.smoothFactorWeight = weight;
+	}
+
+	public void setSmoothFactorWeight (Double weight) {
+		this.smoothFactorWeight = weight;
+	}
+
+	public void setValue (double d) {
+		value = d;
 	}
 }

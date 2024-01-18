@@ -8,15 +8,15 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.core.PlayerAgent;
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.math.LMath;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,6 +41,42 @@ public interface ThirdPersonEvents {
 		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
 		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
 		config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
+	}
+
+	/**
+	 * 当玩家死亡后重生或加入新的维度时触发
+	 */
+	private static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
+		onPlayerReset();
+		ThirdPerson.LOGGER.info("on Client player respawn");
+	}
+
+	private static void onClientPlayerJoin (LocalPlayer player) {
+		onPlayerReset();
+		ThirdPerson.LOGGER.info("on Client player join");
+	}
+
+	/**
+	 * 使用滚轮调整距离
+	 *
+	 * @param minecraft mc
+	 * @param amount    向前滚是+1，向后滚是-1
+	 */
+	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
+		Config config = ThirdPerson.getConfig();
+		if (ModReferee.isAdjustingCameraDistance()) {
+			double dist = config.cameraOffsetScheme.getMode().getMaxDistance();
+			dist = config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
+			config.cameraOffsetScheme.getMode().setMaxDistance(dist);
+			return EventResult.interruptFalse();
+		} else {
+			return EventResult.pass();
+		}
+	}
+
+	private static void onPlayerReset () {
+		CameraAgent.reset();
+		PlayerAgent.reset();
 	}
 
 	/**
@@ -69,42 +105,6 @@ public interface ThirdPersonEvents {
 		}
 	}
 
-	/**
-	 * 当玩家死亡后重生或加入新的维度时触发
-	 */
-	private static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
-		onPlayerReset();
-		ThirdPerson.LOGGER.info("on Client player respawn");
-	}
-
-	private static void onClientPlayerJoin (LocalPlayer player) {
-		onPlayerReset();
-		ThirdPerson.LOGGER.info("on Client player join");
-	}
-
-	private static void onPlayerReset () {
-		CameraAgent.reset();
-		PlayerAgent.reset();
-	}
-
-	/**
-	 * 使用滚轮调整距离
-	 *
-	 * @param minecraft mc
-	 * @param amount    向前滚是+1，向后滚是-1
-	 */
-	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
-		Config config = ThirdPerson.getConfig();
-		if (ModReferee.isAdjustingCameraDistance()) {
-			double dist = config.cameraOffsetScheme.getMode().getMaxDistance();
-			dist = config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
-			config.cameraOffsetScheme.getMode().setMaxDistance(dist);
-			return EventResult.interruptFalse();
-		} else {
-			return EventResult.pass();
-		}
-	}
-
 	static void onStartAdjustingCameraOffset () {
 	}
 
@@ -124,21 +124,21 @@ public interface ThirdPersonEvents {
 		}
 		Config             config     = ThirdPerson.getConfig();
 		Window             window     = Minecraft.getInstance().getWindow();
-		Vector2d           screenSize = new Vector2d(window.getScreenWidth(), window.getScreenHeight());
+		Vector2d           screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
 		CameraOffsetScheme scheme     = config.cameraOffsetScheme;
 		CameraOffsetMode   mode       = scheme.getMode();
 		if (mode.isCentered()) {
 			// 相机在头顶，只能上下调整
 			double topOffset = mode.getCenterOffsetRatio();
-			topOffset += -movement.y / screenSize.y;
+			topOffset += -movement.y() / screenSize.y();
 			topOffset = LMath.clamp(topOffset, -1, 1);
 			mode.setCenterOffsetRatio(topOffset);
 		} else {
 			// 相机没固定在头顶，可以上下左右调整
-			Vector2d offset = mode.getSideOffsetRatio(new Vector2d());
+			Vector2d offset = mode.getSideOffsetRatio(Vector2d.of());
 			offset.sub(movement.div(screenSize));
 			offset.clamp(-1, 1);
-			scheme.setSide(Math.signum(offset.x));
+			scheme.setSide(Math.signum(offset.x()));
 			mode.setSideOffsetRatio(offset);
 		}
 	}
@@ -169,7 +169,7 @@ public interface ThirdPersonEvents {
 	static void onEnterThirdPerson () {
 		CameraAgent.reset();
 		PlayerAgent.reset();
-		PlayerAgent.wasAiming                   = false;
+		PlayerAgent.wasAiming                = false;
 		ModReferee.isToggleToAiming          = false;
 		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 	}
@@ -187,7 +187,7 @@ public interface ThirdPersonEvents {
 			x *= config.lock_camera_pitch_angle ? 0: -0.15;
 			if (y != 0 || x != 0) {
 				CameraAgent.lastCameraTurnTimeStamp = Blaze3D.getTime();
-				CameraAgent.relativeRotation.set(Mth.clamp(CameraAgent.relativeRotation.x + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (CameraAgent.relativeRotation.y + y) % 360f);
+				CameraAgent.relativeRotation.set(Mth.clamp(CameraAgent.relativeRotation.x() + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (CameraAgent.relativeRotation.y() + y) % 360f);
 			}
 		}
 	}

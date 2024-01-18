@@ -33,10 +33,10 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unused")
 public interface ItemPattern {
-	ItemPattern ANY              = of(null, null);
 	Pattern     RGX_REGULAR_ID   = Pattern.compile("^item\\.[a-z_]+\\.[a-z_]+$");
 	Pattern     RGX_PURE_ID      = Pattern.compile("^[a-z_]+$");
 	Pattern     RGX_NAMESPACE_ID = Pattern.compile("^[a-z_]+[.:][a-z_]+$");
+	ItemPattern ANY              = of(null, null);
 	Pattern     RGX_ID_NBT       = Pattern.compile("^[a-z.:_]+\\{.*}$");
 	Pattern     RGX_ID           = Pattern.compile("^[a-z.:_]+$");
 	Pattern     RGX_NBT          = Pattern.compile("^\\{.*}$");
@@ -51,35 +51,13 @@ public interface ItemPattern {
 	}
 
 	/**
-	 * 允许的格式：
+	 * 匹配物品
 	 * <p>
-	 * 完整格式：s -> s
-	 * <p>
-	 * item.minecraft.snowball
-	 * <p>
-	 * 简写格式：s -> "item.minecraft." + s
-	 * <p>
-	 * snowbow
-	 * <p>
-	 * 命名空间+物品id "item." + s.replace(':', '.')
-	 * <p>
-	 * minecraft.snowball
-	 * <p>
-	 * minecraft:snowball
+	 * 仅当 id 和 nbt 都匹配成功时，才匹配成功
+	 *
+	 * @param itemStack 物品槽
 	 */
-	static @Nullable String parseDescriptionId (@Nullable String idExp) throws IllegalArgumentException {
-		if (idExp == null || idExp.isEmpty()) {
-			return null;
-		} else if (RGX_REGULAR_ID.matcher(idExp).matches()) {
-			return idExp;
-		} else if (RGX_PURE_ID.matcher(idExp).matches()) {
-			return "item.minecraft." + idExp;
-		} else if (RGX_NAMESPACE_ID.matcher(idExp).matches()) {
-			return "item." + idExp.replace(':', '.');
-		} else {
-			throw new IllegalArgumentException("Invalid item description id: " + idExp);
-		}
-	}
+	boolean match (@Nullable ItemStack itemStack);
 
 	/**
 	 * 提供错误信息
@@ -130,6 +108,37 @@ public interface ItemPattern {
 		return new ItemPatternImpl(parseDescriptionId(idExp), parsePatternTag(tagExp));
 	}
 
+	/**
+	 * 允许的格式：
+	 * <p>
+	 * 完整格式：s -> s
+	 * <p>
+	 * item.minecraft.snowball
+	 * <p>
+	 * 简写格式：s -> "item.minecraft." + s
+	 * <p>
+	 * snowbow
+	 * <p>
+	 * 命名空间+物品id "item." + s.replace(':', '.')
+	 * <p>
+	 * minecraft.snowball
+	 * <p>
+	 * minecraft:snowball
+	 */
+	static @Nullable String parseDescriptionId (@Nullable String idExp) throws IllegalArgumentException {
+		if (idExp == null || idExp.isEmpty()) {
+			return null;
+		} else if (RGX_REGULAR_ID.matcher(idExp).matches()) {
+			return idExp;
+		} else if (RGX_PURE_ID.matcher(idExp).matches()) {
+			return "item.minecraft." + idExp;
+		} else if (RGX_NAMESPACE_ID.matcher(idExp).matches()) {
+			return "item." + idExp.replace(':', '.');
+		} else {
+			throw new IllegalArgumentException("Invalid item description id: " + idExp);
+		}
+	}
+
 	static @Nullable CompoundTag parsePatternTag (@Nullable String tagExp) throws IllegalArgumentException {
 		if (tagExp == null) {
 			return null;
@@ -172,13 +181,4 @@ public interface ItemPattern {
 	 * @param itemStack 物品槽
 	 */
 	boolean matchNbt (@Nullable ItemStack itemStack);
-
-	/**
-	 * 匹配物品
-	 * <p>
-	 * 仅当 id 和 nbt 都匹配成功时，才匹配成功
-	 *
-	 * @param itemStack 物品槽
-	 */
-	boolean match (@Nullable ItemStack itemStack);
 }
