@@ -25,7 +25,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		final ConfigBuilder builder = me.shedaniel.clothconfig2.api.ConfigBuilder.create()    //
 																				 .setParentScreen(parent)    //
 																				 .setTitle(ConfigManager.getText("text.title"))    //
-																				 .setSavingRunnable(ThirdPerson.getConfigManager()::trySave);
+																				 .setSavingRunnable(ThirdPerson.CONFIG_MANAGER::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		DefaultConfig            defaults     = DefaultConfig.get();
 		//==================================================================================================================================================//

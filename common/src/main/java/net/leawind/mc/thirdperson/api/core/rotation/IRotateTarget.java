@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.api.core;
+package net.leawind.mc.thirdperson.api.core.rotation;
 
 
 import net.leawind.mc.util.api.math.vector.Vector2d;

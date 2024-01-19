@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.core.rotation;
+package net.leawind.mc.thirdperson.api.core.rotation;
 
 
 /**

@@ -1,14 +1,14 @@
-package net.leawind.mc.thirdperson.core.rotation;
+package net.leawind.mc.thirdperson.impl.core.rotation;
 
 
-import net.leawind.mc.thirdperson.api.core.IRotateTarget;
+import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.api.core.rotation.IRotateTarget;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.LMath;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -19,7 +19,7 @@ public enum RotateTarget implements IRotateTarget {
 	/**
 	 * 保持当前朝向，不旋转
 	 */
-	NONE(t -> null),
+	NONE(t -> ThirdPerson.ENTITY_AGENT.getRotation(1)),
 	/**
 	 * 与相机朝向相同
 	 */
@@ -49,7 +49,7 @@ public enum RotateTarget implements IRotateTarget {
 	 * 获取玩家当前的目标朝向
 	 */
 	@Override
-	public @Nullable Vector2d getRotation (float partialTicks) {
+	public @NotNull Vector2d getRotation (float partialTicks) {
 		return rotationGetter.apply(partialTicks);
 	}
 }

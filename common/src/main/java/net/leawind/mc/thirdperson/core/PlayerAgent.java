@@ -8,7 +8,6 @@ import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.SmoothDouble;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
@@ -180,15 +179,5 @@ public final class PlayerAgent {
 		Vector3d eyePosition      = LMath.toVector3d(Minecraft.getInstance().player.getEyePosition(ThirdPerson.lastPartialTick));
 		Vector3d playerViewVector = pos.copy().sub(eyePosition);
 		turnToDirection(playerViewVector, isInstantly);
-	}
-
-	/**
-	 * 玩家是否在交互
-	 * <p>
-	 * 即是否按下了 使用|攻击|选取 键
-	 */
-	public static boolean isInterecting () {
-		Options mcOptions = Minecraft.getInstance().options;
-		return mcOptions.keyUse.isDown() || mcOptions.keyAttack.isDown() || mcOptions.keyPickItem.isDown();
 	}
 }

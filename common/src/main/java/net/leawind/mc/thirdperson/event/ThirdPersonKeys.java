@@ -32,7 +32,7 @@ public interface ThirdPersonKeys {
 	ModKeyMapping OPEN_CONFIG_MENU  = ModKeyMapping.of(getId("open_config_menu"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.screen == null) {
-			mc.setScreen(ThirdPerson.getConfigManager().getConfigScreen(null));
+			mc.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
 		}
 	});
 	ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ModConstants.KEY_CATEGORY).onDown(() -> {

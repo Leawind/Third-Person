@@ -38,8 +38,8 @@ public interface ThirdPersonEvents {
 		Config config = ThirdPerson.getConfig();
 		CameraAgent.updateSmoothEyePosition(0.05);
 		PlayerAgent.updateSmoothRotations(0.05);
-		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
-		PlayerAgent.wasAiming      = ModReferee.isCameraEntityAiming();
+		PlayerAgent.wasInterecting = ThirdPerson.ENTITY_AGENT.isInterecting();
+		PlayerAgent.wasAiming      = ThirdPerson.ENTITY_AGENT.isAiming() || ModReferee.doesPlayerWantToAim();
 		config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
 	}
 
@@ -109,7 +109,7 @@ public interface ThirdPersonEvents {
 	}
 
 	static void onStopAdjustingCameraOffset () {
-		ThirdPerson.getConfigManager().trySave();
+		ThirdPerson.CONFIG_MANAGER.trySave();
 	}
 
 	/**
@@ -147,7 +147,7 @@ public interface ThirdPersonEvents {
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
 	static void onBeforeHandleKeybinds () {
-		PlayerAgent.wasInterecting = PlayerAgent.isInterecting();
+		PlayerAgent.wasInterecting = ModReferee.isInterecting();
 		if (PlayerAgent.wasInterecting) {
 			// 该方法中使用了mixin，修改了 viewVector
 			Minecraft.getInstance().gameRenderer.pick(1.0f);

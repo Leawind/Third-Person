@@ -8,6 +8,7 @@ import net.leawind.mc.util.api.ItemPattern;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.LMath;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -76,6 +77,7 @@ public final class ModReferee {
 	 * <p>
 	 * 根据实体手持物品判断
 	 */
+	@Deprecated
 	public static boolean isCameraEntityAiming () {
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		Config config       = ThirdPerson.getConfig();
@@ -101,11 +103,23 @@ public final class ModReferee {
 	/**
 	 * 判断是否在飞行
 	 */
+	@Deprecated
 	public static boolean isAttachedEntityFallFlying () {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
 			return livingEntity.isFallFlying();
 		}
 		return false;
+	}
+
+	/**
+	 * 玩家是否在交互
+	 * <p>
+	 * 即是否按下了 使用|攻击|选取 键
+	 */
+	@Deprecated
+	public static boolean isInterecting () {
+		Options mcOptions = Minecraft.getInstance().options;
+		return mcOptions.keyUse.isDown() || mcOptions.keyAttack.isDown() || mcOptions.keyPickItem.isDown();
 	}
 }
