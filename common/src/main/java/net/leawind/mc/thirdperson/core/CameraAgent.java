@@ -104,13 +104,6 @@ public final class CameraAgent {
 	 */
 	@PerformanceSensitive
 	public static void onCameraSetup (double period) {
-		Minecraft mc = Minecraft.getInstance();
-		if (!mc.isPaused()) {
-			// 平滑更新距离
-			updateSmoothVirtualDistance(period);
-			// 平滑更新相机偏移量
-			updateSmoothOffsetRatio(period);
-		}
 		// 设置相机朝向和位置
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
@@ -123,6 +116,17 @@ public final class CameraAgent {
 		//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
 		//				applyCamera();
 		//			}
+	}
+
+	@PerformanceSensitive
+	public static void onPreRender(double period, float partialTick){
+		Minecraft mc = Minecraft.getInstance();
+		if (!mc.isPaused()) {
+			// 平滑更新距离
+			updateSmoothVirtualDistance(period);
+			// 平滑更新相机偏移量
+			updateSmoothOffsetRatio(period);
+		}
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
@@ -310,7 +314,7 @@ public final class CameraAgent {
 		Vec3   pickEnd      = viewVector.scale(pickRange).add(pickStart);
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		assert cameraEntity != null;
-		return cameraEntity.level.clip(new ClipContext(pickStart, pickEnd, PlayerAgent.wasAiming ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
+		return cameraEntity.level.clip(new ClipContext(pickStart, pickEnd, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
 	}
 
 	public static @NotNull HitResult pick () {

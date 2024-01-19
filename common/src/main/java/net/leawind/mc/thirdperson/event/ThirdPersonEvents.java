@@ -31,16 +31,14 @@ public interface ThirdPersonEvents {
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 	}
 
-	private static void onClientTickPre (Minecraft mc) {
-		if (mc.isPaused()) {
+	private static void onClientTickPre (Minecraft minecraft) {
+		if (minecraft.isPaused()) {
 			return;
 		}
+		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		Config config = ThirdPerson.getConfig();
 		CameraAgent.updateSmoothEyePosition(0.05);
-		PlayerAgent.updateSmoothRotations(0.05);
-		PlayerAgent.wasInterecting = ThirdPerson.ENTITY_AGENT.isInterecting();
-		PlayerAgent.wasAiming      = ThirdPerson.ENTITY_AGENT.isAiming() || ModReferee.doesPlayerWantToAim();
-		config.cameraOffsetScheme.setAiming(PlayerAgent.wasAiming);
+		config.cameraOffsetScheme.setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
 	}
 
 	/**
@@ -75,6 +73,7 @@ public interface ThirdPersonEvents {
 	}
 
 	private static void onPlayerReset () {
+		ThirdPerson.ENTITY_AGENT.reset();
 		CameraAgent.reset();
 		PlayerAgent.reset();
 	}
@@ -99,9 +98,18 @@ public interface ThirdPersonEvents {
 		if (ModReferee.isThirdPerson()) {
 			CameraAgent.onCameraSetup(period);
 		}
-		PlayerAgent.onCameraSetup(period);
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
+		}
+	}
+
+	static void onPreRender (float partialTick) {
+		double now    = Blaze3D.getTime();
+		double period = now - ThirdPerson.lastRenderTickTimeStamp;
+		ThirdPerson.lastRenderTickTimeStamp = now;
+		if (CameraAgent.isAvailable()) {
+			ThirdPerson.ENTITY_AGENT.onPreRender(period, partialTick);
+			CameraAgent.onPreRender(period, partialTick);
 		}
 	}
 
@@ -170,7 +178,7 @@ public interface ThirdPersonEvents {
 		CameraAgent.reset();
 		PlayerAgent.reset();
 		PlayerAgent.wasAiming                = false;
-		ModReferee.isToggleToAiming          = false;
+		ThirdPerson.isToggleToAiming         = false;
 		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 	}
 

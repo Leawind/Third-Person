@@ -14,7 +14,7 @@ public enum SmoothType {
 	/**
 	 * 在 client tick 中更新并记录旧值
 	 * <p>
-	 * 在 render tick 中根据 partialTicks 应用新值与旧值的线性插值
+	 * 在 render tick 中根据 partialTick 应用新值与旧值的线性插值
 	 */
 	LINEAR_SMOOTH,
 	/**

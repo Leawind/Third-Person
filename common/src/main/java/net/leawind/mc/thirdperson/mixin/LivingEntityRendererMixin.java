@@ -20,7 +20,7 @@ public class LivingEntityRendererMixin {
 	 * 立即返回，即可阻止该实体的渲染，实现隐藏玩家实体。
 	 */
 	@Inject(method="render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;" + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at=@At(value="HEAD"), cancellable=true)
-	public void render (LivingEntity entity, float f, float partialTicks, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+	public void render (LivingEntity entity, float f, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
 		if (entity == Minecraft.getInstance().cameraEntity) {
 			if (CameraAgent.wasCameraCloseToEntity) {
 				ci.cancel();

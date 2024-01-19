@@ -18,6 +18,11 @@ public class ThirdPerson {
 	public static       EntityAgent   ENTITY_AGENT;
 	public static       float         lastPartialTick          = 1;
 	public static       double        lastCameraSetupTimeStamp = 0;
+	public static       double        lastRenderTickTimeStamp  = 0;
+	/**
+	 * 是否通过按键切换到了瞄准模式
+	 */
+	public static       boolean       isToggleToAiming         = false;
 
 	public static void init () {
 		ENTITY_AGENT = EntityAgent.create(Minecraft.getInstance());

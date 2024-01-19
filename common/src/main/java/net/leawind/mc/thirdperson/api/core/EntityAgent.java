@@ -30,7 +30,10 @@ public interface EntityAgent {
 	 */
 	void reset ();
 
-	void onRenderTickPre ();
+	/**
+	 * @param period 相邻两次 render tick 的时间差，单位：s
+	 */
+	void onPreRender (double period, float partialTick);
 
 	void onClientTickPre ();
 
@@ -52,27 +55,27 @@ public interface EntityAgent {
 	/**
 	 * 直接从实体获取眼睛坐标
 	 */
-	@NotNull Vector3d getRawEyePosition (float partialTicks) throws NullPointerException;
+	@NotNull Vector3d getRawEyePosition (float partialTick) throws NullPointerException;
 
 	/**
 	 * 直接从实体获取坐标
 	 */
-	@NotNull Vector3d getRawPosition (float partialTicks) throws NullPointerException;
+	@NotNull Vector3d getRawPosition (float partialTick) throws NullPointerException;
 
 	/**
 	 * 直接从实体获取朝向
 	 */
-	@NotNull Vector2d getRawRotation (float partialTicks) throws NullPointerException;
+	@NotNull Vector2d getRawRotation (float partialTick) throws NullPointerException;
 
 	/**
 	 * 获取平滑的眼睛坐标
 	 */
-	@NotNull Vector3d getSmoothEyePosition (float partialTicks);
+	@NotNull Vector3d getSmoothEyePosition (float partialTick);
 
 	/**
 	 * 获取实体朝向
 	 */
-	@NotNull Vector2d getRotation (float partialTicks);
+	@NotNull Vector2d getRotation (float partialTick);
 
 	/**
 	 * 实体是否在交互
@@ -100,4 +103,9 @@ public interface EntityAgent {
 	 * {@link ModReferee#isCameraEntityAiming}
 	 */
 	boolean isAiming ();
+
+	/**
+	 * 在上一个 clientTick 中是否在瞄准
+	 */
+	boolean wasAiming ();
 }

@@ -8,5 +8,5 @@ public interface IRotateTarget {
 	/**
 	 * 获取玩家当前的目标朝向
 	 */
-	@Nullable Vector2d getRotation (float partialTicks);
+	@Nullable Vector2d getRotation (float partialTick);
 }

@@ -49,7 +49,7 @@ public enum RotateTarget implements IRotateTarget {
 	 * 获取玩家当前的目标朝向
 	 */
 	@Override
-	public @NotNull Vector2d getRotation (float partialTicks) {
-		return rotationGetter.apply(partialTicks);
+	public @NotNull Vector2d getRotation (float partialTick) {
+		return rotationGetter.apply(partialTick);
 	}
 }

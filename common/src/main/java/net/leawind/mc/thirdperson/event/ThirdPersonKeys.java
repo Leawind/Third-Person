@@ -50,7 +50,7 @@ public interface ThirdPersonKeys {
 	});
 	ModKeyMapping TOGGLE_AIMING     = ModKeyMapping.of(getId("toggle_aiming"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
-			ModReferee.isToggleToAiming = !ModReferee.isToggleToAiming;
+			ThirdPerson.isToggleToAiming = !ThirdPerson.isToggleToAiming;
 		}
 	});
 	ModKeyMapping TOGGLE_PITCH_LOCK = ModKeyMapping.of(getId("toggle_pitch_lock"), ModConstants.KEY_CATEGORY).onDown(() -> {

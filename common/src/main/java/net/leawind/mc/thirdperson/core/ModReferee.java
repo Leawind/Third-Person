@@ -14,11 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 public final class ModReferee {
 	/**
-	 * 是否通过按键切换到了瞄准模式
-	 */
-	public static boolean isToggleToAiming = false;
-
-	/**
 	 * <p>
 	 * 是否正在调整摄像机偏移量
 	 */
@@ -42,7 +37,7 @@ public final class ModReferee {
 	 */
 	public static boolean shouldRenderCrosshair () {
 		Config config = ThirdPerson.getConfig();
-		return CameraAgent.isAvailable() && (PlayerAgent.wasAiming ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming);
+		return CameraAgent.isAvailable() && (ThirdPerson.ENTITY_AGENT.wasAiming() ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming);
 	}
 
 	/**
@@ -97,7 +92,7 @@ public final class ModReferee {
 	 * 根据玩家的按键判断玩家是否想瞄准
 	 */
 	public static boolean doesPlayerWantToAim () {
-		return isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
+		return ThirdPerson.isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
 	}
 
 	/**
