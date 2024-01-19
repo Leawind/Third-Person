@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
-import net.leawind.mc.thirdperson.core.PlayerAgent;
+import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +19,7 @@ public class LocalPlayerMixin {
 	@Inject(method="serverAiStep", at=@At(value="TAIL"))
 	public void serverAiStep_inject_tail (CallbackInfo ci) {
 		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson() && CameraAgent.isControlledCamera()) {
-			PlayerAgent.onServerAiStep();
+			ThirdPersonEvents.onServerAiStep();
 		}
 	}
 }

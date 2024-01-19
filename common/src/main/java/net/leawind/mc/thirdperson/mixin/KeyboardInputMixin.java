@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.mixin;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
-import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.LMath;
@@ -39,16 +38,15 @@ public class KeyboardInputMixin {
 			leftImpulse.mul(cameraLeftImpulse);
 			lookImpulseHorizon.mul(cameraLookImpulse);
 			leftImpulseHorizon.mul(cameraLeftImpulse);
-			//求和
-			lookImpulse.add(leftImpulse, PlayerAgent.impulse);
-			lookImpulseHorizon.add(leftImpulseHorizon, PlayerAgent.impulseHorizon);
-			if (PlayerAgent.impulseHorizon.length() > 1E-5 && mc.player != null) {
-				PlayerAgent.impulseHorizon.normalize();
+			lookImpulse.add(leftImpulse, ThirdPerson.impulse);
+			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPerson.impulseHorizon);
+			if (ThirdPerson.impulseHorizon.length() > 1E-5 && mc.player != null) {
+				ThirdPerson.impulseHorizon.normalize();
 				float    playerYRot        = mc.player.getViewYRot(ThirdPerson.lastPartialTick);
 				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
 				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
-				that.forwardImpulse = (float)(PlayerAgent.impulseHorizon.dot(playerLookHorizon));
-				that.leftImpulse    = (float)(PlayerAgent.impulseHorizon.dot(playerLeftHorizon));
+				that.forwardImpulse = (float)(ThirdPerson.impulseHorizon.dot(playerLookHorizon));
+				that.leftImpulse    = (float)(ThirdPerson.impulseHorizon.dot(playerLeftHorizon));
 				if (isMoveSlowly) {
 					that.forwardImpulse *= sneakingSpeedBonus;
 					that.leftImpulse *= sneakingSpeedBonus;

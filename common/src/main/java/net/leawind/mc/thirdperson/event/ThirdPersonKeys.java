@@ -7,8 +7,8 @@ import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
-import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.ModKeyMapping;
 import net.minecraft.client.Minecraft;
 
@@ -22,7 +22,7 @@ public interface ThirdPersonKeys {
 		Config config = ThirdPerson.getConfig();
 		if (ModReferee.isThirdPerson()) {
 			if (config.is_mod_enable) {
-				PlayerAgent.turnToCameraRotation(true);
+				ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
 			} else {
 				ThirdPersonEvents.onEnterThirdPerson();
 			}

@@ -4,9 +4,10 @@ package net.leawind.mc.thirdperson.impl.core;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
+import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.ItemPattern;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
@@ -15,8 +16,12 @@ import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
+import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -24,13 +29,19 @@ import java.util.Objects;
 public class EntityAgentImpl implements EntityAgent {
 	private final    Minecraft         minecraft;
 	private final    ExpSmoothVector3d smoothEyePosition;
-	private @NotNull RotateTarget      rotateTarget = RotateTarget.NONE;
+	/**
+	 * DOITNOW
+	 * <p>
+	 * apply in preRender
+	 */
+	private @NotNull RotateStrategy    rotateStrategy = RotateStrategy.NONE;
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
-	private          boolean           wasAiming    = false;
+	private          boolean           wasAiming      = false;
+	private          boolean           wasInterecting = false;
 
-	public EntityAgentImpl (Minecraft minecraft) {
+	public EntityAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
 		smoothEyePosition = new ExpSmoothVector3d();
 		smoothEyePosition.setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
@@ -45,8 +56,16 @@ public class EntityAgentImpl implements EntityAgent {
 	public void reset () {
 		ThirdPerson.lastPartialTick = minecraft.getFrameTime();
 		smoothEyePosition.set(getRawEyePosition(ThirdPerson.lastPartialTick));
+		wasAiming      = false;
+		wasInterecting = false;
 	}
 
+	@Override
+	public void setRotateStrategy (@NotNull RotateStrategy rotateStrategy) {
+		this.rotateStrategy = rotateStrategy;
+	}
+
+	@PerformanceSensitive
 	@Override
 	public void onPreRender (double period, float partialTick) {
 		Config config = ThirdPerson.getConfig();
@@ -54,22 +73,35 @@ public class EntityAgentImpl implements EntityAgent {
 			return;
 		}
 		if (isAiming() || ModReferee.doesPlayerWantToAim()) {
-			rotateTarget = RotateTarget.CAMERA_HIT_RESULT;
+			setRotateStrategy(RotateStrategy.CAMERA_HIT_RESULT);
+			// 侧身拉弓
+			if (config.auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
+				assert minecraft.player != null;
+				if (minecraft.player.isUsingItem() && minecraft.player.getUseItem().is(Items.BOW)) {
+					double k = minecraft.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
+					if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
+						k = -k;
+					}
+					minecraft.player.yBodyRot = (float)(k * 45 + minecraft.player.getYRot());
+				}
+			}
 		} else if (isFallFlying()) {
-			rotateTarget = RotateTarget.CAMERA_ROTATION;
+			setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
 		} else if (config.player_rotate_with_camera_when_not_aiming) {
-			rotateTarget = RotateTarget.CAMERA_ROTATION;
+			setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
 		} else if (config.auto_rotate_interacting && isInterecting()) {
-			rotateTarget = config.rotate_interacting_type      //
-						   ? RotateTarget.CAMERA_HIT_RESULT    //
-						   : RotateTarget.CAMERA_ROTATION;
+			setRotateStrategy(config.rotate_interacting_type      //
+							  ? RotateStrategy.CAMERA_HIT_RESULT    //
+							  : RotateStrategy.CAMERA_ROTATION);
 		}
+		// 设置玩家朝向
+		Vector2d rotation = rotateStrategy.getRotation(partialTick);
 	}
 
 	@Override
 	public void onClientTickPre () {
-		wasAiming = isAiming();
-		throw new RuntimeException("Method not implemented yet.");
+		wasAiming      = isAiming();
+		wasInterecting = isInterecting();
 	}
 
 	@Override
@@ -145,5 +177,10 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public boolean wasAiming () {
 		return wasAiming;
+	}
+
+	@Override
+	public boolean wasInterecting () {
+		return wasInterecting;
 	}
 }

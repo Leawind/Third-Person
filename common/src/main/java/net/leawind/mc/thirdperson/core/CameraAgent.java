@@ -25,30 +25,30 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class CameraAgent {
-	public static final @NotNull Camera            fakeCamera              = new Camera();
-	public static final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
+	public static final @NotNull             Camera            fakeCamera              = new Camera();
+	public static final @NotNull             Vector2d          relativeRotation        = Vector2d.of(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static final @NotNull ExpSmoothVector2d smoothOffsetRatio;
+	public static final @NotNull             ExpSmoothVector2d smoothOffsetRatio;
 	/**
 	 * 眼睛的平滑位置
 	 */
-	public static final @NotNull ExpSmoothVector3d smoothEyePosition;
+	@Deprecated public static final @NotNull ExpSmoothVector3d smoothEyePosition;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final @NotNull ExpSmoothDouble   smoothDistanceToEye;
-	public static @Nullable      BlockGetter       level;
-	public static @Nullable      Camera            camera;
+	public static final @NotNull             ExpSmoothDouble   smoothDistanceToEye;
+	public static @Nullable                  BlockGetter       level;
+	public static @Nullable                  Camera            camera;
 	/**
 	 * renderTick 中更新
 	 */
-	public static                boolean           wasCameraCloseToEntity  = false;
+	public static                            boolean           wasCameraCloseToEntity  = false;
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	public static                double            lastCameraTurnTimeStamp = 0;
+	public static                            double            lastCameraTurnTimeStamp = 0;
 
 	static {
 		smoothOffsetRatio = new ExpSmoothVector2d();
@@ -97,6 +97,17 @@ public final class CameraAgent {
 		}
 	}
 
+	@PerformanceSensitive
+	public static void onPreRender (double period, float partialTick) {
+		Minecraft mc = Minecraft.getInstance();
+		if (!mc.isPaused()) {
+			// 平滑更新距离
+			updateSmoothVirtualDistance(period);
+			// 平滑更新相机偏移量
+			updateSmoothOffsetRatio(period);
+		}
+	}
+
 	/**
 	 * 计算并更新相机的朝向和坐标
 	 *
@@ -116,17 +127,6 @@ public final class CameraAgent {
 		//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
 		//				applyCamera();
 		//			}
-	}
-
-	@PerformanceSensitive
-	public static void onPreRender(double period, float partialTick){
-		Minecraft mc = Minecraft.getInstance();
-		if (!mc.isPaused()) {
-			// 平滑更新距离
-			updateSmoothVirtualDistance(period);
-			// 平滑更新相机偏移量
-			updateSmoothOffsetRatio(period);
-		}
 	}
 
 	public static void updateSmoothVirtualDistance (double period) {
@@ -150,7 +150,7 @@ public final class CameraAgent {
 		} else {
 			mode.getOffsetSmoothFactor(smoothOffsetRatio.smoothFactor);
 		}
-		if (config.center_offset_when_flying && ModReferee.isAttachedEntityFallFlying()) {
+		if (config.center_offset_when_flying && ThirdPerson.ENTITY_AGENT.isFallFlying()) {
 			smoothOffsetRatio.setTarget(0, 0);
 		} else {
 			mode.getOffsetRatio(smoothOffsetRatio.target);
@@ -249,7 +249,7 @@ public final class CameraAgent {
 			CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
 			Vector3d         eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
 			// 飞行时使用专用的平滑系数
-			if (ModReferee.isAttachedEntityFallFlying()) {
+			if (ThirdPerson.ENTITY_AGENT.isFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
 			} else {
 				mode.getEyeSmoothFactor(smoothEyePosition.smoothFactor);

@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.api.core;
 
 
-import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.minecraft.client.Minecraft;
@@ -29,6 +29,8 @@ public interface EntityAgent {
 	 * 重置
 	 */
 	void reset ();
+
+	void setRotateStrategy (RotateStrategy rotateStrategy);
 
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s
@@ -83,15 +85,11 @@ public interface EntityAgent {
 	 * 当控制玩家时，相当于是否按下了 使用|攻击|选取 键
 	 * <p>
 	 * 当附身其他实体时，另做判断
-	 * <p>
-	 * {@link ModReferee#isInterecting}
 	 */
 	boolean isInterecting ();
 
 	/**
 	 * 实体是否在飞行
-	 * <p>
-	 * {@link ModReferee#isAttachedEntityFallFlying}
 	 */
 	boolean isFallFlying ();
 
@@ -99,8 +97,6 @@ public interface EntityAgent {
 	 * 根据实体的手持物品和使用状态判断是否在瞄准
 	 * <p>
 	 * 不考虑玩家按键
-	 * <p>
-	 * {@link ModReferee#isCameraEntityAiming}
 	 */
 	boolean isAiming ();
 
@@ -108,4 +104,9 @@ public interface EntityAgent {
 	 * 在上一个 clientTick 中是否在瞄准
 	 */
 	boolean wasAiming ();
+
+	/**
+	 * 在上一个 clientTick 中是否在交互
+	 */
+	boolean wasInterecting ();
 }

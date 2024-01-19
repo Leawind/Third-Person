@@ -4,13 +4,9 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.event.ThirdPersonKeys;
 import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.util.api.ItemPattern;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.LMath;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 
 public final class ModReferee {
 	/**
@@ -26,7 +22,7 @@ public final class ModReferee {
 	}
 
 	/**
-	 * 当前是否是第三人称
+	 * 根据 mc options 判断当前是否是第三人称
 	 */
 	public static boolean isThirdPerson () {
 		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
@@ -68,53 +64,9 @@ public final class ModReferee {
 	}
 
 	/**
-	 * 判断相机实体当前是否在瞄准<br/>
-	 * <p>
-	 * 根据实体手持物品判断
-	 */
-	@Deprecated
-	public static boolean isCameraEntityAiming () {
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		Config config       = ThirdPerson.getConfig();
-		if (cameraEntity instanceof LivingEntity livingEntity) {
-			if (livingEntity.isUsingItem() && ItemPattern.anyMatch(config.use_aim_item_patterns, livingEntity.getUseItem())) {
-				return true;
-			} else if (ItemPattern.anyMatch(config.aim_item_patterns, livingEntity.getMainHandItem())) {
-				return true;
-			} else if (ItemPattern.anyMatch(config.aim_item_patterns, livingEntity.getOffhandItem())) {
-				return true;
-			}
-		}
-		return doesPlayerWantToAim();
-	}
-
-	/**
 	 * 根据玩家的按键判断玩家是否想瞄准
 	 */
 	public static boolean doesPlayerWantToAim () {
 		return ThirdPerson.isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
-	}
-
-	/**
-	 * 判断是否在飞行
-	 */
-	@Deprecated
-	public static boolean isAttachedEntityFallFlying () {
-		Minecraft mc = Minecraft.getInstance();
-		if (mc.cameraEntity instanceof LivingEntity livingEntity) {
-			return livingEntity.isFallFlying();
-		}
-		return false;
-	}
-
-	/**
-	 * 玩家是否在交互
-	 * <p>
-	 * 即是否按下了 使用|攻击|选取 键
-	 */
-	@Deprecated
-	public static boolean isInterecting () {
-		Options mcOptions = Minecraft.getInstance().options;
-		return mcOptions.keyUse.isDown() || mcOptions.keyAttack.isDown() || mcOptions.keyPickItem.isDown();
 	}
 }

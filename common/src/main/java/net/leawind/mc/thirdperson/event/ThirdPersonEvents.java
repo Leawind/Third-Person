@@ -13,8 +13,8 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
-import net.leawind.mc.thirdperson.core.PlayerAgent;
 import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.math.LMath;
 import net.minecraft.client.CameraType;
@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
+import org.apache.logging.log4j.util.PerformanceSensitive;
 
 public interface ThirdPersonEvents {
 	static void register () {
@@ -33,6 +34,12 @@ public interface ThirdPersonEvents {
 
 	private static void onClientTickPre (Minecraft minecraft) {
 		if (minecraft.isPaused()) {
+			return;
+		}
+		if (!CameraAgent.isAvailable()) {
+			return;
+		}
+		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
@@ -75,7 +82,6 @@ public interface ThirdPersonEvents {
 	private static void onPlayerReset () {
 		ThirdPerson.ENTITY_AGENT.reset();
 		CameraAgent.reset();
-		PlayerAgent.reset();
 	}
 
 	/**
@@ -155,8 +161,7 @@ public interface ThirdPersonEvents {
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
 	 */
 	static void onBeforeHandleKeybinds () {
-		PlayerAgent.wasInterecting = ModReferee.isInterecting();
-		if (PlayerAgent.wasInterecting) {
+		if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
 			// 该方法中使用了mixin，修改了 viewVector
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
 		}
@@ -167,7 +172,7 @@ public interface ThirdPersonEvents {
 	 */
 	static void onLeaveThirdPerson () {
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
-			PlayerAgent.turnToCameraRotation(true);
+			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
 		}
 	}
 
@@ -176,9 +181,7 @@ public interface ThirdPersonEvents {
 	 */
 	static void onEnterThirdPerson () {
 		CameraAgent.reset();
-		PlayerAgent.reset();
-		PlayerAgent.wasAiming                = false;
-		ThirdPerson.isToggleToAiming         = false;
+		ThirdPerson.ENTITY_AGENT.reset();
 		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 	}
 
@@ -197,6 +200,27 @@ public interface ThirdPersonEvents {
 				CameraAgent.lastCameraTurnTimeStamp = Blaze3D.getTime();
 				CameraAgent.relativeRotation.set(Mth.clamp(CameraAgent.relativeRotation.x() + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (CameraAgent.relativeRotation.y() + y) % 360f);
 			}
+		}
+	}
+
+	/**
+	 * 玩家移动时自动转向移动方向
+	 */
+	@PerformanceSensitive
+	static void onServerAiStep () {
+		Minecraft mc     = Minecraft.getInstance();
+		Config    config = ThirdPerson.getConfig();
+		assert mc.cameraEntity != null;
+		if (!config.rotate_to_moving_direction) {
+		} else if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
+		} else if (ThirdPerson.ENTITY_AGENT.wasAiming()) {
+		} else if (ThirdPerson.impulseHorizon.length() <= 1e-5) {
+		} else if (mc.cameraEntity.isSwimming()) {
+			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.IMPULSE_DIRECTION);
+		} else if (CameraAgent.wasCameraCloseToEntity) {
+		} else if (ThirdPerson.ENTITY_AGENT.isFallFlying()) {
+		} else {
+			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.HORIZONTAL_IMPULSE_DIRECTION);
 		}
 	}
 }
