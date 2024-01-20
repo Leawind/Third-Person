@@ -6,7 +6,7 @@ import net.leawind.mc.thirdperson.api.core.rotation.IRotateStrategy;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
-import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.api.math.LMath;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 

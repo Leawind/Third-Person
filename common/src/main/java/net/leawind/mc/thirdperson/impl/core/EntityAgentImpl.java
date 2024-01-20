@@ -11,7 +11,7 @@ import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.ItemPattern;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
-import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -72,30 +72,40 @@ public class EntityAgentImpl implements EntityAgent {
 		if (!isControlled()) {
 			return;
 		}
-		if (isAiming() || ModReferee.doesPlayerWantToAim()) {
-			setRotateStrategy(RotateStrategy.CAMERA_HIT_RESULT);
-			// 侧身拉弓
-			if (config.auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
-				assert minecraft.player != null;
-				if (minecraft.player.isUsingItem() && minecraft.player.getUseItem().is(Items.BOW)) {
-					double k = minecraft.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
-					if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
-						k = -k;
-					}
-					minecraft.player.yBodyRot = (float)(k * 45 + minecraft.player.getYRot());
-				}
+		// 更新旋转策略
+		{
+			if (isAiming() || ModReferee.doesPlayerWantToAim()) {
+				setRotateStrategy(RotateStrategy.CAMERA_HIT_RESULT);
+				updateBodyRotation();
+			} else if (isFallFlying()) {
+				setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
+			} else if (config.player_rotate_with_camera_when_not_aiming) {
+				setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
+			} else if (config.auto_rotate_interacting && isInterecting()) {
+				setRotateStrategy(config.rotate_interacting_type      //
+								  ? RotateStrategy.CAMERA_HIT_RESULT    //
+								  : RotateStrategy.CAMERA_ROTATION);
 			}
-		} else if (isFallFlying()) {
-			setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
-		} else if (config.player_rotate_with_camera_when_not_aiming) {
-			setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
-		} else if (config.auto_rotate_interacting && isInterecting()) {
-			setRotateStrategy(config.rotate_interacting_type      //
-							  ? RotateStrategy.CAMERA_HIT_RESULT    //
-							  : RotateStrategy.CAMERA_ROTATION);
 		}
 		// 设置玩家朝向
-		Vector2d rotation = rotateStrategy.getRotation(partialTick);
+		{
+			Vector2d targetRotation = rotateStrategy.getRotation(partialTick);
+		}
+	}
+
+	private void updateBodyRotation () {
+		// 侧身拉弓
+		Config config = ThirdPerson.getConfig();
+		if (config.auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
+			assert minecraft.player != null;
+			if (minecraft.player.isUsingItem() && minecraft.player.getUseItem().is(Items.BOW)) {
+				double k = minecraft.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
+				if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
+					k = -k;
+				}
+				minecraft.player.yBodyRot = (float)(k * 45 + minecraft.player.getYRot());
+			}
+		}
 	}
 
 	@Override

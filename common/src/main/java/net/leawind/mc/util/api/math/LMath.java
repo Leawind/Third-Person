@@ -1,4 +1,4 @@
-package net.leawind.mc.util.math;
+package net.leawind.mc.util.api.math;
 
 
 import com.mojang.math.Vector3f;

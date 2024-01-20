@@ -16,7 +16,7 @@ import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.api.math.LMath;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
