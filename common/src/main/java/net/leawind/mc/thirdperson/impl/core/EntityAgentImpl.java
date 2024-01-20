@@ -9,9 +9,9 @@ import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.util.api.ItemPattern;
+import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
-import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -135,7 +135,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
-	public @NotNull Vector3d getRawPosition (float partialTick) throws NullPointerException {
+	public @NotNull Vector3d getRawPosition (float partialTick) {
 		return LMath.toVector3d(Objects.requireNonNull(getRawCameraEntity()).getPosition(partialTick));
 	}
 
@@ -152,7 +152,11 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@Override
 	public @NotNull Vector2d getRotation (float partialTick) {
-		throw new RuntimeException("Method not implemented yet.");
+		/**
+		 * DOITNOW
+		 */
+		return getRawRotation(partialTick);
+		//		throw new RuntimeException("Method not implemented yet.");
 	}
 
 	@Override

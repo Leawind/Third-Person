@@ -2,7 +2,6 @@ package net.leawind.mc.util.math.smoothvalue;
 
 
 import net.leawind.mc.util.api.math.LMath;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -26,14 +25,18 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public void setEndValue (@NotNull Double endValue) {
-		this.target = endValue;
+	public void setTarget (@NotNull Double target) {
+		this.target = target;
 	}
 
 	@Override
-	public void update (double period) {
-		super.preUpdate();
+	protected void udpateWithOutSavingLastValue (double period) {
 		value = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
+	}
+
+	@Override
+	public Double get (double t) {
+		return LMath.lerp(lastValue, value, t);
 	}
 
 	@Override
@@ -49,11 +52,6 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	@Override
 	public void setSmoothFactor (Double smoothFactor) {
 		this.smoothFactor = smoothFactor;
-	}
-
-	@Override
-	public Double get (double t) {
-		return Mth.lerp(t, lastValue, value);
 	}
 
 	@Override

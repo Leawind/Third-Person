@@ -7,9 +7,9 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.LocalPlayerInvoker;
+import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
-import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
@@ -254,7 +254,7 @@ public final class CameraAgent {
 			} else {
 				mode.getEyeSmoothFactor(smoothEyePosition.smoothFactor);
 			}
-			smoothEyePosition.setEndValue(eyePosition);
+			smoothEyePosition.setTarget(eyePosition);
 			smoothEyePosition.update(period);
 		}
 	}

@@ -15,15 +15,19 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setEndValue (@NotNull Vector2d v) {
-		this.target.set(v);
+	public void setTarget (@NotNull Vector2d target) {
+		this.target.set(target);
 	}
 
 	@Override
-	public void update (double period) {
-		super.preUpdate();
+	protected void udpateWithOutSavingLastValue (double period) {
 		Vector2d t = smoothFactor.copy().pow(smoothFactorWeight.copy().mul(period)).negate().add(1);
 		value = value.copy().lerp(target, t);
+	}
+
+	@Override
+	public Vector2d get (double t) {
+		return lastValue.copy().lerp(value, t);
 	}
 
 	@Override
@@ -39,11 +43,6 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	@Override
 	public void setSmoothFactor (Vector2d s) {
 		this.smoothFactor.set(s);
-	}
-
-	@Override
-	public Vector2d get (double t) {
-		return lastValue.copy().lerp(value, t);
 	}
 
 	@Override

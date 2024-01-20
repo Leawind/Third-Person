@@ -15,12 +15,11 @@ import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
-import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.LMath;
+import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 
@@ -188,17 +187,20 @@ public interface ThirdPersonEvents {
 	/**
 	 * 鼠标移动导致的相机旋转
 	 *
-	 * @param y 偏航角变化量
-	 * @param x 俯仰角变化量
+	 * @param dy 偏航角变化量
+	 * @param dx 俯仰角变化量
 	 */
-	static void onCameraTurn (double y, double x) {
+	static void onCameraTurn (double dy, double dx) {
 		Config config = ThirdPerson.getConfig();
 		if (config.is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
-			y *= 0.15;
-			x *= config.lock_camera_pitch_angle ? 0: -0.15;
-			if (y != 0 || x != 0) {
+			dy *= 0.15;
+			dx *= config.lock_camera_pitch_angle ? 0: -0.15;
+			if (dy != 0 || dx != 0) {
 				CameraAgent.lastCameraTurnTimeStamp = Blaze3D.getTime();
-				CameraAgent.relativeRotation.set(Mth.clamp(CameraAgent.relativeRotation.x() + x, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT), (CameraAgent.relativeRotation.y() + y) % 360f);
+				double rx = CameraAgent.relativeRotation.x() + dx;
+				double ry = CameraAgent.relativeRotation.y() + dy;
+				rx = LMath.clamp(rx, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT);
+				CameraAgent.relativeRotation.set(rx, ry % 360f);
 			}
 		}
 	}
