@@ -65,6 +65,12 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 
 	abstract public void setValue (T value);
 
+	/**
+	 * 同时设置目标值和当前平滑值
+	 * <p>
+	 * 不改变旧值
+	 */
+	@Deprecated
 	abstract public void set (T value);
 
 	abstract public void setSmoothFactor (T smoothFactor);

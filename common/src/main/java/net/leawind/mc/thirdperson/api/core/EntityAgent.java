@@ -37,6 +37,11 @@ public interface EntityAgent {
 	 */
 	void onPreRender (double period, float partialTick);
 
+	/**
+	 * 在 client tick 之前
+	 * <p>
+	 * 通常频率固定为 20Hz
+	 */
 	void onClientTickPre ();
 
 	/**

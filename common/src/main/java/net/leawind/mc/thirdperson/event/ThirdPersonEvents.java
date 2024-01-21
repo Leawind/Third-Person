@@ -112,7 +112,7 @@ public interface ThirdPersonEvents {
 		double now    = Blaze3D.getTime();
 		double period = now - ThirdPerson.lastRenderTickTimeStamp;
 		ThirdPerson.lastRenderTickTimeStamp = now;
-		if (CameraAgent.isAvailable()) {
+		if (ModReferee.isThirdPerson() && CameraAgent.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPerson.ENTITY_AGENT.onPreRender(period, partialTick);
 			CameraAgent.onPreRender(period, partialTick);
 		}

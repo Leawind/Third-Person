@@ -87,9 +87,10 @@ public class EntityAgentImpl implements EntityAgent {
 								  : RotateStrategy.CAMERA_ROTATION);
 			}
 		}
-		// 设置玩家朝向
+		//DOITNOW 设置玩家朝向
 		{
 			Vector2d targetRotation = rotateStrategy.getRotation(partialTick);
+			setRawRotation(targetRotation.y(), targetRotation.x());
 		}
 	}
 
@@ -106,6 +107,17 @@ public class EntityAgentImpl implements EntityAgent {
 				minecraft.player.yBodyRot = (float)(k * 45 + minecraft.player.getYRot());
 			}
 		}
+	}
+
+	/**
+	 * 立即设置玩家朝向
+	 * <p>
+	 * 同时修改原始玩家实体的朝向和旧朝向
+	 */
+	private void setRawRotation (double y, double x) {
+		Entity entity = getRawPlayerEntity();
+		entity.setYRot(entity.yRotO = (float)y);
+		entity.setXRot(entity.xRotO = (float)x);
 	}
 
 	@Override
@@ -142,7 +154,7 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public @NotNull Vector2d getRawRotation (float partialTick) {
 		Entity entity = getRawCameraEntity();
-		return Vector2d.of(entity.getViewYRot(partialTick), entity.getViewXRot(partialTick));
+		return Vector2d.of(entity.getViewXRot(partialTick), entity.getViewYRot(partialTick));
 	}
 
 	@Override

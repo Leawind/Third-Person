@@ -263,7 +263,7 @@ public final class CameraAgent {
 	 * 根据相对角度计算相机朝向
 	 */
 	public static @NotNull Vector2d calculateRotation () {
-		return Vector2d.of(relativeRotation.y() + 180, -relativeRotation.x());
+		return Vector2d.of(-relativeRotation.x(), relativeRotation.y() + 180);
 	}
 
 	/**
