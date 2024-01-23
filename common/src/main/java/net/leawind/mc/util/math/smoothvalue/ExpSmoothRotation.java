@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * <li>y：偏航角，范围：[0， 360]</li>
  * <li>x：俯仰角，范围：[-90， 90]</li>
  */
-public class ExpSmoothRotation {
+public class  ExpSmoothRotation {
 	private final ExpRotSmoothDouble y;
 	private final ExpSmoothDouble    x;
 
@@ -30,17 +30,17 @@ public class ExpSmoothRotation {
 		return v;
 	}
 
-	private void setHalflife (double halflife) {
+	public void setHalflife (double halflife) {
 		y.setHalflife(halflife);
 		x.setHalflife(halflife);
 	}
 
-	private void setMT (double multiplier, double time) {
+	public void setMT (double multiplier, double time) {
 		y.setMT(multiplier, time);
 		x.setMT(multiplier, time);
 	}
 
-	private void setSmoothFactor (double smoothFactor) {
+	public void setSmoothFactor (double smoothFactor) {
 		y.setSmoothFactor(smoothFactor);
 		x.setSmoothFactor(smoothFactor);
 	}

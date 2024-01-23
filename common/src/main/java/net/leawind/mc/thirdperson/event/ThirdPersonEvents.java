@@ -204,25 +204,4 @@ public interface ThirdPersonEvents {
 			}
 		}
 	}
-
-	/**
-	 * 玩家移动时自动转向移动方向
-	 */
-	@PerformanceSensitive
-	static void onServerAiStep () {
-		Minecraft mc     = Minecraft.getInstance();
-		Config    config = ThirdPerson.getConfig();
-		assert mc.cameraEntity != null;
-		if (!config.rotate_to_moving_direction) {
-		} else if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
-		} else if (ThirdPerson.ENTITY_AGENT.wasAiming()) {
-		} else if (ThirdPerson.impulseHorizon.length() <= 1e-5) {
-		} else if (mc.cameraEntity.isSwimming()) {
-			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.IMPULSE_DIRECTION);
-		} else if (CameraAgent.wasCameraCloseToEntity) {
-		} else if (ThirdPerson.ENTITY_AGENT.isFallFlying()) {
-		} else {
-			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.HORIZONTAL_IMPULSE_DIRECTION);
-		}
-	}
 }

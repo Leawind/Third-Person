@@ -26,7 +26,9 @@ public interface EntityAgent {
 	boolean isCameraEntityExist ();
 
 	/**
-	 * 重置
+	 * 重置各种属性
+	 * <p>
+	 * 当初始化或进入第三人称时调用
 	 */
 	void reset ();
 
@@ -78,11 +80,6 @@ public interface EntityAgent {
 	 * 获取平滑的眼睛坐标
 	 */
 	@NotNull Vector3d getSmoothEyePosition (float partialTick);
-
-	/**
-	 * 获取实体朝向
-	 */
-	@NotNull Vector2d getRotation (float partialTick);
 
 	/**
 	 * 实体是否在交互
