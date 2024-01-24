@@ -76,27 +76,37 @@ public class EntityAgentImpl implements EntityAgent {
 		if (!isControlled()) {
 			return;
 		}
-		//NOW 设置玩家朝向
-		{
-			Vector2d targetRotation = rotateStrategy.getRotation(partialTick);
-			smoothRotation.setTarget(targetRotation);
-			Vector2d smoothRotationValue = smoothRotation.get(partialTick);
-			setRawRotation(smoothRotationValue);
-			//			smoothRotation.update(period);
-			//			setRawRotation(targetRotation.y(), targetRotation.x());
+		Vector2d targetRotation = rotateStrategy.getRotation(partialTick);
+		smoothRotation.setTarget(targetRotation);
+		switch (smoothRotationType) {
+			case HARD -> setRawRotation(targetRotation);
+			case LINEAR, EXP_LINEAR -> setRawRotation(smoothRotation.get(partialTick));
+			case EXP -> {
+				smoothRotation.update(period);
+				setRawRotation(smoothRotation.get());
+			}
 		}
 	}
 
 	@Override
 	public void onClientTickPre () {
+		final double period = 0.05;
 		wasAiming      = isAiming();
 		wasInterecting = isInterecting();
 		updateRotateStrategy();
-		smoothRotation.update(0.05);
+		smoothRotation.update(period);
+		switch (smoothRotationType) {
+			case HARD, EXP -> {
+			}
+			case LINEAR, EXP_LINEAR -> {
+				smoothRotation.setTarget(rotateStrategy.getRotation(1));
+				smoothRotation.update(period);
+			}
+		}
 	}
 
 	/**
-	 * 更新旋转策略
+	 * 更新旋转策略、平滑类型、平滑系数
 	 * <p>
 	 * 根据配置、游泳、飞行、瞄准等状态判断。
 	 */
@@ -105,34 +115,34 @@ public class EntityAgentImpl implements EntityAgent {
 		// 初始化默认值
 		setRotateStrategy(config.rotate_to_moving_direction ? RotateStrategy.HORIZONTAL_IMPULSE_DIRECTION: RotateStrategy.NONE);
 		smoothRotationType = SmoothType.EXP_LINEAR;
-		smoothRotation.setHalflife(0.1);    //TODO
+		smoothRotation.setHalflife(0.1);
 		if (getRawCameraEntity().isSwimming()) {
 			setRotateStrategy(RotateStrategy.IMPULSE_DIRECTION);
 			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(0.01);    //TODO
+			smoothRotation.setHalflife(0.01);
 		} else if (isAiming() || ModReferee.doesPlayerWantToAim()) {
 			setRotateStrategy(RotateStrategy.CAMERA_HIT_RESULT);
 			smoothRotationType = SmoothType.HARD;
 		} else if (isFallFlying()) {
 			setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
 			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(0);    //TODO
+			smoothRotation.setHalflife(0);
 		} else if (config.player_rotate_with_camera_when_not_aiming) {
 			setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
 			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(1);    // TODO
+			smoothRotation.setHalflife(1);
 		} else if (config.auto_rotate_interacting && isInterecting()) {
 			setRotateStrategy(config.rotate_interacting_type      //
 							  ? RotateStrategy.CAMERA_HIT_RESULT    //
 							  : RotateStrategy.CAMERA_ROTATION);
 			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(0);    // TODO
+			smoothRotation.setHalflife(0);
 		}
-		//TODO		updateBodyRotation();
+		updateBodyRotation();
 	}
 
 	private void updateBodyRotation () {
-		// 侧身拉弓
+		// TODO 侧身拉弓
 		Config config = ThirdPerson.getConfig();
 		if (config.auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
 			assert minecraft.player != null;
