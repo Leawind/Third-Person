@@ -34,20 +34,20 @@ import java.util.Objects;
  * NOW dynamical smoothFactor for Rotation
  */
 public class EntityAgentImpl implements EntityAgent {
-	private final    Minecraft            minecraft;
+	private final    Minecraft         minecraft;
 	private final    ExpSmoothVector3d smoothEyePosition;
 	private @NotNull RotateTarget      rotateTarget       = RotateTarget.NONE;
 	private @NotNull SmoothType        smoothRotationType = SmoothType.EXP_LINEAR;
-	private final    ExpSmoothRotation    smoothRotation       = ExpSmoothRotation.createWithHalflife(0.5);
+	private final    ExpSmoothRotation smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
-	private          boolean              wasAiming            = false;
+	private          boolean           wasAiming          = false;
 	/**
 	 * 上一个 client tick 中的 isInterecting 的值
 	 */
-	private          boolean              wasInterecting       = false;
-	private final    DecisionMap<?>       rotateDecisionMap    = DecisionMap.of(RotateFactor.class);
+	private          boolean           wasInterecting     = false;
+	private final    DecisionMap<?>    rotateDecisionMap  = DecisionMap.of(RotateFactor.class);
 
 	public EntityAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
@@ -69,7 +69,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
-	public void setRotateStrategy (@NotNull RotateTarget rotateTarget) {
+	public void setRotateTarget (@NotNull RotateTarget rotateTarget) {
 		this.rotateTarget = rotateTarget;
 	}
 
@@ -116,26 +116,26 @@ public class EntityAgentImpl implements EntityAgent {
 	private void updateRotateStrategy () {
 		Config config = ThirdPerson.getConfig();
 		// 初始化默认值
-		setRotateStrategy(config.rotate_to_moving_direction ? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION: RotateTarget.NONE);
+		setRotateTarget(config.rotate_to_moving_direction ? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION: RotateTarget.NONE);
 		smoothRotationType = SmoothType.EXP_LINEAR;
 		smoothRotation.setHalflife(0.1);
 		if (getRawCameraEntity().isSwimming()) {
-			setRotateStrategy(RotateTarget.IMPULSE_DIRECTION);
+			setRotateTarget(RotateTarget.IMPULSE_DIRECTION);
 			smoothRotationType = SmoothType.LINEAR;
 			smoothRotation.setHalflife(0.01);
 		} else if (isAiming() || ModReferee.doesPlayerWantToAim()) {
-			setRotateStrategy(RotateTarget.CAMERA_HIT_RESULT);
+			setRotateTarget(RotateTarget.CAMERA_HIT_RESULT);
 			smoothRotationType = SmoothType.HARD;
 		} else if (isFallFlying()) {
-			setRotateStrategy(RotateTarget.CAMERA_ROTATION);
+			setRotateTarget(RotateTarget.CAMERA_ROTATION);
 			smoothRotationType = SmoothType.LINEAR;
 			smoothRotation.setHalflife(0);
 		} else if (config.player_rotate_with_camera_when_not_aiming) {
-			setRotateStrategy(RotateTarget.CAMERA_ROTATION);
+			setRotateTarget(RotateTarget.CAMERA_ROTATION);
 			smoothRotationType = SmoothType.LINEAR;
 			smoothRotation.setHalflife(1);
 		} else if (config.auto_rotate_interacting && isInterecting()) {
-			setRotateStrategy(config.rotate_interacting_type      //
+			setRotateTarget(config.rotate_interacting_type      //
 							  ? RotateTarget.CAMERA_HIT_RESULT    //
 							  : RotateTarget.CAMERA_ROTATION);
 			smoothRotationType = SmoothType.LINEAR;

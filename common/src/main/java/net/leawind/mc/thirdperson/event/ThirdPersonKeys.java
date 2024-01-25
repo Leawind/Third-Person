@@ -22,7 +22,7 @@ public interface ThirdPersonKeys {
 		Config config = ThirdPerson.getConfig();
 		if (ModReferee.isThirdPerson()) {
 			if (config.is_mod_enable) {
-				ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateTarget.CAMERA_ROTATION);
+				ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
 			} else {
 				ThirdPersonEvents.onEnterThirdPerson();
 			}

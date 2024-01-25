@@ -32,7 +32,7 @@ public interface EntityAgent {
 	 */
 	void reset ();
 
-	void setRotateStrategy (RotateTarget rotateTarget);
+	void setRotateTarget (RotateTarget rotateTarget);
 
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s

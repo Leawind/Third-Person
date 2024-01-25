@@ -170,7 +170,7 @@ public interface ThirdPersonEvents {
 	 */
 	static void onLeaveThirdPerson () {
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
-			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateTarget.CAMERA_ROTATION);
+			ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
 		}
 	}
 
