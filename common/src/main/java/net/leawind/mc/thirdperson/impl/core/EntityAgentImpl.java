@@ -80,7 +80,7 @@ public class EntityAgentImpl implements EntityAgent {
 		if (!isControlled()) {
 			return;
 		}
-		Vector2d targetRotation = rotateTarget.getRotation(partialTick);
+		Vector2d targetRotation = rotateTarget.getRotation();
 		smoothRotation.setTarget(targetRotation);
 		switch (smoothRotationType) {
 			case HARD -> setRawRotation(targetRotation);
@@ -103,7 +103,7 @@ public class EntityAgentImpl implements EntityAgent {
 			case HARD, EXP -> {
 			}
 			case LINEAR, EXP_LINEAR -> {
-				smoothRotation.setTarget(rotateTarget.getRotation(1));
+				smoothRotation.setTarget(rotateTarget.getRotation());
 				smoothRotation.update(period);
 			}
 		}
