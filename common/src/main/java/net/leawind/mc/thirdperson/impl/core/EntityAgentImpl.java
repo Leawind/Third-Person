@@ -8,12 +8,12 @@ import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateFactor;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.ItemPattern;
 import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
-import net.leawind.mc.util.math.decisionmap.api.DecisionFactorEnum;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothRotation;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
@@ -29,7 +29,6 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.function.BooleanSupplier;
 
 /**
  * NOW dynamical smoothFactor for Rotation
@@ -48,7 +47,7 @@ public class EntityAgentImpl implements EntityAgent {
 	 * 上一个 client tick 中的 isInterecting 的值
 	 */
 	private          boolean              wasInterecting       = false;
-	private final    DecisionMap<?>       rotateDecisionMap    = DecisionMap.of(RotateFactors.class);
+	private final    DecisionMap<?>       rotateDecisionMap    = DecisionMap.of(RotateFactor.class);
 
 	public EntityAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
@@ -250,25 +249,5 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public boolean wasInterecting () {
 		return wasInterecting;
-	}
-
-	@SuppressWarnings("unused")
-	public enum RotateFactors implements DecisionFactorEnum {
-		ROTATE_TO_MOVING_DIRECTION(() -> ThirdPerson.getConfig().rotate_to_moving_direction),
-		IS_SWIMMING(() -> ThirdPerson.ENTITY_AGENT.getRawCameraEntity().isSwimming()),
-		IS_AIMING(() -> ThirdPerson.ENTITY_AGENT.isAiming() || ModReferee.doesPlayerWantToAim()),
-		IS_FALL_FLYING(() -> ThirdPerson.ENTITY_AGENT.isFallFlying()),
-		ROTATE_WITH_CAMERA_WHEN_NOT_AIMING(() -> ThirdPerson.getConfig().player_rotate_with_camera_when_not_aiming),
-		ROTATE_INTERECTING(() -> ThirdPerson.getConfig().auto_rotate_interacting && ThirdPerson.ENTITY_AGENT.isInterecting()),
-		;
-		final @NotNull BooleanSupplier supplier;
-
-		RotateFactors (@NotNull BooleanSupplier supplier) {
-			this.supplier = supplier;
-		}
-
-		public @NotNull BooleanSupplier getSupplier () {
-			return supplier;
-		}
 	}
 }
