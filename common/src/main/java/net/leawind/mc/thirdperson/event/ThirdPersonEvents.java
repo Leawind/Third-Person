@@ -14,14 +14,13 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.BlockGetter;
-import org.apache.logging.log4j.util.PerformanceSensitive;
 
 public interface ThirdPersonEvents {
 	static void register () {
@@ -171,7 +170,7 @@ public interface ThirdPersonEvents {
 	 */
 	static void onLeaveThirdPerson () {
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
-			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateStrategy.CAMERA_ROTATION);
+			ThirdPerson.ENTITY_AGENT.setRotateStrategy(RotateTarget.CAMERA_ROTATION);
 		}
 	}
 

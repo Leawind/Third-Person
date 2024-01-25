@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.impl.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.api.core.rotation.IRotateStrategy;
+import net.leawind.mc.thirdperson.api.core.rotation.IRotateTarget;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.api.math.vector.Vector2d;
@@ -13,11 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 /**
- * 玩家应该转向何处
- * <p>
+ * 旋转目标，即玩家应该转向何处
  * TODO no t
  */
-public enum RotateStrategy implements IRotateStrategy {
+public enum RotateTarget implements IRotateTarget {
 	/**
 	 * 保持当前朝向，不旋转
 	 */
@@ -59,7 +58,7 @@ public enum RotateStrategy implements IRotateStrategy {
 	});
 	private final Function<Float, Vector2d> rotationGetter;
 
-	RotateStrategy (@NotNull Function<Float, Vector2d> rotationGetter) {
+	RotateTarget (@NotNull Function<Float, Vector2d> rotationGetter) {
 		this.rotationGetter = rotationGetter;
 	}
 

@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.api.core;
 
 
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
-import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.minecraft.client.Minecraft;
@@ -32,7 +32,7 @@ public interface EntityAgent {
 	 */
 	void reset ();
 
-	void setRotateStrategy (RotateStrategy rotateStrategy);
+	void setRotateStrategy (RotateTarget rotateTarget);
 
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s
