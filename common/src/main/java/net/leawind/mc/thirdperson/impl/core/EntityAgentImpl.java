@@ -6,9 +6,8 @@ import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.thirdperson.impl.core.rotation.RotateFactor;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.ItemPattern;
 import net.leawind.mc.util.api.math.LMath;
@@ -34,25 +33,28 @@ import java.util.Objects;
  * NOW dynamical smoothFactor for Rotation
  */
 public class EntityAgentImpl implements EntityAgent {
-	private final    Minecraft         minecraft;
-	private final    ExpSmoothVector3d smoothEyePosition;
-	private @NotNull RotateTarget      rotateTarget       = RotateTarget.NONE;
-	private @NotNull SmoothType        smoothRotationType = SmoothType.EXP_LINEAR;
-	private final    ExpSmoothRotation smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
+	private final    Minecraft           minecraft;
+	private final    ExpSmoothVector3d   smoothEyePosition;
+	private @NotNull RotateTarget        rotateTarget       = RotateTarget.NONE;
+	private @NotNull SmoothType          smoothRotationType = SmoothType.EXP_LINEAR;
+	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
-	private          boolean           wasAiming          = false;
+	private          boolean             wasAiming          = false;
 	/**
 	 * 上一个 client tick 中的 isInterecting 的值
 	 */
-	private          boolean           wasInterecting     = false;
-	private final    DecisionMap<?>    rotateDecisionMap  = DecisionMap.of(RotateFactor.class);
+	private          boolean             wasInterecting     = false;
+	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
 
 	public EntityAgentImpl (@NotNull Minecraft minecraft) {
-		this.minecraft    = minecraft;
-		smoothEyePosition = new ExpSmoothVector3d();
-		smoothEyePosition.setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+		this.minecraft = minecraft;
+		{
+			smoothEyePosition = new ExpSmoothVector3d();
+			smoothEyePosition.setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+		}
+		ThirdPerson.LOGGER.debug(rotateDecisionMap.toString());
 	}
 
 	@Override
@@ -71,6 +73,16 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public void setRotateTarget (@NotNull RotateTarget rotateTarget) {
 		this.rotateTarget = rotateTarget;
+	}
+
+	@Override
+	public void setSmoothRotationType (@NotNull SmoothType smoothType) {
+		smoothRotationType = smoothType;
+	}
+
+	@Override
+	public void setSmoothRotationHalflife (double halflife) {
+		smoothRotation.setHalflife(halflife);
 	}
 
 	@PerformanceSensitive
@@ -114,33 +126,7 @@ public class EntityAgentImpl implements EntityAgent {
 	 * 根据配置、游泳、飞行、瞄准等状态判断。
 	 */
 	private void updateRotateStrategy () {
-		Config config = ThirdPerson.getConfig();
-		// 初始化默认值
-		setRotateTarget(config.rotate_to_moving_direction ? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION: RotateTarget.NONE);
-		smoothRotationType = SmoothType.EXP_LINEAR;
-		smoothRotation.setHalflife(0.1);
-		if (getRawCameraEntity().isSwimming()) {
-			setRotateTarget(RotateTarget.IMPULSE_DIRECTION);
-			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(0.01);
-		} else if (isAiming() || ModReferee.doesPlayerWantToAim()) {
-			setRotateTarget(RotateTarget.CAMERA_HIT_RESULT);
-			smoothRotationType = SmoothType.HARD;
-		} else if (isFallFlying()) {
-			setRotateTarget(RotateTarget.CAMERA_ROTATION);
-			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(0);
-		} else if (config.player_rotate_with_camera_when_not_aiming) {
-			setRotateTarget(RotateTarget.CAMERA_ROTATION);
-			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(1);
-		} else if (config.auto_rotate_interacting && isInterecting()) {
-			setRotateTarget(config.rotate_interacting_type      //
-							  ? RotateTarget.CAMERA_HIT_RESULT    //
-							  : RotateTarget.CAMERA_ROTATION);
-			smoothRotationType = SmoothType.LINEAR;
-			smoothRotation.setHalflife(0);
-		}
+		setSmoothRotationHalflife(rotateDecisionMap.remake());
 		updateBodyRotation();
 	}
 
@@ -164,12 +150,6 @@ public class EntityAgentImpl implements EntityAgent {
 	 * <p>
 	 * 同时修改原始玩家实体的朝向和旧朝向
 	 */
-	private void setRawRotation (double y, double x) {
-		Entity entity = getRawPlayerEntity();
-		entity.setYRot(entity.yRotO = (float)y);
-		entity.setXRot(entity.xRotO = (float)x);
-	}
-
 	private void setRawRotation (Vector2d rot) {
 		Entity entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());

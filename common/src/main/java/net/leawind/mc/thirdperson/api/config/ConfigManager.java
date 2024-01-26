@@ -25,7 +25,7 @@ public interface ConfigManager {
 	 * 在可翻译文本的键前加上modid前缀
 	 *
 	 * @param name 键名
-	 * @return ${MODID}.${name}
+	 * @return ${MODID}.${id}
 	 */
 	static Component getText (String name) {
 		return Component.translatable(ModConstants.MOD_ID + "." + name);

@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson.api.core;
 
 
+import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.math.vector.Vector2d;
@@ -33,6 +34,10 @@ public interface EntityAgent {
 	void reset ();
 
 	void setRotateTarget (RotateTarget rotateTarget);
+
+	void setSmoothRotationType (SmoothType smoothType);
+
+	void setSmoothRotationHalflife (double halflife);
 
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s

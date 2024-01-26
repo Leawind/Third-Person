@@ -3,9 +3,7 @@ package net.leawind.mc.util.math.decisionmap.api;
 
 import net.leawind.mc.util.math.decisionmap.impl.DecisionMapImpl;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.function.BooleanSupplier;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -16,51 +14,36 @@ import java.util.function.Supplier;
 public interface DecisionMap<T> {
 	int MAX_FACTOR_COUNT = 32;
 
-	/**
-	 * 空的决策表
-	 */
-	static <T> DecisionMap<T> of () {
-		return new DecisionMapImpl<>();
+	static <T> DecisionMap<T> of (Class<?> clazz) {
+		return new DecisionMapImpl<>(clazz);
 	}
 
-	/**
-	 * 根据枚举类型注册决策因素
-	 *
-	 * @param factorsClazz 枚举类型
-	 * @param <T>          做出决策时的返回值类型
-	 */
-	static <T> DecisionMap<T> of (Class<? extends DecisionFactorEnum> factorsClazz) {
-		DecisionMap<T> decisionMap = new DecisionMapImpl<>();
-		if (!factorsClazz.isEnum()) {
-			throw new IllegalArgumentException(String.format("%s is not Enum", factorsClazz.getName()));
-		}
-		for (Field field: factorsClazz.getFields()) {
-			if (Modifier.isStatic(field.getModifiers())) {
-				try {
-					if (field.canAccess(null)) {
-						String          factorName     = field.getName();
-						BooleanSupplier factorSupplier = ((DecisionFactorEnum)field.get(null)).getSupplier();
-						decisionMap.addFactor(new DecisionFactor(factorName, factorSupplier));
-					}
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
+	static int toFlagBits (boolean[] flagList) {
+		int flagBits = 0;
+		for (int i = 0; i < flagList.length; i++) {
+			if (flagList[i]) {
+				flagBits |= 1 << i;
 			}
 		}
-		return decisionMap;
+		return flagBits;
 	}
 
 	/**
-	 * 添加决策因素
-	 * <p>
-	 * 自动递增id
+	 * 更新因素
 	 */
-	void addFactor (DecisionFactor decisionFactor);
+	DecisionMap<T> updateFactors ();
 
 	/**
-	 * 做出决策
+	 * 不更新因素，直接做出决策
 	 */
 	T make ();
+
+	Supplier<T> getStrategy (int flagBits);
+
+	/**
+	 * 更新因素并做出决策
+	 */
+	T remake ();
 
 	/**
 	 * 获取因素数量
@@ -84,23 +67,7 @@ public interface DecisionMap<T> {
 	 */
 	boolean isBuilt ();
 
-	/**
-	 * 添加规则
-	 *
-	 * @param getter 决策方法
-	 * @return 原对象
-	 */
-	DecisionMap<T> addRule (int id, Supplier<T> getter);
-
-	/**
-	 * 添加规则
-	 *
-	 * @param id     因素列表
-	 * @param mask   掩码
-	 * @param getter 决策方法
-	 * @return 原对象
-	 */
-	DecisionMap<T> addRule (int id, int mask, Supplier<T> getter);
+	DecisionMap<T> addRule (Function<boolean[], Supplier<T>> func);
 
 	/**
 	 * 添加规则
@@ -108,16 +75,28 @@ public interface DecisionMap<T> {
 	 * 此方法会立即使之前在此对象上调用的所有{@link DecisionMap#addRule}方法失效
 	 *
 	 * @param func 根据输入的各个因素返回相应的决策函数
+	 *             <p>
+	 *             <li>Integer flag bits</li>
+	 *             <li>boolean[] flag list</li>
 	 * @return 原对象
 	 */
-	DecisionMap<T> addRule (Function<boolean[], Supplier<T>> func);
+	DecisionMap<T> addRule (BiFunction<Integer, boolean[], Supplier<T>> func);
 
 	/**
-	 * 决策因素
+	 * 添加规则
+	 *
+	 * @param strategy 决策方法
+	 * @return 原对象
 	 */
-	record DecisionFactor(String name, BooleanSupplier supplier) {
-		public boolean get () {
-			return supplier.getAsBoolean();
-		}
-	}
+	DecisionMap<T> addRule (int flagBits, Supplier<T> strategy);
+
+	/**
+	 * 添加规则
+	 *
+	 * @param flagBits 因素列表
+	 * @param mask     掩码
+	 * @param strategy 决策方法
+	 * @return 原对象
+	 */
+	DecisionMap<T> addRule (int flagBits, int mask, Supplier<T> strategy);
 }

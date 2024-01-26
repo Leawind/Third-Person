@@ -1,70 +1,185 @@
 package net.leawind.mc.util.math.decisionmap.impl;
 
 
+import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
+import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DecisionMapImpl<T> implements DecisionMap<T> {
+	private final          Class<?>                 initializer;
 	/**
 	 * 规则构建器们
 	 */
-	private final          List<Runnable>       ruleBuilders = new LinkedList<>();
+	private final          List<Runnable>           ruleBuilders = new LinkedList<>();
 	/**
 	 * 因素列表
 	 */
-	private final @NotNull List<DecisionFactor> factors      = new ArrayList<>();
+	private final @NotNull List<DecisionFactor>     factors      = new ArrayList<>();
 	/**
 	 * 列出所有可能的情况的列表
+	 * <p>
+	 * flagBits -> Supplier
 	 */
-	private                List<Supplier<T>>    map;
+	private final @NotNull List<Supplier<T>>        strategyMap  = new ArrayList<>();
 	/**
 	 * 此对象是否已经构建
 	 */
-	private                boolean              isBuilt      = false;
+	private                boolean                  isBuilt      = false;
+	private                int                      flagBits     = 0;
+	private final          Map<Supplier<?>, String> nameMap      = new HashMap<>();
 
-	public DecisionMapImpl () {
+	/**
+	 * 根据类中的定义构建决策表
+	 * <p>
+	 * 类中应当包含带有 ADecisionFactor 注解的公共静态字段
+	 * <p>
+	 * 还要包含 public static void build(DecisionMap) 方法
+	 * <pre>
+	 * {@literal @ADecisionFactor public static final DecisionFactor is_swimming = DecisionFactor.of(()->false)}
+	 * {@literal public static void build(DecisionMap\<Double> map){}}
+	 * </pre>
+	 */
+	public DecisionMapImpl (Class<?> clazz) {
+		initializer = clazz;
+		// Register Factors
+		List<Field> adfListIndexed   = new LinkedList<>();
+		List<Field> adfListAutoIndex = new LinkedList<>();
+		for (Field field: clazz.getDeclaredFields()) {
+			if (field.isAnnotationPresent(ADecisionFactor.class)) {
+				if (field.getType() != DecisionFactor.class) {
+					throw new RuntimeException(String.format("Type %s required, got %s", DecisionFactor.class, field));
+				} else if (!Modifier.isStatic(field.getModifiers())) {
+					throw new RuntimeException(String.format("Static required: %s", field));
+				} else if (!field.canAccess(null)) {
+					throw new RuntimeException(String.format("Cannot access field: %s", field));
+				}
+				ADecisionFactor adf = field.getAnnotation(ADecisionFactor.class);
+				if (adf.value() == -1 && adf.mask() == -1) {
+					adfListAutoIndex.add(field);
+				} else {
+					adfListIndexed.add(field);
+				}
+			} else if (field.getType() == Supplier.class) {
+				try {
+					nameMap.put((Supplier<?>)field.get(null), field.getName());
+				} catch (IllegalAccessException ignored) {
+				}
+			}
+		}
+		int factorCount = adfListIndexed.size() + adfListAutoIndex.size();
+		if (factorCount > MAX_FACTOR_COUNT) {
+			throw new RuntimeException(String.format("Too many (%d) DecisioinFactors in class %s", factorCount, clazz));
+		}
+		while (factors.size() < factorCount) {
+			factors.add(null);
+		}
+		try {
+			for (Field field: adfListIndexed) {
+				ADecisionFactor adf   = field.getAnnotation(ADecisionFactor.class);
+				int             index = adf.value() != -1 ? adf.value(): Integer.numberOfTrailingZeros(adf.mask());
+				if (factors.get(index) != null) {
+					throw new RuntimeException(String.format("Field %s: Index %d has been used already.", field, index));
+				}
+				DecisionFactor df = (DecisionFactor)field.get(null);
+				df.setName(field.getName());
+				factors.set(index, df);
+			}
+			for (Field field: adfListAutoIndex) {
+				for (int index = 0; index < factors.size(); index++) {
+					if (factors.get(index) == null) {
+						DecisionFactor df = (DecisionFactor)field.get(null);
+						df.setName(field.getName());
+						factors.set(index, df);
+						df.setIndex(index);
+						break;
+					}
+				}
+			}
+		} catch (IllegalAccessException e) {
+			ThirdPerson.LOGGER.error("This should never happen!");
+			throw new RuntimeException(e);
+		}
+		// Build
+		try {
+			Method building = getBuildMethod(clazz);
+			building.invoke(null, this);
+		} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+			ThirdPerson.LOGGER.error("This should never happen!");
+			throw new RuntimeException(e);
+		}
+		build();
+	}
+
+	@NotNull
+	private static Method getBuildMethod (Class<?> clazz) throws NoSuchMethodException {
+		Method method = clazz.getMethod("build", DecisionMap.class);
+		if (!Modifier.isStatic(method.getModifiers())) {
+			throw new RuntimeException(String.format("Expected static method %s", method));
+		} else if (!method.canAccess(null)) {
+			throw new RuntimeException(String.format("Cannot access method %s", method));
+		} else if (method.getReturnType() != void.class) {
+			throw new RuntimeException(String.format("Required return type void for method %s", method));
+		}
+		return method;
+	}
+
+	public void reset () {
+		ruleBuilders.clear();
+		factors.clear();
+		strategyMap.clear();
+		isBuilt  = false;
+		flagBits = 0;
+	}
+
+	private void assertBuilt (boolean expected) {
+		if (expected ^ isBuilt) {
+			throw new UnsupportedOperationException(isBuilt ? "DecisionMap has been built already.": "DecisionMap not built yet.");
+		}
 	}
 
 	@Override
-	public void addFactor (DecisionFactor factor) {
-		assert !isBuilt;
-		if (getFactorCount() >= MAX_FACTOR_COUNT) {
-			throw new IndexOutOfBoundsException(String.format("Factors count reaches the upper limit %d", getFactorCount()));
+	public DecisionMap<T> updateFactors () {
+		flagBits = 0;
+		final int factorCount = getFactorCount();
+		for (int i = 0; i < factorCount; i++) {
+			flagBits |= (factors.get(i).update().get() ? 1: 0) << i;
 		}
-		factors.add(factor);
+		return this;
 	}
 
 	@Override
 	public T make () {
-		assert isBuilt;
-		int id = 0;
-		for (int i = 0; i < factors.size(); i++) {
-			id |= (factors.get(i).get() ? 1: 0) << i;
-		}
-		Supplier<T> getter = map.get(id);
-		if (getter != null) {
-			return getter.get();
-		}
-		return null;
+		assertBuilt(true);
+		return autoExecute(getStrategy(flagBits));
 	}
 
-	/**
-	 * 因素数量
-	 */
+	@Override
+	public Supplier<T> getStrategy (int flagBits) {
+		return strategyMap.get(flagBits);
+	}
+
+	@Override
+	public T remake () {
+		assertBuilt(true);
+		return updateFactors().make();
+	}
+
 	@Override
 	public int getFactorCount () {
 		return factors.size();
 	}
 
-	/**
-	 * 2^因素数量
-	 */
 	@Override
 	public int getMapSize () {
 		return (int)Math.pow(2, getFactorCount());
@@ -72,8 +187,10 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 
 	@Override
 	public DecisionMap<T> build () {
-		assert !isBuilt;
-		map = new ArrayList<>(getMapSize());
+		strategyMap.clear();
+		while (strategyMap.size() < getMapSize()) {
+			strategyMap.add(null);
+		}
 		for (Runnable ruleBuilder: ruleBuilders) {
 			ruleBuilder.run();
 		}
@@ -87,39 +204,86 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> addRule (int id, Supplier<T> getter) {
-		ruleBuilders.add(() -> map.set(id, getter));
-		return this;
-	}
-
-	@Override
-	public DecisionMap<T> addRule (int id, int mask, Supplier<T> getter) {
-		ruleBuilders.add(() -> {
-			int mapSize = map.size();
-			int im      = id & mask;
-			for (int i = 0; i < mapSize; i++) {
-				if ((i & mask) == im) {
-					map.set(i, getter);
-				}
-			}
-		});
-		return this;
-	}
-
-	@Override
 	public DecisionMap<T> addRule (Function<boolean[], Supplier<T>> func) {
+		assertBuilt(false);
 		ruleBuilders.clear();
 		ruleBuilders.add(() -> {
-			int       mapSize     = map.size();
-			int       factorCount = (int)(Math.log(mapSize) / Math.log(2));
+			int       factorCount = getFactorCount();
+			int       mapSize     = getMapSize();
 			boolean[] params      = new boolean[factorCount];
-			for (int id = 0; id < mapSize; id++) {
-				for (int i = 0; i < factorCount; i++) {
-					params[i] = (id & (1 << i)) > 0;
+			for (int flagBits = 0; flagBits < mapSize; flagBits++) {
+				for (int factorIndex = 0; factorIndex < factorCount; factorIndex++) {
+					boolean factorValue = (flagBits & (1 << factorIndex)) > 0;
+					params[factorIndex] = factorValue;
 				}
-				map.set(id, func.apply(params));
+				strategyMap.set(flagBits, func.apply(params));
 			}
 		});
 		return this;
+	}
+
+	@Override
+	public DecisionMap<T> addRule (BiFunction<Integer, boolean[], Supplier<T>> func) {
+		assertBuilt(false);
+		ruleBuilders.clear();
+		ruleBuilders.add(() -> {
+			int       factorCount = getFactorCount();
+			int       mapSize     = getMapSize();
+			boolean[] flagList    = new boolean[factorCount];
+			for (int flagBits = 0; flagBits < mapSize; flagBits++) {
+				for (int factorIndex = 0; factorIndex < factorCount; factorIndex++) {
+					boolean factorValue = (flagBits & (1 << factorIndex)) > 0;
+					flagList[factorIndex] = factorValue;
+				}
+				strategyMap.set(flagBits, func.apply(flagBits, flagList));
+			}
+		});
+		return this;
+	}
+
+	@Override
+	public DecisionMap<T> addRule (int flagBits, Supplier<T> strategy) {
+		assertBuilt(false);
+		ruleBuilders.add(() -> strategyMap.set(flagBits, strategy));
+		return this;
+	}
+
+	@Override
+	public DecisionMap<T> addRule (int flagBits, int mask, Supplier<T> strategy) {
+		assertBuilt(false);
+		ruleBuilders.add(() -> {
+			int mapSize = strategyMap.size();
+			int im      = flagBits & mask;
+			for (int i = 0; i < mapSize; i++) {
+				if ((i & mask) == im) {
+					strategyMap.set(i, strategy);
+				}
+			}
+		});
+		return this;
+	}
+
+	private T autoExecute (Supplier<T> getter) {
+		return getter == null ? null: getter.get();
+	}
+
+	@Override
+	public String toString () {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("%s from %s (factorCount=%d, mapSize=%d)\n", DecisionMap.class.getSimpleName(), initializer.getSimpleName(), getFactorCount(), getMapSize()));
+		sb.append("Factors:\n");
+		for (int i = 0; i < factors.size(); i++) {
+			sb.append(String.format("\t[%d] %s\n", i, factors.get(i).getName()));
+		}
+		sb.append("Strategy Map:\n");
+		for (int flagBits = 0; flagBits < getMapSize(); flagBits++) {
+			Supplier<?> func = getStrategy(flagBits);
+			sb.append(String.format("\t%s %s\n", padStart(Integer.toBinaryString(flagBits), factors.size(), '0'), nameMap.getOrDefault(func, "unnamed")));
+		}
+		return sb.toString();
+	}
+
+	private String padStart (String s, int length, char filler) {
+		return String.format("%" + length + "s", s).replace(' ', filler);
 	}
 }
