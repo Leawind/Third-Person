@@ -127,8 +127,7 @@ public interface ThirdPersonEvents {
 	/**
 	 * 移动鼠标调整相机偏移
 	 *
-	 * @param xMove 水平移动的像素
-	 * @param yMove 垂直移动的像素
+	 * @param movement 移动的像素
 	 */
 	static void onAdjustingCameraOffset (Vector2d movement) {
 		if (movement.lengthSquared() == 0) {

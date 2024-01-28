@@ -23,7 +23,6 @@ public interface ISmoothValue<T> {
 	 */
 	void update (double period);
 
-
 	/**
 	 * 获取当前的平滑值
 	 * <p>

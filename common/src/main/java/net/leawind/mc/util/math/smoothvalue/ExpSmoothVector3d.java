@@ -24,14 +24,14 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	}
 
 	@Override
-	protected void udpateWithOutSavingLastValue (double period) {
-		Vector3d t = smoothFactor.copy().pow(smoothFactorWeight.copy().mul(period)).negate().add(1);
-		value = value.copy().lerp(target, t);//TODO ?
+	public Vector3d get (double t) {
+		return lastValue.copy().lerp(value, t);
 	}
 
 	@Override
-	public Vector3d get (double t) {
-		return lastValue.copy().lerp(value, t);
+	protected void udpateWithOutSavingLastValue (double period) {
+		Vector3d t = smoothFactor.copy().pow(smoothFactorWeight.copy().mul(period)).negate().add(1);
+		value = value.copy().lerp(target, t);
 	}
 
 	@Override

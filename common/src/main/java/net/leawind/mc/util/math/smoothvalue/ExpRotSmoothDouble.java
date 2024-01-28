@@ -35,6 +35,18 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	@Override
+	public Double get (double t) {
+		lastValue = LMath.floorMod(lastValue, cycle);
+		value     = LMath.floorMod(value, cycle);
+		double delta = LMath.floorMod(value - lastValue, cycle);
+		if (delta > cycle / 2) {
+			delta -= cycle;
+		}
+		value = lastValue + delta;
+		return LMath.lerp(lastValue, value, t);
+	}
+
+	@Override
 	protected void udpateWithOutSavingLastValue (double period) {
 		value  = LMath.floorMod(value, cycle);
 		target = LMath.floorMod(target, cycle);
@@ -50,18 +62,6 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	public void set (Double d) {
 		d = LMath.floorMod(d, cycle);
 		super.set(d);
-	}
-
-	@Override
-	public Double get (double t) {
-		lastValue = LMath.floorMod(lastValue, cycle);
-		value     = LMath.floorMod(value, cycle);
-		double delta = LMath.floorMod(value - lastValue, cycle);
-		if (delta > cycle / 2) {
-			delta -= cycle;
-		}
-		value = lastValue + delta;
-		return LMath.lerp(lastValue, value, t);
 	}
 
 	@Override

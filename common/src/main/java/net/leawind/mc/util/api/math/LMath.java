@@ -6,6 +6,7 @@ import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.minecraft.world.phys.Vec3;
 
+@SuppressWarnings("unused")
 public interface LMath {
 	/**
 	 * 将一个向量相对原本方向旋转一定弧度
@@ -125,8 +126,8 @@ public interface LMath {
 		return d < min ? min: Math.min(d, max);
 	}
 
-	static double lerp (double src, double dst, double t) {
-		return src + t * (dst - src);
+	static double lerp (double start, double end, double t) {
+		return start + t * (end - start);
 	}
 
 	static double floorMod (double x, double y) {

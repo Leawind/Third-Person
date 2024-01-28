@@ -3,6 +3,7 @@ package net.leawind.mc.util.api.math.vector;
 
 import net.leawind.mc.util.impl.math.vector.Vector3dImpl;
 
+@SuppressWarnings("unused")
 public interface Vector3d {
 	static Vector3d of () {
 		return of(0);
@@ -112,9 +113,9 @@ public interface Vector3d {
 
 	Vector3d clamp (Vector3d min, Vector3d max);
 
-	Vector3d lerp (Vector3d dst, double t);
+	Vector3d lerp (Vector3d end, double t);
 
-	Vector3d lerp (Vector3d dst, Vector3d t);
+	Vector3d lerp (Vector3d end, Vector3d t);
 
 	Vector3d absolute ();
 

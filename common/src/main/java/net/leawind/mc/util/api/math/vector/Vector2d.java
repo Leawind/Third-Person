@@ -3,6 +3,7 @@ package net.leawind.mc.util.api.math.vector;
 
 import net.leawind.mc.util.impl.math.vector.Vector2dImpl;
 
+@SuppressWarnings("unused")
 public interface Vector2d {
 	static Vector2d of () {
 		return of(0);
@@ -12,12 +13,12 @@ public interface Vector2d {
 		return of(d, d);
 	}
 
-	static Vector2d of (Vector2d v) {
-		return of(v.x(), v.y());
-	}
-
 	static Vector2d of (double x, double y) {
 		return new Vector2dImpl(x, y);
+	}
+
+	static Vector2d of (Vector2d v) {
+		return of(v.x(), v.y());
 	}
 
 	double x ();
@@ -108,9 +109,9 @@ public interface Vector2d {
 
 	Vector2d clamp (Vector2d min, Vector2d max);
 
-	Vector2d lerp (Vector2d dst, double t);
+	Vector2d lerp (Vector2d end, double t);
 
-	Vector2d lerp (Vector2d dst, Vector2d t);
+	Vector2d lerp (Vector2d end, Vector2d t);
 
 	Vector2d absolute ();
 

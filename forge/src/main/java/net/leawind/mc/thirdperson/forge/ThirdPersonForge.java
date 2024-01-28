@@ -14,8 +14,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(ModConstants.MOD_ID)
 public class ThirdPersonForge {
 	public ThirdPersonForge () {
-		// 仅在客户端运行
-		ThreadGroup tg = Thread.currentThread().getThreadGroup();
+		// 仅在客户端运行 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			EventBuses.registerModEventBus(ModConstants.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
 			ThirdPerson.init();

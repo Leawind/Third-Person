@@ -32,12 +32,12 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	 * flagBits -> Supplier
 	 */
 	private final @NotNull List<Supplier<T>>        strategyMap  = new ArrayList<>();
+	private final          Map<Supplier<?>, String> nameMap      = new HashMap<>();
 	/**
 	 * 此对象是否已经构建
 	 */
 	private                boolean                  isBuilt      = false;
 	private                int                      flagBits     = 0;
-	private final          Map<Supplier<?>, String> nameMap      = new HashMap<>();
 
 	/**
 	 * 根据类中的定义构建决策表
@@ -142,13 +142,29 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		flagBits = 0;
 	}
 
-	private void assertBuilt (boolean expected) {
+	@Override
+	public String toString () {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("%s from %s (factorCount=%d, mapSize=%d)\n", DecisionMap.class.getSimpleName(), initializer.getSimpleName(), getFactorCount(), getMapSize()));
+		sb.append("Factors:\n");
+		for (int i = 0; i < factors.size(); i++) {
+			sb.append(String.format("\t[%d] %s\n", i, factors.get(i).getName()));
+		}
+		sb.append("Strategy Map:\n");
+		for (int flagBits = 0; flagBits < getMapSize(); flagBits++) {
+			Supplier<?> func = getStrategy(flagBits);
+			sb.append(String.format("\t%s %s\n", padStart(Integer.toBinaryString(flagBits), factors.size(), '0'), nameMap.getOrDefault(func, "unnamed")));
+		}
+		return sb.toString();
+	}	private void assertBuilt (boolean expected) {
 		if (expected ^ isBuilt) {
 			throw new UnsupportedOperationException(isBuilt ? "DecisionMap has been built already.": "DecisionMap not built yet.");
 		}
 	}
 
-	@Override
+	private String padStart (String s, int length, char filler) {
+		return String.format("%" + length + "s", s).replace(' ', filler);
+	}	@Override
 	public DecisionMap<T> updateFactors () {
 		flagBits = 0;
 		final int factorCount = getFactorCount();
@@ -267,23 +283,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		return getter == null ? null: getter.get();
 	}
 
-	@Override
-	public String toString () {
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("%s from %s (factorCount=%d, mapSize=%d)\n", DecisionMap.class.getSimpleName(), initializer.getSimpleName(), getFactorCount(), getMapSize()));
-		sb.append("Factors:\n");
-		for (int i = 0; i < factors.size(); i++) {
-			sb.append(String.format("\t[%d] %s\n", i, factors.get(i).getName()));
-		}
-		sb.append("Strategy Map:\n");
-		for (int flagBits = 0; flagBits < getMapSize(); flagBits++) {
-			Supplier<?> func = getStrategy(flagBits);
-			sb.append(String.format("\t%s %s\n", padStart(Integer.toBinaryString(flagBits), factors.size(), '0'), nameMap.getOrDefault(func, "unnamed")));
-		}
-		return sb.toString();
-	}
 
-	private String padStart (String s, int length, char filler) {
-		return String.format("%" + length + "s", s).replace(' ', filler);
-	}
+
+
 }

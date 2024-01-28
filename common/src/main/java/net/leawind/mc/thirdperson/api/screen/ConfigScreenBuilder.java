@@ -8,9 +8,9 @@ import net.minecraft.client.gui.screens.Screen;
 /**
  * 配置屏幕构建器 可能包含多种实现
  *
- * <li>Yet Another Config Lib</li>
- * <li>Carbon Config</li>
- * <li>Cloth Config API</li>
+ * <li><input type="checkbox" TODO    /> Yet Another Config Lib</li>
+ * <li><input type="checkbox" TODO    /> Carbon Config</li>
+ * <li><input type="checkbox" checked /> Cloth Config API</li>
  */
 public interface ConfigScreenBuilder {
 	ConfigScreenBuilder YACL          = null;

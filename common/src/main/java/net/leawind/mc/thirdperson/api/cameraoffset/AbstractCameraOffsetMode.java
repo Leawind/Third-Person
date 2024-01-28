@@ -6,7 +6,7 @@ import net.leawind.mc.util.api.math.vector.Vector2d;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractCameraOffsetMode implements CameraOffsetMode {
-	public @NotNull Config config;
+	public final @NotNull Config config;
 
 	/**
 	 * 相机偏移相关数据直接存储在配置对象中

@@ -15,11 +15,42 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
+	public int hashCode () {
+		final int l = 31;
+		int       r = 1;
+		long      t;
+		t = Double.doubleToLongBits(x());
+		r = l * r + (int)(t ^ (t >>> 32));
+		t = Double.doubleToLongBits(y());
+		r = l * r + (int)(t ^ (t >>> 32));
+		t = Double.doubleToLongBits(z());
+		r = l * r + (int)(t ^ (t >>> 32));
+		return r;
+	}	@Override
 	public Vector3d set (double d) {
 		return set(d, d, d);
 	}
 
 	@Override
+	public boolean equals (Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Vector3d other = (Vector3d)obj;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x())) {
+			return false;
+		}
+		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y())) {
+			return false;
+		}
+		return Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z());
+	}	@Override
 	public Vector3d set (double x, double y, double z) {
 		this.x = x;
 		this.y = y;
@@ -28,6 +59,9 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
+	public String toString () {
+		return String.format("Vector3d(%f, %f, %f)", x, y, z);
+	}	@Override
 	public Vector3d set (Vector3d v) {
 		return set(v.x(), v.y(), v.z());
 	}
@@ -301,18 +335,18 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d lerp (Vector3d dst, double t) {
-		x = x + (dst.x() - x) * t;
-		y = y + (dst.y() - y) * t;
-		z = z + (dst.z() - z) * t;
+	public Vector3d lerp (Vector3d end, double t) {
+		x = x + (end.x() - x) * t;
+		y = y + (end.y() - y) * t;
+		z = z + (end.z() - z) * t;
 		return this;
 	}
 
 	@Override
-	public Vector3d lerp (Vector3d dst, Vector3d t) {
-		x = x + (dst.x() - x) * t.x();
-		y = y + (dst.y() - y) * t.y();
-		z = z + (dst.z() - z) * t.z();
+	public Vector3d lerp (Vector3d end, Vector3d t) {
+		x = x + (end.x() - x) * t.x();
+		y = y + (end.y() - y) * t.y();
+		z = z + (end.z() - z) * t.z();
 		return this;
 	}
 
@@ -359,43 +393,9 @@ public class Vector3dImpl implements Vector3d {
 		this.z = z;
 	}
 
-	@Override
-	public int hashCode () {
-		final int l = 31;
-		int       r = 1;
-		long      t;
-		t = Double.doubleToLongBits(x());
-		r = l * r + (int)(t ^ (t >>> 32));
-		t = Double.doubleToLongBits(y());
-		r = l * r + (int)(t ^ (t >>> 32));
-		t = Double.doubleToLongBits(z());
-		r = l * r + (int)(t ^ (t >>> 32));
-		return r;
-	}
 
-	@Override
-	public boolean equals (Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Vector3d other = (Vector3d)obj;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x())) {
-			return false;
-		}
-		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y())) {
-			return false;
-		}
-		return Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z());
-	}
 
-	@Override
-	public String toString () {
-		return String.format("Vector3d(%f, %f, %f)", x, y, z);
-	}
+
+
+
 }

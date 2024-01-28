@@ -14,17 +14,6 @@ import java.util.function.Supplier;
  * 玩家旋转策略
  */
 public interface RotateStrategy {
-	@SuppressWarnings("unused")
-	static void build (DecisionMap<Double> map) {
-		map.addRule(0, 0, DEFAULT)    //
-		   .addRule(~0, rotate_interacting.mask(), INTERECTING)    //
-		   .addRule(~0, rotate_with_camera_when_not_aiming.mask(), WITH_CAMERA_NOT_AIMING)    //
-		   .addRule(~0, is_fall_flying.mask(), FALL_FLYING)    //
-		   .addRule(~0, is_swimming.mask(), SWIMMING)    //
-		   .addRule(~0, is_aiming.mask(), AIMING)    //
-		;
-	}
-
 	@ADecisionFactor DecisionFactor is_swimming                        = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.getRawCameraEntity().isSwimming());
 	@ADecisionFactor DecisionFactor is_aiming                          = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isAiming() || ModReferee.doesPlayerWantToAim());
 	@ADecisionFactor DecisionFactor is_fall_flying                     = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isFallFlying());
@@ -69,4 +58,15 @@ public interface RotateStrategy {
 		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.LINEAR);
 		return 0D;
 	};
+
+	@SuppressWarnings("unused")
+	static void build (DecisionMap<Double> map) {
+		map.addRule(0, 0, DEFAULT)    //
+		   .addRule(~0, rotate_interacting.mask(), INTERECTING)    //
+		   .addRule(~0, rotate_with_camera_when_not_aiming.mask(), WITH_CAMERA_NOT_AIMING)    //
+		   .addRule(~0, is_fall_flying.mask(), FALL_FLYING)    //
+		   .addRule(~0, is_swimming.mask(), SWIMMING)    //
+		   .addRule(~0, is_aiming.mask(), AIMING)    //
+		;
+	}
 }

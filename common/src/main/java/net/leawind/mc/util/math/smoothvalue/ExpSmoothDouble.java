@@ -30,13 +30,13 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	protected void udpateWithOutSavingLastValue (double period) {
-		value = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
+	public Double get (double t) {
+		return LMath.lerp(lastValue, value, t);
 	}
 
 	@Override
-	public Double get (double t) {
-		return LMath.lerp(lastValue, value, t);
+	protected void udpateWithOutSavingLastValue (double period) {
+		value = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
 	}
 
 	@Override

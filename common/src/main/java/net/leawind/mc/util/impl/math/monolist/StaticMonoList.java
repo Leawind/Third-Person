@@ -1,8 +1,8 @@
 package net.leawind.mc.util.impl.math.monolist;
 
 
-import net.leawind.mc.util.api.math.MonoList;
 import net.leawind.mc.util.api.math.LMath;
+import net.leawind.mc.util.api.math.MonoList;
 
 import java.util.function.Function;
 

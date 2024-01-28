@@ -29,15 +29,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-/**
- * NOW dynamical smoothFactor for Rotation
- */
 public class EntityAgentImpl implements EntityAgent {
 	private final    Minecraft           minecraft;
 	private final    ExpSmoothVector3d   smoothEyePosition;
+	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
+	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
 	private @NotNull RotateTarget        rotateTarget       = RotateTarget.NONE;
 	private @NotNull SmoothType          smoothRotationType = SmoothType.EXP_LINEAR;
-	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
@@ -46,7 +44,6 @@ public class EntityAgentImpl implements EntityAgent {
 	 * 上一个 client tick 中的 isInterecting 的值
 	 */
 	private          boolean             wasInterecting     = false;
-	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
 
 	public EntityAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft = minecraft;
@@ -110,6 +107,18 @@ public class EntityAgentImpl implements EntityAgent {
 		wasInterecting = isInterecting();
 		updateRotateStrategy();
 		smoothRotation.update(period);
+		{
+			// NOW 更新smoothEyePositon
+			Config   config      = ThirdPerson.getConfig();
+			Vector3d eyePosition = getRawEyePosition(1);
+			if (isFallFlying()) {
+				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
+			} else {
+				config.cameraOffsetScheme.getMode().getEyeSmoothFactor(smoothEyePosition.smoothFactor);
+			}
+			smoothEyePosition.setTarget(eyePosition);
+			smoothEyePosition.update(period);
+		}
 		switch (smoothRotationType) {
 			case HARD, EXP -> {
 			}
@@ -143,17 +152,6 @@ public class EntityAgentImpl implements EntityAgent {
 				minecraft.player.yBodyRot = (float)(k * 45 + minecraft.player.getYRot());
 			}
 		}
-	}
-
-	/**
-	 * 立即设置玩家朝向
-	 * <p>
-	 * 同时修改原始玩家实体的朝向和旧朝向
-	 */
-	private void setRawRotation (Vector2d rot) {
-		Entity entity = getRawPlayerEntity();
-		entity.setYRot(entity.yRotO = (float)rot.y());
-		entity.setXRot(entity.xRotO = (float)rot.x());
 	}
 
 	@Override
@@ -190,6 +188,26 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public @NotNull Vector3d getSmoothEyePosition (float partialTick) {
 		return smoothEyePosition.get(partialTick);
+	}
+
+	/**
+	 * 如果平滑系数为0，则返回完全不平滑的值
+	 * <p>
+	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
+	 */
+	@Override
+	public @NotNull Vector3d getSmoothEyePositionDoNotKnowHowToName (float partialTick) {
+		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
+		Vector3d smoothFactor           = smoothEyePosition.smoothFactor.copy();
+		boolean  isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
+		boolean  isVerticalZero         = smoothFactor.y() == 0;
+		if (isHorizontalZero || isVerticalZero) {
+			Vector3d rawEyePosition = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
+			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? rawEyePosition.x(): smoothEyePositionValue.x(),//
+												 isVerticalZero ? rawEyePosition.y(): smoothEyePositionValue.y(),//
+												 isHorizontalZero ? rawEyePosition.z(): smoothEyePositionValue.z());
+		}
+		return smoothEyePositionValue;
 	}
 
 	@Override
@@ -229,5 +247,16 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public boolean wasInterecting () {
 		return wasInterecting;
+	}
+
+	/**
+	 * 立即设置玩家朝向
+	 * <p>
+	 * 同时修改原始玩家实体的朝向和旧朝向
+	 */
+	private void setRawRotation (Vector2d rot) {
+		Entity entity = getRawPlayerEntity();
+		entity.setYRot(entity.yRotO = (float)rot.y());
+		entity.setXRot(entity.xRotO = (float)rot.x());
 	}
 }

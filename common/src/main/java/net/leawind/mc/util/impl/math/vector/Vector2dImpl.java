@@ -24,11 +24,30 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
+	public boolean equals (Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Vector2d other = (Vector2d)obj;
+		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x())) {
+			return false;
+		}
+		return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y());
+	}	@Override
 	public double x () {
 		return x;
 	}
 
 	@Override
+	public String toString () {
+		return String.format("Vector2d(%f, %f)", x(), y());
+	}	@Override
 	public double y () {
 		return y;
 	}
@@ -295,16 +314,16 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d lerp (Vector2d dst, double t) {
-		x = x + (dst.x() - x) * t;
-		y = y + (dst.y() - y) * t;
+	public Vector2d lerp (Vector2d end, double t) {
+		x = x + (end.x() - x) * t;
+		y = y + (end.y() - y) * t;
 		return this;
 	}
 
 	@Override
-	public Vector2d lerp (Vector2d dst, Vector2d t) {
-		x = x + (dst.x() - x) * t.x();
-		y = y + (dst.y() - y) * t.y();
+	public Vector2d lerp (Vector2d end, Vector2d t) {
+		x = x + (end.x() - x) * t.x();
+		y = y + (end.y() - y) * t.y();
 		return this;
 	}
 
@@ -330,26 +349,7 @@ public class Vector2dImpl implements Vector2d {
 		this.y = y;
 	}
 
-	@Override
-	public boolean equals (Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Vector2d other = (Vector2d)obj;
-		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x())) {
-			return false;
-		}
-		return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y());
-	}
 
-	@Override
-	public String toString () {
-		return String.format("Vector2d(%f, %f)", x(), y());
-	}
+
+
 }

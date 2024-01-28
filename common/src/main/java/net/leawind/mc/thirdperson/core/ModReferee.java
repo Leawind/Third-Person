@@ -4,8 +4,8 @@ package net.leawind.mc.thirdperson.core;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.event.ThirdPersonKeys;
 import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.api.math.LMath;
+import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.minecraft.client.Minecraft;
 
 public final class ModReferee {

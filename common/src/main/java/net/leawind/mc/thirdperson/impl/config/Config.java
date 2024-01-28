@@ -21,7 +21,7 @@ public class Config extends AbstractConfig {
 	public @NotNull Set<ItemPattern>   aim_item_patterns;
 	public @NotNull Set<ItemPattern>   use_aim_item_patterns;
 	// ============================================================ //
-	public @NotNull CameraOffsetScheme cameraOffsetScheme = CameraOffsetScheme.create(this);
+	public final @NotNull CameraOffsetScheme cameraOffsetScheme = CameraOffsetScheme.create(this);
 
 	public Config () {
 		DefaultConfig.setToDefault(this);

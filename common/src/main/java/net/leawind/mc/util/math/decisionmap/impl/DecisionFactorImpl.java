@@ -28,22 +28,22 @@ public class DecisionFactorImpl implements DecisionFactor {
 	}
 
 	@Override
-	public void setName (String name) {
-		this.name = name;
-	}
-
-	@Override
 	public String getName () {
 		return name;
 	}
 
 	@Override
-	public int index () {
-		return index;
+	public void setName (String name) {
+		this.name = name;
 	}
 
 	@Override
 	public void setIndex (int index) {
 		this.index = index;
+	}
+
+	@Override
+	public int index () {
+		return index;
 	}
 }

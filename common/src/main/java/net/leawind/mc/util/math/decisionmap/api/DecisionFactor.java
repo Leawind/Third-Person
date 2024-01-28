@@ -18,15 +18,15 @@ public interface DecisionFactor {
 
 	DecisionFactor update ();
 
-	void setName (String name);
-
 	String getName ();
 
-	int index ();
+	void setName (String name);
 
 	void setIndex (int index);
 
 	default int mask () {
 		return 1 << index();
 	}
+
+	int index ();
 }

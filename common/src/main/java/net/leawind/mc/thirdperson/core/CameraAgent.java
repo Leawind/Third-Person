@@ -108,27 +108,6 @@ public final class CameraAgent {
 		}
 	}
 
-	/**
-	 * 计算并更新相机的朝向和坐标
-	 *
-	 * @param period 维度
-	 */
-	@PerformanceSensitive
-	public static void onCameraSetup (double period) {
-		// 设置相机朝向和位置
-		updateFakeCameraRotationPosition();
-		preventThroughWall();
-		updateFakeCameraRotationPosition();
-		applyCamera();
-		wasCameraCloseToEntity = ModReferee.wasCameraCloseToEntity();
-		//			if (wasCameraCloseToEntity) {
-		//				// 假的第一人称，强制将相机放在玩家眼睛处
-		//				Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
-		//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
-		//				applyCamera();
-		//			}
-	}
-
 	public static void updateSmoothVirtualDistance (double period) {
 		Config           config      = ThirdPerson.getConfig();
 		boolean          isAdjusting = ModReferee.isAdjustingCameraDistance();
@@ -156,6 +135,27 @@ public final class CameraAgent {
 			mode.getOffsetRatio(smoothOffsetRatio.target);
 		}
 		smoothOffsetRatio.update(period);
+	}
+
+	/**
+	 * 计算并更新相机的朝向和坐标
+	 *
+	 * @param period 维度
+	 */
+	@PerformanceSensitive
+	public static void onCameraSetup (double period) {
+		// 设置相机朝向和位置
+		updateFakeCameraRotationPosition();
+		preventThroughWall();
+		updateFakeCameraRotationPosition();
+		applyCamera();
+		wasCameraCloseToEntity = ModReferee.wasCameraCloseToEntity();
+		//			if (wasCameraCloseToEntity) {
+		//				// 假的第一人称，强制将相机放在玩家眼睛处
+		//				Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
+		//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
+		//				applyCamera();
+		//			}
 	}
 
 	/**
@@ -233,22 +233,23 @@ public final class CameraAgent {
 		assert mc.cameraEntity != null;
 		Vector3d eyePosition      = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
 		double   dist             = smoothEyePositionValue.distance(eyePosition);
-		Vector3d sf               = smoothEyePosition.smoothFactor.copy();
-		boolean  isHorizontalZero = sf.x() * sf.z() == 0;
-		boolean  isVerticalZero   = sf.y() == 0;
+		Vector3d smoothFactor     = smoothEyePosition.smoothFactor.copy();
+		boolean  isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
+		boolean  isVerticalZero   = smoothFactor.y() == 0;
 		if (isHorizontalZero || isVerticalZero) {
-			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? eyePosition.x(): smoothEyePositionValue.x(), isVerticalZero ? eyePosition.y(): smoothEyePositionValue.y(), isHorizontalZero ? eyePosition.z(): smoothEyePositionValue.z());
+			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? eyePosition.x(): smoothEyePositionValue.x(),//
+												 isVerticalZero ? eyePosition.y(): smoothEyePositionValue.y(),//
+												 isHorizontalZero ? eyePosition.z(): smoothEyePositionValue.z());
 		}
 		return smoothEyePositionValue;
 	}
 
-	public static void updateSmoothEyePosition (double period) {
+	public static void updateSmoothEyePosition (double period) {//NOW move to EntityAgent
 		Config    config = ThirdPerson.getConfig();
 		Minecraft mc     = Minecraft.getInstance();
 		if (mc.cameraEntity != null && mc.player != null) {
 			CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
 			Vector3d         eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
-			// 飞行时使用专用的平滑系数
 			if (ThirdPerson.ENTITY_AGENT.isFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
 			} else {

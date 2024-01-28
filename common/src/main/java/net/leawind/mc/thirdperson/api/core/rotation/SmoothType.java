@@ -41,7 +41,6 @@ public enum SmoothType {
 	/**
 	 * <h1>指数衰减+线性插值</h1>
 	 * 解决了 {@link SmoothType#EXP} 的不平滑问题。但是响应速度可能略迟钝。
-	 *
 	 * <h2>render tick</h2>
 	 * 取值时不直接取平滑值，而是取线性插值
 	 * <h2>client tick</h2>
