@@ -12,7 +12,6 @@ import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
-import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -25,36 +24,30 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class CameraAgent {
-	public static final @NotNull             Camera            fakeCamera              = new Camera();
-	public static final @NotNull             Vector2d          relativeRotation        = Vector2d.of(0);
+	public static final @NotNull Camera            fakeCamera              = new Camera();
+	public static final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
 	/**
 	 * 相机偏移量
 	 */
-	public static final @NotNull             ExpSmoothVector2d smoothOffsetRatio;
-	/**
-	 * 眼睛的平滑位置
-	 */
-	@Deprecated public static final @NotNull ExpSmoothVector3d smoothEyePosition;
+	public static final @NotNull ExpSmoothVector2d smoothOffsetRatio;
 	/**
 	 * 虚相机到平滑眼睛的距离
 	 */
-	public static final @NotNull             ExpSmoothDouble   smoothDistanceToEye;
-	public static @Nullable                  BlockGetter       level;
-	public static @Nullable                  Camera            camera;
+	public static final @NotNull ExpSmoothDouble   smoothDistanceToEye;
+	public static @Nullable      BlockGetter       level;
+	public static @Nullable      Camera            camera;
 	/**
 	 * renderTick 中更新
 	 */
-	public static                            boolean           wasCameraCloseToEntity  = false;
+	public static                boolean           wasCameraCloseToEntity  = false;
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	public static                            double            lastCameraTurnTimeStamp = 0;
+	public static                double            lastCameraTurnTimeStamp = 0;
 
 	static {
 		smoothOffsetRatio = new ExpSmoothVector2d();
 		smoothOffsetRatio.setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT);
-		smoothEyePosition = new ExpSmoothVector3d();
-		smoothEyePosition.setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
 		smoothDistanceToEye = new ExpSmoothDouble();
 		smoothDistanceToEye.setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT);
 	}
@@ -192,7 +185,7 @@ public final class CameraAgent {
 	public static void preventThroughWall () {
 		// 防止穿墙
 		Vec3   cameraPosition    = fakeCamera.getPosition();
-		Vec3   smoothEyePosition = LMath.toVec3(getSmoothEyePositionValue());
+		Vec3   smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPerson.lastPartialTick));
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		double minDistance       = initDistance;
@@ -224,40 +217,8 @@ public final class CameraAgent {
 	}
 
 	public static @NotNull Vector3d calculatePositionWithoutOffset () {
-		return getSmoothEyePositionValue().add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
-	}
-
-	public static @NotNull Vector3d getSmoothEyePositionValue () {
-		Vector3d  smoothEyePositionValue = smoothEyePosition.get(ThirdPerson.lastPartialTick);
-		Minecraft mc                     = Minecraft.getInstance();
-		assert mc.cameraEntity != null;
-		Vector3d eyePosition      = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
-		double   dist             = smoothEyePositionValue.distance(eyePosition);
-		Vector3d smoothFactor     = smoothEyePosition.smoothFactor.copy();
-		boolean  isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
-		boolean  isVerticalZero   = smoothFactor.y() == 0;
-		if (isHorizontalZero || isVerticalZero) {
-			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? eyePosition.x(): smoothEyePositionValue.x(),//
-												 isVerticalZero ? eyePosition.y(): smoothEyePositionValue.y(),//
-												 isHorizontalZero ? eyePosition.z(): smoothEyePositionValue.z());
-		}
-		return smoothEyePositionValue;
-	}
-
-	public static void updateSmoothEyePosition (double period) {//NOW move to EntityAgent
-		Config    config = ThirdPerson.getConfig();
-		Minecraft mc     = Minecraft.getInstance();
-		if (mc.cameraEntity != null && mc.player != null) {
-			CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
-			Vector3d         eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition(ThirdPerson.lastPartialTick));
-			if (ThirdPerson.ENTITY_AGENT.isFallFlying()) {
-				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
-			} else {
-				mode.getEyeSmoothFactor(smoothEyePosition.smoothFactor);
-			}
-			smoothEyePosition.setTarget(eyePosition);
-			smoothEyePosition.update(period);
-		}
+		return ThirdPerson.ENTITY_AGENT.getPossiblySmoothEyePosition(ThirdPerson.lastPartialTick)    //
+									   .add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
 	/**

@@ -190,19 +190,15 @@ public class EntityAgentImpl implements EntityAgent {
 		return smoothEyePosition.get(partialTick);
 	}
 
-	/**
-	 * 如果平滑系数为0，则返回完全不平滑的值
-	 * <p>
-	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
-	 */
 	@Override
-	public @NotNull Vector3d getSmoothEyePositionDoNotKnowHowToName (float partialTick) {
+	public @NotNull Vector3d getPossiblySmoothEyePosition (float partialTick) {
 		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
+		Vector3d rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
+		double   distance                   = smoothEyePositionValue.distance(rawEyePosition);
 		Vector3d smoothFactor           = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
 		boolean  isVerticalZero         = smoothFactor.y() == 0;
 		if (isHorizontalZero || isVerticalZero) {
-			Vector3d rawEyePosition = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
 			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? rawEyePosition.x(): smoothEyePositionValue.x(),//
 												 isVerticalZero ? rawEyePosition.y(): smoothEyePositionValue.y(),//
 												 isHorizontalZero ? rawEyePosition.z(): smoothEyePositionValue.z());

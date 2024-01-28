@@ -54,7 +54,7 @@ public final class ModReferee {
 			return false;
 		}
 		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
-		Vector3d eyePosition    = CameraAgent.getSmoothEyePositionValue();
+		Vector3d eyePosition    = ThirdPerson.ENTITY_AGENT.getPossiblySmoothEyePosition(ThirdPerson.lastPartialTick);
 		Vector3d cameraPosition = LMath.toVector3d(CameraAgent.camera.getPosition());
 		if (config.cameraOffsetScheme.getMode().getMaxDistance() <= config.distanceMonoList.get(0)) {
 			return true;

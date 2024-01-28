@@ -42,7 +42,6 @@ public interface ThirdPersonEvents {
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		Config config = ThirdPerson.getConfig();
-		CameraAgent.updateSmoothEyePosition(0.05);
 		config.cameraOffsetScheme.setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
 	}
 

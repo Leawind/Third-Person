@@ -59,32 +59,39 @@ public interface EntityAgent {
 	/**
 	 * 获取相机附着的实体
 	 */
-	@NotNull Entity getRawCameraEntity () throws NullPointerException;
+	@NotNull Entity getRawCameraEntity ();
 
 	/**
 	 * 获取玩家实体
 	 */
-	@NotNull LocalPlayer getRawPlayerEntity () throws NullPointerException;
+	@NotNull LocalPlayer getRawPlayerEntity ();
 
 	/**
 	 * 直接从实体获取眼睛坐标
 	 */
-	@NotNull Vector3d getRawEyePosition (float partialTick) throws NullPointerException;
+	@NotNull Vector3d getRawEyePosition (float partialTick);
 
 	/**
 	 * 直接从实体获取坐标
 	 */
-	@NotNull Vector3d getRawPosition (float partialTick) throws NullPointerException;
+	@NotNull Vector3d getRawPosition (float partialTick);
 
 	/**
 	 * 直接从实体获取朝向
 	 */
-	@NotNull Vector2d getRawRotation (float partialTick) throws NullPointerException;
+	@NotNull Vector2d getRawRotation (float partialTick);
 
 	/**
 	 * 获取平滑的眼睛坐标
 	 */
 	@NotNull Vector3d getSmoothEyePosition (float partialTick);
+
+	/**
+	 * 如果平滑系数为0，则返回完全不平滑的值
+	 * <p>
+	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
+	 */
+	@NotNull Vector3d getPossiblySmoothEyePosition (float partialTick);
 
 	/**
 	 * 实体是否在交互
