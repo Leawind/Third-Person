@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.impl.core;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.config.Config;

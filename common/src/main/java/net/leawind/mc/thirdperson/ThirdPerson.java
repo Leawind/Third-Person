@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;

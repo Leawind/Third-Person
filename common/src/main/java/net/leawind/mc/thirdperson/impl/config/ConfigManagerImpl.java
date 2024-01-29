@@ -4,7 +4,7 @@ package net.leawind.mc.thirdperson.impl.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;

@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.api.config;
 
 
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
 import net.minecraft.client.gui.screens.Screen;

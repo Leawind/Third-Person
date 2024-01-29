@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.impl.core;
 
 import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.impl.config.Config;

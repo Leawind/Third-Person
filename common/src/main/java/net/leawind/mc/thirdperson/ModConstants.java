@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.api;
+package net.leawind.mc.thirdperson;
 
 
 import net.minecraft.client.Minecraft;

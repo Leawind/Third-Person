@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.impl.config;
 
 
-import net.leawind.mc.thirdperson.api.ModConstants;
+import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.AbstractConfig;
 import net.leawind.mc.util.api.ItemPattern;
