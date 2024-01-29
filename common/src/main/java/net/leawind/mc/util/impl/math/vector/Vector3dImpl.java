@@ -26,9 +26,6 @@ public class Vector3dImpl implements Vector3d {
 		t = Double.doubleToLongBits(z());
 		r = l * r + (int)(t ^ (t >>> 32));
 		return r;
-	}	@Override
-	public Vector3d set (double d) {
-		return set(d, d, d);
 	}
 
 	@Override
@@ -50,7 +47,34 @@ public class Vector3dImpl implements Vector3d {
 			return false;
 		}
 		return Double.doubleToLongBits(z) == Double.doubleToLongBits(other.z());
-	}	@Override
+	}
+
+	@Override
+	public String toString () {
+		return String.format("Vector3d(%f, %f, %f)", x, y, z);
+	}
+
+	@Override
+	public double x () {
+		return x;
+	}
+
+	@Override
+	public double y () {
+		return y;
+	}
+
+	@Override
+	public double z () {
+		return z;
+	}
+
+	@Override
+	public Vector3d set (double d) {
+		return set(d, d, d);
+	}
+
+	@Override
 	public Vector3d set (double x, double y, double z) {
 		this.x = x;
 		this.y = y;
@@ -59,9 +83,6 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public String toString () {
-		return String.format("Vector3d(%f, %f, %f)", x, y, z);
-	}	@Override
 	public Vector3d set (Vector3d v) {
 		return set(v.x(), v.y(), v.z());
 	}
@@ -364,18 +385,8 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public double x () {
-		return x;
-	}
-
-	@Override
 	public void x (double x) {
 		this.x = x;
-	}
-
-	@Override
-	public double y () {
-		return y;
 	}
 
 	@Override
@@ -384,18 +395,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public double z () {
-		return z;
-	}
-
-	@Override
 	public void z (double z) {
 		this.z = z;
 	}
-
-
-
-
-
-
 }

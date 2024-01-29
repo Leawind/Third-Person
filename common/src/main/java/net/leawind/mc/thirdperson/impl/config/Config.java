@@ -17,11 +17,11 @@ import java.util.Set;
  */
 public class Config extends AbstractConfig {
 	// ============================================================ //
-	public @NotNull MonoList           distanceMonoList;
-	public @NotNull Set<ItemPattern>   aim_item_patterns;
-	public @NotNull Set<ItemPattern>   use_aim_item_patterns;
-	// ============================================================ //
 	public final @NotNull CameraOffsetScheme cameraOffsetScheme = CameraOffsetScheme.create(this);
+	// ============================================================ //
+	public @NotNull       MonoList           distanceMonoList;
+	public @NotNull       Set<ItemPattern>   aim_item_patterns;
+	public @NotNull       Set<ItemPattern>   use_aim_item_patterns;
 
 	public Config () {
 		DefaultConfig.setToDefault(this);

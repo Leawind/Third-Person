@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson.impl.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.api.math.LMath;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.leawind.mc.util.api.math.vector.Vector3d;
@@ -22,12 +21,12 @@ public enum RotateTarget {
 	/**
 	 * 与相机朝向相同
 	 */
-	CAMERA_ROTATION(CameraAgent::calculateRotation),
+	CAMERA_ROTATION(() -> ThirdPerson.CAMERA_AGENT.calculateRotation()),
 	/**
 	 * 转向相机的视线落点，即准星所指的位置
 	 */
 	CAMERA_HIT_RESULT(() -> {
-		Vector3d cameraHitPosition = CameraAgent.getPickPosition();
+		Vector3d cameraHitPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
 		if (cameraHitPosition == null) {
 			return CAMERA_ROTATION.getRotation();
 		} else {

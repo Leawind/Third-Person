@@ -5,8 +5,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.ModKeyMapping;
@@ -20,7 +18,7 @@ public interface ThirdPersonKeys {
 	ModKeyMapping FORCE_AIMING      = ModKeyMapping.of(getId("force_aiming"), InputConstants.UNKNOWN.getValue(), ModConstants.KEY_CATEGORY);
 	ModKeyMapping TOOGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		Config config = ThirdPerson.getConfig();
-		if (ModReferee.isThirdPerson()) {
+		if (ThirdPerson.isThirdPerson()) {
 			if (config.is_mod_enable) {
 				ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
 			} else {
@@ -49,7 +47,7 @@ public interface ThirdPersonKeys {
 		ThirdPerson.getConfig().cameraOffsetScheme.toNextSide();
 	});
 	ModKeyMapping TOGGLE_AIMING     = ModKeyMapping.of(getId("toggle_aiming"), ModConstants.KEY_CATEGORY).onDown(() -> {
-		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
 			ThirdPerson.isToggleToAiming = !ThirdPerson.isToggleToAiming;
 		}
 	});

@@ -1,8 +1,7 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModReferee;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -26,9 +25,9 @@ public class EntityMixin {
 		if (mc.player == null) {
 			return viewVectorFake;
 		}
-		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
 			Vec3      eyePosition    = mc.player.getEyePosition(1);
-			HitResult hr             = CameraAgent.pick();
+			HitResult hr             = ThirdPerson.CAMERA_AGENT.pick();
 			Vec3      eyeToHitResult = eyePosition.vectorTo(hr.getLocation());
 			return eyeToHitResult.normalize();
 		}

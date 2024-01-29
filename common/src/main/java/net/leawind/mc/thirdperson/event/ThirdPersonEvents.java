@@ -8,11 +8,8 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.api.math.LMath;
@@ -34,13 +31,11 @@ public interface ThirdPersonEvents {
 		if (minecraft.isPaused()) {
 			return;
 		}
-		if (!CameraAgent.isAvailable()) {
-			return;
-		}
-		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
+		if (!ThirdPerson.isAvailable()) {
 			return;
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
+		ThirdPerson.CAMERA_AGENT.onClientTickPre();
 		Config config = ThirdPerson.getConfig();
 		config.cameraOffsetScheme.setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
 	}
@@ -66,7 +61,7 @@ public interface ThirdPersonEvents {
 	 */
 	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
 		Config config = ThirdPerson.getConfig();
-		if (ModReferee.isAdjustingCameraDistance()) {
+		if (ThirdPerson.isAdjustingCameraDistance()) {
 			double dist = config.cameraOffsetScheme.getMode().getMaxDistance();
 			dist = config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
 			config.cameraOffsetScheme.getMode().setMaxDistance(dist);
@@ -78,7 +73,7 @@ public interface ThirdPersonEvents {
 
 	private static void onPlayerReset () {
 		ThirdPerson.ENTITY_AGENT.reset();
-		CameraAgent.reset();
+		ThirdPerson.CAMERA_AGENT.reset();
 	}
 
 	/**
@@ -90,7 +85,7 @@ public interface ThirdPersonEvents {
 	 */
 	static void onCameraSetup (BlockGetter level, float partialTick) {
 		ThirdPerson.lastPartialTick = partialTick;
-		CameraAgent.level           = level;
+		ThirdPerson.CAMERA_AGENT.setLevel(level);
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null) {
 			return;
@@ -98,8 +93,8 @@ public interface ThirdPersonEvents {
 		double now    = Blaze3D.getTime();
 		double period = now - ThirdPerson.lastCameraSetupTimeStamp;
 		ThirdPerson.lastCameraSetupTimeStamp = now;
-		if (ModReferee.isThirdPerson()) {
-			CameraAgent.onCameraSetup(period);
+		if (ThirdPerson.isThirdPerson()) {
+			ThirdPerson.CAMERA_AGENT.onCameraSetup(period);
 		}
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
@@ -110,9 +105,9 @@ public interface ThirdPersonEvents {
 		double now    = Blaze3D.getTime();
 		double period = now - ThirdPerson.lastRenderTickTimeStamp;
 		ThirdPerson.lastRenderTickTimeStamp = now;
-		if (ModReferee.isThirdPerson() && CameraAgent.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
+		if (ThirdPerson.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPerson.ENTITY_AGENT.onPreRender(period, partialTick);
-			CameraAgent.onPreRender(period, partialTick);
+			ThirdPerson.CAMERA_AGENT.onPreRender(period, partialTick);
 		}
 	}
 
@@ -176,29 +171,8 @@ public interface ThirdPersonEvents {
 	 * 进入第三人称视角时触发
 	 */
 	static void onEnterThirdPerson () {
-		CameraAgent.reset();
+		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
 		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
-	}
-
-	/**
-	 * 鼠标移动导致的相机旋转
-	 *
-	 * @param dy 偏航角变化量
-	 * @param dx 俯仰角变化量
-	 */
-	static void onCameraTurn (double dy, double dx) {
-		Config config = ThirdPerson.getConfig();
-		if (config.is_mod_enable && !ModReferee.isAdjustingCameraOffset()) {
-			dy *= 0.15;
-			dx *= config.lock_camera_pitch_angle ? 0: -0.15;
-			if (dy != 0 || dx != 0) {
-				CameraAgent.lastCameraTurnTimeStamp = Blaze3D.getTime();
-				double rx = CameraAgent.relativeRotation.x() + dx;
-				double ry = CameraAgent.relativeRotation.y() + dy;
-				rx = LMath.clamp(rx, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT);
-				CameraAgent.relativeRotation.set(rx, ry % 360f);
-			}
-		}
 	}
 }

@@ -1,8 +1,7 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.core.CameraAgent;
-import net.leawind.mc.thirdperson.core.ModReferee;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
 import net.leawind.mc.util.api.math.vector.Vector2d;
 import net.minecraft.client.Minecraft;
@@ -28,7 +27,7 @@ public class MouseHandlerMixin {
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	public void turnPlayer (CallbackInfo ci) {
-		if (CameraAgent.isAvailable() && ModReferee.isAdjustingCameraOffset()) {
+		if (ThirdPerson.isAvailable() && ThirdPerson.isAdjustingCameraOffset()) {
 			ThirdPersonEvents.onAdjustingCameraOffset(Vector2d.of(accumulatedDX, accumulatedDY));
 			accumulatedDX = 0;
 			accumulatedDY = 0;
@@ -46,8 +45,8 @@ public class MouseHandlerMixin {
 	 */
 	@Redirect(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
 	private void turnPlayerInject (LocalPlayer instance, double dy, double dx) {
-		if (CameraAgent.isAvailable() && ModReferee.isThirdPerson()) {
-			ThirdPersonEvents.onCameraTurn(dy, dx);
+		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
+			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
 		} else {
 			assert Minecraft.getInstance().player != null;
 			Minecraft.getInstance().player.turn(dy, dx);

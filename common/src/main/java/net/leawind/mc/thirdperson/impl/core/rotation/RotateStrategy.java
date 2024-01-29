@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson.impl.core.rotation;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
-import net.leawind.mc.thirdperson.core.ModReferee;
 import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
@@ -15,7 +14,7 @@ import java.util.function.Supplier;
  */
 public interface RotateStrategy {
 	@ADecisionFactor DecisionFactor is_swimming                        = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.getRawCameraEntity().isSwimming());
-	@ADecisionFactor DecisionFactor is_aiming                          = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isAiming() || ModReferee.doesPlayerWantToAim());
+	@ADecisionFactor DecisionFactor is_aiming                          = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isAiming() || ThirdPerson.doesPlayerWantToAim());
 	@ADecisionFactor DecisionFactor is_fall_flying                     = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isFallFlying());
 	@ADecisionFactor DecisionFactor rotate_with_camera_when_not_aiming = DecisionFactor.of(() -> ThirdPerson.getConfig().player_rotate_with_camera_when_not_aiming);
 	@ADecisionFactor DecisionFactor rotate_interacting                 = DecisionFactor.of(() -> ThirdPerson.getConfig().auto_rotate_interacting && ThirdPerson.ENTITY_AGENT.isInterecting());

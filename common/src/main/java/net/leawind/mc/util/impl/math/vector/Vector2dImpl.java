@@ -39,15 +39,19 @@ public class Vector2dImpl implements Vector2d {
 			return false;
 		}
 		return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y());
-	}	@Override
-	public double x () {
-		return x;
 	}
 
 	@Override
 	public String toString () {
 		return String.format("Vector2d(%f, %f)", x(), y());
-	}	@Override
+	}
+
+	@Override
+	public double x () {
+		return x;
+	}
+
+	@Override
 	public double y () {
 		return y;
 	}
@@ -348,8 +352,4 @@ public class Vector2dImpl implements Vector2d {
 	public void y (double y) {
 		this.y = y;
 	}
-
-
-
-
 }

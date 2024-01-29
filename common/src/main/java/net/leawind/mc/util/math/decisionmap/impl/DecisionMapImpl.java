@@ -156,15 +156,19 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 			sb.append(String.format("\t%s %s\n", padStart(Integer.toBinaryString(flagBits), factors.size(), '0'), nameMap.getOrDefault(func, "unnamed")));
 		}
 		return sb.toString();
+	}
+
+	private String padStart (String s, int length, char filler) {
+		return String.format("%" + length + "s", s).replace(' ', filler);
 	}	private void assertBuilt (boolean expected) {
 		if (expected ^ isBuilt) {
 			throw new UnsupportedOperationException(isBuilt ? "DecisionMap has been built already.": "DecisionMap not built yet.");
 		}
 	}
 
-	private String padStart (String s, int length, char filler) {
-		return String.format("%" + length + "s", s).replace(' ', filler);
-	}	@Override
+
+
+	@Override
 	public DecisionMap<T> updateFactors () {
 		flagBits = 0;
 		final int factorCount = getFactorCount();
@@ -282,8 +286,4 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	private T autoExecute (Supplier<T> getter) {
 		return getter == null ? null: getter.get();
 	}
-
-
-
-
 }

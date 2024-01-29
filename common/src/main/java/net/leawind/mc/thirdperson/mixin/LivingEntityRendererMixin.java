@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.leawind.mc.thirdperson.core.CameraAgent;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -22,7 +22,7 @@ public class LivingEntityRendererMixin {
 	@Inject(method="render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;" + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at=@At(value="HEAD"), cancellable=true)
 	public void render (LivingEntity entity, float f, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
 		if (entity == Minecraft.getInstance().cameraEntity) {
-			if (CameraAgent.wasCameraCloseToEntity) {
+			if (ThirdPerson.CAMERA_AGENT.wasCameraCloseToEntity()) {
 				ci.cancel();
 			}
 		}

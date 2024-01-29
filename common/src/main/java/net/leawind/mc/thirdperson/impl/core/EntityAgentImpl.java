@@ -5,7 +5,6 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.ModConstants;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
-import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
@@ -142,7 +141,7 @@ public class EntityAgentImpl implements EntityAgent {
 	private void updateBodyRotation () {
 		// TODO 侧身拉弓
 		Config config = ThirdPerson.getConfig();
-		if (config.auto_turn_body_drawing_a_bow && CameraAgent.isControlledCamera()) {
+		if (config.auto_turn_body_drawing_a_bow && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			assert minecraft.player != null;
 			if (minecraft.player.isUsingItem() && minecraft.player.getUseItem().is(Items.BOW)) {
 				double k = minecraft.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
@@ -194,7 +193,7 @@ public class EntityAgentImpl implements EntityAgent {
 	public @NotNull Vector3d getPossiblySmoothEyePosition (float partialTick) {
 		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
 		Vector3d rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
-		double   distance                   = smoothEyePositionValue.distance(rawEyePosition);
+		double   distance               = smoothEyePositionValue.distance(rawEyePosition);
 		Vector3d smoothFactor           = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
 		boolean  isVerticalZero         = smoothFactor.y() == 0;
