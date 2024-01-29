@@ -81,7 +81,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		// Category: smooth factors
 		final ConfigCategory CATEGORY_SMOOTH_FACTORS = builder.getOrCreateCategory(ConfigManager.getText("option_category.smooth_factors"));
 		{
-			CATEGORY_MISC.addEntry(buildSmoothFactorEntry("flying_smooth_factor", defaults.flying_smooth_factor, config.flying_smooth_factor, v -> config.flying_smooth_factor = v, entryBuilder));
+			CATEGORY_SMOOTH_FACTORS.addEntry(buildSmoothFactorEntry("flying_smooth_factor", defaults.flying_smooth_factor, config.flying_smooth_factor, v -> config.flying_smooth_factor = v, entryBuilder));
 			// SubCategory: Adjusting Camera
 			final SubCategoryBuilder Subcategory_Adjusting_Camera = buildSubCategory("adjusting_camera", entryBuilder);
 			Subcategory_Adjusting_Camera.add(buildSmoothFactorEntry("adjusting_camera_offset_smooth_factor",
