@@ -1,8 +1,7 @@
-package net.leawind.mc.util.impl.math.monolist;
+package net.leawind.mc.util.math.monolist;
 
 
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.MonoList;
+import net.leawind.mc.util.math.LMath;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -42,12 +41,14 @@ public class DeferedMonoList implements MonoList {
 		return new DeferedMonoList(length, getter);
 	}
 
+	@Override
 	public double offset (double value, int offset) {
 		int i = iadsorption(value) + offset;
 		i = LMath.clamp(i, 0, length() - 1);
 		return get(i);
 	}
 
+	@Override
 	public int iadsorption (double value) {
 		int ileft   = 0;
 		int iright  = length() - 1;
@@ -75,10 +76,12 @@ public class DeferedMonoList implements MonoList {
 		}
 	}
 
+	@Override
 	public double get (int i) {
 		return getter.apply(i);
 	}
 
+	@Override
 	public double adsorption (double value) {
 		return get(iadsorption(value));
 	}
@@ -88,6 +91,7 @@ public class DeferedMonoList implements MonoList {
 		return sgn;
 	}
 
+	@Override
 	public int length () {
 		return length;
 	}

@@ -1,7 +1,6 @@
-package net.leawind.mc.util.impl;
+package net.leawind.mc.util.itempattern;
 
 
-import net.leawind.mc.util.api.ItemPattern;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,7 @@ public class ItemPatternImpl implements ItemPattern {
 	 * @param descriptionId 正规的 descriptionId
 	 * @param patternTag    NBT模式标签
 	 */
-	public ItemPatternImpl (@Nullable String descriptionId, @Nullable CompoundTag patternTag) throws IllegalArgumentException {
+	public ItemPatternImpl (@Nullable String descriptionId, @Nullable CompoundTag patternTag) {
 		if (!(descriptionId == null || RGX_REGULAR_ID.matcher(descriptionId).matches())) {
 			throw new IllegalArgumentException(String.format("Irregular item description id: %s", descriptionId));
 		}
@@ -37,11 +36,6 @@ public class ItemPatternImpl implements ItemPattern {
 		this.patternTag    = patternTag;
 		this.tagExp        = patternTag == null ? null: patternTag.getAsString();
 		this.hashCode      = Objects.hashCode(descriptionId) ^ Objects.hashCode(tagExp);
-	}
-
-	@Override
-	public boolean match (@Nullable ItemStack itemStack) {
-		return matchId(itemStack) && matchNbt(itemStack);
 	}
 
 	@Override

@@ -1,7 +1,8 @@
-package net.leawind.mc.util.impl.math.vector;
+package net.leawind.mc.util.math.vector.impl;
 
 
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
+import org.jetbrains.annotations.NotNull;
 
 public class Vector3dImpl implements Vector3d {
 	private double x;
@@ -70,6 +71,21 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
+	public void x (double x) {
+		this.x = x;
+	}
+
+	@Override
+	public void y (double y) {
+		this.y = y;
+	}
+
+	@Override
+	public void z (double z) {
+		this.z = z;
+	}
+
+	@Override
 	public Vector3d set (double d) {
 		return set(d, d, d);
 	}
@@ -83,17 +99,17 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d set (Vector3d v) {
+	public Vector3d set (@NotNull Vector3d v) {
 		return set(v.x(), v.y(), v.z());
 	}
 
 	@Override
-	public Vector3d add (Vector3d v, Vector3d dest) {
+	public Vector3d add (@NotNull Vector3d v, @NotNull Vector3d dest) {
 		return add(v.x(), v.y(), v.z(), dest);
 	}
 
 	@Override
-	public Vector3d add (double x, double y, double z, Vector3d dest) {
+	public Vector3d add (double x, double y, double z, @NotNull Vector3d dest) {
 		dest.x(this.x + x);
 		dest.y(this.y + y);
 		dest.z(this.z + z);
@@ -101,7 +117,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d add (Vector3d v) {
+	public Vector3d add (@NotNull Vector3d v) {
 		return add(v.x(), v.y(), v.z());
 	}
 
@@ -119,12 +135,12 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d sub (Vector3d v, Vector3d dest) {
+	public Vector3d sub (@NotNull Vector3d v, @NotNull Vector3d dest) {
 		return sub(v.x(), v.y(), v.z(), dest);
 	}
 
 	@Override
-	public Vector3d sub (double x, double y, double z, Vector3d dest) {
+	public Vector3d sub (double x, double y, double z, @NotNull Vector3d dest) {
 		dest.x(this.x - x);
 		dest.y(this.y - y);
 		dest.z(this.z - z);
@@ -132,7 +148,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d sub (Vector3d v) {
+	public Vector3d sub (@NotNull Vector3d v) {
 		return sub(v.x(), v.y(), v.z());
 	}
 
@@ -145,12 +161,12 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d mul (Vector3d v, Vector3d dest) {
+	public Vector3d mul (@NotNull Vector3d v, @NotNull Vector3d dest) {
 		return mul(v.x(), v.y(), v.z(), dest);
 	}
 
 	@Override
-	public Vector3d mul (double x, double y, double z, Vector3d dest) {
+	public Vector3d mul (double x, double y, double z, @NotNull Vector3d dest) {
 		dest.x(this.x * x);
 		dest.y(this.y * y);
 		dest.z(this.z * z);
@@ -158,7 +174,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d mul (Vector3d v) {
+	public Vector3d mul (@NotNull Vector3d v) {
 		return mul(v.x(), v.y(), v.z());
 	}
 
@@ -176,12 +192,12 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d div (Vector3d v, Vector3d dest) {
+	public Vector3d div (@NotNull Vector3d v, @NotNull Vector3d dest) {
 		return div(v.x(), v.y(), v.z(), dest);
 	}
 
 	@Override
-	public Vector3d div (double x, double y, double z, Vector3d dest) {
+	public Vector3d div (double x, double y, double z, @NotNull Vector3d dest) {
 		dest.x(this.x / x);
 		dest.y(this.y / y);
 		dest.z(this.z / z);
@@ -189,7 +205,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d div (Vector3d v) {
+	public Vector3d div (@NotNull Vector3d v) {
 		return div(v.x(), v.y(), v.z());
 	}
 
@@ -207,12 +223,12 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d pow (Vector3d v, Vector3d dest) {
+	public Vector3d pow (@NotNull Vector3d v, @NotNull Vector3d dest) {
 		return pow(v.x(), v.y(), v.z(), dest);
 	}
 
 	@Override
-	public Vector3d pow (double x, double y, double z, Vector3d dest) {
+	public Vector3d pow (double x, double y, double z, @NotNull Vector3d dest) {
 		dest.x(Math.pow(this.x, x));
 		dest.y(Math.pow(this.y, y));
 		dest.z(Math.pow(this.z, z));
@@ -220,12 +236,12 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d pow (double d, Vector3d dest) {
+	public Vector3d pow (double d, @NotNull Vector3d dest) {
 		return pow(d, d, d, dest);
 	}
 
 	@Override
-	public Vector3d pow (Vector3d v) {
+	public Vector3d pow (@NotNull Vector3d v) {
 		return pow(v.x(), v.y(), v.z());
 	}
 
@@ -248,7 +264,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public double distance (Vector3d v) {
+	public double distance (@NotNull Vector3d v) {
 		return distance(v.x(), v.y(), v.z());
 	}
 
@@ -269,17 +285,17 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
+	public double length () {
+		return Math.sqrt(x * x + y * y + z * z);
+	}
+
+	@Override
 	public Vector3d normalize () {
 		double len = length();
 		x /= len;
 		y /= len;
 		z /= len;
 		return this;
-	}
-
-	@Override
-	public double length () {
-		return Math.sqrt(x * x + y * y + z * z);
 	}
 
 	@Override
@@ -307,7 +323,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d rotateTo (Vector3d direction) {
+	public Vector3d rotateTo (@NotNull Vector3d direction) {
 		return direction.normalize(length());
 	}
 
@@ -335,7 +351,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public double dot (Vector3d v) {
+	public double dot (@NotNull Vector3d v) {
 		return x * v.x() + y * v.y() + z * v.z();
 	}
 
@@ -348,7 +364,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d clamp (Vector3d min, Vector3d max) {
+	public Vector3d clamp (@NotNull Vector3d min, @NotNull Vector3d max) {
 		x = Math.min(Math.max(x, min.x()), max.x());
 		y = Math.min(Math.max(y, min.y()), max.y());
 		z = Math.min(Math.max(z, min.z()), max.z());
@@ -356,7 +372,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d lerp (Vector3d end, double t) {
+	public Vector3d lerp (@NotNull Vector3d end, double t) {
 		x = x + (end.x() - x) * t;
 		y = y + (end.y() - y) * t;
 		z = z + (end.z() - z) * t;
@@ -364,7 +380,7 @@ public class Vector3dImpl implements Vector3d {
 	}
 
 	@Override
-	public Vector3d lerp (Vector3d end, Vector3d t) {
+	public Vector3d lerp (@NotNull Vector3d end, @NotNull Vector3d t) {
 		x = x + (end.x() - x) * t.x();
 		y = y + (end.y() - y) * t.y();
 		z = z + (end.z() - z) * t.z();
@@ -382,20 +398,5 @@ public class Vector3dImpl implements Vector3d {
 	@Override
 	public Vector3d copy () {
 		return Vector3d.of(x(), y(), z());
-	}
-
-	@Override
-	public void x (double x) {
-		this.x = x;
-	}
-
-	@Override
-	public void y (double y) {
-		this.y = y;
-	}
-
-	@Override
-	public void z (double z) {
-		this.z = z;
 	}
 }

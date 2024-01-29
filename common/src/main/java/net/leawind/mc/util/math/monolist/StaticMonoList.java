@@ -1,8 +1,9 @@
-package net.leawind.mc.util.impl.math.monolist;
+package net.leawind.mc.util.math.monolist;
 
 
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.MonoList;
+import net.leawind.mc.util.math.LMath;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -20,7 +21,7 @@ public class StaticMonoList implements MonoList {
 	 *
 	 * @param list 列表
 	 */
-	public StaticMonoList (double[] list) throws IllegalArgumentException {
+	public StaticMonoList (double @NotNull [] list) {
 		this.list = list;
 		sgn       = (int)Math.signum(list[1] - list[0]);
 		if (!isMono()) {
@@ -38,11 +39,11 @@ public class StaticMonoList implements MonoList {
 		return true;
 	}
 
-	public static StaticMonoList linear (int length) {
+	public static @NotNull StaticMonoList linear (int length) {
 		return of(length, d -> (double)d);
 	}
 
-	public static StaticMonoList of (int length, Function<Integer, Double> getter) throws IllegalArgumentException {
+	public static @NotNull StaticMonoList of (int length, @NotNull Function<Integer, Double> getter) {
 		double[] list = new double[length];
 		for (int i = 0; i < length; i++) {
 			list[i] = getter.apply(i);
@@ -50,26 +51,27 @@ public class StaticMonoList implements MonoList {
 		return of(list);
 	}
 
-	public static StaticMonoList of (double[] list) throws IllegalArgumentException {
+	@Contract("_ -> new")
+	public static @NotNull StaticMonoList of (double[] list) {
 		return new StaticMonoList(list);
 	}
 
-	public static StaticMonoList exp (int length) {
+	public static @NotNull StaticMonoList exp (int length) {
 		return of(length, Math::exp);
 	}
 
-	public static StaticMonoList squared (int length) {
+	public static @NotNull StaticMonoList squared (int length) {
 		return of(length, i -> (double)(i * i));
 	}
 
-	public static StaticMonoList of (int length, double min, double max, Function<Double, Double> f, Function<Double, Double> fInv) throws IllegalArgumentException {
+	public static @NotNull StaticMonoList of (int length, double min, double max, @NotNull Function<Double, Double> f, @NotNull Function<Double, Double> fInv) {
 		double xmin   = fInv.apply(min);
 		double xrange = fInv.apply(max) - xmin;
 		return of(length, i -> f.apply(i * xrange / length + xmin));
 	}
 
 	@Override
-	public double get (int i) throws ArrayIndexOutOfBoundsException {
+	public double get (int i) {
 		return list[i];
 	}
 

@@ -3,10 +3,12 @@ package net.leawind.mc.thirdperson.api.cameraoffset;
 
 import net.leawind.mc.thirdperson.impl.cameraoffset.CameraOffsetSchemeImpl;
 import net.leawind.mc.thirdperson.impl.config.Config;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public interface CameraOffsetScheme {
-	static CameraOffsetScheme create (Config config) {
+	@Contract("_ -> new")
+	static @NotNull CameraOffsetScheme create (@NotNull Config config) {
 		return new CameraOffsetSchemeImpl(config);
 	}
 

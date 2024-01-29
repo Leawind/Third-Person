@@ -3,8 +3,8 @@ package net.leawind.mc.thirdperson.impl.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ModConstants;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;
@@ -62,7 +62,7 @@ public class ConfigManagerImpl implements ConfigManager {
 	}
 
 	@Override
-	public @Nullable Screen getConfigScreen (Screen parent) {
+	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
 		return ConfigScreenBuilder.CLOTH_CONFIG.build(config, parent);
 	}
 

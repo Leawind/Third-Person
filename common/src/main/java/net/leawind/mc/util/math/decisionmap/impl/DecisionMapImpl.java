@@ -6,6 +6,7 @@ import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +51,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	 * {@literal public static void build(DecisionMap\<Double> map){}}
 	 * </pre>
 	 */
-	public DecisionMapImpl (Class<?> clazz) {
+	public DecisionMapImpl (@NotNull Class<?> clazz) {
 		initializer = clazz;
 		// Register Factors
 		List<Field> adfListIndexed   = new LinkedList<>();
@@ -121,8 +122,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		build();
 	}
 
-	@NotNull
-	private static Method getBuildMethod (Class<?> clazz) throws NoSuchMethodException {
+	private static @NotNull Method getBuildMethod (Class<?> clazz) throws NoSuchMethodException {
 		Method method = clazz.getMethod("build", DecisionMap.class);
 		if (!Modifier.isStatic(method.getModifiers())) {
 			throw new RuntimeException(String.format("Expected static method %s", method));
@@ -160,13 +160,13 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 
 	private String padStart (String s, int length, char filler) {
 		return String.format("%" + length + "s", s).replace(' ', filler);
-	}	private void assertBuilt (boolean expected) {
+	}
+
+	private void assertBuilt (boolean expected) {
 		if (expected ^ isBuilt) {
 			throw new UnsupportedOperationException(isBuilt ? "DecisionMap has been built already.": "DecisionMap not built yet.");
 		}
 	}
-
-
 
 	@Override
 	public DecisionMap<T> updateFactors () {
@@ -185,7 +185,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public Supplier<T> getStrategy (int flagBits) {
+	public @Nullable Supplier<T> getStrategy (int flagBits) {
 		return strategyMap.get(flagBits);
 	}
 
@@ -224,7 +224,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> addRule (Function<boolean[], Supplier<T>> func) {
+	public DecisionMap<T> addRule (@NotNull Function<boolean[], Supplier<T>> func) {
 		assertBuilt(false);
 		ruleBuilders.clear();
 		ruleBuilders.add(() -> {
@@ -243,7 +243,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> addRule (BiFunction<Integer, boolean[], Supplier<T>> func) {
+	public DecisionMap<T> addRule (@NotNull BiFunction<Integer, boolean[], Supplier<T>> func) {
 		assertBuilt(false);
 		ruleBuilders.clear();
 		ruleBuilders.add(() -> {

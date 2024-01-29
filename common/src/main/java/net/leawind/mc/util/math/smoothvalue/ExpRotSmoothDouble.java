@@ -1,7 +1,8 @@
 package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.util.api.math.LMath;
+import net.leawind.mc.util.math.LMath;
+import org.jetbrains.annotations.NotNull;
 
 public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	private double cycle;
@@ -14,7 +15,7 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 		setCycle(cycle);
 	}
 
-	public static ExpRotSmoothDouble createWithHalflife (double cycle, double halflife) {
+	public static @NotNull ExpRotSmoothDouble createWithHalflife (double cycle, double halflife) {
 		ExpRotSmoothDouble v = new ExpRotSmoothDouble(cycle);
 		v.setHalflife(halflife);
 		return v;

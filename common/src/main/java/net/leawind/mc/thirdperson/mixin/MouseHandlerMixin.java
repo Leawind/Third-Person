@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
-import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;

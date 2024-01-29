@@ -6,6 +6,7 @@ import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -59,7 +60,7 @@ public interface RotateStrategy {
 	};
 
 	@SuppressWarnings("unused")
-	static void build (DecisionMap<Double> map) {
+	static void build (@NotNull DecisionMap<Double> map) {
 		map.addRule(0, 0, DEFAULT)    //
 		   .addRule(~0, rotate_interacting.mask(), INTERECTING)    //
 		   .addRule(~0, rotate_with_camera_when_not_aiming.mask(), WITH_CAMERA_NOT_AIMING)    //

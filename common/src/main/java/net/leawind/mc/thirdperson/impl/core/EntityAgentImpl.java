@@ -8,10 +8,10 @@ import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
-import net.leawind.mc.util.api.ItemPattern;
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.itempattern.ItemPattern;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothRotation;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
@@ -249,7 +249,7 @@ public class EntityAgentImpl implements EntityAgent {
 	 * <p>
 	 * 同时修改原始玩家实体的朝向和旧朝向
 	 */
-	private void setRawRotation (Vector2d rot) {
+	private void setRawRotation (@NotNull Vector2d rot) {
 		Entity entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());
 		entity.setXRot(entity.xRotO = (float)rot.x());

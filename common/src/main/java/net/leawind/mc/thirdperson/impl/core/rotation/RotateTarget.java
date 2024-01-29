@@ -2,9 +2,9 @@ package net.leawind.mc.thirdperson.impl.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 

@@ -2,13 +2,14 @@ package net.leawind.mc.thirdperson.event;
 
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ModConstants;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
-import net.leawind.mc.util.api.ModKeyMapping;
+import net.leawind.mc.util.modkeymapping.ModKeyMapping;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public interface ThirdPersonKeys {
@@ -56,7 +57,7 @@ public interface ThirdPersonKeys {
 		config.lock_camera_pitch_angle = !config.lock_camera_pitch_angle;
 	});
 
-	private static String getId (String name) {
+	private static @NotNull String getId (@NotNull String name) {
 		return "key." + ModConstants.MOD_ID + "." + name;
 	}
 

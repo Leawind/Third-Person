@@ -12,12 +12,13 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.BlockGetter;
+import org.jetbrains.annotations.NotNull;
 
 public interface ThirdPersonEvents {
 	static void register () {
@@ -27,7 +28,7 @@ public interface ThirdPersonEvents {
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 	}
 
-	private static void onClientTickPre (Minecraft minecraft) {
+	private static void onClientTickPre (@NotNull Minecraft minecraft) {
 		if (minecraft.isPaused()) {
 			return;
 		}
@@ -41,12 +42,12 @@ public interface ThirdPersonEvents {
 	/**
 	 * 当玩家死亡后重生或加入新的维度时触发
 	 */
-	private static void onClientPlayerRespawn (LocalPlayer oldPlayer, LocalPlayer newPlayer) {
+	private static void onClientPlayerRespawn (@NotNull LocalPlayer oldPlayer, @NotNull LocalPlayer newPlayer) {
 		onPlayerReset();
 		ThirdPerson.LOGGER.info("on Client player respawn");
 	}
 
-	private static void onClientPlayerJoin (LocalPlayer player) {
+	private static void onClientPlayerJoin (@NotNull LocalPlayer player) {
 		onPlayerReset();
 		ThirdPerson.LOGGER.info("on Client player join");
 	}
@@ -57,7 +58,7 @@ public interface ThirdPersonEvents {
 	 * @param minecraft mc
 	 * @param amount    向前滚是+1，向后滚是-1
 	 */
-	private static EventResult onMouseScrolled (Minecraft minecraft, double amount) {
+	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPerson.isAdjustingCameraDistance()) {
 			double dist = config.cameraOffsetScheme.getMode().getMaxDistance();
@@ -81,7 +82,7 @@ public interface ThirdPersonEvents {
 	 * <p>
 	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
 	 */
-	static void onCameraSetup (BlockGetter level, float partialTick) {
+	static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
 		ThirdPerson.lastPartialTick = partialTick;
 		ThirdPerson.CAMERA_AGENT.setLevel(level);
 		Minecraft mc = Minecraft.getInstance();
@@ -121,7 +122,7 @@ public interface ThirdPersonEvents {
 	 *
 	 * @param movement 移动的像素
 	 */
-	static void onAdjustingCameraOffset (Vector2d movement) {
+	static void onAdjustingCameraOffset (@NotNull Vector2d movement) {
 		if (movement.lengthSquared() == 0) {
 			return;
 		}

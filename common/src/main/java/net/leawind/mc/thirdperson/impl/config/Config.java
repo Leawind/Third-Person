@@ -4,9 +4,9 @@ package net.leawind.mc.thirdperson.impl.config;
 import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.AbstractConfig;
-import net.leawind.mc.util.api.ItemPattern;
-import net.leawind.mc.util.api.math.MonoList;
-import net.leawind.mc.util.impl.math.monolist.StaticMonoList;
+import net.leawind.mc.util.itempattern.ItemPattern;
+import net.leawind.mc.util.math.monolist.MonoList;
+import net.leawind.mc.util.math.monolist.StaticMonoList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;

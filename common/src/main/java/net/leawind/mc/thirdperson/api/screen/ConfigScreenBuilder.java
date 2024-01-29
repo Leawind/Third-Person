@@ -4,6 +4,8 @@ package net.leawind.mc.thirdperson.api.screen;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.screen.ClothConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 配置屏幕构建器 可能包含多种实现
@@ -17,5 +19,5 @@ public interface ConfigScreenBuilder {
 	ConfigScreenBuilder CARBON_CONFIG = null;
 	ConfigScreenBuilder CLOTH_CONFIG  = new ClothConfigScreenBuilder();
 
-	Screen build (Config config, Screen parent);
+	@NotNull Screen build (@NotNull Config config, @Nullable Screen parent);
 }

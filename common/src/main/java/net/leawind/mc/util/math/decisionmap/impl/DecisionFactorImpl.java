@@ -22,13 +22,13 @@ public class DecisionFactorImpl implements DecisionFactor {
 	}
 
 	@Override
-	public DecisionFactor update () {
+	public @NotNull DecisionFactor update () {
 		value = getter.getAsBoolean();
 		return this;
 	}
 
 	@Override
-	public String getName () {
+	public @NotNull String getName () {
 		return name;
 	}
 

@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.impl.config;
 
 
 import net.leawind.mc.thirdperson.api.config.AbstractConfig;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 public final class DefaultConfig extends AbstractConfig {
 	private static final DefaultConfig instance = (DefaultConfig)setToDefault(new DefaultConfig());
 
-	public static AbstractConfig setToDefault (AbstractConfig config) {
+	@Contract("_ -> param1")
+	public static @NotNull AbstractConfig setToDefault (@NotNull AbstractConfig config) {
 		config.is_mod_enable           = true;
 		config.lock_camera_pitch_angle = false;
 		//

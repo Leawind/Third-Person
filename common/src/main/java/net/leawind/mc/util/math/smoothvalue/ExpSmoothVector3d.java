@@ -1,7 +1,7 @@
 package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -59,7 +59,7 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 	}
 
 	@Override
-	public void setMT (Vector3d multiplier, Vector3d time) {
+	public void setMT (@NotNull Vector3d multiplier, Vector3d time) {
 		if (multiplier.x() < 0 || multiplier.x() > 1) {
 			throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x());
 		} else if (multiplier.y() < 0 || multiplier.y() > 1) {

@@ -1,7 +1,8 @@
-package net.leawind.mc.util.impl.math.vector;
+package net.leawind.mc.util.math.vector.impl;
 
 
-import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import org.jetbrains.annotations.NotNull;
 
 public class Vector2dImpl implements Vector2d {
 	private double x;
@@ -57,12 +58,22 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
+	public void x (double x) {
+		this.x = x;
+	}
+
+	@Override
+	public void y (double y) {
+		this.y = y;
+	}
+
+	@Override
 	public Vector2d set (double d) {
 		return set(d, d);
 	}
 
 	@Override
-	public Vector2d set (Vector2d v) {
+	public Vector2d set (@NotNull Vector2d v) {
 		return set(v.x(), v.y());
 	}
 
@@ -74,19 +85,19 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d add (Vector2d v, Vector2d dest) {
+	public Vector2d add (@NotNull Vector2d v, @NotNull Vector2d dest) {
 		return add(v.x(), v.y(), dest);
 	}
 
 	@Override
-	public Vector2d add (double x, double y, Vector2d dest) {
+	public Vector2d add (double x, double y, @NotNull Vector2d dest) {
 		dest.x(this.x + x);
 		dest.y(this.y + y);
 		return dest;
 	}
 
 	@Override
-	public Vector2d add (Vector2d v) {
+	public Vector2d add (@NotNull Vector2d v) {
 		return add(v.x(), v.y());
 	}
 
@@ -103,19 +114,19 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d sub (Vector2d v, Vector2d dest) {
+	public Vector2d sub (@NotNull Vector2d v, @NotNull Vector2d dest) {
 		return sub(v.x(), v.y(), dest);
 	}
 
 	@Override
-	public Vector2d sub (double x, double y, Vector2d dest) {
+	public Vector2d sub (double x, double y, @NotNull Vector2d dest) {
 		dest.x(this.x - x);
 		dest.y(this.y - y);
 		return dest;
 	}
 
 	@Override
-	public Vector2d sub (Vector2d v) {
+	public Vector2d sub (@NotNull Vector2d v) {
 		return sub(v.x(), v.y());
 	}
 
@@ -127,19 +138,19 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d mul (Vector2d v, Vector2d dest) {
+	public Vector2d mul (@NotNull Vector2d v, @NotNull Vector2d dest) {
 		return mul(v.x(), v.y(), dest);
 	}
 
 	@Override
-	public Vector2d mul (double x, double y, Vector2d dest) {
+	public Vector2d mul (double x, double y, @NotNull Vector2d dest) {
 		dest.x(this.x * x);
 		dest.y(this.y * y);
 		return dest;
 	}
 
 	@Override
-	public Vector2d mul (Vector2d v) {
+	public Vector2d mul (@NotNull Vector2d v) {
 		return mul(v.x(), v.y());
 	}
 
@@ -156,19 +167,19 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d div (Vector2d v, Vector2d dest) {
+	public Vector2d div (@NotNull Vector2d v, @NotNull Vector2d dest) {
 		return div(v.x(), v.y(), dest);
 	}
 
 	@Override
-	public Vector2d div (double x, double y, Vector2d dest) {
+	public Vector2d div (double x, double y, @NotNull Vector2d dest) {
 		dest.x(this.x / x);
 		dest.y(this.y / y);
 		return dest;
 	}
 
 	@Override
-	public Vector2d div (Vector2d v) {
+	public Vector2d div (@NotNull Vector2d v) {
 		return div(v.x(), v.y());
 	}
 
@@ -180,24 +191,24 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d pow (Vector2d v, Vector2d dest) {
+	public Vector2d pow (@NotNull Vector2d v, @NotNull Vector2d dest) {
 		return pow(v.x(), v.y(), dest);
 	}
 
 	@Override
-	public Vector2d pow (double d, Vector2d dest) {
+	public Vector2d pow (double d, @NotNull Vector2d dest) {
 		return pow(d, d, dest);
 	}
 
 	@Override
-	public Vector2d pow (double x, double y, Vector2d dest) {
+	public Vector2d pow (double x, double y, @NotNull Vector2d dest) {
 		dest.x(Math.pow(this.x, x));
 		dest.y(Math.pow(this.y, y));
 		return dest;
 	}
 
 	@Override
-	public Vector2d pow (Vector2d v) {
+	public Vector2d pow (@NotNull Vector2d v) {
 		return pow(v.x(), v.y());
 	}
 
@@ -224,7 +235,7 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public double distance (Vector2d v) {
+	public double distance (@NotNull Vector2d v) {
 		return distance(v.x(), v.y());
 	}
 
@@ -281,7 +292,7 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d rotateTo (Vector2d direction) {
+	public Vector2d rotateTo (@NotNull Vector2d direction) {
 		return direction.normalize(length());
 	}
 
@@ -299,7 +310,7 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public double dot (Vector2d v) {
+	public double dot (@NotNull Vector2d v) {
 		return x() * v.x() + y() * v.y();
 	}
 
@@ -311,21 +322,21 @@ public class Vector2dImpl implements Vector2d {
 	}
 
 	@Override
-	public Vector2d clamp (Vector2d min, Vector2d max) {
+	public Vector2d clamp (@NotNull Vector2d min, @NotNull Vector2d max) {
 		x = Math.min(Math.max(x, min.x()), max.x());
 		y = Math.min(Math.max(y, min.y()), max.y());
 		return this;
 	}
 
 	@Override
-	public Vector2d lerp (Vector2d end, double t) {
+	public Vector2d lerp (@NotNull Vector2d end, double t) {
 		x = x + (end.x() - x) * t;
 		y = y + (end.y() - y) * t;
 		return this;
 	}
 
 	@Override
-	public Vector2d lerp (Vector2d end, Vector2d t) {
+	public Vector2d lerp (@NotNull Vector2d end, @NotNull Vector2d t) {
 		x = x + (end.x() - x) * t.x();
 		y = y + (end.y() - y) * t.y();
 		return this;
@@ -341,15 +352,5 @@ public class Vector2dImpl implements Vector2d {
 	@Override
 	public Vector2d copy () {
 		return Vector2d.of(x, y);
-	}
-
-	@Override
-	public void x (double x) {
-		this.x = x;
-	}
-
-	@Override
-	public void y (double y) {
-		this.y = y;
 	}
 }

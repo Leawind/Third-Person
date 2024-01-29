@@ -1,10 +1,11 @@
-package net.leawind.mc.util.api;
+package net.leawind.mc.util.modkeymapping;
 
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import net.leawind.mc.util.impl.ModKeyMappingImpl;
 import net.minecraft.client.KeyMapping;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -40,7 +41,8 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
 	 * @param id          按键映射的标识符，用于可翻译文本
 	 * @param categoryKey 类别标识符，用于可翻译文本
 	 */
-	static ModKeyMapping of (String id, String categoryKey) {
+	@Contract("_,_ -> new")
+	static @NotNull ModKeyMapping of (@NotNull String id, @NotNull String categoryKey) {
 		return of(id, InputConstants.UNKNOWN.getValue(), categoryKey);
 	}
 
@@ -49,7 +51,8 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
 	 * @param defaultValue 默认按键
 	 * @param categoryKey  类别标识符，用于可翻译文本
 	 */
-	static ModKeyMapping of (String id, int defaultValue, String categoryKey) {
+	@Contract("_,_,_ -> new")
+	static @NotNull ModKeyMapping of (@NotNull String id, int defaultValue, @NotNull String categoryKey) {
 		return new ModKeyMappingImpl(id, defaultValue, categoryKey);
 	}
 
@@ -72,6 +75,7 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
 	 *
 	 * @param holdLength 长按时长，单位是 ms
 	 */
+	@Contract("_ -> this")
 	ModKeyMapping holdLength (long holdLength);
 
 	/**
@@ -81,49 +85,58 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
 	 *
 	 * @param pressLength 短按时长，单位是 ms
 	 */
+	@Contract("_ -> this")
 	ModKeyMapping pressLength (long pressLength);
 
 	/**
 	 * 当按键被按下时立即触发
 	 */
-	ModKeyMapping onDown (Runnable handler);
+	@Contract("_ -> this")
+	ModKeyMapping onDown (@NotNull Runnable handler);
 
 	/**
 	 * 当按键被按下时立即触发
 	 *
 	 * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 或 onHold 事件
 	 */
-	ModKeyMapping onDown (Supplier<Boolean> handler);
+	@Contract("_ -> this")
+	ModKeyMapping onDown (@NotNull Supplier<Boolean> handler);
 
 	/**
 	 * 当按键松开时立即触发，位于 onPress 之前
 	 */
-	ModKeyMapping onUp (Runnable handler);
+	@Contract("_ -> this")
+	ModKeyMapping onUp (@NotNull Runnable handler);
 
 	/**
 	 * 当按键松开时立即触发，位于 onPress 之前
 	 *
 	 * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 事件
 	 */
-	ModKeyMapping onUp (Supplier<Boolean> handler);
+	@Contract("_ -> this")
+	ModKeyMapping onUp (@NotNull Supplier<Boolean> handler);
 
 	/**
 	 * 按下一个按键后经过足够短的时间后抬起时触发
 	 */
-	ModKeyMapping onPress (Runnable handler);
+	@Contract("_ -> this")
+	ModKeyMapping onPress ( @NotNull Runnable handler);
 
 	/**
 	 * 按下一个按键后经过足够短的时间后抬起时触发
 	 */
-	ModKeyMapping onPress (Supplier<Boolean> handler);
+	@Contract("_ -> this")
+	ModKeyMapping onPress ( @NotNull Supplier<Boolean> handler);
 
 	/**
 	 * 当按住一个按键时间足够长时触发
 	 */
-	ModKeyMapping onHold (Runnable handler);
+	@Contract("_ -> this")
+	ModKeyMapping onHold ( @NotNull Runnable handler);
 
 	/**
 	 * 当按住一个按键时间足够长时触发
 	 */
-	ModKeyMapping onHold (Supplier<Boolean> handler);
+	@Contract("_ -> this")
+	ModKeyMapping onHold ( @NotNull Supplier<Boolean> handler);
 }

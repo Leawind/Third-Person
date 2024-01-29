@@ -1,8 +1,8 @@
 package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.vector.Vector2d;
+import net.leawind.mc.util.math.LMath;
+import net.leawind.mc.util.math.vector.api.Vector2d;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,7 +24,7 @@ public class ExpSmoothRotation {
 		x = new ExpSmoothDouble();
 	}
 
-	public static ExpSmoothRotation createWithHalflife (double halflife) {
+	public static @NotNull ExpSmoothRotation createWithHalflife (double halflife) {
 		ExpSmoothRotation v = new ExpSmoothRotation();
 		v.setHalflife(halflife);
 		return v;
@@ -73,8 +73,7 @@ public class ExpSmoothRotation {
 	 * <p>
 	 * 应当使用 {@link ISmoothValue#get(double)}
 	 */
-	@NotNull
-	public Vector2d get () {
+	public @NotNull Vector2d get () {
 		return Vector2d.of(x.get(), y.get());
 	}
 

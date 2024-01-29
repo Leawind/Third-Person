@@ -1,8 +1,9 @@
-package net.leawind.mc.util.impl;
+package net.leawind.mc.util.modkeymapping;
 
 
 import com.mojang.blaze3d.Blaze3D;
 import net.minecraft.client.KeyMapping;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Timer;
@@ -10,7 +11,7 @@ import java.util.TimerTask;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.mc.util.api.ModKeyMapping {
+public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping {
 	private           long              holdLength  = 300;
 	private           long              pressLength = 300;
 	private           long              keyDownTime = 0;
@@ -43,7 +44,7 @@ public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.m
 	}
 
 	@Override
-	public ModKeyMappingImpl onDown (Runnable handler) {
+	public ModKeyMappingImpl onDown (@NotNull Runnable handler) {
 		return onDown(() -> {
 			handler.run();
 			return false;
@@ -51,13 +52,13 @@ public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.m
 	}
 
 	@Override
-	public ModKeyMappingImpl onDown (Supplier<Boolean> handler) {
+	public ModKeyMappingImpl onDown (@NotNull Supplier<Boolean> handler) {
 		ondown = handler;
 		return this;
 	}
 
 	@Override
-	public ModKeyMappingImpl onUp (Runnable handler) {
+	public ModKeyMappingImpl onUp (@NotNull Runnable handler) {
 		return onUp(() -> {
 			handler.run();
 			return false;
@@ -65,13 +66,13 @@ public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.m
 	}
 
 	@Override
-	public ModKeyMappingImpl onUp (Supplier<Boolean> handler) {
+	public ModKeyMappingImpl onUp (@NotNull Supplier<Boolean> handler) {
 		onup = handler;
 		return this;
 	}
 
 	@Override
-	public ModKeyMappingImpl onPress (Runnable handler) {
+	public ModKeyMappingImpl onPress (@NotNull Runnable handler) {
 		return onPress(() -> {
 			handler.run();
 			return false;
@@ -79,13 +80,13 @@ public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.m
 	}
 
 	@Override
-	public ModKeyMappingImpl onPress (Supplier<Boolean> handler) {
+	public ModKeyMappingImpl onPress (@NotNull Supplier<Boolean> handler) {
 		onpress = handler;
 		return this;
 	}
 
 	@Override
-	public ModKeyMappingImpl onHold (Runnable handler) {
+	public ModKeyMappingImpl onHold (@NotNull Runnable handler) {
 		return onHold(() -> {
 			handler.run();
 			return false;
@@ -93,7 +94,7 @@ public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.m
 	}
 
 	@Override
-	public ModKeyMappingImpl onHold (Supplier<Boolean> handler) {
+	public ModKeyMappingImpl onHold (@NotNull Supplier<Boolean> handler) {
 		onhold = handler;
 		return this;
 	}
@@ -135,7 +136,7 @@ public final class ModKeyMappingImpl extends KeyMapping implements net.leawind.m
 		}
 	}
 
-	private static boolean handle (Supplier<Boolean> handler) {
+	private static boolean handle (@Nullable Supplier<Boolean> handler) {
 		return handler != null && handler.get();
 	}
 }

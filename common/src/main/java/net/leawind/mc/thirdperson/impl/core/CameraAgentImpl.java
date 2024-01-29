@@ -2,17 +2,17 @@ package net.leawind.mc.thirdperson.impl.core;
 
 
 import com.mojang.blaze3d.Blaze3D;
-import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ModConstants;
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
-import net.leawind.mc.util.api.math.LMath;
-import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -114,12 +114,12 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public Vector3d getPickPosition () {
+	public @Nullable Vector3d getPickPosition () {
 		return getPickPosition(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	@Override
-	public HitResult pick () {
+	public @NotNull HitResult pick () {
 		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
@@ -145,21 +145,18 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	@NotNull
-	public Vector2d getRelativeRotation () {
+	public @NotNull Vector2d getRelativeRotation () {
 		return relativeRotation;
 	}
 
 	@Override
-	@Nullable
-	public Vector3d getPickPosition (double pickRange) {
+	public @Nullable Vector3d getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
 		return hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation());
 	}
 
 	@Override
-	@NotNull
-	public HitResult pick (double pickRange) {
+	public @NotNull HitResult pick (double pickRange) {
 		Camera          camera = getRawCamera();
 		EntityHitResult ehr    = pickEntity(pickRange);
 		BlockHitResult  bhr    = pickBlock(pickRange);
@@ -167,8 +164,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	@Nullable
-	public EntityHitResult pickEntity (double pickRange) {
+	public @Nullable EntityHitResult pickEntity (double pickRange) {
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		Camera camera       = getRawCamera();
 		if (cameraEntity == null) {
@@ -182,8 +178,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	@NotNull
-	public BlockHitResult pickBlock (double pickRange) {
+	public @NotNull BlockHitResult pickBlock (double pickRange) {
 		Camera camera       = getRawCamera();
 		Vec3   pickStart    = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());

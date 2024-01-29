@@ -2,19 +2,23 @@ package net.leawind.mc.thirdperson.api.core;
 
 
 import net.leawind.mc.thirdperson.impl.core.CameraAgentImpl;
-import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public interface CameraAgent {
-	static CameraAgent create (Minecraft mc) {
+	@Contract("_ -> new")
+	static @NotNull CameraAgent create (@NotNull Minecraft mc) {
 		return new CameraAgentImpl(mc);
 	}
 
@@ -42,20 +46,23 @@ public interface CameraAgent {
 
 	@NotNull Camera getRawCamera ();
 
-	void setLevel (BlockGetter level);
+	void setLevel (@NotNull BlockGetter level);
 
 	boolean wasCameraCloseToEntity ();
 
 	@NotNull Vector2d calculateRotation ();
 
-	Vector3d getPickPosition ();
+	@NotNull Optional<Vector3d> getPickPosition ();
 
-	HitResult pick ();
+	@NotNull HitResult pick ();
 
-	Camera getFakeCamera ();
+	@NotNull Camera getFakeCamera ();
 
 	void onCameraTurn (double dy, double dx);
 
+	/**
+	 * 获取相对旋转角度
+	 */
 	@NotNull Vector2d getRelativeRotation ();
 
 	/**
@@ -63,16 +70,32 @@ public interface CameraAgent {
 	 *
 	 * @param pickRange 最大探测距离
 	 */
-	@Nullable Vector3d getPickPosition (double pickRange);
-
-	@NotNull HitResult pick (double pickRange);
-
-	@Nullable EntityHitResult pickEntity (double pickRange);
+	@NotNull Optional<Vector3d> getPickPosition (double pickRange);
 
 	/**
-	 * pick 方块
+	 * 根据实体视线探测所选方块或实体
+	 *
+	 * @param pickRange 探测距离
+	 */
+	@NotNull HitResult pick (double pickRange);
+
+	/**
+	 * 根据实体的视线确定所选实体
+	 *
+	 * @param pickRange 探测距离
+	 */
+	@NotNull Optional<EntityHitResult> pickEntity (double pickRange);
+
+	/**
+	 * 根据实体的视线确定所选方块。
 	 * <p>
-	 * 瞄准时忽略草
+	 * 瞄准时会忽略草，因为使用的过滤器是 {@link ClipContext.Block#COLLIDER}
+	 * <p>
+	 * 非瞄准时会包括所有方块，因为过滤器是 {@link ClipContext.Block#OUTLINE}
+	 * <p>
+	 * 当目标无限远时，坐标将为探测终点，即 探测起点 + 视线向量.normalize(探测距离)
+	 *
+	 * @param pickRange 探测距离
 	 */
 	@NotNull BlockHitResult pickBlock (double pickRange);
 }

@@ -4,11 +4,12 @@ package net.leawind.mc.thirdperson.api.core;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
-import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +18,8 @@ import org.jetbrains.annotations.NotNull;
  * 当操控玩家时，玩家的旋转由本类接管。
  */
 public interface EntityAgent {
-	static EntityAgent create (Minecraft mc) {
+	@Contract("_ -> new")
+	static @NotNull EntityAgent create (@NotNull Minecraft mc) {
 		return new EntityAgentImpl(mc);
 	}
 
@@ -33,9 +35,9 @@ public interface EntityAgent {
 	 */
 	void reset ();
 
-	void setRotateTarget (RotateTarget rotateTarget);
+	void setRotateTarget (@NotNull RotateTarget rotateTarget);
 
-	void setSmoothRotationType (SmoothType smoothType);
+	void setSmoothRotationType (@NotNull SmoothType smoothType);
 
 	void setSmoothRotationHalflife (double halflife);
 

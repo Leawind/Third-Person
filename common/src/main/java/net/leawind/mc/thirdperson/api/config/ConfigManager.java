@@ -6,6 +6,7 @@ import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,8 @@ import java.io.IOException;
  * 负则配置的加载与保存
  */
 public interface ConfigManager {
-	static ConfigManager create () {
+	@Contract("-> new")
+	static @NotNull ConfigManager create () {
 		return new ConfigManagerImpl();
 	}
 
@@ -27,7 +29,8 @@ public interface ConfigManager {
 	 * @param name 键名
 	 * @return ${MODID}.${id}
 	 */
-	static Component getText (String name) {
+	@Contract(value="_ -> new", pure=true)
+	static @NotNull Component getText (@NotNull String name) {
 		return Component.translatable(ModConstants.MOD_ID + "." + name);
 	}
 
@@ -60,7 +63,7 @@ public interface ConfigManager {
 	/**
 	 * 获取配置屏幕
 	 */
-	@Nullable Screen getConfigScreen (Screen parent);
+	@Nullable Screen getConfigScreen (@Nullable Screen parent);
 
 	/**
 	 * 获取配置对象

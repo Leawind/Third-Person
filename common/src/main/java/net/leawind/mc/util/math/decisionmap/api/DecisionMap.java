@@ -2,6 +2,9 @@ package net.leawind.mc.util.math.decisionmap.api;
 
 
 import net.leawind.mc.util.math.decisionmap.impl.DecisionMapImpl;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -14,11 +17,12 @@ import java.util.function.Supplier;
 public interface DecisionMap<T> {
 	int MAX_FACTOR_COUNT = 32;
 
-	static <T> DecisionMap<T> of (Class<?> clazz) {
+	@Contract("_ -> new")
+	static <T> @NotNull DecisionMap<T> of (@NotNull Class<?> clazz) {
 		return new DecisionMapImpl<>(clazz);
 	}
 
-	static int toFlagBits (boolean[] flagList) {
+	static int toFlagBits (boolean @NotNull [] flagList) {
 		int flagBits = 0;
 		for (int i = 0; i < flagList.length; i++) {
 			if (flagList[i]) {
@@ -31,6 +35,7 @@ public interface DecisionMap<T> {
 	/**
 	 * 更新因素
 	 */
+	@Contract("-> this")
 	DecisionMap<T> updateFactors ();
 
 	/**
@@ -38,7 +43,7 @@ public interface DecisionMap<T> {
 	 */
 	T make ();
 
-	Supplier<T> getStrategy (int flagBits);
+	@Nullable Supplier<T> getStrategy (int flagBits);
 
 	/**
 	 * 更新因素并做出决策
@@ -60,6 +65,7 @@ public interface DecisionMap<T> {
 	/**
 	 * 构建
 	 */
+	@Contract("-> this")
 	DecisionMap<T> build ();
 
 	/**
@@ -67,7 +73,8 @@ public interface DecisionMap<T> {
 	 */
 	boolean isBuilt ();
 
-	DecisionMap<T> addRule (Function<boolean[], Supplier<T>> func);
+	@Contract("_-> this")
+	DecisionMap<T> addRule (@NotNull Function<boolean[], Supplier<T>> func);
 
 	/**
 	 * 添加规则
@@ -80,7 +87,8 @@ public interface DecisionMap<T> {
 	 *             <li>boolean[] flag list</li>
 	 * @return 原对象
 	 */
-	DecisionMap<T> addRule (BiFunction<Integer, boolean[], Supplier<T>> func);
+	@Contract("_-> this")
+	DecisionMap<T> addRule (@NotNull BiFunction<Integer, boolean[], Supplier<T>> func);
 
 	/**
 	 * 添加规则
@@ -88,6 +96,7 @@ public interface DecisionMap<T> {
 	 * @param strategy 决策方法
 	 * @return 原对象
 	 */
+	@Contract("_,_ -> this")
 	DecisionMap<T> addRule (int flagBits, Supplier<T> strategy);
 
 	/**
@@ -98,5 +107,6 @@ public interface DecisionMap<T> {
 	 * @param strategy 决策方法
 	 * @return 原对象
 	 */
+	@Contract("_,_,_ -> this")
 	DecisionMap<T> addRule (int flagBits, int mask, Supplier<T> strategy);
 }

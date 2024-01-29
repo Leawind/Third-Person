@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.api.cameraoffset;
 
 
-import net.leawind.mc.util.api.math.vector.Vector2d;
-import net.leawind.mc.util.api.math.vector.Vector3d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -84,5 +84,5 @@ public interface CameraOffsetMode {
 	 * @param v 将取得的数据存入该向量
 	 * @return 与传入参数是同一个对象
 	 */
-	Vector2d getSideOffsetRatio (@NotNull Vector2d v);
+	@NotNull Vector2d getSideOffsetRatio (@NotNull Vector2d v);
 }

@@ -1,7 +1,7 @@
 package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.util.api.math.LMath;
+import net.leawind.mc.util.math.LMath;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;

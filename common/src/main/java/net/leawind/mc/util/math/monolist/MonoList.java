@@ -1,4 +1,4 @@
-package net.leawind.mc.util.api.math;
+package net.leawind.mc.util.math.monolist;
 
 
 /**
@@ -11,7 +11,7 @@ public interface MonoList {
 	/**
 	 * 获取下标对应的值
 	 */
-	double get (int i) throws ArrayIndexOutOfBoundsException;
+	double get (int i);
 
 	double offset (double value, int offset);
 

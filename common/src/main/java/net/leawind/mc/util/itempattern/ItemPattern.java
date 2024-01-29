@@ -1,9 +1,8 @@
-package net.leawind.mc.util.api;
+package net.leawind.mc.util.itempattern;
 
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.util.impl.ItemPatternImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
@@ -41,7 +40,7 @@ public interface ItemPattern {
 	Pattern     RGX_ID           = Pattern.compile("^[a-z.:_]+$");
 	Pattern     RGX_NBT          = Pattern.compile("^\\{.*}$");
 
-	static boolean anyMatch (Iterable<ItemPattern> itemPatterns, ItemStack itemStack) {
+	static boolean anyMatch (@NotNull Iterable<ItemPattern> itemPatterns, @Nullable ItemStack itemStack) {
 		for (ItemPattern ip: itemPatterns) {
 			if (ip.match(itemStack)) {
 				return true;
@@ -49,15 +48,6 @@ public interface ItemPattern {
 		}
 		return false;
 	}
-
-	/**
-	 * 匹配物品
-	 * <p>
-	 * 仅当 id 和 nbt 都匹配成功时，才匹配成功
-	 *
-	 * @param itemStack 物品槽
-	 */
-	boolean match (@Nullable ItemStack itemStack);
 
 	/**
 	 * 提供错误信息
@@ -85,7 +75,7 @@ public interface ItemPattern {
 	 * <p>
 	 * item.minecraft.crossbow{Charged:1b}
 	 */
-	static @NotNull ItemPattern of (@Nullable String ruleExpression) throws IllegalArgumentException {
+	static @NotNull ItemPattern of (@Nullable String ruleExpression) {
 		if (ruleExpression == null) {
 			return ANY;
 		} else if (RGX_ID.matcher(ruleExpression).matches()) {
@@ -104,7 +94,7 @@ public interface ItemPattern {
 	 * @param idExp  宽松规则的 descriptionId
 	 * @param tagExp NBT复合标签表达式
 	 */
-	static @NotNull ItemPattern of (@Nullable String idExp, @Nullable String tagExp) throws IllegalArgumentException {
+	static @NotNull ItemPattern of (@Nullable String idExp, @Nullable String tagExp) {
 		return new ItemPatternImpl(parseDescriptionId(idExp), parsePatternTag(tagExp));
 	}
 
@@ -125,7 +115,7 @@ public interface ItemPattern {
 	 * <p>
 	 * minecraft:snowball
 	 */
-	static @Nullable String parseDescriptionId (@Nullable String idExp) throws IllegalArgumentException {
+	static @Nullable String parseDescriptionId (@Nullable String idExp) {
 		if (idExp == null || idExp.isEmpty()) {
 			return null;
 		} else if (RGX_REGULAR_ID.matcher(idExp).matches()) {
@@ -139,7 +129,7 @@ public interface ItemPattern {
 		}
 	}
 
-	static @Nullable CompoundTag parsePatternTag (@Nullable String tagExp) throws IllegalArgumentException {
+	static @Nullable CompoundTag parsePatternTag (@Nullable String tagExp) {
 		if (tagExp == null) {
 			return null;
 		}
@@ -160,6 +150,17 @@ public interface ItemPattern {
 				}
 			}
 		}
+	}
+
+	/**
+	 * 匹配物品
+	 * <p>
+	 * 仅当 id 和 nbt 都匹配成功时，才匹配成功
+	 *
+	 * @param itemStack 物品槽
+	 */
+	default boolean match (@Nullable ItemStack itemStack) {
+		return matchId(itemStack) && matchNbt(itemStack);
 	}
 
 	/**

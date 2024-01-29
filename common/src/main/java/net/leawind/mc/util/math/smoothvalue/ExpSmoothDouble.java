@@ -1,7 +1,7 @@
 package net.leawind.mc.util.math.smoothvalue;
 
 
-import net.leawind.mc.util.api.math.LMath;
+import net.leawind.mc.util.math.LMath;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -10,7 +10,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		super(0D, 1D, 0D, 0D, 0D);
 	}
 
-	public static ExpSmoothDouble createWithHalflife (double halflife) {
+	public static @NotNull ExpSmoothDouble createWithHalflife (double halflife) {
 		ExpSmoothDouble v = new ExpSmoothDouble();
 		v.setHalflife(halflife);
 		return v;

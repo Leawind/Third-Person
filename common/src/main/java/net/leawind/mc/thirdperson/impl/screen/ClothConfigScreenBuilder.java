@@ -14,14 +14,16 @@ import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.config.DefaultConfig;
-import net.leawind.mc.util.api.ItemPattern;
+import net.leawind.mc.util.itempattern.ItemPattern;
 import net.minecraft.client.gui.screens.Screen;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
-	public Screen build (Config config, Screen parent) {
+	public @NotNull Screen build (@NotNull Config config, @Nullable Screen parent) {
 		final ConfigBuilder builder = me.shedaniel.clothconfig2.api.ConfigBuilder.create()    //
 																				 .setParentScreen(parent)    //
 																				 .setTitle(ConfigManager.getText("text.title"))    //
