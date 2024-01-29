@@ -61,7 +61,7 @@ public interface CameraOffsetMode {
 	 * <p>
 	 * 根据当前是居中还是在两侧自动计算偏移量
 	 */
-	Vector2d getOffsetRatio (@NotNull Vector2d v);
+	void getOffsetRatio (@NotNull Vector2d v);
 
 	/**
 	 * 设置当相机位于两侧，而非居中时的偏移量。

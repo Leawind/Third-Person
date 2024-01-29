@@ -102,13 +102,13 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public void onClientTickPre () {
 		final double period = 0.05;
+		Config       config = ThirdPerson.getConfig();
+		config.cameraOffsetScheme.setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
 		wasAiming      = isAiming();
 		wasInterecting = isInterecting();
 		updateRotateStrategy();
 		smoothRotation.update(period);
 		{
-			// NOW 更新smoothEyePositon
-			Config   config      = ThirdPerson.getConfig();
 			Vector3d eyePosition = getRawEyePosition(1);
 			if (isFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);

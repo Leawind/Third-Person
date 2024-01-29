@@ -24,11 +24,11 @@ public abstract class AbstractCameraOffsetMode implements CameraOffsetMode {
 	}
 
 	@Override
-	public Vector2d getOffsetRatio (@NotNull Vector2d v) {
+	public void getOffsetRatio (@NotNull Vector2d v) {
 		if (isCentered()) {
-			return v.set(0, getCenterOffsetRatio());
+			v.set(0, getCenterOffsetRatio());
 		} else {
-			return getSideOffsetRatio(v);
+			getSideOffsetRatio(v);
 		}
 	}
 }

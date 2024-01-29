@@ -36,8 +36,6 @@ public interface ThirdPersonEvents {
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		ThirdPerson.CAMERA_AGENT.onClientTickPre();
-		Config config = ThirdPerson.getConfig();
-		config.cameraOffsetScheme.setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
 	}
 
 	/**
