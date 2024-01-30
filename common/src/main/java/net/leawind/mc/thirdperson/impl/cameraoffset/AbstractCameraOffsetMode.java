@@ -1,12 +1,13 @@
-package net.leawind.mc.thirdperson.api.cameraoffset;
+package net.leawind.mc.thirdperson.impl.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractCameraOffsetMode implements CameraOffsetMode {
-	public final @NotNull Config config;
+	protected final @NotNull Config config;
 
 	/**
 	 * 相机偏移相关数据直接存储在配置对象中

@@ -10,7 +10,7 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
@@ -61,9 +61,9 @@ public interface ThirdPersonEvents {
 	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPerson.isAdjustingCameraDistance()) {
-			double dist = config.cameraOffsetScheme.getMode().getMaxDistance();
-			dist = config.distanceMonoList.offset(dist, (int)-Math.signum(amount));
-			config.cameraOffsetScheme.getMode().setMaxDistance(dist);
+			double dist = config.getCameraOffsetScheme().getMode().getMaxDistance();
+			dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amount));
+			config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
 			return EventResult.interruptFalse();
 		} else {
 			return EventResult.pass();
@@ -129,7 +129,7 @@ public interface ThirdPersonEvents {
 		Config             config     = ThirdPerson.getConfig();
 		Window             window     = Minecraft.getInstance().getWindow();
 		Vector2d           screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
-		CameraOffsetScheme scheme     = config.cameraOffsetScheme;
+		CameraOffsetScheme scheme     = config.getCameraOffsetScheme();
 		CameraOffsetMode   mode       = scheme.getMode();
 		if (mode.isCentered()) {
 			// 相机在头顶，只能上下调整

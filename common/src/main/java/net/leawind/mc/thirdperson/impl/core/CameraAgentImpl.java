@@ -5,8 +5,8 @@ import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
-import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
@@ -59,7 +59,7 @@ public class CameraAgentImpl implements CameraAgent {
 	@Override
 	public void reset () {
 		smoothOffsetRatio.setValue(0, 0);
-		smoothDistanceToEye.set(ThirdPerson.getConfig().distanceMonoList.get(0));
+		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
 		if (minecraft.cameraEntity != null) {
 			relativeRotation.set(-minecraft.cameraEntity.getViewXRot(ThirdPerson.lastPartialTick), minecraft.cameraEntity.getViewYRot(ThirdPerson.lastPartialTick) - 180);
 		}
@@ -262,19 +262,19 @@ public class CameraAgentImpl implements CameraAgent {
 	private void updateSmoothVirtualDistance (double period) {
 		Config           config      = ThirdPerson.getConfig();
 		boolean          isAdjusting = ThirdPerson.isAdjustingCameraDistance();
-		CameraOffsetMode mode        = config.cameraOffsetScheme.getMode();
+		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		smoothDistanceToEye.setSmoothFactor(isAdjusting ? config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
 		smoothDistanceToEye.setTarget(mode.getMaxDistance());
 		smoothDistanceToEye.update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
-		if (!config.cameraOffsetScheme.isAiming() && !isAdjusting) {
+		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
 		}
 	}
 
 	private void updateSmoothOffsetRatio (double period) {
 		Config           config = ThirdPerson.getConfig();
-		CameraOffsetMode mode   = config.cameraOffsetScheme.getMode();
+		CameraOffsetMode mode   = config.getCameraOffsetScheme().getMode();
 		if (ThirdPerson.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setSmoothFactor(config.adjusting_camera_offset_smooth_factor);
 		} else {

@@ -1,20 +1,20 @@
 package net.leawind.mc.thirdperson.impl.core;
 
 
-import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ModConstants;
+import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
-import net.leawind.mc.thirdperson.impl.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.vector.api.Vector2d;
-import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothRotation;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
+import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
@@ -103,7 +103,7 @@ public class EntityAgentImpl implements EntityAgent {
 	public void onClientTickPre () {
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
-		config.cameraOffsetScheme.setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
+		config.getCameraOffsetScheme().setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
 		wasAiming      = isAiming();
 		wasInterecting = isInterecting();
 		updateRotateStrategy();
@@ -113,7 +113,7 @@ public class EntityAgentImpl implements EntityAgent {
 			if (isFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
 			} else {
-				config.cameraOffsetScheme.getMode().getEyeSmoothFactor(smoothEyePosition.smoothFactor);
+				config.getCameraOffsetScheme().getMode().getEyeSmoothFactor(smoothEyePosition.smoothFactor);
 			}
 			smoothEyePosition.setTarget(eyePosition);
 			smoothEyePosition.update(period);
@@ -225,10 +225,10 @@ public class EntityAgentImpl implements EntityAgent {
 		Config config = ThirdPerson.getConfig();
 		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem()) {
-				return ItemPattern.anyMatch(config.use_aim_item_patterns, livingEntity.getUseItem());
+				return ItemPattern.anyMatch(config.getUseAimItemPatterns(), livingEntity.getUseItem());
 			} else {
-				return ItemPattern.anyMatch(config.aim_item_patterns, livingEntity.getMainHandItem()) || //
-					   ItemPattern.anyMatch(config.aim_item_patterns, livingEntity.getOffhandItem());
+				return ItemPattern.anyMatch(config.getAimItemPatterns(), livingEntity.getMainHandItem()) || //
+					   ItemPattern.anyMatch(config.getAimItemPatterns(), livingEntity.getOffhandItem());
 			}
 		}
 		return false;

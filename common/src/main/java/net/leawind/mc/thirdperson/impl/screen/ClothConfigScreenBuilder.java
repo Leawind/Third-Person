@@ -10,10 +10,9 @@ import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
-import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.thirdperson.impl.config.DefaultConfig;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 																				 .setTitle(ConfigManager.getText("text.title"))    //
 																				 .setSavingRunnable(ThirdPerson.CONFIG_MANAGER::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
-		DefaultConfig            defaults     = DefaultConfig.get();
+		Config                   defaults     = Config.DEFAULTS;
 		//==================================================================================================================================================//
 		//==================================================================================================================================================//
 		// Category: general

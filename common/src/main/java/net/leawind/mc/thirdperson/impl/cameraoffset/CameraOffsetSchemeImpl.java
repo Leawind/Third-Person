@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.impl.cameraoffset;
 
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.api.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.modkeymapping.ModKeyMapping;
 import net.minecraft.client.Minecraft;
@@ -35,7 +35,7 @@ public interface ThirdPersonKeys {
 		}
 	});
 	ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ModConstants.KEY_CATEGORY).onDown(() -> {
-		CameraOffsetScheme scheme = ThirdPerson.getConfig().cameraOffsetScheme;
+		CameraOffsetScheme scheme = ThirdPerson.getConfig().getCameraOffsetScheme();
 		if (scheme.isCentered()) {
 			scheme.toNextSide();
 			return true;
@@ -43,9 +43,9 @@ public interface ThirdPersonKeys {
 			return false;
 		}
 	}).onHold(() -> {
-		ThirdPerson.getConfig().cameraOffsetScheme.setCentered(true);
+		ThirdPerson.getConfig().getCameraOffsetScheme().setCentered(true);
 	}).onPress(() -> {
-		ThirdPerson.getConfig().cameraOffsetScheme.toNextSide();
+		ThirdPerson.getConfig().getCameraOffsetScheme().toNextSide();
 	});
 	ModKeyMapping TOGGLE_AIMING     = ModKeyMapping.of(getId("toggle_aiming"), ModConstants.KEY_CATEGORY).onDown(() -> {
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {

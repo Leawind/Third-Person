@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,7 +19,7 @@ import java.nio.file.Files;
 
 public class ConfigManagerImpl implements ConfigManager {
 	private final @NotNull Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
-	private @NotNull       Config config = new Config();
+	private @NotNull       Config config = new ConfigImpl();
 
 	public ConfigManagerImpl () {
 	}
@@ -53,7 +54,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public void load () throws IOException {
-		config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
+		config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), ConfigImpl.class);
 	}
 
 	@Override

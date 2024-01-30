@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.api.screen;
 
 
-import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.impl.screen.ClothConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;

@@ -2,8 +2,6 @@ package net.leawind.mc.thirdperson.api.config;
 
 
 import net.leawind.mc.thirdperson.ModConstants;
-import net.leawind.mc.thirdperson.impl.config.Config;
-import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
@@ -18,11 +16,6 @@ import java.io.IOException;
  * 负则配置的加载与保存
  */
 public interface ConfigManager {
-	@Contract("-> new")
-	static @NotNull ConfigManager create () {
-		return new ConfigManagerImpl();
-	}
-
 	/**
 	 * 在可翻译文本的键前加上modid前缀
 	 *

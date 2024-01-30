@@ -120,23 +120,23 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
 	 * 按下一个按键后经过足够短的时间后抬起时触发
 	 */
 	@Contract("_ -> this")
-	ModKeyMapping onPress ( @NotNull Runnable handler);
+	ModKeyMapping onPress (@NotNull Runnable handler);
 
 	/**
 	 * 按下一个按键后经过足够短的时间后抬起时触发
 	 */
 	@Contract("_ -> this")
-	ModKeyMapping onPress ( @NotNull Supplier<Boolean> handler);
+	ModKeyMapping onPress (@NotNull Supplier<Boolean> handler);
 
 	/**
 	 * 当按住一个按键时间足够长时触发
 	 */
 	@Contract("_ -> this")
-	ModKeyMapping onHold ( @NotNull Runnable handler);
+	ModKeyMapping onHold (@NotNull Runnable handler);
 
 	/**
 	 * 当按住一个按键时间足够长时触发
 	 */
 	@Contract("_ -> this")
-	ModKeyMapping onHold ( @NotNull Supplier<Boolean> handler);
+	ModKeyMapping onHold (@NotNull Supplier<Boolean> handler);
 }

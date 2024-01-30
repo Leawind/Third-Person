@@ -1,12 +1,13 @@
 package net.leawind.mc.thirdperson;
 
 
+import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
 import net.leawind.mc.thirdperson.event.ThirdPersonKeys;
-import net.leawind.mc.thirdperson.impl.config.Config;
+import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 public class ThirdPerson {
 	public static final          Logger        LOGGER                   = LoggerFactory.getLogger(ModConstants.MOD_ID);
-	public static final          ConfigManager CONFIG_MANAGER           = ConfigManager.create();
+	public static final          ConfigManager CONFIG_MANAGER           = new ConfigManagerImpl();
 	public static final @NotNull Vector3d      impulse                  = Vector3d.of(0);
 	public static final @NotNull Vector2d      impulseHorizon           = Vector2d.of(0);
 	public static                EntityAgent   ENTITY_AGENT;
@@ -101,10 +102,10 @@ public class ThirdPerson {
 		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
 		Vector3d eyePosition    = ENTITY_AGENT.getPossiblySmoothEyePosition(lastPartialTick);
 		Vector3d cameraPosition = LMath.toVector3d(CAMERA_AGENT.getRawCamera().getPosition());
-		if (config.cameraOffsetScheme.getMode().getMaxDistance() <= config.distanceMonoList.get(0)) {
+		if (config.getCameraOffsetScheme().getMode().getMaxDistance() <= config.getDistanceMonoList().get(0)) {
 			return true;
 		} else {
-			return eyePosition.distance(cameraPosition) <= config.distanceMonoList.get(0);
+			return eyePosition.distance(cameraPosition) <= config.getDistanceMonoList().get(0);
 		}
 	}
 
