@@ -86,7 +86,7 @@ public interface ThirdPersonEvents {
 		ThirdPerson.lastPartialTick = partialTick;
 		ThirdPerson.CAMERA_AGENT.setLevel(level);
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null) {
+		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
 		}
 		double now    = Blaze3D.getTime();
@@ -105,8 +105,8 @@ public interface ThirdPersonEvents {
 		double period = now - ThirdPerson.lastRenderTickTimeStamp;
 		ThirdPerson.lastRenderTickTimeStamp = now;
 		if (ThirdPerson.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			ThirdPerson.ENTITY_AGENT.onPreRender(period, partialTick);
-			ThirdPerson.CAMERA_AGENT.onPreRender(period, partialTick);
+			ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);
+			ThirdPerson.CAMERA_AGENT.onRenderTickPre(period, partialTick);
 		}
 	}
 
@@ -170,8 +170,9 @@ public interface ThirdPersonEvents {
 	 * 进入第三人称视角时触发
 	 */
 	static void onEnterThirdPerson () {
+		ThirdPerson.lastPartialTick          = Minecraft.getInstance().getFrameTime();
+		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
-		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 	}
 }

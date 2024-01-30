@@ -16,11 +16,12 @@ public class ItemPatternImpl implements ItemPattern {
 	 */
 	private final @Nullable String      descriptionId;
 	/**
-	 * 用于匹配物品的NBT标签
-	 * <p>
-	 * null 表示匹配任意标签
+	 * 用于匹配物品的NBT标签。null 表示匹配任意标签。
 	 */
 	private final @Nullable CompoundTag patternTag;
+	/**
+	 * NBT标签的表达式
+	 */
 	private final @Nullable String      tagExp;
 	private final           int         hashCode;
 

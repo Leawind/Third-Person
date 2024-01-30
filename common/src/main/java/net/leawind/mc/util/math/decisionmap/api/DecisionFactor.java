@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.BooleanSupplier;
 
 /**
- * 用于标记因素
+ * 决策因素
  */
 public interface DecisionFactor {
 	@Contract("_ -> new")
@@ -16,20 +16,35 @@ public interface DecisionFactor {
 		return new DecisionFactorImpl(getter);
 	}
 
-	boolean get ();
-
+	/**
+	 * 重新计算因素的值
+	 */
 	@Contract("-> this")
 	DecisionFactor update ();
+
+	/**
+	 * 获取上次的计算结果
+	 */
+	boolean get ();
 
 	@NotNull String getName ();
 
 	void setName (String name);
 
+	/**
+	 * 设置索引
+	 */
 	void setIndex (int index);
 
+	/**
+	 * 在所有因素中的索引
+	 */
+	int index ();
+
+	/**
+	 * 掩码，即 1<<index
+	 */
 	default int mask () {
 		return 1 << index();
 	}
-
-	int index ();
 }

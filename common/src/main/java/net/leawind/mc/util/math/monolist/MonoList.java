@@ -13,15 +13,60 @@ public interface MonoList {
 	 */
 	double get (int i);
 
+	/**
+	 * 计算当前值对应的下标，加上偏移量后获取值
+	 * <p>
+	 * 如果加上偏移量后超出范围，则取边缘的值（第一个或最后一个值）
+	 * <p>
+	 * 例：
+	 * <pre>
+	 * {@code
+	 * value ≈ B
+	 * offset = 2
+	 *
+	 * 下标： | 0 | 1 | 2 | 3 | 4 |
+	 * 数值： | A | B | C | D | E |
+	 *             ↑       ↑
+	 *           value     |
+	 *                     |
+	 *            index(value)+offset
+	 * }
+	 * </pre>
+	 *
+	 * @param value  值
+	 * @param offset 偏移量
+	 */
 	double offset (double value, int offset);
 
 	/**
 	 * 取最接近的一个值的下标
+	 * <p>
+	 * 例：
+	 * <pre>
+	 * {@code
+	 * value ≈ 2.4
+	 *             result
+	 *               ↓
+	 * 下标： | 0   | 1   | 2   | 3   | 4   |
+	 * 数值： | 1.0 | 2.0 | 3.0 | 4.0 | 5.0 |
+	 * }
+	 * </pre>
 	 */
 	int iadsorption (double value);
 
 	/**
 	 * 找最近的一个值
+	 * <p>
+	 * 例：
+	 * <pre>
+	 *  {@code
+	 *  value ≈ 2.4
+	 *  下标： | 0   | 1   | 2   | 3   | 4   |
+	 *  数值： | 1.0 | 2.0 | 3.0 | 4.0 | 5.0 |
+	 *                ↑
+	 *              result
+	 *  }
+	 *  </pre>
 	 */
 	double adsorption (double value);
 

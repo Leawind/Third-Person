@@ -58,7 +58,6 @@ public class CameraAgentImpl implements CameraAgent {
 
 	@Override
 	public void reset () {
-		ThirdPerson.lastPartialTick = minecraft.getFrameTime();
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(ThirdPerson.getConfig().distanceMonoList.get(0));
 		if (minecraft.cameraEntity != null) {
@@ -67,13 +66,19 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void onPreRender (double period, float partialTick) {
+	public void setLevel (@NotNull BlockGetter level) {
+		this.level = level;
+	}
+
+	@Override
+	public void onRenderTickPre (double period, float partialTick) {
 		if (!minecraft.isPaused()) {
 			// 平滑更新距离
 			updateSmoothVirtualDistance(period);
 			// 平滑更新相机偏移量
 			updateSmoothOffsetRatio(period);
 		}
+		wasCameraCloseToEntity = ThirdPerson.wasCameraCloseToEntity();
 	}
 
 	@Override
@@ -82,13 +87,12 @@ public class CameraAgentImpl implements CameraAgent {
 		preventThroughWall();
 		updateFakeCameraRotationPosition();
 		applyCamera();
-		wasCameraCloseToEntity = ThirdPerson.wasCameraCloseToEntity();
-		//			if (wasCameraCloseToEntity) {
-		//				// 假的第一人称，强制将相机放在玩家眼睛处
-		//				Vec3 eyePosition = attachedEntity.getEyePosition(partialTick);
-		//				((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
-		//				applyCamera();
-		//			}
+		//		if (wasCameraCloseToEntity) {
+		//			// 假的第一人称，强制将相机放在玩家眼睛处
+		//			Vec3 eyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPerson.lastPartialTick));
+		//			((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
+		//			applyCamera();
+		//		}
 	}
 
 	@Override
@@ -100,23 +104,13 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void setLevel (@NotNull BlockGetter level) {
-		this.level = level;
-	}
-
-	@Override
 	public boolean wasCameraCloseToEntity () {
 		return wasCameraCloseToEntity;
 	}
 
 	@Override
-	public @NotNull Vector2d calculateRotation () {
+	public @NotNull Vector2d getRotation () {
 		return Vector2d.of(-relativeRotation.x(), relativeRotation.y() + 180);
-	}
-
-	@Override
-	public @NotNull Optional<Vector3d> getPickPosition () {
-		return getPickPosition(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	@Override
@@ -146,14 +140,19 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public @NotNull Optional<Vector3d> getPickPosition (double pickRange) {
-		HitResult hitResult = pick(pickRange);
-		return Optional.ofNullable(hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation()));
+	public @NotNull HitResult pick () {
+		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	@Override
-	public @NotNull HitResult pick () {
-		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
+	public @NotNull Optional<Vector3d> getPickPosition () {
+		return getPickPosition(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
+	}
+
+	@Override
+	public @NotNull Optional<Vector3d> getPickPosition (double pickRange) {
+		HitResult hitResult = pick(pickRange);
+		return Optional.ofNullable(hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation()));
 	}
 
 	@Override

@@ -19,5 +19,12 @@ public interface ConfigScreenBuilder {
 	ConfigScreenBuilder CARBON_CONFIG = null;
 	ConfigScreenBuilder CLOTH_CONFIG  = new ClothConfigScreenBuilder();
 
+	/**
+	 * 构建配置屏幕
+	 *
+	 * @param config 配置实例
+	 * @param parent 父屏幕
+	 * @return 配置屏幕
+	 */
 	@NotNull Screen build (@NotNull Config config, @Nullable Screen parent);
 }

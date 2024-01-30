@@ -56,7 +56,6 @@ public class ThirdPerson {
 	}
 
 	/**
-	 * <p>
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {

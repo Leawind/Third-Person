@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.api.core;
 
 
 import net.leawind.mc.thirdperson.impl.core.CameraAgentImpl;
+import net.leawind.mc.thirdperson.mixin.CameraMixin;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
@@ -27,13 +28,21 @@ public interface CameraAgent {
 	 */
 	void reset ();
 
+	void setLevel (@NotNull BlockGetter level);
+
 	/**
 	 * 渲染前
 	 */
-	void onPreRender (double period, float partialTick);
+	void onRenderTickPre (double period, float partialTick);
 
 	/**
-	 * 渲染时放置相机
+	 * 渲染过程中放置相机
+	 * <p>
+	 * 在原版的渲染方法中，会调用{@link Camera#setup}来设置相机的位置和朝向。
+	 * <p>
+	 * 在第三人称下，咱需要覆盖该方法的行为，重新设置相机的位置和朝向。
+	 * <p>
+	 * {@link CameraMixin#setup_invoke}
 	 */
 	void onCameraSetup (double period);
 
@@ -44,18 +53,29 @@ public interface CameraAgent {
 	 */
 	void onClientTickPre ();
 
+	/**
+	 * 获取原版相机对象
+	 */
 	@NotNull Camera getRawCamera ();
-
-	void setLevel (@NotNull BlockGetter level);
 
 	boolean wasCameraCloseToEntity ();
 
-	@NotNull Vector2d calculateRotation ();
+	/**
+	 * 第三人称相机朝向
+	 */
+	@NotNull Vector2d getRotation ();
 
-	@NotNull Optional<Vector3d> getPickPosition ();
-
+	/**
+	 * 假相机
+	 */
 	@NotNull Camera getFakeCamera ();
 
+	/**
+	 * 玩家控制的相机旋转
+	 *
+	 * @param dy 方向角变化量
+	 * @param dx 俯仰角变化量
+	 */
 	void onCameraTurn (double dy, double dx);
 
 	/**
@@ -63,14 +83,16 @@ public interface CameraAgent {
 	 */
 	@NotNull Vector2d getRelativeRotation ();
 
+	@NotNull HitResult pick ();
+
+	@NotNull Optional<Vector3d> getPickPosition ();
+
 	/**
 	 * 获取相机视线落点坐标
 	 *
 	 * @param pickRange 最大探测距离
 	 */
 	@NotNull Optional<Vector3d> getPickPosition (double pickRange);
-
-	@NotNull HitResult pick ();
 
 	/**
 	 * 根据实体视线探测所选方块或实体

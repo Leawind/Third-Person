@@ -83,7 +83,7 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@PerformanceSensitive
 	@Override
-	public void onPreRender (double period, float partialTick) {
+	public void onRenderTickPre (double period, float partialTick) {
 		if (!isControlled()) {
 			return;
 		}

@@ -35,16 +35,27 @@ public interface EntityAgent {
 	 */
 	void reset ();
 
+	/**
+	 * 设置旋转目标
+	 */
 	void setRotateTarget (@NotNull RotateTarget rotateTarget);
 
+	/**
+	 * 设置平滑类型
+	 * <p>
+	 * 在 clientTick 和 renderTick 中要根据平滑类型采用不同的处理方式
+	 */
 	void setSmoothRotationType (@NotNull SmoothType smoothType);
 
+	/**
+	 * 设置平滑转向的半衰期
+	 */
 	void setSmoothRotationHalflife (double halflife);
 
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s
 	 */
-	void onPreRender (double period, float partialTick);
+	void onRenderTickPre (double period, float partialTick);
 
 	/**
 	 * 在 client tick 之前

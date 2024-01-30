@@ -22,7 +22,7 @@ public enum RotateTarget {
 	/**
 	 * 与相机朝向相同
 	 */
-	CAMERA_ROTATION(() -> ThirdPerson.CAMERA_AGENT.calculateRotation()),
+	CAMERA_ROTATION(() -> ThirdPerson.CAMERA_AGENT.getRotation()),
 	/**
 	 * 转向相机的视线落点，即准星所指的位置
 	 */
