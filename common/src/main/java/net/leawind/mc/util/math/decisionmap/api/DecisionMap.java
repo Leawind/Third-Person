@@ -4,8 +4,8 @@ package net.leawind.mc.util.math.decisionmap.api;
 import net.leawind.mc.util.math.decisionmap.impl.DecisionMapImpl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -32,6 +32,8 @@ public interface DecisionMap<T> {
 		return flagBits;
 	}
 
+	void reset ();
+
 	/**
 	 * 更新因素
 	 */
@@ -43,7 +45,12 @@ public interface DecisionMap<T> {
 	 */
 	T make ();
 
-	@Nullable Supplier<T> getStrategy (int flagBits);
+	/**
+	 * 获取因素对应的决策
+	 *
+	 * @param flagBits 因素位图
+	 */
+	Optional<Supplier<T>> getStrategy (int flagBits);
 
 	/**
 	 * 更新因素并做出决策

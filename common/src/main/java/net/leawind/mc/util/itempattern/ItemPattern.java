@@ -50,10 +50,10 @@ public interface ItemPattern {
 	}
 
 	/**
-	 * 提供错误信息
+	 * 如果规则表达式不合语法，则提供相关错误信息
 	 *
 	 * @param ruleExpression 表达式
-	 * @return 错误信息，null 表示没有错误
+	 * @return 错误信息，空值表示没有错误
 	 */
 	static @NotNull Optional<Component> supplyError (@Nullable String ruleExpression) {
 		try {

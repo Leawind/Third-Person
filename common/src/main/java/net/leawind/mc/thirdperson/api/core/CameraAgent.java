@@ -54,8 +54,6 @@ public interface CameraAgent {
 
 	@NotNull Optional<Vector3d> getPickPosition ();
 
-	@NotNull HitResult pick ();
-
 	@NotNull Camera getFakeCamera ();
 
 	void onCameraTurn (double dy, double dx);
@@ -72,8 +70,12 @@ public interface CameraAgent {
 	 */
 	@NotNull Optional<Vector3d> getPickPosition (double pickRange);
 
+	@NotNull HitResult pick ();
+
 	/**
 	 * 根据实体视线探测所选方块或实体
+	 * <p>
+	 * 当探测不到时，返回的是{@link HitResult.Type#MISS}类型。坐标将为探测终点
 	 *
 	 * @param pickRange 探测距离
 	 */
@@ -81,6 +83,8 @@ public interface CameraAgent {
 
 	/**
 	 * 根据实体的视线确定所选实体
+	 * <p>
+	 * 如果探测不到就返回空值
 	 *
 	 * @param pickRange 探测距离
 	 */
@@ -93,7 +97,7 @@ public interface CameraAgent {
 	 * <p>
 	 * 非瞄准时会包括所有方块，因为过滤器是 {@link ClipContext.Block#OUTLINE}
 	 * <p>
-	 * 当目标无限远时，坐标将为探测终点，即 探测起点 + 视线向量.normalize(探测距离)
+	 * 当目标无限远时，返回的是{@link HitResult.Type#MISS}类型，坐标将为探测终点，即 探测起点 + 视线向量.normalize(探测距离)
 	 *
 	 * @param pickRange 探测距离
 	 */

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class CameraAgentImpl implements CameraAgent {
 	private final          Minecraft         minecraft;
@@ -99,7 +100,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void setLevel (@Nullable BlockGetter level) {
+	public void setLevel (@NotNull BlockGetter level) {
 		this.level = level;
 	}
 
@@ -114,13 +115,8 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public @Nullable Vector3d getPickPosition () {
+	public @NotNull Optional<Vector3d> getPickPosition () {
 		return getPickPosition(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
-	}
-
-	@Override
-	public @NotNull HitResult pick () {
-		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	@Override
@@ -150,31 +146,38 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public @Nullable Vector3d getPickPosition (double pickRange) {
+	public @NotNull Optional<Vector3d> getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
-		return hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation());
+		return Optional.ofNullable(hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation()));
+	}
+
+	@Override
+	public @NotNull HitResult pick () {
+		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
 	}
 
 	@Override
 	public @NotNull HitResult pick (double pickRange) {
-		Camera          camera = getRawCamera();
-		EntityHitResult ehr    = pickEntity(pickRange);
-		BlockHitResult  bhr    = pickBlock(pickRange);
-		return ehr == null ? bhr: bhr.getLocation().distanceTo(camera.getPosition()) < ehr.getLocation().distanceTo(camera.getPosition()) ? bhr: ehr;
+		Camera              camera                 = getRawCamera();
+		Vec3                cameraPos              = camera.getPosition();
+		Optional<HitResult> entityHitResult        = pickEntity(pickRange).map(hr -> hr);
+		HitResult           blockHitResult         = pickBlock(pickRange);
+		double              blockHitResultDistance = blockHitResult.getLocation().distanceTo(cameraPos);
+		return entityHitResult.filter(hitResult -> !(blockHitResultDistance < hitResult.getLocation().distanceTo(cameraPos))).orElse(blockHitResult);
 	}
 
 	@Override
-	public @Nullable EntityHitResult pickEntity (double pickRange) {
+	public @NotNull Optional<EntityHitResult> pickEntity (double pickRange) {
 		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
 		Camera camera       = getRawCamera();
 		if (cameraEntity == null) {
-			return null;
+			return Optional.empty();
 		}
 		Vec3 viewVector = new Vec3(camera.getLookVector());
 		Vec3 pickEnd    = viewVector.scale(pickRange).add(camera.getPosition());
 		AABB aabb       = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
 		aabb = aabb.move(cameraEntity.getEyePosition(1).vectorTo(camera.getPosition()));
-		return ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), pickEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange);
+		return Optional.ofNullable(ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), pickEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange));
 	}
 
 	@Override

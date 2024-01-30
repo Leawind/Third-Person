@@ -6,7 +6,6 @@ import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -122,7 +121,13 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		build();
 	}
 
-	private static @NotNull Method getBuildMethod (Class<?> clazz) throws NoSuchMethodException {
+	private void assertBuilt (boolean expected) {
+		if (expected ^ isBuilt) {
+			throw new UnsupportedOperationException(isBuilt ? "DecisionMap has been built already.": "DecisionMap not built yet.");
+		}
+	}
+
+	private static @NotNull Method getBuildMethod (@NotNull Class<?> clazz) throws NoSuchMethodException {
 		Method method = clazz.getMethod("build", DecisionMap.class);
 		if (!Modifier.isStatic(method.getModifiers())) {
 			throw new RuntimeException(String.format("Expected static method %s", method));
@@ -134,6 +139,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		return method;
 	}
 
+	@Override
 	public void reset () {
 		ruleBuilders.clear();
 		factors.clear();
@@ -152,20 +158,14 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		}
 		sb.append("Strategy Map:\n");
 		for (int flagBits = 0; flagBits < getMapSize(); flagBits++) {
-			Supplier<?> func = getStrategy(flagBits);
+			Supplier<?> func = getStrategy(flagBits).orElse(null);
 			sb.append(String.format("\t%s %s\n", padStart(Integer.toBinaryString(flagBits), factors.size(), '0'), nameMap.getOrDefault(func, "unnamed")));
 		}
 		return sb.toString();
 	}
 
-	private String padStart (String s, int length, char filler) {
+	private @NotNull String padStart (String s, int length, char filler) {
 		return String.format("%" + length + "s", s).replace(' ', filler);
-	}
-
-	private void assertBuilt (boolean expected) {
-		if (expected ^ isBuilt) {
-			throw new UnsupportedOperationException(isBuilt ? "DecisionMap has been built already.": "DecisionMap not built yet.");
-		}
 	}
 
 	@Override
@@ -181,12 +181,12 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	@Override
 	public T make () {
 		assertBuilt(true);
-		return autoExecute(getStrategy(flagBits));
+		return getStrategy(flagBits).map(Supplier::get).orElse(null);
 	}
 
 	@Override
-	public @Nullable Supplier<T> getStrategy (int flagBits) {
-		return strategyMap.get(flagBits);
+	public Optional<Supplier<T>> getStrategy (int flagBits) {
+		return Optional.ofNullable(strategyMap.get(flagBits));
 	}
 
 	@Override
@@ -281,9 +281,5 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 			}
 		});
 		return this;
-	}
-
-	private T autoExecute (Supplier<T> getter) {
-		return getter == null ? null: getter.get();
 	}
 }

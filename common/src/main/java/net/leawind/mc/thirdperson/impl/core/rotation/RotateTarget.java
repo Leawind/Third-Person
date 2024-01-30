@@ -8,6 +8,7 @@ import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -26,14 +27,14 @@ public enum RotateTarget {
 	 * 转向相机的视线落点，即准星所指的位置
 	 */
 	CAMERA_HIT_RESULT(() -> {
-		Vector3d cameraHitPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
-		if (cameraHitPosition == null) {
+		Optional<Vector3d> cameraHitPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
+		if (cameraHitPosition.isEmpty()) {
 			return CAMERA_ROTATION.getRotation();
 		} else {
 			Minecraft mc = Minecraft.getInstance();
 			assert mc.cameraEntity != null;
 			Vector3d eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition());
-			Vector3d viewVector  = cameraHitPosition.sub(eyePosition);
+			Vector3d viewVector  = cameraHitPosition.get().sub(eyePosition);
 			return LMath.rotationDegreeFromDirection(viewVector);
 		}
 	}),
