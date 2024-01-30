@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * 相机偏移模式
+ * <p>
+ * 描述相机应如何偏移
  */
 public interface CameraOffsetMode {
 	/**

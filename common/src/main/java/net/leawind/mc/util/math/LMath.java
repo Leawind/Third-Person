@@ -34,7 +34,7 @@ public interface LMath {
 	 */
 	@Contract(pure=true)
 	static Vector2d rotationRadianFromDirection (Vector3d d) {
-		d = d.normalize();
+		d.normalize();
 		return Vector2d.of(-Math.asin(d.y()), Math.atan2(-d.x(), d.z()));
 	}
 
@@ -78,7 +78,7 @@ public interface LMath {
 	 */
 	@Contract(pure=true)
 	static Vector2d rotationDegreeFromDirection (Vector3d d) {
-		d = d.normalize();
+		d.normalize();
 		return Vector2d.of((-Math.toDegrees(Math.asin(d.y()))), Math.toDegrees(Math.atan2(-d.x(), d.z())));
 	}
 

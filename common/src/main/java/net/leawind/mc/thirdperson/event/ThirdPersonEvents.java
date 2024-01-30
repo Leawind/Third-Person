@@ -12,22 +12,36 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
+import net.leawind.mc.thirdperson.mixin.CameraMixin;
+import net.leawind.mc.thirdperson.mixin.GameRendererMixin;
+import net.leawind.mc.thirdperson.mixin.MinecraftMixin;
+import net.leawind.mc.thirdperson.mixin.MouseHandlerMixin;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public interface ThirdPersonEvents {
-	static void register () {
+public final class ThirdPersonEvents {
+	public static void register () {
 		ClientTickEvent.CLIENT_PRE.register(ThirdPersonEvents::onClientTickPre);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ThirdPersonEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 	}
 
+	/**
+	 * Client tick 前
+	 *
+	 * @see ClientTickEvent#CLIENT_PRE
+	 */
 	private static void onClientTickPre (@NotNull Minecraft minecraft) {
 		if (minecraft.isPaused()) {
 			return;
@@ -41,12 +55,19 @@ public interface ThirdPersonEvents {
 
 	/**
 	 * 当玩家死亡后重生或加入新的维度时触发
+	 *
+	 * @see ClientPlayerEvent#CLIENT_PLAYER_RESPAWN
 	 */
 	private static void onClientPlayerRespawn (@NotNull LocalPlayer oldPlayer, @NotNull LocalPlayer newPlayer) {
 		onPlayerReset();
 		ThirdPerson.LOGGER.info("on Client player respawn");
 	}
 
+	/**
+	 * 当玩家加入时触发
+	 *
+	 * @see ClientPlayerEvent#CLIENT_PLAYER_JOIN
+	 */
 	private static void onClientPlayerJoin (@NotNull LocalPlayer player) {
 		onPlayerReset();
 		ThirdPerson.LOGGER.info("on Client player join");
@@ -57,6 +78,7 @@ public interface ThirdPersonEvents {
 	 *
 	 * @param minecraft mc
 	 * @param amount    向前滚是+1，向后滚是-1
+	 * @see ClientRawInputEvent#MOUSE_SCROLLED
 	 */
 	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
 		Config config = ThirdPerson.getConfig();
@@ -70,6 +92,12 @@ public interface ThirdPersonEvents {
 		}
 	}
 
+	/**
+	 * 重置玩家
+	 *
+	 * @see ThirdPersonEvents#onClientPlayerRespawn(LocalPlayer, LocalPlayer)
+	 * @see ThirdPersonEvents#onClientPlayerJoin(LocalPlayer)
+	 */
 	private static void onPlayerReset () {
 		ThirdPerson.ENTITY_AGENT.reset();
 		ThirdPerson.CAMERA_AGENT.reset();
@@ -81,8 +109,11 @@ public interface ThirdPersonEvents {
 	 * 该调用位于真正渲染画面之前。
 	 * <p>
 	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
+	 *
+	 * @see Camera#setup
+	 * @see CameraMixin#setup_head
 	 */
-	static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
+	public static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
 		ThirdPerson.lastPartialTick = partialTick;
 		ThirdPerson.CAMERA_AGENT.setLevel(level);
 		Minecraft mc = Minecraft.getInstance();
@@ -100,7 +131,13 @@ public interface ThirdPersonEvents {
 		}
 	}
 
-	static void onPreRender (float partialTick) {
+	/**
+	 * gameRenderer 渲染之前
+	 *
+	 * @see GameRenderer#render(float, long, boolean)
+	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
+	 */
+	public static void onPreRender (float partialTick) {
 		double now    = Blaze3D.getTime();
 		double period = now - ThirdPerson.lastRenderTickTimeStamp;
 		ThirdPerson.lastRenderTickTimeStamp = now;
@@ -110,10 +147,16 @@ public interface ThirdPersonEvents {
 		}
 	}
 
-	static void onStartAdjustingCameraOffset () {
+	/**
+	 * @see ThirdPersonKeys#ADJUST_POSITION
+	 */
+	public static void onStartAdjustingCameraOffset () {
 	}
 
-	static void onStopAdjustingCameraOffset () {
+	/**
+	 * @see ThirdPersonKeys#ADJUST_POSITION
+	 */
+	public static void onStopAdjustingCameraOffset () {
 		ThirdPerson.CONFIG_MANAGER.trySave();
 	}
 
@@ -121,8 +164,10 @@ public interface ThirdPersonEvents {
 	 * 移动鼠标调整相机偏移
 	 *
 	 * @param movement 移动的像素
+	 * @see MouseHandler#turnPlayer()
+	 * @see MouseHandlerMixin#turnPlayer_head(CallbackInfo)
 	 */
-	static void onAdjustingCameraOffset (@NotNull Vector2d movement) {
+	public static void onAdjustingCameraOffset (@NotNull Vector2d movement) {
 		if (movement.lengthSquared() == 0) {
 			return;
 		}
@@ -149,8 +194,10 @@ public interface ThirdPersonEvents {
 
 	/**
 	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
+	 *
+	 * @see MinecraftMixin#handleKeybinds_head(CallbackInfo)
 	 */
-	static void onBeforeHandleKeybinds () {
+	public static void onBeforeHandleKeybinds () {
 		if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
 			// 该方法中使用了mixin，修改了 viewVector
 			Minecraft.getInstance().gameRenderer.pick(1.0f);
@@ -159,8 +206,10 @@ public interface ThirdPersonEvents {
 
 	/**
 	 * 退出第三人称视角
+	 *
+	 * @see CameraMixin#setup_head(BlockGetter, Entity, boolean, boolean, float, CallbackInfo)
 	 */
-	static void onLeaveThirdPerson () {
+	public static void onLeaveThirdPerson () {
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
 			ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
 		}
@@ -168,8 +217,10 @@ public interface ThirdPersonEvents {
 
 	/**
 	 * 进入第三人称视角时触发
+	 *
+	 * @see CameraMixin#setup_head(BlockGetter, Entity, boolean, boolean, float, CallbackInfo)
 	 */
-	static void onEnterThirdPerson () {
+	public static void onEnterThirdPerson () {
 		ThirdPerson.lastPartialTick          = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 		ThirdPerson.CAMERA_AGENT.reset();

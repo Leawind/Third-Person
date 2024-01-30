@@ -23,10 +23,10 @@ import java.util.function.Consumer;
 
 public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 	public @NotNull Screen build (@NotNull Config config, @Nullable Screen parent) {
-		final ConfigBuilder builder = me.shedaniel.clothconfig2.api.ConfigBuilder.create()    //
-																				 .setParentScreen(parent)    //
-																				 .setTitle(ConfigManager.getText("text.title"))    //
-																				 .setSavingRunnable(ThirdPerson.CONFIG_MANAGER::trySave);
+		final ConfigBuilder builder = ConfigBuilder.create()    //
+												   .setParentScreen(parent)    //
+												   .setTitle(ConfigManager.getText("text.title"))    //
+												   .setSavingRunnable(ThirdPerson.CONFIG_MANAGER::trySave);
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		Config                   defaults     = Config.DEFAULTS;
 		//==================================================================================================================================================//

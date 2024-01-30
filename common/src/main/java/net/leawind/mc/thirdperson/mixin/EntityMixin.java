@@ -20,7 +20,7 @@ public class EntityMixin {
 	 * 在 viewVector 赋值时截获，重新计算 viewVector 的值。这样就可以计算出正确的 pickEnd 和 aabb
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
-	private Vec3 storeViewVector (Vec3 viewVectorFake) {
+	public Vec3 pick_storeViewVector (Vec3 viewVectorFake) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null) {
 			return viewVectorFake;

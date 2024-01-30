@@ -21,7 +21,7 @@ public class KeyboardInputMixin {
 	 */
 	@Inject(method="tick", at=@At(value="TAIL"))
 	@PerformanceSensitive
-	public void tick_inject_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
+	public void tick_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			LocalPlayer player = Minecraft.getInstance().player;

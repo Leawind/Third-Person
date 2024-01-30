@@ -21,7 +21,7 @@ public class MinecraftMixin {
 	 * 注入到 handleKeybinds 头部，触发相应事件
 	 */
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
-	private void handleKeybinds_inject_head (CallbackInfo ci) {
+	public void handleKeybinds_head (CallbackInfo ci) {
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
 			ThirdPersonEvents.onBeforeHandleKeybinds();
 		}

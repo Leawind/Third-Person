@@ -17,7 +17,7 @@ public class GuiMixin {
 	 * 原本仅在第一人称下显示准星，现在第三人称下也可以显示准星
 	 */
 	@Redirect(method="renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", at=@At(value="INVOKE", target="Lnet/minecraft/client/CameraType;isFirstPerson ()Z"))
-	public boolean shouldRenderCrosshair (CameraType instance) {
+	public boolean renderCrosshair_invoke (CameraType instance) {
 		return ThirdPerson.shouldRenderCrosshair() || Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 }

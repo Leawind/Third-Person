@@ -7,7 +7,7 @@ import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
-import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
+import net.leawind.mc.thirdperson.impl.screen.ConfigScreenBuilders;
 import net.minecraft.client.gui.screens.Screen;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +64,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
-		return ConfigScreenBuilder.CLOTH_CONFIG.build(config, parent);
+		return ConfigScreenBuilders.CLOTH_CONFIG.build(config, parent);
 	}
 
 	@Override

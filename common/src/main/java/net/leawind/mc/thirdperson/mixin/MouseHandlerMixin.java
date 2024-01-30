@@ -26,7 +26,7 @@ public class MouseHandlerMixin {
 	 * 处理完后要重置累积变化量（accumulatedDX|Y）
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
-	public void turnPlayer (CallbackInfo ci) {
+	public void turnPlayer_head (CallbackInfo ci) {
 		if (ThirdPerson.isAvailable() && ThirdPerson.isAdjustingCameraOffset()) {
 			ThirdPersonEvents.onAdjustingCameraOffset(Vector2d.of(accumulatedDX, accumulatedDY));
 			accumulatedDX = 0;
@@ -44,7 +44,7 @@ public class MouseHandlerMixin {
 	 * @param dy y轴角度（偏航角）变化量
 	 */
 	@Redirect(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
-	private void turnPlayerInject (LocalPlayer instance, double dy, double dx) {
+	public void turnPlayer_invoke (LocalPlayer instance, double dy, double dx) {
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
 		} else {
