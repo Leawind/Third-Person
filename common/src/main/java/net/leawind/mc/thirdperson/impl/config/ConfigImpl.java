@@ -13,9 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * 模组配置
- */
 public class ConfigImpl extends Config {
 	private final CameraOffsetScheme cameraOffsetScheme = new CameraOffsetSchemeImpl(this);
 	private final Set<ItemPattern>   aimItemPatterns    = new HashSet<>();

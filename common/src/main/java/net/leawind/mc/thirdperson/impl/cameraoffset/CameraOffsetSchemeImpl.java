@@ -6,13 +6,6 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.Config;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * 第三人称相机的偏移方案
- * <p>
- * 第三人称下，相机会根据其当前所处的模式来确定相机的行为。例如如何跟随玩家、如何旋转、与玩家的相对位置如何确定等。
- * <p>
- * 默认有两种模式，按F5在第一人称和两种模式间切换
- */
 public class CameraOffsetSchemeImpl implements CameraOffsetScheme {
 	private final @NotNull CameraOffsetMode normalMode;
 	private final @NotNull CameraOffsetMode aimingMode;

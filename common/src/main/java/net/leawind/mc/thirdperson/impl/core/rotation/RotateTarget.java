@@ -41,11 +41,16 @@ public enum RotateTarget {
 	/**
 	 * 使用键盘控制的移动方向
 	 * <p>
-	 * 当没有使用键盘控制时，则保持当前朝向
+	 * 当没有使用键盘控制时保持当前朝向
 	 */
 	IMPULSE_DIRECTION(() -> ThirdPerson.impulseHorizon.length() < 1e-5    //
 							? NONE.getRotation()    //
 							: LMath.rotationDegreeFromDirection(ThirdPerson.impulse)),
+	/**
+	 * 使用键盘控制的移动方向（仅水平）
+	 * <p>
+	 * 当没有使用键盘控制时保持当前朝向
+	 */
 	HORIZONTAL_IMPULSE_DIRECTION(() -> {
 		if (ThirdPerson.impulseHorizon.length() < 1e-5) {
 			return NONE.getRotation();

@@ -9,9 +9,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class AbstractCameraOffsetMode implements CameraOffsetMode {
 	protected final @NotNull Config config;
 
-	/**
-	 * 相机偏移相关数据直接存储在配置对象中
-	 */
 	public AbstractCameraOffsetMode (@NotNull Config config) {
 		this.config = config;
 	}

@@ -5,10 +5,13 @@ import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
+
 /**
  * 相机偏移模式
  * <p>
  * 描述相机应如何偏移
+ * <p>
+ * 相机偏移相关数据直接存储在配置对象中
  */
 public interface CameraOffsetMode {
 	/**

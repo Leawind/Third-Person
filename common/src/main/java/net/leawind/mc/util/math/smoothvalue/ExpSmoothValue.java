@@ -70,7 +70,6 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	 * <p>
 	 * 不改变旧值
 	 */
-	@Deprecated
 	abstract public void set (T value);
 
 	abstract public void setSmoothFactor (T smoothFactor);
