@@ -5,7 +5,6 @@ import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import org.jetbrains.annotations.NotNull;
 
-
 /**
  * 相机偏移模式
  * <p>

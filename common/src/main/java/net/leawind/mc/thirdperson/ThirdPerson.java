@@ -5,8 +5,6 @@ import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
-import net.leawind.mc.thirdperson.event.ThirdPersonEvents;
-import net.leawind.mc.thirdperson.event.ThirdPersonKeys;
 import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
@@ -16,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ThirdPerson {
-	public static final          Logger        LOGGER                   = LoggerFactory.getLogger(ModConstants.MOD_ID);
+public final class ThirdPerson {
+	public static final          Logger        LOGGER                   = LoggerFactory.getLogger(ThirdPersonConstants.MOD_ID);
 	public static final          ConfigManager CONFIG_MANAGER           = new ConfigManagerImpl();
 	public static final @NotNull Vector3d      impulse                  = Vector3d.of(0);
 	public static final @NotNull Vector2d      impulseHorizon           = Vector2d.of(0);

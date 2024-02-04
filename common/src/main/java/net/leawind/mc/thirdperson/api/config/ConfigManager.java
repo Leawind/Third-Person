@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.api.config;
 
 
-import net.leawind.mc.thirdperson.ModConstants;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
@@ -24,7 +24,7 @@ public interface ConfigManager {
 	 */
 	@Contract(value="_ -> new", pure=true)
 	static @NotNull Component getText (@NotNull String name) {
-		return Component.translatable(ModConstants.MOD_ID + "." + name);
+		return Component.translatable(ThirdPersonConstants.MOD_ID + "." + name);
 	}
 
 	/**

@@ -1,8 +1,8 @@
 package net.leawind.mc.thirdperson.impl.core;
 
 
-import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
@@ -48,7 +48,7 @@ public class EntityAgentImpl implements EntityAgent {
 		this.minecraft = minecraft;
 		{
 			smoothEyePosition = new ExpSmoothVector3d();
-			smoothEyePosition.setSmoothFactorWeight(ModConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+			smoothEyePosition.setSmoothFactorWeight(ThirdPersonConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
 		}
 		ThirdPerson.LOGGER.debug(rotateDecisionMap.toString());
 	}

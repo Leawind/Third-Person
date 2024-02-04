@@ -3,8 +3,8 @@ package net.leawind.mc.thirdperson.impl.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.impl.screen.ConfigScreenBuilders;
@@ -19,7 +19,7 @@ import java.nio.file.Files;
 
 public class ConfigManagerImpl implements ConfigManager {
 	private final @NotNull Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
-	private @NotNull       Config config = new ConfigImpl();
+	private @NotNull       Config config = Config.create();
 
 	public ConfigManagerImpl () {
 	}
@@ -27,10 +27,10 @@ public class ConfigManagerImpl implements ConfigManager {
 	@Override
 	public void tryLoad () {
 		try {
-			assert ModConstants.CONFIG_FILE.getParentFile().mkdirs();
-			if (ModConstants.CONFIG_FILE.exists()) {
+			assert ThirdPersonConstants.CONFIG_FILE.getParentFile().mkdirs();
+			if (ThirdPersonConstants.CONFIG_FILE.exists()) {
 				load();
-				ThirdPerson.LOGGER.info("Config is loaded from {}", ModConstants.CONFIG_FILE);
+				ThirdPerson.LOGGER.info("Config is loaded from {}", ThirdPersonConstants.CONFIG_FILE);
 			} else {
 				ThirdPerson.LOGGER.info("Config not found, creating one.");
 				trySave();
@@ -54,12 +54,12 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public void load () throws IOException {
-		config = GSON.fromJson(Files.readString(ModConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), ConfigImpl.class);
+		config = GSON.fromJson(Files.readString(ThirdPersonConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.IMPL);
 	}
 
 	@Override
 	public void save () throws IOException {
-		FileUtils.writeStringToFile(ModConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
+		FileUtils.writeStringToFile(ThirdPersonConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
 	}
 
 	@Override

@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson.impl.core;
 
 
 import com.mojang.blaze3d.Blaze3D;
-import net.leawind.mc.thirdperson.ModConstants;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
@@ -51,9 +51,9 @@ public class CameraAgentImpl implements CameraAgent {
 	public CameraAgentImpl (Minecraft minecraft) {
 		this.minecraft    = minecraft;
 		smoothOffsetRatio = new ExpSmoothVector2d();
-		smoothOffsetRatio.setSmoothFactorWeight(ModConstants.OFFSET_RATIO_SMOOTH_WEIGHT);
+		smoothOffsetRatio.setSmoothFactorWeight(ThirdPersonConstants.OFFSET_RATIO_SMOOTH_WEIGHT);
 		smoothDistanceToEye = new ExpSmoothDouble();
-		smoothDistanceToEye.setSmoothFactorWeight(ModConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT);
+		smoothDistanceToEye.setSmoothFactorWeight(ThirdPersonConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT);
 	}
 
 	@Override
@@ -129,7 +129,7 @@ public class CameraAgentImpl implements CameraAgent {
 				lastCameraTurnTimeStamp = Blaze3D.getTime();
 				double rx = getRelativeRotation().x() + dx;
 				double ry = getRelativeRotation().y() + dy;
-				rx = LMath.clamp(rx, -ModConstants.CAMERA_PITCH_DEGREE_LIMIT, ModConstants.CAMERA_PITCH_DEGREE_LIMIT);
+				rx = LMath.clamp(rx, -ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT, ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT);
 				getRelativeRotation().set(rx, ry % 360f);
 			}
 		}
@@ -201,7 +201,7 @@ public class CameraAgentImpl implements CameraAgent {
 		// 垂直视野角度一半(弧度制）
 		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
 		// 成像平面宽高
-		double heightHalf = Math.tan(verticalRadianHalf) * ModConstants.NEAR_PLANE_DISTANCE;
+		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
 		//		// 水平视野角度一半(弧度制）
 		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
@@ -210,7 +210,7 @@ public class CameraAgentImpl implements CameraAgent {
 		double   smoothVirtualDistanceValue = smoothDistanceToEye.get();
 		// 偏移量
 		double upOffset   = smoothOffsetRatioValue.y() * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
-		double leftOffset = smoothOffsetRatioValue.x() * smoothVirtualDistanceValue * widthHalf / ModConstants.NEAR_PLANE_DISTANCE;
+		double leftOffset = smoothOffsetRatioValue.x() * smoothVirtualDistanceValue * widthHalf / ThirdPersonConstants.NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
 		Vector3d positionWithoutOffset = calculatePositionWithoutOffset();
 		// 应用到假相机
@@ -234,9 +234,9 @@ public class CameraAgentImpl implements CameraAgent {
 			double offsetX = (i & 1) * 2 - 1;
 			double offsetY = (i >> 1 & 1) * 2 - 1;
 			double offsetZ = (i >> 2 & 1) * 2 - 1;
-			offsetX *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
-			offsetY *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
-			offsetZ *= ModConstants.CAMERA_THROUGH_WALL_DETECTION;
+			offsetX *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
+			offsetY *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
+			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			Vec3      pickEnd   = pickStart.add(smoothEyeToCamera);
 			HitResult hitResult = level.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));

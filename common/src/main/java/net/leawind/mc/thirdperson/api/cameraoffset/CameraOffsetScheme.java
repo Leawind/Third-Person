@@ -1,6 +1,8 @@
 package net.leawind.mc.thirdperson.api.cameraoffset;
 
 
+import net.leawind.mc.thirdperson.api.config.Config;
+import net.leawind.mc.thirdperson.impl.cameraoffset.CameraOffsetSchemeImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,6 +13,10 @@ import org.jetbrains.annotations.NotNull;
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public interface CameraOffsetScheme {
+	static CameraOffsetScheme of (Config that) {
+		return new CameraOffsetSchemeImpl(that);
+	}
+
 	/**
 	 * 获取当前模式
 	 */
