@@ -58,6 +58,7 @@ public class CameraAgentImpl implements CameraAgent {
 
 	@Override
 	public void reset () {
+		ThirdPerson.LOGGER.debug("Reset CameraAgent");
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
 		if (minecraft.cameraEntity != null) {

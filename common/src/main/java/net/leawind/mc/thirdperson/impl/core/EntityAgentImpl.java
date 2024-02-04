@@ -60,8 +60,11 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@Override
 	public void reset () {
+		ThirdPerson.LOGGER.debug("Reset EntityAgent");
 		ThirdPerson.lastPartialTick = minecraft.getFrameTime();
-		smoothEyePosition.set(getRawEyePosition(ThirdPerson.lastPartialTick));
+		if (isCameraEntityExist()) {
+			smoothEyePosition.set(getRawEyePosition(ThirdPerson.lastPartialTick));
+		}
 		wasAiming      = false;
 		wasInterecting = false;
 	}
