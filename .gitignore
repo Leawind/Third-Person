@@ -1,5 +1,5 @@
 # eclipse
-bin
+eclipse
 *.launch
 .settings
 .metadata
@@ -13,15 +13,17 @@ out
 *.iml
 .idea
 
+# vscode
+.vscode
+
 # gradle
 build
 .gradle
-gradle/wrapper/**.zip
 
 # other
-eclipse
+bin
 run
-*.sh
+.architectury-transformer
 
 # Files from Forge MDK
 forge*changelog.txt
