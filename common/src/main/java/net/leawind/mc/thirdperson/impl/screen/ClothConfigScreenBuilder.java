@@ -57,10 +57,11 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		}
 		//==================================================================================================================================================//
 		//==================================================================================================================================================//
-		// Category: misc
+		// Category: Miscellaneous
 		final ConfigCategory CATEGORY_MISC = builder.getOrCreateCategory(ConfigManager.getText("option_category.misc"));
 		{
 			CATEGORY_MISC.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
+			CATEGORY_MISC.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildBooleanEntry("turn_with_camera_when_enter_first_person",
 													 defaults.turn_with_camera_when_enter_first_person,
 													 config.turn_with_camera_when_enter_first_person,
@@ -109,7 +110,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		}
 		//==================================================================================================================================================//
 		//==================================================================================================================================================//
-		// Category: camera offset
+		// Category: Camera Offset
 		final ConfigCategory CATEGORY_CAMERA_OFFSET = builder.getOrCreateCategory(ConfigManager.getText("option_category.camera_offset"));
 		{
 			// SubCategory: Normal Mode

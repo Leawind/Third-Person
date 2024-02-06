@@ -83,8 +83,20 @@ public interface CameraAgent {
 	 */
 	@NotNull Vector2d getRelativeRotation ();
 
+	/**
+	 * 从相机pick，使用默认距离
+	 * <p>
+	 * 默认距离是相机到玩家的距离加上配置中相机的pick距离
+	 * <p>
+	 * 结果可能是实体或方块
+	 */
 	@NotNull HitResult pick ();
 
+	/**
+	 * 获取pick结果坐标
+	 * <p>
+	 * 使用默认距离
+	 */
 	@NotNull Optional<Vector3d> getPickPosition ();
 
 	/**

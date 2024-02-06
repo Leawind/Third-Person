@@ -19,6 +19,10 @@ public final class ThirdPersonConstants {
 	 * 取自 {@link net.minecraft.client.Camera#getNearPlane()}
 	 */
 	public static final double       NEAR_PLANE_DISTANCE           = 0.050;
+	/**
+	 * @see net.minecraft.server.network.ServerGamePacketListenerImpl#MAX_INTERACTION_DISTANCE
+	 */
+	public static final double       MAX_INTERACTION_DISTANCE      = 6.0;
 	public static final double       CAMERA_PITCH_DEGREE_LIMIT     = 89.800;
 	public static final double       CAMERA_THROUGH_WALL_DETECTION = 0.180;
 	public static final List<String> BUILDIN_AIM_ITEM_RULES        = List.of("crossbow{Charged:1b}", "ender_pearl", "snowball", "egg", "splash_potion", "lingering_potion", "experience_bottle");

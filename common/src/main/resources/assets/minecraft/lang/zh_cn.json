@@ -33,6 +33,8 @@
 	"leawind_third_person.option.center_offset_when_flying.desc": "当相机附着的实体正在使用鞘翅飞行时，不使用相机偏移量",
 	"leawind_third_person.option.player_fade_out_enabled": "启用玩家淡出",
 	"leawind_third_person.option.player_fade_out_enabled.desc": "实际上不是“淡出”，只是突然看不见，但避免玩家实体遮挡视线",
+	"leawind_third_person.option.use_camera_pick_in_creative": "创造模式下使用相机pick",
+	"leawind_third_person.option.use_camera_pick_in_creative.desc": "创造模式下玩家视线不会被遮挡，准星指哪就交互哪",
 	"leawind_third_person.option.lock_camera_pitch_angle": "锁定相机的俯仰角",
 	"leawind_third_person.option.lock_camera_pitch_angle.desc": "锁定后无法上下转动",
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming": "未瞄准时强制玩家跟随相机转动",

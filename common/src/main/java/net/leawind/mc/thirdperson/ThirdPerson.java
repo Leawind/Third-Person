@@ -10,6 +10,7 @@ import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,5 +113,14 @@ public final class ThirdPerson {
 	 */
 	public static boolean doesPlayerWantToAim () {
 		return isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
+	}
+
+	public static boolean shouldPickFromCamera () {
+		if (!ENTITY_AGENT.isCameraEntityExist()) {
+			return false;
+		} else if (!getConfig().use_camera_pick_in_creative) {
+			return false;
+		}
+		return ENTITY_AGENT.getRawCameraEntity() instanceof Player player && player.isCreative();
 	}
 }

@@ -33,6 +33,8 @@
 	"leawind_third_person.option.center_offset_when_flying.desc": "Use 0 camera offset when attached entity is flying with elytra",
 	"leawind_third_person.option.player_fade_out_enabled": "Enable Player Fade Out",
 	"leawind_third_person.option.player_fade_out_enabled.desc": "Not actually 'fade out,' just suddenly invisible to avoid obstructing the view.",
+	"leawind_third_person.option.use_camera_pick_in_creative": "Use camera pick in creative mode",
+	"leawind_third_person.option.use_camera_pick_in_creative.desc": "In creative mode, player sight won't be blocked, you can interect with what crosshair aims at",
 	"leawind_third_person.option.lock_camera_pitch_angle": "Lock Camera Pitch Angle",
 	"leawind_third_person.option.lock_camera_pitch_angle.desc": "After locking, you cannot tilt the camera up or down.",
 	"leawind_third_person.option.player_rotate_with_camera_when_not_aiming": "Force Player to Rotate with Camera When Not Aiming",
