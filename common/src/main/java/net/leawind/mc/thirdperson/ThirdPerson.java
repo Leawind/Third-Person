@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
@@ -10,28 +11,32 @@ import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ThirdPerson {
-	public static final          Logger        LOGGER                   = LoggerFactory.getLogger(ThirdPersonConstants.MOD_ID);
-	public static final          ConfigManager CONFIG_MANAGER           = new ConfigManagerImpl();
-	public static final @NotNull Vector3d      impulse                  = Vector3d.of(0);
-	public static final @NotNull Vector2d      impulseHorizon           = Vector2d.of(0);
+	public static final          Minecraft     mc                      = Minecraft.getInstance();
+	public static final          Logger        LOGGER                  = LoggerFactory.getLogger(ThirdPersonConstants.MOD_ID);
+	public static final          ConfigManager CONFIG_MANAGER          = new ConfigManagerImpl();
+	public static final @NotNull Vector3d      impulse                 = Vector3d.of(0);
+	public static final @NotNull Vector2d      impulseHorizon          = Vector2d.of(0);
 	public static                EntityAgent   ENTITY_AGENT;
 	public static                CameraAgent   CAMERA_AGENT;
-	public static                float         lastPartialTick          = 1;
-	public static                double        lastCameraSetupTimeStamp = 0;
-	public static                double        lastRenderTickTimeStamp  = 0;
+	public static                float         lastPartialTick         = 1;
+	public static                double        lastRenderTickTimeStamp = 0;
 	/**
 	 * 是否通过按键切换到了瞄准模式
+	 *
+	 * @see ThirdPersonKeys#TOGGLE_AIMING
 	 */
-	public static                boolean       isToggleToAiming         = false;
+	public static                boolean       isToggleToAiming        = false;
 
 	public static void init () {
-		Minecraft mc = Minecraft.getInstance();
 		ENTITY_AGENT = EntityAgent.create(mc);
 		CAMERA_AGENT = CameraAgent.create(mc);
 		CONFIG_MANAGER.tryLoad();
@@ -43,7 +48,6 @@ public final class ThirdPerson {
 	 * 判断：模组功能已启用，且相机和玩家都已经初始化
 	 */
 	public static boolean isAvailable () {
-		Minecraft mc = Minecraft.getInstance();
 		return mc.player != null    //
 			   && mc.cameraEntity != null    //
 			   && getConfig().is_mod_enable //
@@ -70,7 +74,7 @@ public final class ThirdPerson {
 	 * 根据 mc options 判断当前是否是第三人称
 	 */
 	public static boolean isThirdPerson () {
-		return !Minecraft.getInstance().options.getCameraType().isFirstPerson();
+		return !mc.options.getCameraType().isFirstPerson();
 	}
 
 	/**
@@ -89,16 +93,16 @@ public final class ThirdPerson {
 	 * 当启用假的第一人称或相机距离玩家足够近时隐藏
 	 * <p>
 	 * 需要借助相机坐标和玩家眼睛坐标来判断
+	 *
+	 * @see LivingEntityRenderer#render(LivingEntity, float, float, PoseStack, MultiBufferSource, int)
 	 */
 	public static boolean wasCameraCloseToEntity () {
-		Minecraft mc     = Minecraft.getInstance();
-		Config    config = getConfig();
+		Config config = getConfig();
 		if (!config.player_fade_out_enabled) {
 			return false;
 		} else if (mc.cameraEntity == null) {
 			return false;
 		}
-		//		Vec3 eyePosition    = mc.cameraEntity.getEyePosition(PlayerAgent.lastPartialTick);
 		Vector3d eyePosition    = ENTITY_AGENT.getPossiblySmoothEyePosition(lastPartialTick);
 		Vector3d cameraPosition = LMath.toVector3d(CAMERA_AGENT.getRawCamera().getPosition());
 		if (config.getCameraOffsetScheme().getMode().getMaxDistance() <= config.getDistanceMonoList().get(0)) {
@@ -115,6 +119,9 @@ public final class ThirdPerson {
 		return isToggleToAiming || ThirdPersonKeys.FORCE_AIMING.isDown();
 	}
 
+	/**
+	 * 探测射线是否应当起始于相机处，而非玩家眼睛处
+	 */
 	public static boolean shouldPickFromCamera () {
 		if (!ENTITY_AGENT.isCameraEntityExist()) {
 			return false;

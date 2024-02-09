@@ -71,6 +71,8 @@ public interface EntityAgent {
 
 	/**
 	 * 获取相机附着的实体
+	 *
+	 * @see EntityAgent#isCameraEntityExist
 	 */
 	@NotNull Entity getRawCameraEntity ();
 

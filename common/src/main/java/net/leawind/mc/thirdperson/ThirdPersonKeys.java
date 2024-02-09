@@ -14,7 +14,7 @@ public final class ThirdPersonKeys {
 	public static final ModKeyMapping ADJUST_POSITION   = ModKeyMapping.of(getId("adjust_position"), InputConstants.KEY_Z, ThirdPersonConstants.KEY_CATEGORY)    //
 																	   .onDown(ThirdPersonEvents::onStartAdjustingCameraOffset)    //
 																	   .onUp(ThirdPersonEvents::onStopAdjustingCameraOffset);
-	public static final ModKeyMapping FORCE_AIMING      = ModKeyMapping.of(getId("force_aiming"), InputConstants.UNKNOWN.getValue(), ThirdPersonConstants.KEY_CATEGORY);
+	public static final ModKeyMapping FORCE_AIMING      = ModKeyMapping.of(getId("force_aiming"), ThirdPersonConstants.KEY_CATEGORY);
 	public static final ModKeyMapping TOOGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPerson.isThirdPerson()) {

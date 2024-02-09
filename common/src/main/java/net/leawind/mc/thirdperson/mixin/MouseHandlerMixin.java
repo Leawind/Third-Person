@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.mixin;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonEvents;
 import net.leawind.mc.util.math.vector.api.Vector2d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,8 +47,7 @@ public class MouseHandlerMixin {
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
 		} else {
-			assert Minecraft.getInstance().player != null;
-			Minecraft.getInstance().player.turn(dy, dx);
+			ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().turn(dy, dx);
 		}
 	}
 }

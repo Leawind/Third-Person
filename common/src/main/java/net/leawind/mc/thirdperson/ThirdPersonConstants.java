@@ -20,6 +20,8 @@ public final class ThirdPersonConstants {
 	 */
 	public static final double       NEAR_PLANE_DISTANCE           = 0.050;
 	/**
+	 * 服务器允许的最大交互距离
+	 *
 	 * @see net.minecraft.server.network.ServerGamePacketListenerImpl#MAX_INTERACTION_DISTANCE
 	 */
 	public static final double       MAX_INTERACTION_DISTANCE      = 6.0;

@@ -31,10 +31,8 @@ public enum RotateTarget {
 		if (cameraHitPosition.isEmpty()) {
 			return CAMERA_ROTATION.getRotation();
 		} else {
-			Minecraft mc = Minecraft.getInstance();
-			assert mc.cameraEntity != null;
-			Vector3d eyePosition = LMath.toVector3d(mc.cameraEntity.getEyePosition());
-			Vector3d viewVector  = cameraHitPosition.get().sub(eyePosition);
+			Vector3d  eyePosition = ThirdPerson.ENTITY_AGENT.getRawEyePosition(1);
+			Vector3d  viewVector  = cameraHitPosition.get().sub(eyePosition);
 			return LMath.rotationDegreeFromDirection(viewVector);
 		}
 	}),

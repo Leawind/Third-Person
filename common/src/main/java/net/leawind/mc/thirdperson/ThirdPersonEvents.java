@@ -119,11 +119,8 @@ public final class ThirdPersonEvents {
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
 		}
-		double now    = Blaze3D.getTime();
-		double period = now - ThirdPerson.lastCameraSetupTimeStamp;
-		ThirdPerson.lastCameraSetupTimeStamp = now;
 		if (ThirdPerson.isThirdPerson()) {
-			ThirdPerson.CAMERA_AGENT.onCameraSetup(period);
+			ThirdPerson.CAMERA_AGENT.onCameraSetup();
 		}
 		if (mc.options.getCameraType().isMirrored()) {
 			mc.options.setCameraType(CameraType.FIRST_PERSON);
@@ -221,7 +218,6 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onEnterThirdPerson () {
 		ThirdPerson.lastPartialTick          = Minecraft.getInstance().getFrameTime();
-		ThirdPerson.lastCameraSetupTimeStamp = Blaze3D.getTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
 	}

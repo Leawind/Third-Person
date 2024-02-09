@@ -61,8 +61,9 @@ public class CameraAgentImpl implements CameraAgent {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
-		if (minecraft.cameraEntity != null) {
-			relativeRotation.set(-minecraft.cameraEntity.getViewXRot(ThirdPerson.lastPartialTick), minecraft.cameraEntity.getViewYRot(ThirdPerson.lastPartialTick) - 180);
+		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
+			Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			relativeRotation.set(-entity.getViewXRot(ThirdPerson.lastPartialTick), entity.getViewYRot(ThirdPerson.lastPartialTick) - 180);
 		}
 	}
 
@@ -83,7 +84,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void onCameraSetup (double period) {
+	public void onCameraSetup () {
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
 		updateFakeCameraRotationPosition();
@@ -168,14 +169,14 @@ public class CameraAgentImpl implements CameraAgent {
 
 	@Override
 	public @NotNull Optional<EntityHitResult> pickEntity (double pickRange) {
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		Camera camera       = getRawCamera();
-		if (cameraEntity == null) {
+		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return Optional.empty();
 		}
-		Vec3 viewVector = new Vec3(camera.getLookVector());
-		Vec3 pickEnd    = viewVector.scale(pickRange).add(camera.getPosition());
-		AABB aabb       = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
+		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		Camera camera       = getRawCamera();
+		Vec3   viewVector   = new Vec3(camera.getLookVector());
+		Vec3   pickEnd      = viewVector.scale(pickRange).add(camera.getPosition());
+		AABB   aabb         = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
 		aabb = aabb.move(cameraEntity.getEyePosition(1).vectorTo(camera.getPosition()));
 		return Optional.ofNullable(ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), pickEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange));
 	}
@@ -186,8 +187,7 @@ public class CameraAgentImpl implements CameraAgent {
 		Vec3   pickStart    = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
 		Vec3   pickEnd      = viewVector.scale(pickRange).add(pickStart);
-		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
-		assert cameraEntity != null;
+		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		return cameraEntity.level.clip(new ClipContext(pickStart, pickEnd, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
 	}
 
@@ -221,6 +221,8 @@ public class CameraAgentImpl implements CameraAgent {
 
 	/**
 	 * 为防止穿墙，重新计算 smoothVirtualDistance 的值
+	 *
+	 * @see Camera#getMaxZoom(double)
 	 */
 	private void preventThroughWall () {
 		// 防止穿墙
@@ -239,7 +241,7 @@ public class CameraAgentImpl implements CameraAgent {
 			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			Vec3      pickEnd   = pickStart.add(smoothEyeToCamera);
-			HitResult hitResult = level.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, Minecraft.getInstance().cameraEntity));
+			HitResult hitResult = level.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickStart));
 			}

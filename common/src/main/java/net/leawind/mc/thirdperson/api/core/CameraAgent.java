@@ -44,7 +44,7 @@ public interface CameraAgent {
 	 * <p>
 	 * {@link CameraMixin#setup_invoke}
 	 */
-	void onCameraSetup (double period);
+	void onCameraSetup ();
 
 	/**
 	 * client tick 前

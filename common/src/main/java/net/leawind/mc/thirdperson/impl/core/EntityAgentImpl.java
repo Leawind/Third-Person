@@ -141,17 +141,23 @@ public class EntityAgentImpl implements EntityAgent {
 		updateBodyRotation();
 	}
 
+	/**
+	 * 脖子最多左右转85度
+	 *
+	 * @see net.minecraft.client.renderer.entity.LivingEntityRenderer#render
+	 */
 	private void updateBodyRotation () {
 		// TODO 侧身拉弓
+		// net.minecraft.client.renderer.entity.LivingEntityRenderer.render
 		Config config = ThirdPerson.getConfig();
 		if (config.auto_turn_body_drawing_a_bow && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			assert minecraft.player != null;
-			if (minecraft.player.isUsingItem() && minecraft.player.getUseItem().is(Items.BOW)) {
-				double k = minecraft.player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
+			LocalPlayer player = getRawPlayerEntity();
+			if (player.isUsingItem() && player.getUseItem().is(Items.BOW)) {
+				double k = player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
 				if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
 					k = -k;
 				}
-				minecraft.player.yBodyRot = (float)(k * 45 + minecraft.player.getYRot());
+				player.yBodyRot = (float)(k * 45 + player.getYRot());
 			}
 		}
 	}

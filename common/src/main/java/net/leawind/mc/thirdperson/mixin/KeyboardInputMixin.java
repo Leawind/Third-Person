@@ -5,9 +5,7 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
-import net.minecraft.client.player.LocalPlayer;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +22,6 @@ public class KeyboardInputMixin {
 	public void tick_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			LocalPlayer player = Minecraft.getInstance().player;
 			// 相机坐标系下的impulse
 			double cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
 			double cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);
@@ -41,9 +38,9 @@ public class KeyboardInputMixin {
 			lookImpulse.add(leftImpulse, ThirdPerson.impulse);
 			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPerson.impulseHorizon);
 			// impulse 不为0，
-			if (player != null && ThirdPerson.impulseHorizon.length() > 1E-5) {
+			if (ThirdPerson.impulseHorizon.length() > 1E-5) {
 				ThirdPerson.impulseHorizon.normalize();
-				float    playerYRot        = player.getViewYRot(ThirdPerson.lastPartialTick);
+				float    playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPerson.lastPartialTick);
 				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
 				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
 				that.forwardImpulse = (float)(ThirdPerson.impulseHorizon.dot(playerLookHorizon));
