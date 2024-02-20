@@ -135,9 +135,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		// Category: Aiming Check
 		final ConfigCategory CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
-			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("enable_buildin_aim_item_rules", defaults.enable_buildin_aim_item_rules, config.enable_buildin_aim_item_rules, v -> config.enable_buildin_aim_item_rules = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("aim_item_rules", defaults.aim_item_rules, config.aim_item_rules, v -> config.aim_item_rules = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_aim_item_rules", defaults.use_aim_item_rules, config.use_aim_item_rules, v -> config.use_aim_item_rules = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("enable_buildin_item_aiming_rules", defaults.enable_buildin_item_aiming_rules, config.enable_buildin_item_aiming_rules, v -> config.enable_buildin_item_aiming_rules = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("holding_item_aiming_rules", defaults.holding_item_aiming_rules, config.holding_item_aiming_rules, v -> config.holding_item_aiming_rules = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("using_item_aiming_rules", defaults.using_item_aiming_rules, config.using_item_aiming_rules, v -> config.using_item_aiming_rules = v, entryBuilder));
 		}
 		return builder.build();
 	}

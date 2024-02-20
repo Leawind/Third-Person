@@ -38,12 +38,12 @@ public class ConfigImpl extends Config {
 	public void updateItemSet () {
 		aimItemPatterns.clear();
 		useAimItemPatterns.clear();
-		ItemPattern.addToSet(aimItemPatterns, aim_item_rules);
-		ItemPattern.addToSet(useAimItemPatterns, use_aim_item_rules);
+		ItemPattern.addToSet(aimItemPatterns, holding_item_aiming_rules);
+		ItemPattern.addToSet(useAimItemPatterns, using_item_aiming_rules);
 		// 内置物品匹配规则
-		if (enable_buildin_aim_item_rules) {
-			ItemPattern.addToSet(aimItemPatterns, ThirdPersonConstants.BUILDIN_AIM_ITEM_RULES);
-			ItemPattern.addToSet(useAimItemPatterns, ThirdPersonConstants.BUILDIN_USE_AIM_ITEM_RULES);
+		if (enable_buildin_item_aiming_rules) {
+			ItemPattern.addToSet(aimItemPatterns, ThirdPersonConstants.BUILDIN_HOLDING_ITEM_AIMING_RULES);
+			ItemPattern.addToSet(useAimItemPatterns, ThirdPersonConstants.BUILDIN_USING_ITEM_AIMING_RULES);
 		}
 	}
 
