@@ -1,0 +1,19 @@
+* text=auto
+
+*.js             text eol=lf
+*.java           text eol=lf
+*.kts            text eol=lf
+*.gradle         text eol=lf
+*.properties     text eol=lf
+*.json           text eol=lf
+*.yaml           text eol=lf
+*.toml           text eol=lf
+*.md             text eol=lf
+*.svg            text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.gif  binary
+*.mp3  binary
+*.ogg  binary
