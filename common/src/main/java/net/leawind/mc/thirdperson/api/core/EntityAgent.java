@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.api.core;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
+import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;

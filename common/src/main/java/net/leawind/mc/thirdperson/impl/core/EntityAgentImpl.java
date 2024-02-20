@@ -8,6 +8,7 @@ import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
+import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
@@ -188,6 +189,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
+	@VersionSensitive
 	public @NotNull Vector2d getRawRotation (float partialTick) {
 		Entity entity = getRawCameraEntity();
 		return Vector2d.of(entity.getViewXRot(partialTick), entity.getViewYRot(partialTick));
@@ -215,6 +217,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
+	@VersionSensitive
 	public boolean isInterecting () {
 		if (isControlled()) {
 			Options options = minecraft.options;
@@ -225,6 +228,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
+	@VersionSensitive
 	public boolean isFallFlying () {
 		return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isFallFlying();
 	}

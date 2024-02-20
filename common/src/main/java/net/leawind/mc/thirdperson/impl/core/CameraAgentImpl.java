@@ -8,6 +8,7 @@ import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
+import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
@@ -158,6 +159,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
+	@VersionSensitive
 	public @NotNull HitResult pick (double pickRange) {
 		Camera              camera                 = getRawCamera();
 		Vec3                cameraPos              = camera.getPosition();
@@ -168,6 +170,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
+	@VersionSensitive
 	public @NotNull Optional<EntityHitResult> pickEntity (double pickRange) {
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return Optional.empty();
@@ -182,6 +185,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
+	@VersionSensitive
 	public @NotNull BlockHitResult pickBlock (double pickRange) {
 		Camera camera       = getRawCamera();
 		Vec3   pickStart    = camera.getPosition();
