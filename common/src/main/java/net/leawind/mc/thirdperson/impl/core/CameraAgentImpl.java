@@ -90,12 +90,6 @@ public class CameraAgentImpl implements CameraAgent {
 		preventThroughWall();
 		updateFakeCameraRotationPosition();
 		applyCamera();
-		//		if (wasCameraCloseToEntity) {
-		//			// 假的第一人称，强制将相机放在玩家眼睛处
-		//			Vec3 eyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPerson.lastPartialTick));
-		//			((CameraInvoker)fakeCamera).invokeSetPosition(eyePosition);
-		//			applyCamera();
-		//		}
 	}
 
 	@Override

@@ -28,6 +28,9 @@ public interface CameraAgent {
 	 */
 	void reset ();
 
+	/**
+	 * 设置维度
+	 */
 	void setLevel (@NotNull BlockGetter level);
 
 	/**
@@ -107,11 +110,11 @@ public interface CameraAgent {
 	@NotNull Optional<Vector3d> getPickPosition (double pickRange);
 
 	/**
-	 * 根据实体视线探测所选方块或实体
+	 * 根据实体视线探测所选方块或实体。
 	 * <p>
 	 * 当探测不到时，返回的是{@link HitResult.Type#MISS}类型。坐标将为探测终点
 	 *
-	 * @param pickRange 探测距离
+	 * @param pickRange 探测距离限制
 	 */
 	@NotNull HitResult pick (double pickRange);
 

@@ -50,7 +50,6 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
 	public Vec3 pick_storeViewVector (Vec3 viewVectorFake) {
-		Minecraft mc = Minecraft.getInstance();
 		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
 			if (ThirdPerson.shouldPickFromCamera()) {
 				return new Vec3(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector());
