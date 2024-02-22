@@ -26,7 +26,9 @@ public interface RotateStrategy {
 		RotateTarget rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction    //
 									? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION    //
 									: RotateTarget.NONE;
-		SmoothType smoothType = SmoothType.EXP_LINEAR;
+		SmoothType smoothType = ThirdPerson.mc.options.keySprint.isDown() || ThirdPerson.ENTITY_AGENT.isSprinting()    //
+								? SmoothType.HARD    //
+								: SmoothType.EXP_LINEAR;
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(rotateTarget);
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(smoothType);
 		return 0.1D;
