@@ -76,7 +76,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
-	public void setSmoothRotationType (@NotNull SmoothType smoothType) {
+	public void setRotationSmoothType (@NotNull SmoothType smoothType) {
 		smoothRotationType = smoothType;
 	}
 
@@ -231,6 +231,12 @@ public class EntityAgentImpl implements EntityAgent {
 	@VersionSensitive
 	public boolean isFallFlying () {
 		return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isFallFlying();
+	}
+
+
+	@Override
+	public boolean isSprinting () {
+		return getRawCameraEntity().isSprinting();
 	}
 
 	@Override

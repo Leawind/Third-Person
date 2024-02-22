@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.api.core;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
-import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
@@ -46,7 +45,7 @@ public interface EntityAgent {
 	 * <p>
 	 * 在 clientTick 和 renderTick 中要根据平滑类型采用不同的处理方式
 	 */
-	void setSmoothRotationType (@NotNull SmoothType smoothType);
+	void setRotationSmoothType (@NotNull SmoothType smoothType);
 
 	/**
 	 * 设置平滑转向的半衰期
@@ -122,6 +121,11 @@ public interface EntityAgent {
 	 * 实体是否在飞行
 	 */
 	boolean isFallFlying ();
+
+	/**
+	 * 实体是否在奔跑
+	 */
+	boolean isSprinting ();
 
 	/**
 	 * 根据实体的手持物品和使用状态判断是否在瞄准

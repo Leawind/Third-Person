@@ -55,6 +55,11 @@ public final class ThirdPerson {
 			;
 	}
 
+	/**
+	 * 获取当前配置实例
+	 *
+	 * @return 配置实例
+	 */
 	public static @NotNull Config getConfig () {
 		return CONFIG_MANAGER.getConfig();
 	}
@@ -66,6 +71,9 @@ public final class ThirdPerson {
 		return isAdjustingCameraDistance() && !CAMERA_AGENT.wasCameraCloseToEntity();
 	}
 
+	/**
+	 * 检查相机距离是否正在调整。
+	 */
 	public static boolean isAdjustingCameraDistance () {
 		return isAvailable() && isThirdPerson() && ThirdPersonKeys.ADJUST_POSITION.isDown();
 	}

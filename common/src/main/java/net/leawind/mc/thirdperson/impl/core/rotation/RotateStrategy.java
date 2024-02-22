@@ -23,40 +23,47 @@ public interface RotateStrategy {
 	 * 默认策略：移动时转向前进方向，静止时不旋转
 	 */
 	Supplier<Double> DEFAULT                = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(ThirdPerson.getConfig().rotate_to_moving_direction    //
-												 ? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION    //
-												 : RotateTarget.NONE);
-		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.EXP_LINEAR);
+		RotateTarget rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction    //
+									? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION    //
+									: RotateTarget.NONE;
+		SmoothType smoothType = SmoothType.EXP_LINEAR;
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(rotateTarget);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(smoothType);
 		return 0.1D;
 	};
 	Supplier<Double> SWIMMING               = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.IMPULSE_DIRECTION);
-		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
 		return 0.01D;
 	};
 	Supplier<Double> AIMING                 = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_HIT_RESULT);
-		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.HARD);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.HARD);
 		return 0D;
 	};
 	Supplier<Double> FALL_FLYING            = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
 		return 0D;
 	};
 	Supplier<Double> WITH_CAMERA_NOT_AIMING = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
 		return 0D;
 	};
 	Supplier<Double> INTERECTING            = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(ThirdPerson.getConfig().rotate_interacting_type      //
 												 ? RotateTarget.CAMERA_HIT_RESULT    //
 												 : RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setSmoothRotationType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
 		return 0D;
 	};
 
+	/**
+	 * 将通过反射调用此方法
+	 * <p>
+	 * {@link DecisionMap#of(Class)}
+	 */
 	@SuppressWarnings("unused")
 	static void build (@NotNull DecisionMap<Double> map) {
 		map.addRule(0, 0, DEFAULT)    //
