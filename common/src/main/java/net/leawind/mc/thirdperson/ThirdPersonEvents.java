@@ -23,14 +23,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -203,7 +197,6 @@ public final class ThirdPersonEvents {
 		if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
 			// 该方法中使用mixin修改了 viewVector
 			Minecraft.getInstance().gameRenderer.pick(1f);
-
 		}
 	}
 

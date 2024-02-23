@@ -135,9 +135,16 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		// Category: Aiming Check
 		final ConfigCategory CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
-			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("enable_buildin_item_aiming_rules", defaults.enable_buildin_item_aiming_rules, config.enable_buildin_item_aiming_rules, v -> config.enable_buildin_item_aiming_rules = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("holding_item_aiming_rules", defaults.hold_to_aim_item_pattern_expressions, config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("using_item_aiming_rules", defaults.use_to_aim_item_pattern_expressions, config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("hold_to_aim_item_pattern_expressions",
+																defaults.hold_to_aim_item_pattern_expressions,
+																config.hold_to_aim_item_pattern_expressions,
+																v -> config.hold_to_aim_item_pattern_expressions = v,
+																entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_aim_item_pattern_expressions",
+																defaults.use_to_aim_item_pattern_expressions,
+																config.use_to_aim_item_pattern_expressions,
+																v -> config.use_to_aim_item_pattern_expressions = v,
+																entryBuilder));
 		}
 		return builder.build();
 	}

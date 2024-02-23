@@ -64,8 +64,6 @@ abstract class AbstractConfig {
 	@Expose public          double       aiming_offset_x                           = -0.47;
 	@Expose public          double       aiming_offset_y                           = -0.09;
 	@Expose public          double       aiming_offset_center                      = 0.48;
-	// =================================================================================Aiming Check //
-	@Expose public          boolean      enable_buildin_item_aiming_rules          = true;
 	@Expose @NotNull public List<String> hold_to_aim_item_pattern_expressions      = new ArrayList<>();
 	@Expose @NotNull public List<String> use_to_aim_item_pattern_expressions       = new ArrayList<>();
 }

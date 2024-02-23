@@ -164,6 +164,17 @@ public class EntityAgentImpl implements EntityAgent {
 		}
 	}
 
+	/**
+	 * 立即设置玩家朝向
+	 * <p>
+	 * 同时修改原始玩家实体的朝向和旧朝向
+	 */
+	private void setRawRotation (@NotNull Vector2d rot) {
+		Entity entity = getRawPlayerEntity();
+		entity.setYRot(entity.yRotO = (float)rot.y());
+		entity.setXRot(entity.xRotO = (float)rot.x());
+	}
+
 	@Override
 	public boolean isControlled () {
 		return getRawPlayerEntity() == getRawCameraEntity();
@@ -261,16 +272,5 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public boolean wasInterecting () {
 		return wasInterecting;
-	}
-
-	/**
-	 * 立即设置玩家朝向
-	 * <p>
-	 * 同时修改原始玩家实体的朝向和旧朝向
-	 */
-	private void setRawRotation (@NotNull Vector2d rot) {
-		Entity entity = getRawPlayerEntity();
-		entity.setYRot(entity.yRotO = (float)rot.y());
-		entity.setXRot(entity.xRotO = (float)rot.x());
 	}
 }
