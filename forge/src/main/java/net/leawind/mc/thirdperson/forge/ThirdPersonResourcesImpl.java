@@ -7,6 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 
+/**
+ * @see ThirdPersonResources
+ */
 @SuppressWarnings("unused")
 public class ThirdPersonResourcesImpl {
 	public static void register () {

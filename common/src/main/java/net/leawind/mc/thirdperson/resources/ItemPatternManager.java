@@ -3,14 +3,15 @@ package net.leawind.mc.thirdperson.resources;
 
 import com.google.gson.*;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.api.config.Config;
+import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.minecraft.client.resources.SplashManager;
-import net.minecraft.client.resources.language.LanguageManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.storage.loot.LootTables;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +20,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 物品模式管理器
+ * <p>
+ * 物品模式采用json格式存储。
+ * <p>
+ * 重载资源包时，mc会调用{@link ItemPatternManager#apply}方法处理读取到的json数据。
+ *
+ * @see ItemPattern
  * @see LootTables
- * @see RecipeManager
- * @see LanguageManager
  * @see SplashManager
  */
+@VersionSensitive("SimpleJsonResourceReloadListener may not exist in other mc version")
 public class ItemPatternManager extends SimpleJsonResourceReloadListener {
 	public static final  String           ID                       = "item_patterns";
 	private static final Gson             GSON                     = new GsonBuilder().create();
@@ -37,8 +44,15 @@ public class ItemPatternManager extends SimpleJsonResourceReloadListener {
 		super(GSON, ID);
 	}
 
+	/**
+	 * 重载资源包时会调用此方法，处理资源包中的json数据
+	 *
+	 * @param map             资源地址与json数据的映射表
+	 * @param resourceManager {@link MultiPackResourceManager}的实例
+	 * @see Config#updateItemPatterns()
+	 */
 	@Override
-	protected void apply (Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller filler) {
+	public void apply (@NotNull Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profile) {
 		holdToAimItemPatterns.clear();
 		useToAimItemPatterns.clear();
 		map.forEach((resourceLocation, jsonElement) -> {

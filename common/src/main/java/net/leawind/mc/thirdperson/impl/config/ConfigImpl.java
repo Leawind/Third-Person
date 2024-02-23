@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson.impl.config;
 
 
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.util.itempattern.ItemPattern;
@@ -36,9 +37,11 @@ public class ConfigImpl extends Config {
 	@Override
 	public void updateItemPatterns () {
 		holdToAimItemPatterns.clear();
+		int countHold = ItemPattern.addToSet(holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
+		ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", countHold);
 		useToAimItemPatterns.clear();
-		ItemPattern.addToSet(holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
-		ItemPattern.addToSet(useToAimItemPatterns, use_to_aim_item_pattern_expressions);
+		int countUse = ItemPattern.addToSet(useToAimItemPatterns, use_to_aim_item_pattern_expressions);
+		ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", countUse);
 	}
 
 	@Override

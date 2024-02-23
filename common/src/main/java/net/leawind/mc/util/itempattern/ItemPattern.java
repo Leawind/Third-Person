@@ -186,16 +186,19 @@ public interface ItemPattern {
 	 * @param itemPatterns 要添加到的物品模式集合
 	 * @param expressions  包含表达式的可迭代对象
 	 */
-	static void addToSet (@NotNull Set<ItemPattern> itemPatterns, @Nullable Iterable<String> expressions) {
+	static int addToSet (@NotNull Set<ItemPattern> itemPatterns, @Nullable Iterable<String> expressions) {
+		int count = 0;
 		if (expressions != null) {
 			for (String expression: expressions) {
 				try {
 					itemPatterns.add(of(expression));
+					count++;
 				} catch (IllegalArgumentException e) {
 					ThirdPerson.LOGGER.error("Skip invalid item pattern expression: {}", expression);
 				}
 			}
 		}
+		return count;
 	}
 
 	/**

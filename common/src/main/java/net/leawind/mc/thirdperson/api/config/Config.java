@@ -31,11 +31,13 @@ public abstract class Config extends AbstractConfig {
 	abstract public void updateDistancesMonoList ();
 
 	/**
-	 * 更新自动瞄准物品集合
+	 * 更新配置的自动瞄准物品集合
 	 * <p>
 	 * aiming_items 是字符串数组，其中的元素是nbt标签表达式
 	 * <p>
 	 * aiming_item_tags 是解析好的nbt标签集合，用于匹配玩家手持物品
+	 *
+	 * @see net.leawind.mc.thirdperson.resources.ItemPatternManager#apply
 	 */
 	abstract public void updateItemPatterns ();
 
