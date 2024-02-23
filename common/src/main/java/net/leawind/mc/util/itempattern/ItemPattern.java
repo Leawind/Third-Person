@@ -9,6 +9,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,25 +26,58 @@ import java.util.regex.Pattern;
  * <p>
  * 示例：
  * <pre>
- * ItemPattern ip          = ItemPattern.of("crossbow{Charged:1b}");
- * LocalPlayer player      = Minecraft.getInstance().player;
- * boolean     matchResult = ip.match(player.getMainHandItem());
+ * // 获取玩家手持物品
+ * ItemStack   item        = Minecraft.getInstance().player.getMainHandItem();
+ * // 创建物品模式实例
+ * ItemPattern pattern     = ItemPattern.of("crossbow{Charged:1b}");	// 已装填的弩
+ * // 测试物品是否匹配该模式
+ * boolean     matchResult = pattern.match(item);
  * </pre>
  */
 @SuppressWarnings("unused")
 public interface ItemPattern {
+	/**
+	 * 正规的物品描述符
+	 */
 	Pattern     RGX_REGULAR_ID   = Pattern.compile("^item\\.[a-z_]+\\.[a-z_]+$");
+	/**
+	 * 纯物品名，没有命名空间。
+	 * <p>
+	 * 例如 bread
+	 */
 	Pattern     RGX_PURE_ID      = Pattern.compile("^[a-z_]+$");
+	/**
+	 * <命名空间>:<物品ID>
+	 * <p>
+	 * 例如 minecraft:apple
+	 */
 	Pattern     RGX_NAMESPACE_ID = Pattern.compile("^[a-z_]+[.:][a-z_]+$");
-	ItemPattern ANY              = of(null, null);
+	/**
+	 * 宽松规则的物品ID加上NBT标签
+	 * <p>
+	 * 例如 crossbow{Charged:1b}
+	 */
 	Pattern     RGX_ID_NBT       = Pattern.compile("^[a-z.:_]+\\{.*}$");
+	/**
+	 * 宽松规则的物品ID
+	 */
 	Pattern     RGX_ID           = Pattern.compile("^[a-z.:_]+$");
+	/**
+	 * NBT标签表达式
+	 */
 	Pattern     RGX_NBT          = Pattern.compile("^\\{.*}$");
+	/**
+	 * 匹配一切物品
+	 */
+	ItemPattern ANY              = of(null, null);
 
-	static boolean anyMatch (@NotNull Iterable<ItemPattern> itemPatterns, @Nullable ItemStack itemStack) {
-		for (ItemPattern ip: itemPatterns) {
-			if (ip.match(itemStack)) {
-				return true;
+	@SafeVarargs
+	static boolean anyMatch (@Nullable ItemStack itemStack, @NotNull Iterable<ItemPattern>... itemPatternsList) {
+		for (Iterable<ItemPattern> patterns: itemPatternsList) {
+			for (ItemPattern ip: patterns) {
+				if (ip.match(itemStack)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -52,12 +86,12 @@ public interface ItemPattern {
 	/**
 	 * 如果规则表达式不合语法，则提供相关错误信息
 	 *
-	 * @param ruleExpression 表达式
+	 * @param expression 表达式
 	 * @return 错误信息，空值表示没有错误
 	 */
-	static @NotNull Optional<Component> supplyError (@Nullable String ruleExpression) {
+	static @NotNull Optional<Component> supplyError (@Nullable String expression) {
 		try {
-			of(ruleExpression);
+			of(expression);
 			return Optional.empty();
 		} catch (IllegalArgumentException e) {
 			return Optional.of(Component.literal(e.getMessage()));
@@ -65,7 +99,9 @@ public interface ItemPattern {
 	}
 
 	/**
-	 * 示例：
+	 * 由宽松规则的表达式创建物品模式对象。
+	 * <p>
+	 * 表达式示例：
 	 * <p>
 	 * snowball
 	 * <p>
@@ -75,46 +111,43 @@ public interface ItemPattern {
 	 * <p>
 	 * item.minecraft.crossbow{Charged:1b}
 	 */
-	static @NotNull ItemPattern of (@Nullable String ruleExpression) {
-		if (ruleExpression == null) {
+	@Contract("_ -> new")
+	static @NotNull ItemPattern of (@Nullable String expression) {
+		if (expression == null) {
 			return ANY;
-		} else if (RGX_ID.matcher(ruleExpression).matches()) {
-			return of(ruleExpression, null);
-		} else if (RGX_ID_NBT.matcher(ruleExpression).matches()) {
-			int i = ruleExpression.indexOf('{');
-			return of(ruleExpression.substring(0, i), ruleExpression.substring(i));
-		} else if (RGX_NBT.matcher(ruleExpression).matches()) {
-			return of(null, ruleExpression);
+		} else if (RGX_ID.matcher(expression).matches()) {
+			return of(expression, null);
+		} else if (RGX_ID_NBT.matcher(expression).matches()) {
+			int i = expression.indexOf('{');
+			return of(expression.substring(0, i), expression.substring(i));
+		} else if (RGX_NBT.matcher(expression).matches()) {
+			return of(null, expression);
 		} else {
-			throw new IllegalArgumentException(String.format("Invalid item pattern expression: %s", ruleExpression));
+			throw new IllegalArgumentException(String.format("Invalid item pattern expression: %s", expression));
 		}
 	}
 
 	/**
-	 * @param idExp  宽松规则的 descriptionId
+	 * @param idExp  宽松规则的物品ID
 	 * @param tagExp NBT复合标签表达式
 	 */
+	@Contract("_,_ -> new")
 	static @NotNull ItemPattern of (@Nullable String idExp, @Nullable String tagExp) {
 		return new ItemPatternImpl(parseDescriptionId(idExp), parsePatternTag(tagExp));
 	}
 
 	/**
-	 * 允许的格式：
+	 * 将宽松规则的物品ID解析为严格的descriptionId。
 	 * <p>
-	 * 完整格式：s -> s
-	 * <p>
-	 * item.minecraft.snowball
-	 * <p>
-	 * 简写格式：s -> "item.minecraft." + s
-	 * <p>
-	 * snowbow
-	 * <p>
-	 * 命名空间+物品id "item." + s.replace(':', '.')
-	 * <p>
-	 * minecraft.snowball
-	 * <p>
-	 * minecraft:snowball
+	 * 允许 4 种输入格式：
+	 * <li>null，解析结果也将是null</li>
+	 * <li>"ID"，例如 snowball</li>
+	 * <li>"命名空间:ID"，例如 minecraft:snowball</li>
+	 * <li>"descriptionId"，例如 item.minecraft.snowball</li>
+	 *
+	 * @param idExp 宽松规则的物品ID，允许3种格式：
 	 */
+	@Contract("null->null")
 	static @Nullable String parseDescriptionId (@Nullable String idExp) {
 		if (idExp == null || idExp.isEmpty()) {
 			return null;
@@ -129,24 +162,37 @@ public interface ItemPattern {
 		}
 	}
 
+	/**
+	 * 解析给定的标签表达式，并在成功时返回一个CompoundTag。
+	 *
+	 * @param tagExp 要解析的标签表达式
+	 * @return 解析后的CompoundTag，如果tagExp为null则返回null
+	 */
+	@Contract("null->null; !null ->new")
 	static @Nullable CompoundTag parsePatternTag (@Nullable String tagExp) {
 		if (tagExp == null) {
 			return null;
 		}
 		try {
 			return TagParser.parseTag(tagExp);
-		} catch (CommandSyntaxException e) {
-			throw new IllegalArgumentException(String.format("Invalid NBT expression: %s\n%s", tagExp, e.getMessage()));
+		} catch (CommandSyntaxException exception) {
+			throw new IllegalArgumentException(String.format("Invalid NBT expression: %s\n%s", tagExp, exception.getMessage()));
 		}
 	}
 
-	static void addToSet (@NotNull Set<ItemPattern> set, @Nullable Iterable<String> ruleExpressions) {
-		if (ruleExpressions != null) {
-			for (String nbtSrc: ruleExpressions) {
+	/**
+	 * 迭代解析表达式，并将解析的物品模式添加到指定集合，
+	 *
+	 * @param itemPatterns 要添加到的物品模式集合
+	 * @param expressions  包含表达式的可迭代对象
+	 */
+	static void addToSet (@NotNull Set<ItemPattern> itemPatterns, @Nullable Iterable<String> expressions) {
+		if (expressions != null) {
+			for (String expression: expressions) {
 				try {
-					set.add(of(nbtSrc));
+					itemPatterns.add(of(expression));
 				} catch (IllegalArgumentException e) {
-					ThirdPerson.LOGGER.error("Skip invalid id-nbt expression: {}", nbtSrc);
+					ThirdPerson.LOGGER.error("Skip invalid item pattern expression: {}", expression);
 				}
 			}
 		}

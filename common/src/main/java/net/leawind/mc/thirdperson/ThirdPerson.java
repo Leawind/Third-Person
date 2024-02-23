@@ -40,6 +40,7 @@ public final class ThirdPerson {
 		ENTITY_AGENT = EntityAgent.create(mc);
 		CAMERA_AGENT = CameraAgent.create(mc);
 		CONFIG_MANAGER.tryLoad();
+		ThirdPersonResources.register();
 		ThirdPersonKeys.register();
 		ThirdPersonEvents.register();
 	}

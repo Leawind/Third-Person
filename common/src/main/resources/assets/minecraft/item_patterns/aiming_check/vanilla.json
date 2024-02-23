@@ -1,0 +1,15 @@
+{
+	"hold_to_aim": [
+		"minecraft:crossbow{Charged:1b}",
+		"minecraft:ender_pearl",
+		"minecraft:snowball",
+		"minecraft:egg",
+		"minecraft:splash_potion",
+		"minecraft:lingering_potion",
+		"minecraft:experience_bottle"
+	],
+	"use_to_aim": [
+		"minecraft:bow",
+		"minecraft:trident"
+	]
+}

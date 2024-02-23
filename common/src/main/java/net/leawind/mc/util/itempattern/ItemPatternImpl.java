@@ -18,7 +18,7 @@ public class ItemPatternImpl implements ItemPattern {
 	/**
 	 * 用于匹配物品的NBT标签。null 表示匹配任意标签。
 	 */
-	private final @Nullable CompoundTag patternTag;
+	private final @Nullable CompoundTag tag;
 	/**
 	 * NBT标签的表达式
 	 */
@@ -34,7 +34,7 @@ public class ItemPatternImpl implements ItemPattern {
 			throw new IllegalArgumentException(String.format("Irregular item description id: %s", descriptionId));
 		}
 		this.descriptionId = descriptionId;
-		this.patternTag    = patternTag;
+		this.tag           = patternTag;
 		this.tagExp        = patternTag == null ? null: patternTag.getAsString();
 		this.hashCode      = Objects.hashCode(descriptionId) ^ Objects.hashCode(tagExp);
 	}
@@ -52,8 +52,8 @@ public class ItemPatternImpl implements ItemPattern {
 
 	@Override
 	public boolean matchNbt (@Nullable ItemStack itemStack) {
-		CompoundTag tag = itemStack == null ? null: itemStack.getTag();
-		return NbtUtils.compareNbt(patternTag, tag, true);
+		CompoundTag itemTag = itemStack == null ? null: itemStack.getTag();
+		return NbtUtils.compareNbt(this.tag, itemTag, true);
 	}
 
 	@Override

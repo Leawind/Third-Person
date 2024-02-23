@@ -37,17 +37,17 @@ public abstract class Config extends AbstractConfig {
 	 * <p>
 	 * aiming_item_tags 是解析好的nbt标签集合，用于匹配玩家手持物品
 	 */
-	abstract public void updateItemSet ();
+	abstract public void updateItemPatterns ();
 
-	abstract public @NotNull Set<ItemPattern> getAimItemPatterns ();
+	abstract public @NotNull Set<ItemPattern> getHoldToAimItemPatterns ();
 
-	abstract public @NotNull Set<ItemPattern> getUseAimItemPatterns ();
+	abstract public @NotNull Set<ItemPattern> getUseToAimItemPatterns ();
 
 	abstract public @NotNull CameraOffsetScheme getCameraOffsetScheme ();
 
 	abstract public @NotNull MonoList getDistanceMonoList ();
 
-	private static class DefaultConfig extends Config {
+	private static final class DefaultConfig extends Config {
 		@Override
 		public void update () {
 			throw illegalAccess();
@@ -59,17 +59,17 @@ public abstract class Config extends AbstractConfig {
 		}
 
 		@Override
-		public void updateItemSet () {
+		public void updateItemPatterns () {
 			throw illegalAccess();
 		}
 
 		@Override
-		public @NotNull Set<ItemPattern> getAimItemPatterns () {
+		public @NotNull Set<ItemPattern> getHoldToAimItemPatterns () {
 			throw illegalAccess();
 		}
 
 		@Override
-		public @NotNull Set<ItemPattern> getUseAimItemPatterns () {
+		public @NotNull Set<ItemPattern> getUseToAimItemPatterns () {
 			throw illegalAccess();
 		}
 

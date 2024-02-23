@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson.impl.config;
 
 
-import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.util.itempattern.ItemPattern;
@@ -13,9 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigImpl extends Config {
-	private final CameraOffsetScheme cameraOffsetScheme = CameraOffsetScheme.of(this);
-	private final Set<ItemPattern>   aimItemPatterns    = new HashSet<>();
-	private final Set<ItemPattern>   useAimItemPatterns = new HashSet<>();
+	private final CameraOffsetScheme cameraOffsetScheme    = CameraOffsetScheme.of(this);
+	private final Set<ItemPattern>   holdToAimItemPatterns = new HashSet<>();
+	private final Set<ItemPattern>   useToAimItemPatterns  = new HashSet<>();
 	private       MonoList           distanceMonoList;
 
 	public ConfigImpl () {
@@ -26,7 +25,7 @@ public class ConfigImpl extends Config {
 	@Override
 	public void update () {
 		updateDistancesMonoList();
-		updateItemSet();
+		updateItemPatterns();
 	}
 
 	@Override
@@ -35,26 +34,21 @@ public class ConfigImpl extends Config {
 	}
 
 	@Override
-	public void updateItemSet () {
-		aimItemPatterns.clear();
-		useAimItemPatterns.clear();
-		ItemPattern.addToSet(aimItemPatterns, holding_item_aiming_rules);
-		ItemPattern.addToSet(useAimItemPatterns, using_item_aiming_rules);
-		// 内置物品匹配规则
-		if (enable_buildin_item_aiming_rules) {
-			ItemPattern.addToSet(aimItemPatterns, ThirdPersonConstants.BUILDIN_HOLDING_ITEM_AIMING_RULES);
-			ItemPattern.addToSet(useAimItemPatterns, ThirdPersonConstants.BUILDIN_USING_ITEM_AIMING_RULES);
-		}
+	public void updateItemPatterns () {
+		holdToAimItemPatterns.clear();
+		useToAimItemPatterns.clear();
+		ItemPattern.addToSet(holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
+		ItemPattern.addToSet(useToAimItemPatterns, use_to_aim_item_pattern_expressions);
 	}
 
 	@Override
-	public @NotNull Set<ItemPattern> getAimItemPatterns () {
-		return aimItemPatterns;
+	public @NotNull Set<ItemPattern> getHoldToAimItemPatterns () {
+		return holdToAimItemPatterns;
 	}
 
 	@Override
-	public @NotNull Set<ItemPattern> getUseAimItemPatterns () {
-		return useAimItemPatterns;
+	public @NotNull Set<ItemPattern> getUseToAimItemPatterns () {
+		return useToAimItemPatterns;
 	}
 
 	@Override

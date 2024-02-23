@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.impl.core;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
+import net.leawind.mc.thirdperson.ThirdPersonResources;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
@@ -233,7 +234,6 @@ public class EntityAgentImpl implements EntityAgent {
 		return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isFallFlying();
 	}
 
-
 	@Override
 	public boolean isSprinting () {
 		return getRawCameraEntity().isSprinting();
@@ -243,12 +243,12 @@ public class EntityAgentImpl implements EntityAgent {
 	public boolean isAiming () {
 		Config config = ThirdPerson.getConfig();
 		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
+			boolean shouldBeAiming = ItemPattern.anyMatch(livingEntity.getMainHandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns) || //
+									 ItemPattern.anyMatch(livingEntity.getOffhandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns);
 			if (livingEntity.isUsingItem()) {
-				return ItemPattern.anyMatch(config.getUseAimItemPatterns(), livingEntity.getUseItem());
-			} else {
-				return ItemPattern.anyMatch(config.getAimItemPatterns(), livingEntity.getMainHandItem()) || //
-					   ItemPattern.anyMatch(config.getAimItemPatterns(), livingEntity.getOffhandItem());
+				shouldBeAiming |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToAimItemPatterns(), ThirdPersonResources.itemPatternManager.useToAimItemPatterns);
 			}
+			return shouldBeAiming;
 		}
 		return false;
 	}
