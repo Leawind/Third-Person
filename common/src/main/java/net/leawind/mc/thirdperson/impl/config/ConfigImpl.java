@@ -13,10 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigImpl extends Config {
-	private final CameraOffsetScheme cameraOffsetScheme    = CameraOffsetScheme.of(this);
-	private final Set<ItemPattern>   holdToAimItemPatterns = new HashSet<>();
-	private final Set<ItemPattern>   useToAimItemPatterns  = new HashSet<>();
-	private       MonoList           distanceMonoList;
+	private final @NotNull CameraOffsetScheme cameraOffsetScheme    = CameraOffsetScheme.of(this);
+	private final @NotNull Set<ItemPattern>   holdToAimItemPatterns = new HashSet<>();
+	private final @NotNull Set<ItemPattern>   useToAimItemPatterns  = new HashSet<>();
+	private                MonoList           distanceMonoList;
 
 	public ConfigImpl () {
 		super();

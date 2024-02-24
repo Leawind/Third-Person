@@ -13,8 +13,8 @@ import java.util.Set;
  * 定义配置项的默认值、额外方法等信息
  */
 public abstract class Config extends AbstractConfig {
-	public static final Class<? extends Config> IMPL     = ConfigImpl.class;
-	public static final Config                  DEFAULTS = new DefaultConfig();
+	public static final @NotNull Class<? extends Config> IMPL     = ConfigImpl.class;
+	public static final @NotNull Config                  DEFAULTS = new DefaultConfig();
 
 	public static Config create () {
 		return new ConfigImpl();

@@ -72,7 +72,7 @@ public interface ItemPattern {
 	ItemPattern ANY              = of(null, null);
 
 	@SafeVarargs
-	static boolean anyMatch (@Nullable ItemStack itemStack, @NotNull Iterable<ItemPattern>... itemPatternsList) {
+	static boolean anyMatch (@Nullable ItemStack itemStack, Iterable<ItemPattern> @NotNull ... itemPatternsList) {
 		for (Iterable<ItemPattern> patterns: itemPatternsList) {
 			for (ItemPattern ip: patterns) {
 				if (ip.match(itemStack)) {

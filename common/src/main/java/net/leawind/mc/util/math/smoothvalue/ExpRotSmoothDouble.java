@@ -36,7 +36,7 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	@Override
-	public Double get (double t) {
+	public @NotNull Double get (double t) {
 		lastValue = LMath.floorMod(lastValue, cycle);
 		value     = LMath.floorMod(value, cycle);
 		double delta = LMath.floorMod(value - lastValue, cycle);
@@ -60,7 +60,7 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	@Override
-	public void set (Double d) {
+	public void set (@NotNull Double d) {
 		d = LMath.floorMod(d, cycle);
 		super.set(d);
 	}

@@ -20,7 +20,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public Vector2d get (double t) {
+	public @NotNull Vector2d get (double t) {
 		return lastValue.copy().lerp(value, t);
 	}
 
@@ -31,17 +31,17 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setValue (Vector2d v) {
+	public void setValue (@NotNull Vector2d v) {
 		value = v;
 	}
 
 	@Override
-	public void set (Vector2d v) {
+	public void set (@NotNull Vector2d v) {
 		value = target = v;
 	}
 
 	@Override
-	public void setSmoothFactor (Vector2d s) {
+	public void setSmoothFactor (@NotNull Vector2d s) {
 		this.smoothFactor.set(s);
 	}
 
@@ -55,7 +55,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setMT (@NotNull Vector2d multiplier, Vector2d time) {
+	public void setMT (@NotNull Vector2d multiplier, @NotNull Vector2d time) {
 		if (multiplier.x() < 0 || multiplier.x() > 1) {
 			throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x());
 		} else if (multiplier.y() < 0 || multiplier.y() > 1) {
@@ -68,7 +68,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	public void setHalflife (Vector2d halflife) {
+	public void setHalflife (@NotNull Vector2d halflife) {
 		setMT(Vector2d.of(0.5), halflife);
 	}
 
@@ -81,7 +81,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 		setSmoothFactorWeight(w, w);
 	}
 
-	public void setSmoothFactorWeight (Vector2d w) {
+	public void setSmoothFactorWeight (@NotNull Vector2d w) {
 		this.smoothFactorWeight.set(w);
 	}
 

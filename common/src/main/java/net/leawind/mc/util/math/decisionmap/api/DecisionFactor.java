@@ -29,7 +29,7 @@ public interface DecisionFactor {
 
 	@NotNull String getName ();
 
-	void setName (String name);
+	void setName (@NotNull String name);
 
 	/**
 	 * 设置索引

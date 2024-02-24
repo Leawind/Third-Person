@@ -30,7 +30,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public Double get (double t) {
+	public @NotNull Double get (double t) {
 		return LMath.lerp(lastValue, value, t);
 	}
 
@@ -40,17 +40,17 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public void setValue (Double d) {
+	public void setValue (@NotNull Double d) {
 		value = d;
 	}
 
 	@Override
-	public void set (Double d) {
+	public void set (@NotNull Double d) {
 		value = target = d;
 	}
 
 	@Override
-	public void setSmoothFactor (Double smoothFactor) {
+	public void setSmoothFactor (@NotNull Double smoothFactor) {
 		this.smoothFactor = smoothFactor;
 	}
 
@@ -60,7 +60,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public void setMT (Double multiplier, Double time) {
+	public void setMT (@NotNull Double multiplier, @NotNull Double time) {
 		if (multiplier < 0 || multiplier > 1) {
 			throw new IllegalArgumentException("Multiplier should in [0,1]: " + multiplier);
 		} else if (time < 0) {
@@ -70,7 +70,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	@Override
-	public void setHalflife (Double halflife) {
+	public void setHalflife (@NotNull Double halflife) {
 		setMT(0.5, halflife);
 	}
 
@@ -83,7 +83,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		this.smoothFactorWeight = weight;
 	}
 
-	public void setSmoothFactorWeight (Double weight) {
+	public void setSmoothFactorWeight (@NotNull Double weight) {
 		this.smoothFactorWeight = weight;
 	}
 

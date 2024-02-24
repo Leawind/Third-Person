@@ -185,7 +185,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public Optional<Supplier<T>> getStrategy (int flagBits) {
+	public @NotNull Optional<Supplier<T>> getStrategy (int flagBits) {
 		return Optional.ofNullable(strategyMap.get(flagBits));
 	}
 
@@ -206,7 +206,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> build () {
+	public @NotNull DecisionMap<T> build () {
 		strategyMap.clear();
 		while (strategyMap.size() < getMapSize()) {
 			strategyMap.add(null);
@@ -224,7 +224,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> addRule (@NotNull Function<boolean[], Supplier<T>> func) {
+	public @NotNull DecisionMap<T> addRule (@NotNull Function<boolean[], Supplier<T>> func) {
 		assertBuilt(false);
 		ruleBuilders.clear();
 		ruleBuilders.add(() -> {
@@ -243,7 +243,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> addRule (@NotNull BiFunction<Integer, boolean[], Supplier<T>> func) {
+	public @NotNull DecisionMap<T> addRule (@NotNull BiFunction<Integer, boolean[], Supplier<T>> func) {
 		assertBuilt(false);
 		ruleBuilders.clear();
 		ruleBuilders.add(() -> {
@@ -262,14 +262,14 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	@Override
-	public DecisionMap<T> addRule (int flagBits, Supplier<T> strategy) {
+	public @NotNull DecisionMap<T> addRule (int flagBits, @NotNull Supplier<T> strategy) {
 		assertBuilt(false);
 		ruleBuilders.add(() -> strategyMap.set(flagBits, strategy));
 		return this;
 	}
 
 	@Override
-	public DecisionMap<T> addRule (int flagBits, int mask, Supplier<T> strategy) {
+	public @NotNull DecisionMap<T> addRule (int flagBits, int mask, @NotNull Supplier<T> strategy) {
 		assertBuilt(false);
 		ruleBuilders.add(() -> {
 			int mapSize = strategyMap.size();

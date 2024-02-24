@@ -86,7 +86,7 @@ public class ExpSmoothRotation {
 	 *
 	 * @param t 自上次更新以来经过的时间占更新间隔的比例，用于线性插值。
 	 */
-	public Vector2d get (double t) {
+	public @NotNull Vector2d get (double t) {
 		return Vector2d.of(x.get(t), y.get(t));
 	}
 
@@ -108,7 +108,7 @@ public class ExpSmoothRotation {
 	/**
 	 * 获取上次更新前的平滑值（旧值）
 	 */
-	public Vector2d getLast () {
+	public @NotNull Vector2d getLast () {
 		return Vector2d.of(x.getLast(), y.getLast());
 	}
 }

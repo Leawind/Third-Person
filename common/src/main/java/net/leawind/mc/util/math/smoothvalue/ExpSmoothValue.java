@@ -26,12 +26,12 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	 */
 	protected @NotNull T lastValue;
 
-	protected ExpSmoothValue (@NotNull T sf, @NotNull T sw, @NotNull T v, @NotNull T lv, @NotNull T t) {
-		smoothFactor       = sf;
-		smoothFactorWeight = sw;
-		value              = v;
-		lastValue          = lv;
-		target             = t;
+	protected ExpSmoothValue (@NotNull T smoothFactor, @NotNull T smoothFactorWeight, @NotNull T value, @NotNull T lastValue, @NotNull T target) {
+		this.smoothFactor       = smoothFactor;
+		this.smoothFactorWeight = smoothFactorWeight;
+		this.value              = value;
+		this.lastValue          = lastValue;
+		this.target             = target;
 	}
 
 	final public void update (double period) {
@@ -45,10 +45,10 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	}
 
 	@Override
-	abstract public T get (double t);
+	abstract public @NotNull T get (double t);
 
 	@Override
-	final public T getLast () {
+	final public @NotNull T getLast () {
 		return lastValue;
 	}
 
@@ -63,16 +63,16 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 
 	abstract protected void udpateWithOutSavingLastValue (double period);
 
-	abstract public void setValue (T value);
+	abstract public void setValue (@NotNull T value);
 
 	/**
 	 * 同时设置目标值和当前平滑值
 	 * <p>
 	 * 不改变旧值
 	 */
-	abstract public void set (T value);
+	abstract public void set (@NotNull T value);
 
-	abstract public void setSmoothFactor (T smoothFactor);
+	abstract public void setSmoothFactor (@NotNull T smoothFactor);
 
 	abstract void setSmoothFactor (double smoothFactor);
 
@@ -81,12 +81,12 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	 * <p>
 	 * 每隔 time 秒，value 变为原来的 multiplier 倍。
 	 */
-	abstract void setMT (T multiplier, T time);
+	abstract void setMT (@NotNull T multiplier, @NotNull T time);
 
 	/**
 	 * 根据半衰期设置平滑系数
 	 */
-	abstract void setHalflife (T halflife);
+	abstract void setHalflife (@NotNull T halflife);
 
 	/**
 	 * 根据半衰期设置平滑系数
@@ -95,5 +95,5 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 
 	abstract void setSmoothFactorWeight (double smoothFactorWeight);
 
-	abstract void setSmoothFactorWeight (T smoothFactorWeight);
+	abstract void setSmoothFactorWeight (@NotNull T smoothFactorWeight);
 }

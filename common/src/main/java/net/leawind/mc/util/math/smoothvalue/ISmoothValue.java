@@ -43,10 +43,10 @@ public interface ISmoothValue<T> {
 	 *
 	 * @param t 自上次更新以来经过的时间占更新间隔的比例，用于线性插值。
 	 */
-	T get (double t);
+	@NotNull T get (double t);
 
 	/**
 	 * 获取上次更新前的平滑值（旧值）
 	 */
-	T getLast ();
+	@NotNull T getLast ();
 }

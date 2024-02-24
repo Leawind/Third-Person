@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class CameraAgentImpl implements CameraAgent {
-	private final          Minecraft         minecraft;
+	private final @NotNull Minecraft         minecraft;
 	private final @NotNull Camera            fakeCamera              = new Camera();
 	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
 	/**
@@ -49,7 +49,7 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private                double            lastCameraTurnTimeStamp = 0;
 
-	public CameraAgentImpl (Minecraft minecraft) {
+	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
 		smoothOffsetRatio = new ExpSmoothVector2d();
 		smoothOffsetRatio.setSmoothFactorWeight(ThirdPersonConstants.OFFSET_RATIO_SMOOTH_WEIGHT);
