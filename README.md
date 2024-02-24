@@ -1,9 +1,9 @@
 # Leawind's Third Person
 
-[See Wiki for more details](https://github.com/LEAWIND/Third-Person/wiki/Home.en)
+[Mod Document](https://leawind.github.io/zh-CN/Third-Person/)
 
 ---
 
 # Leawind的第三人称
 
-[前往 Wiki 查看详细内容](https://github.com/LEAWIND/Third-Person/wiki)
+[模组文档](https://leawind.github.io/zh-CN/Third-Person/)
