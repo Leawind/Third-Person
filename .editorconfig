@@ -2,7 +2,7 @@ root = true
 
 [*]
 charset                     = utf-8
-end_of_line                 = crlf
+end_of_line                 = lf
 indent_size                 = 4
 indent_style                = tab
 insert_final_newline        = true
@@ -17,7 +17,6 @@ ij_visual_guides            = none
 ij_wrap_on_typing           = false
 
 [*.java]
-end_of_line                                                     = lf
 ij_continuation_indent_size                                     = 4
 ij_smart_tabs                                                   = false
 ij_visual_guides                                                = 64
@@ -578,7 +577,6 @@ ij_html_space_inside_empty_tag             = false
 ij_html_text_wrap                          = normal
 
 [{*.kt,*.kts}]
-end_of_line                                                                          = lf
 indent_style                                                                         = space
 ij_smart_tabs                                                                        = false
 ij_kotlin_align_in_columns_case_branch                                               = false

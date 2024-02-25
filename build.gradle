@@ -40,7 +40,7 @@ allprojects {
 	}
 	tasks.withType(JavaCompile) {
 		options.encoding = "UTF-8"
-		options.release = 17
+		options.release = JavaLanguageVersion.of(java_version).asInt()
 	}
 	java {
 		withSourcesJar()
@@ -59,6 +59,6 @@ def archiveFileNameOfPlatform(String platform){
 		case "fabric":
 			return "${mod_id}-v${mod_version}-mc${minecraft_version}-fabric";
 		default:
-			throw new IllegalArgumentException("Unknown platform: $platform");
+			throw new IllegalArgumentException("Unknown platform: ${platform}");
 	}
 }

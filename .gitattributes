@@ -1,5 +1,8 @@
 * text=auto
 
+.gitattributes   text eol=lf
+.gitignore       text eol=lf
+
 *.js             text eol=lf
 *.java           text eol=lf
 *.kts            text eol=lf
