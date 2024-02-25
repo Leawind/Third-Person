@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonEvents;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +23,7 @@ public class MinecraftMixin {
 	 */
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
 	public void handleKeybinds_head (CallbackInfo ci) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
 			ThirdPersonEvents.onBeforeHandleKeybinds();
 		}
 	}

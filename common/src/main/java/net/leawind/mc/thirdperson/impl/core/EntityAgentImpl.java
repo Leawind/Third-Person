@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.impl.core;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonResources;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
@@ -63,9 +64,9 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset EntityAgent");
-		ThirdPerson.lastPartialTick = minecraft.getFrameTime();
+		ThirdPersonStatus.lastPartialTick = minecraft.getFrameTime();
 		if (isCameraEntityExist()) {
-			smoothEyePosition.set(getRawEyePosition(ThirdPerson.lastPartialTick));
+			smoothEyePosition.set(getRawEyePosition(ThirdPersonStatus.lastPartialTick));
 		}
 		wasAiming      = false;
 		wasInterecting = false;

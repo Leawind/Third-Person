@@ -2,10 +2,10 @@ package net.leawind.mc.thirdperson.impl.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
-import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -41,19 +41,19 @@ public enum RotateTarget {
 	 * <p>
 	 * 当没有使用键盘控制时保持当前朝向
 	 */
-	IMPULSE_DIRECTION(() -> ThirdPerson.impulseHorizon.length() < 1e-5    //
+	IMPULSE_DIRECTION(() -> ThirdPersonStatus.impulseHorizon.length() < 1e-5    //
 							? NONE.getRotation()    //
-							: LMath.rotationDegreeFromDirection(ThirdPerson.impulse)),
+							: LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulse)),
 	/**
 	 * 使用键盘控制的移动方向（仅水平）
 	 * <p>
 	 * 当没有使用键盘控制时保持当前朝向
 	 */
 	HORIZONTAL_IMPULSE_DIRECTION(() -> {
-		if (ThirdPerson.impulseHorizon.length() < 1e-5) {
+		if (ThirdPersonStatus.impulseHorizon.length() < 1e-5) {
 			return NONE.getRotation();
 		} else {
-			double absoluteYRotDegree = LMath.rotationDegreeFromDirection(ThirdPerson.impulseHorizon);
+			double absoluteYRotDegree = LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulseHorizon);
 			return Vector2d.of(0, absoluteYRotDegree);
 		}
 	});

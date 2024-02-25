@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.impl.core;
 import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
@@ -64,7 +65,7 @@ public class CameraAgentImpl implements CameraAgent {
 		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			relativeRotation.set(-entity.getViewXRot(ThirdPerson.lastPartialTick), entity.getViewYRot(ThirdPerson.lastPartialTick) - 180);
+			relativeRotation.set(-entity.getViewXRot(ThirdPersonStatus.lastPartialTick), entity.getViewYRot(ThirdPersonStatus.lastPartialTick) - 180);
 		}
 	}
 
@@ -81,7 +82,7 @@ public class CameraAgentImpl implements CameraAgent {
 			// 平滑更新相机偏移量
 			updateSmoothOffsetRatio(period);
 		}
-		wasCameraCloseToEntity = ThirdPerson.wasCameraCloseToEntity();
+		wasCameraCloseToEntity = ThirdPersonStatus.wasCameraCloseToEntity();
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class CameraAgentImpl implements CameraAgent {
 	@Override
 	public void onCameraTurn (double dy, double dx) {
 		Config config = ThirdPerson.getConfig();
-		if (config.is_mod_enable && !ThirdPerson.isAdjustingCameraOffset()) {
+		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
 			dy *= 0.15;
 			dx *= config.lock_camera_pitch_angle ? 0: -0.15;
 			if (dy != 0 || dx != 0) {
@@ -225,7 +226,7 @@ public class CameraAgentImpl implements CameraAgent {
 	private void preventThroughWall () {
 		// 防止穿墙
 		Vec3   cameraPosition    = fakeCamera.getPosition();
-		Vec3   smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPerson.lastPartialTick));
+		Vec3   smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPersonStatus.lastPartialTick));
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		double minDistance       = initDistance;
@@ -257,12 +258,12 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	private @NotNull Vector3d calculatePositionWithoutOffset () {
-		return ThirdPerson.ENTITY_AGENT.getPossiblySmoothEyePosition(ThirdPerson.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
+		return ThirdPerson.ENTITY_AGENT.getPossiblySmoothEyePosition(ThirdPersonStatus.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
 	private void updateSmoothVirtualDistance (double period) {
 		Config           config      = ThirdPerson.getConfig();
-		boolean          isAdjusting = ThirdPerson.isAdjustingCameraDistance();
+		boolean          isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		smoothDistanceToEye.setSmoothFactor(isAdjusting ? config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
 		smoothDistanceToEye.setTarget(mode.getMaxDistance());
@@ -276,7 +277,7 @@ public class CameraAgentImpl implements CameraAgent {
 	private void updateSmoothOffsetRatio (double period) {
 		Config           config = ThirdPerson.getConfig();
 		CameraOffsetMode mode   = config.getCameraOffsetScheme().getMode();
-		if (ThirdPerson.isAdjustingCameraOffset()) {
+		if (ThirdPersonStatus.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setSmoothFactor(config.adjusting_camera_offset_smooth_factor);
 		} else {
 			mode.getOffsetSmoothFactor(smoothOffsetRatio.smoothFactor);

@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
@@ -21,7 +22,7 @@ public class KeyboardInputMixin {
 	@PerformanceSensitive
 	public void tick_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			// 相机坐标系下的impulse
 			double cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
 			double cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);
@@ -35,16 +36,16 @@ public class KeyboardInputMixin {
 			lookImpulseHorizon.mul(cameraLookImpulse);    // 水平 impulse
 			leftImpulseHorizon.mul(cameraLeftImpulse);
 			// 世界坐标系下的 impulse
-			lookImpulse.add(leftImpulse, ThirdPerson.impulse);
-			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPerson.impulseHorizon);
+			lookImpulse.add(leftImpulse, ThirdPersonStatus.impulse);
+			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPersonStatus.impulseHorizon);
 			// impulse 不为0，
-			if (ThirdPerson.impulseHorizon.length() > 1E-5) {
-				ThirdPerson.impulseHorizon.normalize();
-				float    playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPerson.lastPartialTick);
+			if (ThirdPersonStatus.impulseHorizon.length() > 1E-5) {
+				ThirdPersonStatus.impulseHorizon.normalize();
+				float    playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
 				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
 				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
-				that.forwardImpulse = (float)(ThirdPerson.impulseHorizon.dot(playerLookHorizon));
-				that.leftImpulse    = (float)(ThirdPerson.impulseHorizon.dot(playerLeftHorizon));
+				that.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
+				that.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
 				if (isMoveSlowly) {
 					that.forwardImpulse *= sneakingSpeedBonus;
 					that.leftImpulse *= sneakingSpeedBonus;

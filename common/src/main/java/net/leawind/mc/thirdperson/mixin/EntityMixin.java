@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.renderer.GameRenderer;
@@ -34,7 +35,7 @@ public class EntityMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public Vec3 pick_storePickStart (Vec3 pickStartFake) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			return ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
 		} else {
 			return pickStartFake;
@@ -50,12 +51,12 @@ public class EntityMixin {
 	 *
 	 * @param viewVectorFake 探测向量
 	 * @see GameRendererMixin#pick_storeViewVector(Vec3)
-	 * @see ThirdPerson#shouldPickFromCamera()
+	 * @see ThirdPersonStatus#shouldPickFromCamera()
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
 	public Vec3 pick_storeViewVector (Vec3 viewVectorFake) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
-			if (ThirdPerson.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
+			if (ThirdPersonStatus.shouldPickFromCamera()) {
 				Vector3d viewVector = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector()).normalize();
 				return LMath.toVec3(viewVector);
 			} else {

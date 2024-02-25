@@ -3,8 +3,8 @@ package net.leawind.mc.thirdperson.mixin;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonEvents;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.util.math.LMath;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -33,7 +33,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public Vec3 pick_storePickStart (Vec3 pickStartFake) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			return ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
 		} else {
 			return pickStartFake;
@@ -50,8 +50,8 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
 	public Vec3 pick_storeViewVector (Vec3 viewVectorFake) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson()) {
-			if (ThirdPerson.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
+			if (ThirdPersonStatus.shouldPickFromCamera()) {
 				return new Vec3(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector());
 			} else {
 				Vec3      eyePosition     = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getRawEyePosition(1));
@@ -69,7 +69,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public double pick_storePickRange (double pickRange) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			pickRange += Math.max(0, ThirdPerson.ENTITY_AGENT.getRawEyePosition(1).distance(LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition())));
 		}
 		return pickRange;
@@ -80,7 +80,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public AABB pick_storeAabb (AABB aabb) {
-		if (ThirdPerson.isAvailable() && ThirdPerson.isThirdPerson() && ThirdPerson.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			aabb.move(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition().subtract(ThirdPerson.ENTITY_AGENT.getRawCameraEntity().getEyePosition()));
 		}
 		return aabb;

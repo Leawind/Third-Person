@@ -81,7 +81,7 @@ public final class ThirdPersonEvents {
 	 */
 	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
 		Config config = ThirdPerson.getConfig();
-		if (ThirdPerson.isAdjustingCameraDistance()) {
+		if (ThirdPersonStatus.isAdjustingCameraDistance()) {
 			double dist = config.getCameraOffsetScheme().getMode().getMaxDistance();
 			dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amount));
 			config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
@@ -113,13 +113,13 @@ public final class ThirdPersonEvents {
 	 * @see CameraMixin#setup_head
 	 */
 	public static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
-		ThirdPerson.lastPartialTick = partialTick;
+		ThirdPersonStatus.lastPartialTick = partialTick;
 		ThirdPerson.CAMERA_AGENT.setLevel(level);
 		Minecraft mc = Minecraft.getInstance();
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
 		}
-		if (ThirdPerson.isThirdPerson()) {
+		if (ThirdPersonStatus.isThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.onCameraSetup();
 		}
 		if (mc.options.getCameraType().isMirrored()) {
@@ -135,9 +135,9 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onPreRender (float partialTick) {
 		double now    = Blaze3D.getTime();
-		double period = now - ThirdPerson.lastRenderTickTimeStamp;
-		ThirdPerson.lastRenderTickTimeStamp = now;
-		if (ThirdPerson.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
+		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
+		ThirdPersonStatus.lastRenderTickTimeStamp = now;
+		if (ThirdPersonStatus.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);
 			ThirdPerson.CAMERA_AGENT.onRenderTickPre(period, partialTick);
 		}
@@ -217,7 +217,7 @@ public final class ThirdPersonEvents {
 	 * @see CameraMixin#setup_head(BlockGetter, Entity, boolean, boolean, float, CallbackInfo)
 	 */
 	public static void onEnterThirdPerson () {
-		ThirdPerson.lastPartialTick = Minecraft.getInstance().getFrameTime();
+		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
 	}

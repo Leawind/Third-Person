@@ -4,8 +4,6 @@ package net.leawind.mc.thirdperson.api.core.rotation;
 /**
  * <h1>平滑类型</h1>
  * <p>
- * TODO combine with ExpSmoothValue
- * <p>
  * 在渲染中实现平滑效果可以有多种方式，主要区别在于 render tick 和 client tick 中的处理方式不同。
  * <p>
  * 注意此处的 client tick 可以是mc的 client tick，也可以是自定义的固定间隔的tick，但是需要在 render tick 中计算 partialTick。

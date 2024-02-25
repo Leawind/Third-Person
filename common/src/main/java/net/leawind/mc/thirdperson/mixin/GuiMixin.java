@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
-import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -18,6 +18,6 @@ public class GuiMixin {
 	 */
 	@Redirect(method="renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", at=@At(value="INVOKE", target="Lnet/minecraft/client/CameraType;isFirstPerson ()Z"))
 	public boolean renderCrosshair_invoke (CameraType instance) {
-		return ThirdPerson.shouldRenderCrosshair() || Minecraft.getInstance().options.getCameraType().isFirstPerson();
+		return ThirdPersonStatus.shouldRenderCrosshair() || Minecraft.getInstance().options.getCameraType().isFirstPerson();
 	}
 }
