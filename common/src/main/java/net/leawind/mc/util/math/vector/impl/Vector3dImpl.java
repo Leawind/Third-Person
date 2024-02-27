@@ -329,16 +329,16 @@ public class Vector3dImpl implements Vector3d {
 
 	@Override
 	public Vector3d normalize (double length) {
-		double len = length() / length;
-		x /= len;
-		y /= len;
-		z /= len;
+		double a = length / length();
+		x *= a;
+		y *= a;
+		z *= a;
 		return this;
 	}
 
 	@Override
 	public Vector3d zero () {
-		x = y = 0;
+		x = y = z = 0;
 		return this;
 	}
 
@@ -373,17 +373,17 @@ public class Vector3dImpl implements Vector3d {
 
 	@Override
 	public Vector3d lerp (@NotNull Vector3d end, double t) {
-		x = x + (end.x() - x) * t;
-		y = y + (end.y() - y) * t;
-		z = z + (end.z() - z) * t;
+		x += (end.x() - x) * t;
+		y += (end.y() - y) * t;
+		z += (end.z() - z) * t;
 		return this;
 	}
 
 	@Override
 	public Vector3d lerp (@NotNull Vector3d end, @NotNull Vector3d t) {
-		x = x + (end.x() - x) * t.x();
-		y = y + (end.y() - y) * t.y();
-		z = z + (end.z() - z) * t.z();
+		x += (end.x() - x) * t.x();
+		y += (end.y() - y) * t.y();
+		z += (end.z() - z) * t.z();
 		return this;
 	}
 
@@ -397,6 +397,6 @@ public class Vector3dImpl implements Vector3d {
 
 	@Override
 	public Vector3d copy () {
-		return Vector3d.of(x(), y(), z());
+		return Vector3d.of(x, y, z);
 	}
 }

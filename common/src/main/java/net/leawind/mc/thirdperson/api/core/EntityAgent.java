@@ -53,6 +53,11 @@ public interface EntityAgent {
 	void setSmoothRotationHalflife (double halflife);
 
 	/**
+	 * 获取相机实体不透明度
+	 */
+	float getSmoothOpacity ();
+
+	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s
 	 */
 	void onRenderTickPre (double period, float partialTick);

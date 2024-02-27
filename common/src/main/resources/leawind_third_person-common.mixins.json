@@ -6,7 +6,9 @@
 	"client": [
 		"CameraInvoker",
 		"LocalPlayerInvoker",
-		"LivingEntityRendererMixin",
+		"LevelRendererMixin",
+		"ModelPartCubeMixin",
+		"RenderTypeMixin",
 		"CameraMixin",
 		"MinecraftMixin",
 		"GuiMixin",

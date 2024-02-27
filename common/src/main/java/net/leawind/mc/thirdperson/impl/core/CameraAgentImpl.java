@@ -42,10 +42,6 @@ public class CameraAgentImpl implements CameraAgent {
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
 	private @Nullable      BlockGetter       level;
 	/**
-	 * renderTick 中更新
-	 */
-	private                boolean           wasCameraCloseToEntity  = false;
-	/**
 	 * 上次玩家操控转动视角的时间
 	 */
 	private                double            lastCameraTurnTimeStamp = 0;
@@ -82,7 +78,6 @@ public class CameraAgentImpl implements CameraAgent {
 			// 平滑更新相机偏移量
 			updateSmoothOffsetRatio(period);
 		}
-		wasCameraCloseToEntity = ThirdPersonStatus.wasCameraCloseToEntity();
 	}
 
 	@Override
@@ -99,11 +94,6 @@ public class CameraAgentImpl implements CameraAgent {
 
 	public @NotNull Camera getRawCamera () {
 		return Objects.requireNonNull(Minecraft.getInstance().gameRenderer.getMainCamera());
-	}
-
-	@Override
-	public boolean wasCameraCloseToEntity () {
-		return wasCameraCloseToEntity;
 	}
 
 	@Override
@@ -188,6 +178,15 @@ public class CameraAgentImpl implements CameraAgent {
 		Vec3   pickEnd      = viewVector.scale(pickRange).add(pickStart);
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		return cameraEntity.level.clip(new ClipContext(pickStart, pickEnd, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
+	}
+
+	@VersionSensitive
+	@Override
+	public boolean isLookingAt (@NotNull Entity entity) {
+		Vec3 from = getRawCamera().getPosition();
+		Vec3 to   = from.add(new Vec3(getRawCamera().getLookVector()).scale(ThirdPerson.getConfig().camera_ray_trace_length));
+		AABB aabb = entity.getBoundingBox();
+		return aabb.contains(from) || aabb.clip(from, to).isPresent();
 	}
 
 	/**

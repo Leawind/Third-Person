@@ -14,6 +14,7 @@ import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
+import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothRotation;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.leawind.mc.util.math.vector.api.Vector2d;
@@ -35,6 +36,7 @@ public class EntityAgentImpl implements EntityAgent {
 	private final    Minecraft           minecraft;
 	private final    ExpSmoothVector3d   smoothEyePosition;
 	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
+	private final    ExpSmoothDouble     smoothOpacity;
 	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
 	private @NotNull RotateTarget        rotateTarget       = RotateTarget.NONE;
 	private @NotNull SmoothType          smoothRotationType = SmoothType.EXP_LINEAR;
@@ -52,6 +54,10 @@ public class EntityAgentImpl implements EntityAgent {
 		{
 			smoothEyePosition = new ExpSmoothVector3d();
 			smoothEyePosition.setSmoothFactorWeight(ThirdPersonConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
+		}
+		{
+			smoothOpacity = new ExpSmoothDouble();
+			smoothOpacity.set(1d);
 		}
 		ThirdPerson.LOGGER.debug(rotateDecisionMap.toString());
 	}
@@ -87,11 +93,28 @@ public class EntityAgentImpl implements EntityAgent {
 		smoothRotation.setHalflife(halflife);
 	}
 
+	@Override
+	public float getSmoothOpacity () {
+		return smoothOpacity.get().floatValue();
+	}
+
 	@PerformanceSensitive
 	@Override
 	public void onRenderTickPre (double period, float partialTick) {
 		if (!isControlled()) {
 			return;
+		}
+		{
+			final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
+			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
+			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
+			double       targetOpacity  = (distance - C) / (1 - C);
+			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
+				targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
+			}
+			smoothOpacity.setTarget(LMath.clamp(targetOpacity, 0, 1));
+			smoothOpacity.setHalflife(ThirdPersonConstants.OPACITY_HALFLIFE * (wasAiming ? 0.25: 1));
+			smoothOpacity.update(period);
 		}
 		Vector2d targetRotation = rotateTarget.getRotation();
 		smoothRotation.setTarget(targetRotation);
@@ -217,7 +240,6 @@ public class EntityAgentImpl implements EntityAgent {
 	public @NotNull Vector3d getPossiblySmoothEyePosition (float partialTick) {
 		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
 		Vector3d rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
-		double   distance               = smoothEyePositionValue.distance(rawEyePosition);
 		Vector3d smoothFactor           = smoothEyePosition.smoothFactor.copy();
 		boolean  isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
 		boolean  isVerticalZero         = smoothFactor.y() == 0;

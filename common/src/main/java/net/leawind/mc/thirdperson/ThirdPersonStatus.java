@@ -1,14 +1,9 @@
 package net.leawind.mc.thirdperson;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.leawind.mc.thirdperson.api.config.Config;
-import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +21,7 @@ public final class ThirdPersonStatus {
 	 * 是否正在调整摄像机偏移量
 	 */
 	public static boolean isAdjustingCameraOffset () {
-		return isAdjustingCameraDistance() && !ThirdPerson.CAMERA_AGENT.wasCameraCloseToEntity();
+		return isAdjustingCameraDistance();
 	}
 
 	/**
@@ -52,33 +47,6 @@ public final class ThirdPersonStatus {
 	}
 
 	/**
-	 * TODO 让玩家实体淡出淡入，而不是瞬间消失出现 参考 https://github.com/Exopandora/ShoulderSurfing/commit/d488ec52e24897e47551cf2767f9372f7707c94b
-	 * <p>
-	 * 是否完全隐藏玩家实体
-	 * <p>
-	 * 当启用假的第一人称或相机距离玩家足够近时隐藏
-	 * <p>
-	 * 需要借助相机坐标和玩家眼睛坐标来判断
-	 *
-	 * @see LivingEntityRenderer#render(LivingEntity, float, float, PoseStack, MultiBufferSource, int)
-	 */
-	public static boolean wasCameraCloseToEntity () {
-		Config config = ThirdPerson.getConfig();
-		if (!config.player_fade_out_enabled) {
-			return false;
-		} else if (ThirdPerson.mc.cameraEntity == null) {
-			return false;
-		}
-		Vector3d eyePosition    = ThirdPerson.ENTITY_AGENT.getPossiblySmoothEyePosition(lastPartialTick);
-		Vector3d cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
-		if (config.getCameraOffsetScheme().getMode().getMaxDistance() <= config.getDistanceMonoList().get(0)) {
-			return true;
-		} else {
-			return eyePosition.distance(cameraPosition) <= config.getDistanceMonoList().get(0);
-		}
-	}
-
-	/**
 	 * 根据玩家的按键判断玩家是否想瞄准
 	 */
 	public static boolean doesPlayerWantToAim () {
@@ -95,5 +63,14 @@ public final class ThirdPersonStatus {
 			return false;
 		}
 		return ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof Player player && player.isCreative();
+	}
+
+	/**
+	 * 根据不透明度判断是否需要渲染相机实体
+	 *
+	 * @return 是否应当渲染相机实体
+	 */
+	public static boolean shouldRenderCameraEntity () {
+		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD;
 	}
 }

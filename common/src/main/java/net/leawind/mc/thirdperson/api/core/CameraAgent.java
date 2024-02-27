@@ -7,6 +7,7 @@ import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
@@ -60,8 +61,6 @@ public interface CameraAgent {
 	 * 获取原版相机对象
 	 */
 	@NotNull Camera getRawCamera ();
-
-	boolean wasCameraCloseToEntity ();
 
 	/**
 	 * 第三人称相机朝向
@@ -139,4 +138,9 @@ public interface CameraAgent {
 	 * @param pickRange 探测距离
 	 */
 	@NotNull BlockHitResult pickBlock (double pickRange);
+
+	/**
+	 * 相机是否正在注视某个实体（无视其他实体或方块）
+	 */
+	boolean isLookingAt (@NotNull Entity entity);
 }
