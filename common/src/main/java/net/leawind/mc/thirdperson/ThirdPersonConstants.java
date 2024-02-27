@@ -28,6 +28,4 @@ public final class ThirdPersonConstants {
 	@VersionSensitive public static final             double       MAX_INTERACTION_DISTANCE                     = 6.0;
 	public static final                               double       CAMERA_PITCH_DEGREE_LIMIT                    = 89.800;
 	public static final                               double       CAMERA_THROUGH_WALL_DETECTION                = 0.180;
-	@Deprecated @VersionSensitive public static final List<String> BUILDIN_HOLD_TO_AIM_ITEM_PATTERN_EXPRESSIONS = List.of("crossbow{Charged:1b}", "ender_pearl", "snowball", "egg", "splash_potion", "lingering_potion", "experience_bottle");
-	@Deprecated @VersionSensitive public static final List<String> BUILDIN_USE_TO_AIM_ITEM_PATTERN_EXPRESSIONS  = List.of("bow", "trident");
 }
