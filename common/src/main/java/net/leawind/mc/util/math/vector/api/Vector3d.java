@@ -48,7 +48,7 @@ public interface Vector3d {
 	@Contract("_ -> this")
 	Vector3d set (@NotNull Vector3d v);
 
-	@Contract("_,_ -> new")
+	@Contract("_,_ -> param2")
 	Vector3d add (@NotNull Vector3d v, @NotNull Vector3d dest);
 
 	@Contract("_,_,_,_ -> param4")
@@ -63,10 +63,10 @@ public interface Vector3d {
 	@Contract("_ -> this")
 	Vector3d add (double d);
 
-	@Contract("_,_ -> new")
+	@Contract("_,_ -> param2")
 	Vector3d sub (@NotNull Vector3d v, @NotNull Vector3d dest);
 
-	@Contract("_,_,_,_ -> new")
+	@Contract("_,_,_,_ -> param2")
 	Vector3d sub (double x, double y, double z, @NotNull Vector3d dest);
 
 	@Contract("_ -> this")
@@ -75,10 +75,10 @@ public interface Vector3d {
 	@Contract("_,_,_ -> this")
 	Vector3d sub (double x, double y, double z);
 
-	@Contract("_,_ -> new")
+	@Contract("_,_ -> param2")
 	Vector3d mul (@NotNull Vector3d v, @NotNull Vector3d dest);
 
-	@Contract("_,_,_,_ -> new")
+	@Contract("_,_,_,_ -> param4")
 	Vector3d mul (double x, double y, double z, @NotNull Vector3d dest);
 
 	@Contract("_ -> this")
@@ -90,10 +90,10 @@ public interface Vector3d {
 	@Contract("_ -> this")
 	Vector3d mul (double d);
 
-	@Contract("_,_ -> new")
+	@Contract("_,_ -> param2")
 	Vector3d div (@NotNull Vector3d v, @NotNull Vector3d dest);
 
-	@Contract("_,_,_,_ -> new")
+	@Contract("_,_,_,_ -> param4")
 	Vector3d div (double x, double y, double z, @NotNull Vector3d dest);
 
 	@Contract("_ -> this")
@@ -105,13 +105,13 @@ public interface Vector3d {
 	@Contract("_ -> this")
 	Vector3d div (double d);
 
-	@Contract("_,_ -> new")
+	@Contract("_,_ -> param2")
 	Vector3d pow (@NotNull Vector3d v, @NotNull Vector3d dest);
 
-	@Contract("_,_,_,_ -> new")
+	@Contract("_,_,_,_ -> param4")
 	Vector3d pow (double x, double y, double z, @NotNull Vector3d dest);
 
-	@Contract("_,_ -> new")
+	@Contract("_,_ -> param2")
 	Vector3d pow (double d, @NotNull Vector3d dest);
 
 	@Contract("_ -> this")
