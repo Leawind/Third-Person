@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
