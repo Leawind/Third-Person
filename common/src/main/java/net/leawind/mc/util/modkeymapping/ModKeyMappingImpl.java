@@ -32,6 +32,11 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
 	}
 
 	@Override
+	public boolean isDown () {
+		return super.isDown();
+	}
+
+	@Override
 	public ModKeyMappingImpl holdLength (long holdLength) {
 		this.holdLength = holdLength;
 		return this;
