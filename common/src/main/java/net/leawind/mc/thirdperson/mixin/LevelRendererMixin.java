@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LevelRenderer.class)
+@Mixin(value=LevelRenderer.class, priority=2000)
 public class LevelRendererMixin {
 	/**
 	 * 如果不透明度足够低则取消渲染实体

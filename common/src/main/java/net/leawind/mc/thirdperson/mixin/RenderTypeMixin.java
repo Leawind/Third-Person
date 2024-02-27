@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Function;
 
-@Mixin(RenderType.class)
+@Mixin(value=RenderType.class, priority=2000)
 public class RenderTypeMixin extends RenderStateShard {
 	public RenderTypeMixin (String name, Runnable setupState, Runnable clearState) {
 		super(name, setupState, clearState);
