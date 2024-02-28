@@ -210,7 +210,6 @@ public final class ThirdPersonEvents {
 	 * @see MinecraftMixin#handleKeybinds_head(CallbackInfo)
 	 */
 	public static void onBeforeHandleKeybinds (Minecraft minecraft) {
-		// NOW keyTogglePerspective
 		Config config = ThirdPerson.getConfig();
 		while (minecraft.options.keyTogglePerspective.consumeClick()) {
 			config.is_third_person_mode = !config.is_third_person_mode;
