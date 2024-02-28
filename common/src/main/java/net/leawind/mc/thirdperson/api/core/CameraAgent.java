@@ -37,7 +37,7 @@ public interface CameraAgent {
 	/**
 	 * 渲染前
 	 */
-	void onRenderTickPre (double period, float partialTick);
+	void onRenderTickPre (double now, double period, float partialTick);
 
 	/**
 	 * 渲染过程中放置相机

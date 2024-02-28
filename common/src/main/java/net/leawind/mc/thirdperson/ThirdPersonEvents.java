@@ -170,8 +170,8 @@ public final class ThirdPersonEvents {
 				}
 			}
 			if (ThirdPersonStatus.isThirdPerson()) {
-				ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);
-				ThirdPerson.CAMERA_AGENT.onRenderTickPre(period, partialTick);
+				ThirdPerson.ENTITY_AGENT.onRenderTickPre(now, period, partialTick);
+				ThirdPerson.CAMERA_AGENT.onRenderTickPre(now, period, partialTick);
 			}
 		}
 	}

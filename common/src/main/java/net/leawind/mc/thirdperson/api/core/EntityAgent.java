@@ -60,7 +60,7 @@ public interface EntityAgent {
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s
 	 */
-	void onRenderTickPre (double period, float partialTick);
+	void onRenderTickPre (double now, double period, float partialTick);
 
 	/**
 	 * 在 client tick 之前

@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson.impl.core;
 
 
-import com.mojang.blaze3d.Blaze3D;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
@@ -35,8 +34,8 @@ public class CameraAgentImpl implements CameraAgent {
 	 * 上次玩家操控转动视角的时间
 	 */
 	private                double            lastCameraTurnTimeStamp = 0;
-	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
 	private final @NotNull ExpSmoothVector2d smoothRelativeRotation  = new ExpSmoothVector2d();
+	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
 	/**
 	 * 相机偏移量
 	 */
@@ -72,7 +71,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void onRenderTickPre (double period, float partialTick) {
+	public void onRenderTickPre (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
 			// 平滑更新距离
 			updateSmoothVirtualDistance(period);

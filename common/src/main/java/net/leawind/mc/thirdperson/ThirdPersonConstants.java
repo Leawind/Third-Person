@@ -27,6 +27,7 @@ public final class ThirdPersonConstants {
 	 * @see net.minecraft.server.network.ServerGamePacketListenerImpl#MAX_INTERACTION_DISTANCE
 	 */
 	@VersionSensitive public static final double MAX_INTERACTION_DISTANCE      = 6.0;
+	public static final                   long   CAMERA_FOLLOW_DELAY           = 5000L;
 	public static final                   double CAMERA_PITCH_DEGREE_LIMIT     = 89.800;
 	public static final                   double CAMERA_THROUGH_WALL_DETECTION = 0.180;
 	public static final                   double GAZE_OPACITY                  = 0.32;
