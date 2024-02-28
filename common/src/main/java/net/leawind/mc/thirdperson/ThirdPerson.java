@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public final class ThirdPerson {
 	public static final Minecraft     mc             = Minecraft.getInstance();
-	public static final Logger        LOGGER         = LoggerFactory.getLogger(ThirdPersonConstants.MOD_ID);
+	public static final Logger        LOGGER         = LoggerFactory.getLogger(ThirdPersonConstants.MOD_NAME);
 	public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 	public static       EntityAgent   ENTITY_AGENT;
 	public static       CameraAgent   CAMERA_AGENT;
