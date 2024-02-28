@@ -16,10 +16,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ConfigManagerImpl implements ConfigManager {
-	private final @NotNull Gson   GSON   = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
-	private @NotNull       Config config = Config.create();
+	private final @NotNull Gson    GSON                = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
+	private @NotNull       Config  config              = Config.create();
+	private final          Timer   lazySaveTimer       = new Timer();
+	private                boolean isLazySaveScheduled = false;
 
 	public ConfigManagerImpl () {
 	}
@@ -50,6 +54,20 @@ public class ConfigManagerImpl implements ConfigManager {
 			ThirdPerson.LOGGER.error("Failed to save config.", e);
 		}
 		config.update();
+	}
+
+	@Override
+	public void lazySave () {
+		if (!isLazySaveScheduled) {
+			isLazySaveScheduled = true;
+			lazySaveTimer.schedule(new TimerTask() {
+				@Override
+				public void run () {
+					trySave();
+					isLazySaveScheduled = false;
+				}
+			}, ThirdPersonConstants.CONFIG_LAZY_SAVE_DELAY);
+		}
 	}
 
 	@Override

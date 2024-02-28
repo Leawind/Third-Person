@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.Window;
 import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
@@ -31,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class ThirdPersonEvents {
 	public static void register () {
 		ClientTickEvent.CLIENT_PRE.register(ThirdPersonEvents::onClientTickPre);
+		ClientLifecycleEvent.CLIENT_STOPPING.register(ThirdPersonEvents::onClientStopping);
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ThirdPersonEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
@@ -50,6 +52,10 @@ public final class ThirdPersonEvents {
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		ThirdPerson.CAMERA_AGENT.onClientTickPre();
+	}
+
+	private static void onClientStopping (Minecraft minecraft) {
+		ThirdPerson.CONFIG_MANAGER.trySave();
 	}
 
 	/**
@@ -153,7 +159,7 @@ public final class ThirdPersonEvents {
 	 * @see ThirdPersonKeys#ADJUST_POSITION
 	 */
 	public static void onStopAdjustingCameraOffset () {
-		ThirdPerson.CONFIG_MANAGER.trySave();
+		ThirdPerson.CONFIG_MANAGER.lazySave();
 	}
 
 	/**

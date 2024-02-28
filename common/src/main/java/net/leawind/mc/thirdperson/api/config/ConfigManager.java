@@ -44,6 +44,13 @@ public interface ConfigManager {
 	void trySave ();
 
 	/**
+	 * 惰性保存
+	 * <p>
+	 * 两次保存时间间隔至少为 {@link ThirdPersonConstants#CONFIG_LAZY_SAVE_DELAY}
+	 */
+	void lazySave ();
+
+	/**
 	 * 直接读取配置文件
 	 */
 	void load () throws IOException;

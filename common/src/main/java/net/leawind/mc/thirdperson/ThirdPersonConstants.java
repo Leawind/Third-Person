@@ -10,6 +10,7 @@ public final class ThirdPersonConstants {
 	public static final                   String MOD_ID                        = "leawind_third_person";
 	public static final                   String KEY_CATEGORY                  = "key.categories." + MOD_ID;
 	public static final                   File   CONFIG_FILE                   = Minecraft.getInstance().gameDirectory.toPath().resolve("config/" + MOD_ID + ".json").toFile();
+	public static final                   long   CONFIG_LAZY_SAVE_DELAY        = 60000L;
 	public static final                   double EYE_POSITIOIN_SMOOTH_WEIGHT   = 8;
 	public static final                   double DISTANCE_TO_EYE_SMOOTH_WEIGHT = 4;
 	public static final                   double OFFSET_RATIO_SMOOTH_WEIGHT    = 12;
