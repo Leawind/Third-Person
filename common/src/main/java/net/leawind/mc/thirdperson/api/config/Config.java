@@ -45,6 +45,8 @@ public abstract class Config extends AbstractConfig {
 
 	abstract public @NotNull Set<ItemPattern> getUseToAimItemPatterns ();
 
+	abstract public @NotNull Set<ItemPattern> getUseToFirstPersonItemPatterns ();
+
 	abstract public @NotNull CameraOffsetScheme getCameraOffsetScheme ();
 
 	abstract public @NotNull MonoList getDistanceMonoList ();
@@ -72,6 +74,11 @@ public abstract class Config extends AbstractConfig {
 
 		@Override
 		public @NotNull Set<ItemPattern> getUseToAimItemPatterns () {
+			throw illegalAccess();
+		}
+
+		@Override
+		public @NotNull Set<ItemPattern> getUseToFirstPersonItemPatterns () {
 			throw illegalAccess();
 		}
 

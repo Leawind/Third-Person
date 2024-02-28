@@ -1,7 +1,10 @@
 package net.leawind.mc.thirdperson.resources;
 
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.util.annotations.VersionSensitive;
@@ -32,13 +35,14 @@ import java.util.Set;
  */
 @VersionSensitive("SimpleJsonResourceReloadListener may not exist in other mc version")
 public class ItemPatternManager extends SimpleJsonResourceReloadListener {
-	public static final  String           ID                       = "item_patterns";
-	private static final Gson             GSON                     = new GsonBuilder().create();
-	private static final String           AIMING_CHECK_DIRECTORY   = "aiming_check";
-	private static final String           AIMING_CHECK_HOLD_TO_AIM = "hold_to_aim";
-	private static final String           AIMING_CHECK_USE_TO_AIM  = "use_to_aim";
-	public final         Set<ItemPattern> holdToAimItemPatterns    = new HashSet<>();
-	public final         Set<ItemPattern> useToAimItemPatterns     = new HashSet<>();
+	public static final  String           ID                           = "item_patterns";
+	private static final Gson             GSON                         = new GsonBuilder().create();
+	private static final String           SET_HOLD_TO_AIM              = "hold_to_aim";
+	private static final String           SET_USE_TO_AIM               = "use_to_aim";
+	private static final String           SET_USE_TO_FIRST_PERSON      = "use_to_first_person";
+	public final         Set<ItemPattern> holdToAimItemPatterns        = new HashSet<>();
+	public final         Set<ItemPattern> useToAimItemPatterns         = new HashSet<>();
+	public final         Set<ItemPattern> useToFirstPersonItemPatterns = new HashSet<>();
 
 	public ItemPatternManager () {
 		super(GSON, ID);
@@ -55,13 +59,26 @@ public class ItemPatternManager extends SimpleJsonResourceReloadListener {
 	public void apply (@NotNull Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profile) {
 		holdToAimItemPatterns.clear();
 		useToAimItemPatterns.clear();
+		useToFirstPersonItemPatterns.clear();
 		map.forEach((resourceLocation, jsonElement) -> {
-			JsonObject aimingCheckObj = jsonElement.getAsJsonObject();
-			if (resourceLocation.getPath().startsWith(AIMING_CHECK_DIRECTORY + "/")) {
-				int countHold = aimingCheckObj.has(AIMING_CHECK_HOLD_TO_AIM) ? addToSet(holdToAimItemPatterns, aimingCheckObj.getAsJsonArray(AIMING_CHECK_HOLD_TO_AIM)): 0;
-				int countUse  = aimingCheckObj.has(AIMING_CHECK_USE_TO_AIM) ? addToSet(useToAimItemPatterns, aimingCheckObj.getAsJsonArray(AIMING_CHECK_USE_TO_AIM)): 0;
-				ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from {}", countHold, resourceLocation);
-				ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from {}", countUse, resourceLocation);
+			JsonArray aimingCheckObj = jsonElement.getAsJsonArray();
+			String[]  resourcePath   = resourceLocation.getPath().split("/");
+			if (resourcePath.length >= 2) {
+				String resourceSetName = resourcePath[0];
+				switch (resourceSetName) {
+					case SET_HOLD_TO_AIM -> {
+						int count = addToSet(holdToAimItemPatterns, aimingCheckObj);
+						ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from {}", count, resourceLocation);
+					}
+					case SET_USE_TO_AIM -> {
+						int count = addToSet(useToAimItemPatterns, aimingCheckObj);
+						ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from {}", count, resourceLocation);
+					}
+					case SET_USE_TO_FIRST_PERSON -> {
+						int count = addToSet(useToFirstPersonItemPatterns, aimingCheckObj);
+						ThirdPerson.LOGGER.info("Loaded {}  use_to_first_person item patterns from {}", count, resourceLocation);
+					}
+				}
 			}
 		});
 	}

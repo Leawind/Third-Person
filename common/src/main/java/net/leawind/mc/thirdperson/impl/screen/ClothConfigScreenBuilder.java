@@ -146,6 +146,11 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 																config.use_to_aim_item_pattern_expressions,
 																v -> config.use_to_aim_item_pattern_expressions = v,
 																entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_first_person_pattern_expressions",
+																defaults.use_to_first_person_pattern_expressions,
+																config.use_to_first_person_pattern_expressions,
+																v -> config.use_to_first_person_pattern_expressions = v,
+																entryBuilder));
 		}
 		return builder.build();
 	}

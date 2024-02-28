@@ -95,6 +95,8 @@
 	"leawind_third_person.option.hold_to_aim_item_pattern_expressions.desc": "When the item player is holding matches any rule, auto enter aiming mode.",
 	"leawind_third_person.option.use_to_aim_item_pattern_expressions": "Using Item Matching Rules",
 	"leawind_third_person.option.use_to_aim_item_pattern_expressions.desc": "When the item player is using matches any rule, auto enter aiming mode.",
+	"leawind_third_person.option.use_to_first_person_pattern_expressions": "Temply First Person When Using",
+	"leawind_third_person.option.use_to_first_person_pattern_expressions.desc": "When the item player is using matches any rule, temply enter first person perspective.",
 	"key.categories.leawind_third_person": "Leawind's Third Person",
 	"key.leawind_third_person.open_config_menu": "Open Configuration Menu",
 	"key.leawind_third_person.toggle_mod_enable": "Toggle Mod Enable",

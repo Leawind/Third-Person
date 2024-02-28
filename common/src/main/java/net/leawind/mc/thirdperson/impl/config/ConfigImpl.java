@@ -13,9 +13,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigImpl extends Config {
-	private final @NotNull CameraOffsetScheme cameraOffsetScheme    = CameraOffsetScheme.of(this);
-	private final @NotNull Set<ItemPattern>   holdToAimItemPatterns = new HashSet<>();
-	private final @NotNull Set<ItemPattern>   useToAimItemPatterns  = new HashSet<>();
+	private final @NotNull CameraOffsetScheme cameraOffsetScheme           = CameraOffsetScheme.of(this);
+	private final @NotNull Set<ItemPattern>   holdToAimItemPatterns        = new HashSet<>();
+	private final @NotNull Set<ItemPattern>   useToAimItemPatterns         = new HashSet<>();
+	public final @NotNull  Set<ItemPattern>   useToFirstPersonItemPatterns = new HashSet<>();
 	private                MonoList           distanceMonoList;
 
 	public ConfigImpl () {
@@ -36,12 +37,16 @@ public class ConfigImpl extends Config {
 
 	@Override
 	public void updateItemPatterns () {
+		int count;
 		holdToAimItemPatterns.clear();
-		int countHold = ItemPattern.addToSet(holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
-		ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", countHold);
+		count = ItemPattern.addToSet(holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
+		ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", count);
 		useToAimItemPatterns.clear();
-		int countUse = ItemPattern.addToSet(useToAimItemPatterns, use_to_aim_item_pattern_expressions);
-		ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", countUse);
+		count = ItemPattern.addToSet(useToAimItemPatterns, use_to_aim_item_pattern_expressions);
+		ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", count);
+		useToFirstPersonItemPatterns.clear();
+		count = ItemPattern.addToSet(useToFirstPersonItemPatterns, use_to_first_person_pattern_expressions);
+		ThirdPerson.LOGGER.info("Loaded {} use_to_first_person item patterns from configuration", count);
 	}
 
 	@Override
@@ -52,6 +57,11 @@ public class ConfigImpl extends Config {
 	@Override
 	public @NotNull Set<ItemPattern> getUseToAimItemPatterns () {
 		return useToAimItemPatterns;
+	}
+
+	@Override
+	public @NotNull Set<ItemPattern> getUseToFirstPersonItemPatterns () {
+		return useToFirstPersonItemPatterns;
 	}
 
 	@Override

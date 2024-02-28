@@ -15,6 +15,7 @@ import net.leawind.mc.thirdperson.mixin.CameraMixin;
 import net.leawind.mc.thirdperson.mixin.GameRendererMixin;
 import net.leawind.mc.thirdperson.mixin.MinecraftMixin;
 import net.leawind.mc.thirdperson.mixin.MouseHandlerMixin;
+import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
@@ -25,8 +26,6 @@ import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpyglassItem;
 import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -157,21 +156,18 @@ public final class ThirdPersonEvents {
 			}
 			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = shouldRenderInThirdPerson;
 		}
-		// 望远镜时临时第一人称
-		{
+		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPersonStatus.isTemporaryFirstPerson = false;
-			if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist() && ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
+			if (ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
+				//				ThirdPersonStatus.isTemporaryFirstPerson |= livingEntity.isSleeping();
 				if (livingEntity.isUsingItem()) {
-					ItemStack useItem = livingEntity.getUseItem();
-					if (useItem.getItem() instanceof SpyglassItem) {
-						ThirdPersonStatus.isTemporaryFirstPerson = true;
-					}
+					ThirdPersonStatus.isTemporaryFirstPerson |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns);
 				}
 			}
-		}
-		if (ThirdPersonStatus.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);
-			ThirdPerson.CAMERA_AGENT.onRenderTickPre(period, partialTick);
+			if (ThirdPersonStatus.isThirdPerson()) {
+				ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);
+				ThirdPerson.CAMERA_AGENT.onRenderTickPre(period, partialTick);
+			}
 		}
 	}
 

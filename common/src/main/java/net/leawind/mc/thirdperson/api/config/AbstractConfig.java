@@ -67,4 +67,5 @@ abstract class AbstractConfig {
 	@Expose public          double       aiming_offset_center                      = 0.48;
 	@Expose @NotNull public List<String> hold_to_aim_item_pattern_expressions      = new ArrayList<>();
 	@Expose @NotNull public List<String> use_to_aim_item_pattern_expressions       = new ArrayList<>();
+	@Expose @NotNull public List<String> use_to_first_person_pattern_expressions   = new ArrayList<>();
 }
