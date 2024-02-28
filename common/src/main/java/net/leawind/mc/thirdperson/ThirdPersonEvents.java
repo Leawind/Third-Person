@@ -24,6 +24,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpyglassItem;
 import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -145,13 +148,26 @@ public final class ThirdPersonEvents {
 		double now    = Blaze3D.getTime();
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
-		if (config.is_third_person_mode != ThirdPersonStatus.wasThirdPersonModeLastRenderTick) {
-			if (config.is_third_person_mode) {
+		final boolean shouldRenderInThirdPerson = ThirdPersonStatus.shouldRenderInThirdPerson();
+		if (shouldRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
+			if (shouldRenderInThirdPerson) {
 				onEnterThirdPerson();
 			} else {
 				onEnterFirstPerson();
 			}
-			ThirdPersonStatus.wasThirdPersonModeLastRenderTick = config.is_third_person_mode;
+			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = shouldRenderInThirdPerson;
+		}
+		// 望远镜时临时第一人称
+		{
+			ThirdPersonStatus.isTemporaryFirstPerson = false;
+			if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist() && ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
+				if (livingEntity.isUsingItem()) {
+					ItemStack useItem = livingEntity.getUseItem();
+					if (useItem.getItem() instanceof SpyglassItem) {
+						ThirdPersonStatus.isTemporaryFirstPerson = true;
+					}
+				}
+			}
 		}
 		if (ThirdPersonStatus.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);

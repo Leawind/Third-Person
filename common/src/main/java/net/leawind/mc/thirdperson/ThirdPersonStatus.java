@@ -8,15 +8,16 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public final class ThirdPersonStatus {
-	public static final @NotNull Vector3d impulse                          = Vector3d.of(0);
-	public static final @NotNull Vector2d impulseHorizon                   = Vector2d.of(0);
+	public static final @NotNull Vector3d impulse                              = Vector3d.of(0);
+	public static final @NotNull Vector2d impulseHorizon                       = Vector2d.of(0);
 	/**
 	 * @see ThirdPersonKeys#TOGGLE_AIMING
 	 */
-	public static                boolean  isToggleToAiming                 = false;
-	public static                float    lastPartialTick                  = 1;
-	public static                double   lastRenderTickTimeStamp          = 0;
-	public static                boolean  wasThirdPersonModeLastRenderTick = false;
+	public static                boolean  isToggleToAiming                     = false;
+	public static                float    lastPartialTick                      = 1;
+	public static                double   lastRenderTickTimeStamp              = 0;
+	public static                boolean  wasRenderInThirdPersonLastRenderTick = false;
+	public static                boolean  isTemporaryFirstPerson               = false;
 
 	/**
 	 * 是否正在调整摄像机偏移量
@@ -37,6 +38,13 @@ public final class ThirdPersonStatus {
 	 */
 	public static boolean isThirdPerson () {
 		return !ThirdPerson.mc.options.getCameraType().isFirstPerson();
+	}
+
+	/**
+	 * NOW
+	 */
+	public static boolean shouldRenderInThirdPerson () {
+		return ThirdPerson.getConfig().is_third_person_mode && !isTemporaryFirstPerson;
 	}
 
 	/**
