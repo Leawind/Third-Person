@@ -1,7 +1,6 @@
 package net.leawind.mc.util.modkeymapping;
 
 
-import com.mojang.blaze3d.Blaze3D;
 import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,7 +107,7 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
 	public void setDown (boolean down) {
 		boolean wasDown = isDown();
 		super.setDown(down);
-		long now = (long)(1e3 * Blaze3D.getTime());
+		long now = System.currentTimeMillis();
 		if (!wasDown && down) {
 			// key down
 			if (handle(ondown)) {

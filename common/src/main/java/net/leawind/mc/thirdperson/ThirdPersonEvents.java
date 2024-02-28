@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson;
 
 
-import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.Window;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
@@ -144,7 +143,8 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onPreRender (float partialTick) {
 		Config config = ThirdPerson.getConfig();
-		double now    = Blaze3D.getTime();
+		// in seconds
+		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
 		final boolean shouldRenderInThirdPerson = ThirdPersonStatus.shouldRenderInThirdPerson();

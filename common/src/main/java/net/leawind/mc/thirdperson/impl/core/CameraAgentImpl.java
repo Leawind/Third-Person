@@ -31,7 +31,12 @@ import java.util.Optional;
 public class CameraAgentImpl implements CameraAgent {
 	private final @NotNull Minecraft         minecraft;
 	private final @NotNull Camera            fakeCamera              = new Camera();
+	/**
+	 * 上次玩家操控转动视角的时间
+	 */
+	private                double            lastCameraTurnTimeStamp = 0;
 	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
+	private final @NotNull ExpSmoothVector2d smoothRelativeRotation  = new ExpSmoothVector2d();
 	/**
 	 * 相机偏移量
 	 */
@@ -41,10 +46,6 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
 	private @Nullable      BlockGetter       level;
-	/**
-	 * 上次玩家操控转动视角的时间
-	 */
-	private                double            lastCameraTurnTimeStamp = 0;
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
@@ -113,7 +114,7 @@ public class CameraAgentImpl implements CameraAgent {
 			dy *= 0.15;
 			dx *= config.lock_camera_pitch_angle ? 0: -0.15;
 			if (dy != 0 || dx != 0) {
-				lastCameraTurnTimeStamp = Blaze3D.getTime();
+				lastCameraTurnTimeStamp = System.currentTimeMillis() / 1000D;
 				double rx = getRelativeRotation().x() + dx;
 				double ry = getRelativeRotation().y() + dy;
 				rx = LMath.clamp(rx, -ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT, ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT);
