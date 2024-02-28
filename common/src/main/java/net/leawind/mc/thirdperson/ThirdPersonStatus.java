@@ -41,7 +41,7 @@ public final class ThirdPersonStatus {
 	}
 
 	/**
-	 * NOW
+	 * 是否应该进入第三人称视角
 	 */
 	public static boolean shouldRenderInThirdPerson () {
 		return ThirdPerson.getConfig().is_third_person_mode && !isTemporaryFirstPerson;

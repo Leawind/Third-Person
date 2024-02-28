@@ -151,9 +151,14 @@ public final class ThirdPersonEvents {
 		if (shouldRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
 			if (shouldRenderInThirdPerson) {
 				onEnterThirdPerson();
+				ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 			} else {
 				onEnterFirstPerson();
+				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
+			ThirdPerson.mc.levelRenderer.needsUpdate();
 			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = shouldRenderInThirdPerson;
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
@@ -247,9 +252,6 @@ public final class ThirdPersonEvents {
 				ThirdPerson.ENTITY_AGENT.setRawRotation(LMath.rotationDegreeFromDirection(eyeToHitResult));
 			}
 		}
-		ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
-		ThirdPerson.mc.levelRenderer.needsUpdate();
 	}
 
 	/**
@@ -259,8 +261,5 @@ public final class ThirdPersonEvents {
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
-		ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
-		ThirdPerson.mc.levelRenderer.needsUpdate();
 	}
 }

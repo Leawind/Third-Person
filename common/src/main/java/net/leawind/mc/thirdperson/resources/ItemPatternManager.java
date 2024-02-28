@@ -35,8 +35,8 @@ import java.util.Set;
  */
 @VersionSensitive("SimpleJsonResourceReloadListener may not exist in other mc version")
 public class ItemPatternManager extends SimpleJsonResourceReloadListener {
-	public static final  String           ID                           = "item_patterns";
 	private static final Gson             GSON                         = new GsonBuilder().create();
+	public static final  String           ID                           = "item_patterns";
 	private static final String           SET_HOLD_TO_AIM              = "hold_to_aim";
 	private static final String           SET_USE_TO_AIM               = "use_to_aim";
 	private static final String           SET_USE_TO_FIRST_PERSON      = "use_to_first_person";

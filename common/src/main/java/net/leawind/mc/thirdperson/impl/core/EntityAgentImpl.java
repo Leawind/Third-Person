@@ -105,12 +105,15 @@ public class EntityAgentImpl implements EntityAgent {
 			return;
 		}
 		{
-			final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
-			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
-			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
-			double       targetOpacity  = (distance - C) / (1 - C);
-			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
-				targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
+			double targetOpacity = 1.0;
+			if (ThirdPerson.getConfig().player_fade_out_enabled) {
+				final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
+				Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
+				final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
+				targetOpacity = (distance - C) / (1 - C);
+				if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
+					targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
+				}
 			}
 			smoothOpacity.setTarget(LMath.clamp(targetOpacity, 0, 1));
 			smoothOpacity.setHalflife(ThirdPersonConstants.OPACITY_HALFLIFE * (wasAiming ? 0.25: 1));
@@ -173,7 +176,6 @@ public class EntityAgentImpl implements EntityAgent {
 	 * @see net.minecraft.client.renderer.entity.LivingEntityRenderer#render
 	 */
 	private void updateBodyRotation () {
-		// TODO 侧身拉弓
 		// net.minecraft.client.renderer.entity.LivingEntityRenderer.render
 		Config config = ThirdPerson.getConfig();
 		if (config.auto_turn_body_drawing_a_bow && ThirdPerson.ENTITY_AGENT.isControlled()) {
