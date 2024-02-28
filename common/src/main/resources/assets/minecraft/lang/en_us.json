@@ -29,6 +29,8 @@
 	"leawind_third_person.option_group.behavior_interacting.desc": "How the player rotates when pressing the interact key (attack, use, select).",
 	"leawind_third_person.option.is_mod_enable": "Is this mod enabled?",
 	"leawind_third_person.option.is_mod_enable.desc": "Disabling this will show the original third-person perspective, but you can still open the configuration screen with a key.",
+	"leawind_third_person.option.is_third_person_mode": "Is third person mode",
+	"leawind_third_person.option.is_third_person_mode.desc": "Will be first person if turned off",
 	"leawind_third_person.option.center_offset_when_flying": "Centered when flying",
 	"leawind_third_person.option.center_offset_when_flying.desc": "Use 0 camera offset when attached entity is flying with elytra",
 	"leawind_third_person.option.player_fade_out_enabled": "Enable Player Fade Out",

@@ -35,6 +35,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		final ConfigCategory CATEGORY_GENERAL = builder.getOrCreateCategory(ConfigManager.getText("option_category.general"));
 		{
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_mod_enable", defaults.is_mod_enable, config.is_mod_enable, v -> config.is_mod_enable = v, entryBuilder));
+			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_third_person_mode", defaults.is_third_person_mode, config.is_third_person_mode, v -> config.is_third_person_mode = v, entryBuilder));
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);

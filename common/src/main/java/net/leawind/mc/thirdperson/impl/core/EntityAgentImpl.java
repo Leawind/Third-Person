@@ -193,7 +193,8 @@ public class EntityAgentImpl implements EntityAgent {
 	 * <p>
 	 * 同时修改原始玩家实体的朝向和旧朝向
 	 */
-	private void setRawRotation (@NotNull Vector2d rot) {
+	@Override
+	public void setRawRotation (@NotNull Vector2d rot) {
 		Entity entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());
 		entity.setXRot(entity.xRotO = (float)rot.x());

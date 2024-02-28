@@ -15,6 +15,7 @@ import java.util.List;
 abstract class AbstractConfig {
 	// ================================================================================General //
 	@Expose public          boolean      is_mod_enable                             = true;
+	@Expose public          boolean      is_third_person_mode                      = true;
 	@Expose public          boolean      lock_camera_pitch_angle                   = false;
 	//------------------------------Player Rotation
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;

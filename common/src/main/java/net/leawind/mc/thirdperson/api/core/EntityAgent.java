@@ -102,6 +102,11 @@ public interface EntityAgent {
 	@NotNull Vector2d getRawRotation (float partialTick);
 
 	/**
+	 * 设置实体朝向
+	 */
+	void setRawRotation (@NotNull Vector2d rot);
+
+	/**
 	 * 获取平滑的眼睛坐标
 	 */
 	@NotNull Vector3d getSmoothEyePosition (float partialTick);

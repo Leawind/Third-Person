@@ -11,23 +11,24 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.api.config.Config;
-import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.thirdperson.mixin.CameraMixin;
 import net.leawind.mc.thirdperson.mixin.GameRendererMixin;
 import net.leawind.mc.thirdperson.mixin.MinecraftMixin;
 import net.leawind.mc.thirdperson.mixin.MouseHandlerMixin;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Optional;
 
 public final class ThirdPersonEvents {
 	public static void register () {
@@ -140,9 +141,18 @@ public final class ThirdPersonEvents {
 	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
 	public static void onPreRender (float partialTick) {
+		Config config = ThirdPerson.getConfig();
 		double now    = Blaze3D.getTime();
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
+		if (config.is_third_person_mode != ThirdPersonStatus.wasThirdPersonModeLastRenderTick) {
+			if (config.is_third_person_mode) {
+				onEnterThirdPerson();
+			} else {
+				onEnterFirstPerson();
+			}
+			ThirdPersonStatus.wasThirdPersonModeLastRenderTick = config.is_third_person_mode;
+		}
 		if (ThirdPersonStatus.isThirdPerson() && ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPerson.ENTITY_AGENT.onRenderTickPre(period, partialTick);
 			ThirdPerson.CAMERA_AGENT.onRenderTickPre(period, partialTick);
@@ -199,32 +209,47 @@ public final class ThirdPersonEvents {
 	 *
 	 * @see MinecraftMixin#handleKeybinds_head(CallbackInfo)
 	 */
-	public static void onBeforeHandleKeybinds () {
-		if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
-			// 该方法中使用mixin修改了 viewVector
-			Minecraft.getInstance().gameRenderer.pick(1f);
+	public static void onBeforeHandleKeybinds (Minecraft minecraft) {
+		// NOW keyTogglePerspective
+		Config config = ThirdPerson.getConfig();
+		while (minecraft.options.keyTogglePerspective.consumeClick()) {
+			config.is_third_person_mode = !config.is_third_person_mode;
+		}
+		if (ThirdPersonStatus.isThirdPerson()) {
+			if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
+				// 该方法中使用mixin修改了 viewVector
+				minecraft.gameRenderer.pick(1f);
+			}
 		}
 	}
 
 	/**
-	 * 退出第三人称视角
-	 *
-	 * @see CameraMixin#setup_head(BlockGetter, Entity, boolean, boolean, float, CallbackInfo)
+	 * 进入第一人称视角
 	 */
-	public static void onLeaveThirdPerson () {
+	public static void onEnterFirstPerson () {
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
-			ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
+			Optional<Vector3d> pickPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
+			if (pickPosition.isEmpty()) {
+				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+			} else {
+				Vector3d eyeToHitResult = pickPosition.get().sub(ThirdPerson.ENTITY_AGENT.getRawEyePosition(1));
+				ThirdPerson.ENTITY_AGENT.setRawRotation(LMath.rotationDegreeFromDirection(eyeToHitResult));
+			}
 		}
+		ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
+		ThirdPerson.mc.levelRenderer.needsUpdate();
 	}
 
 	/**
-	 * 进入第三人称视角时触发
-	 *
-	 * @see CameraMixin#setup_head(BlockGetter, Entity, boolean, boolean, float, CallbackInfo)
+	 * 进入第三人称视角
 	 */
 	public static void onEnterThirdPerson () {
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
+		ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
+		ThirdPerson.mc.levelRenderer.needsUpdate();
 	}
 }
