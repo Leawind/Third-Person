@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["Documentation"]
 
   workflow_dispatch:
 
@@ -34,7 +34,10 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Install NPM dependencies
-        run: npm ci
+        run: |
+          rm ./package-lock.json
+          rm -rf ./node_modules
+          npm i
 
       - name: Build with VitePress
         run: |
