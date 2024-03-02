@@ -10,13 +10,13 @@ export default {
 	description: "Documentation for minecraft mod Leawind's Thrid Person",
 	themeConfig: {
 		nav: [
-			{ text: '👁Features', link: `${lang}/Features/` },
-			{ text: '💬Q&A', link: `${lang}/Q&A/` },
-			{ text: '🕗Changelog', link: `${lang}/changelog` },
+			{ text: '👁Features', link: `/${lang}/Features/` },
+			{ text: '💬Q&A', link: `/${lang}/Q&A/` },
+			{ text: '🕗Changelog', link: `/${lang}/changelog` },
 			{
 				text: 'Misc',
 				items: [
-					{ text: '🏅Badges', link: `${lang}/badges` },
+					{ text: '🏅Badges', link: `/${lang}/badges` },
 				]
 			},
 			{ text: 'Donate', link: 'https://leawind.github.io/en/donate' },
