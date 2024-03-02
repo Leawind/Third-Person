@@ -34,7 +34,10 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Install NPM dependencies
-        run: npm i
+        run: |
+          rm ./package-lock.json
+          rm -rf ./node_modules
+          npm i
 
       - name: Build with VitePress
         run: |
