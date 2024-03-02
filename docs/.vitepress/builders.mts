@@ -9,70 +9,55 @@ import path from 'path/posix';
  */
 export function buildSidebar(dir: string, docsRoot: string = 'docs'): any {
 	dir = path.join(docsRoot, dir.replace(/^\/+/g, ''));
-	const sidebar = [parseDir(dir)];
+	const sidebar = [buildDir(dir)];
 	// console.debug(JSON.stringify(sidebar, null, 2));
 	return sidebar;
 
 	/**
-	 * @param dir 目录路径
+	 * @param dirPath 目录路径
 	 * @param [name=null] 显示名称
 	 */
-	function parseDir(dir: string, name: string | null = null) {
-		const dirName = name || getTitle(dir);
-		return {
-			text: dirName,
+	function buildDir(dirPath: string) {
+		const dir = parseDir(dirPath);
+		const result = {
+			text: dir.title,
 			collapsed: true,
-			link: path.relative(docsRoot, dir).replace(/(^\/*)|(\/*$)/g, '/'),
-			items: fs.readdirSync(dir).map(oName => {
-				const oPath = path.join(dir, oName);
+			items: fs.readdirSync(dirPath).map(oName => {
+				const oPath = path.join(dirPath, oName);
 				if (!isOrHasPageFile(oPath)) return;
 				if (fs.statSync(oPath).isFile()) {
 					if (oName.startsWith('index')) return;
 					return {
-						text: getTitle(oPath),
+						text: parseDir(oPath).title,
 						link: '/' + path.relative(docsRoot, oPath),
 					};
 				} else {
-					return parseDir(oPath);
+					return buildDir(oPath);
 				}
 			}).filter(i => i),
 		};
+		if (!dir.titleOnly)
+			result.link = path.relative(docsRoot, dirPath).replace(/(^\/*)|(\/*$)/g, '/');
+		return result;
 	}
 }
 
-export function sidebarTree(dir: string, name: string, items: string[], docsRoot: string = 'docs') {
-	dir = path.join(docsRoot, dir.replace(/^\/+/g, ''));
-	const sidebar = [{
-		text: name,
-		items: items.map(oName => {
-			const oPath = path.join(dir, oName);
-			if (!fs.existsSync(oPath)) throw new Error(`File not found: ${oPath}`);
-			if (fs.statSync(oPath).isFile()) {
-				if (oName.startsWith('index')) return;
-				return {
-					text: getTitle(oPath),
-					link: '/' + path.relative(docsRoot, oPath),
-				};
-			} else {
-				return sidebarTree(oPath, oName, fs.readdirSync(oPath), docsRoot);
-			}
-		})
-	}];
-
-}
-
-function getTitle(filePath: string): string {
+function parseDir(filePath: string): { title: string; src?: string; titleOnly?: boolean; } {
 	if (!fs.existsSync(filePath))
-		return path.basename(filePath);
+		return { title: path.basename(filePath) };
 	const stat = fs.statSync(filePath);
 	if (stat.isFile()) {
 		const src: string = fs.readFileSync(filePath, 'utf-8');
 		const matches = /(\n|^)\s*#*#(.*)/.exec(src);
-		return matches === null ? path.basename(filePath) : matches[2];
+		return {
+			title: matches === null ? path.basename(filePath) : matches[2],
+			src,
+			titleOnly: src.replace(/(\n|^)\s*#{1,}.*(\n|$)/, '').trim() === '',
+		};
 	} else if (stat.isDirectory()) {
-		return getTitle(path.join(filePath, 'index.md'));
+		return parseDir(path.join(filePath, 'index.md'));
 	} else {
-		return path.basename(filePath);
+		return { title: path.basename(filePath) };
 	}
 }
 

@@ -8,15 +8,15 @@ hero:
   tagline: 一个实用、丝滑、功能丰富的第三人称模组
   image: 
   actions:
-    - theme: brand
+    - theme: alt
+      text: 📥下载
+      link: ./#下载
+    - theme: alt
       text: 🕗更新日志
       link: ./changelog
     - theme: alt
-      text: CurseForge
-      link: .
-    - theme: alt
-      text: Modrinth
-      link: .
+      text: 💡遇到问题
+      link: ./Q&A/
 features:
   - title: Features
     details: 👁详细特性
@@ -38,20 +38,24 @@ features:
 :::
 
 :::tip
-本文档仅适用于最新 2.0.6 及以上版本。
+本文档仅适用于最新 2.0.7 及以上版本。
 :::
 
 ## 功能
 
 按 F5 在第一人称与第三人称视角间切换。
 
-### 快速切换相机偏移位置：左|中|右
+### 像第一人称一样精准射中敌人
 
-短按CapsLock可切换左右，按住CapsLock可以切换到居中。
+第三人称下瞄准远处的敌人时，模组会自动预测你想要射击的目标实体，你只需要像第一人称那样将准星放在敌人上方即可。
 
 ### 使用鼠标精确调整相机偏移量
 
 按住 Z 时，移动鼠标可以调整相机偏移量（玩家在屏幕上的位置），使用鼠标滚轮可以调整相机到玩家的距离。
+
+### 快速切换相机偏移位置：左|中|右
+
+短按CapsLock可切换左右，按住CapsLock可以切换到居中。
 
 ### 自动进入瞄准模式
 

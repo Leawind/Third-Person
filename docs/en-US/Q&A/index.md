@@ -1,19 +1,19 @@
-# FAQ
+# Questions
+
+At the top of the page, there is a search box. If you cannot find a solution to the issue you are facing, please visit the [Issues page](https://github.com/LEAWIND/Third-Person/issues) to submit your problem.
 
 ## Game Crashes/Freezes
 
-If you encounter game crashes or freezes, you can report the issue on [Issues Page](https://github.com/LEAWIND/Third-Person/issues), and please make sure to include the game logs ψ(._. )ψ.
+If you are using an older version of the mod, please update to the latest version and try again.
 
-## Update to 1.20+
+## When will it be updated to 1.20+?
 
-There are still a few important features yet to be implemented, and the plan is to wait until they are completed before releasing the update.
+There are still a few important features pending implementation; the update will be released once they are completed.
 
-## Porting to Older Versions (1.18, 1.16, 1.12)
+## When will it be ported to older versions (1.18, 1.16, 1.12)?
 
-Consideration for porting will come after updating to the latest version.
+I plan to update to the latest version before contemplating porting to older versions.
 
-## Automatic Aim Issue with Specific Items
+## Unable to auto-aim with a specific item
 
-If it's a vanilla Minecraft item, please raise an [issue on GitHub](https://github.com/LEAWIND/Third-Person/issues).
-
-For items from other mods, you can manually add configurations or create a resource pack. Alternatively, reach out to the authors of the relevant mods and kindly suggest adding the necessary resources in their upcoming versions.
+If the item is not from the vanilla Minecraft, you can manually add configurations or create a resource pack yourself. You can also reach out to the authors of related mods and request them to incorporate the necessary resources in the new version.
