@@ -1,0 +1,17 @@
+* text=auto
+
+LICENSE          text eol=lf
+.gitattributes   text eol=lf
+.gitignore       text eol=lf
+
+*.js             text eol=lf
+*.json           text eol=lf
+*.md             text eol=lf
+*.svg            text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.gif  binary
+*.mp3  binary
+*.ogg  binary
