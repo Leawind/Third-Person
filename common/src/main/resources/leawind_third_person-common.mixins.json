@@ -6,6 +6,7 @@
 	"client": [
 		"CameraInvoker",
 		"LocalPlayerInvoker",
+		"ClientLevelInvoker",
 		"LevelRendererMixin",
 		"ModelPartCubeMixin",
 		"RenderTypeMixin",

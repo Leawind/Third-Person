@@ -1,13 +1,16 @@
 package net.leawind.mc.thirdperson.impl.core;
 
 
+import com.google.common.collect.Lists;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.config.Config;
+import net.leawind.mc.thirdperson.api.core.AimingTargetComparator;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
+import net.leawind.mc.thirdperson.mixin.ClientLevelInvoker;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
@@ -16,14 +19,18 @@ import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,7 +51,7 @@ public class CameraAgentImpl implements CameraAgent {
 	 * 虚相机到平滑眼睛的距离
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
-	private @Nullable      BlockGetter       level;
+	private @Nullable      BlockGetter       blockGetter;
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
@@ -66,8 +73,8 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void setLevel (@NotNull BlockGetter level) {
-		this.level = level;
+	public void setBlockGetter (@NotNull BlockGetter blockGetter) {
+		this.blockGetter = blockGetter;
 	}
 
 	@Override
@@ -94,6 +101,11 @@ public class CameraAgentImpl implements CameraAgent {
 
 	public @NotNull Camera getRawCamera () {
 		return Objects.requireNonNull(Minecraft.getInstance().gameRenderer.getMainCamera());
+	}
+
+	@Override
+	public @NotNull Vector3d getRawCameraPosition () {
+		return LMath.toVector3d(getRawCamera().getPosition());
 	}
 
 	@Override
@@ -190,6 +202,51 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	/**
+	 * @see AimingTargetComparator
+	 */
+	@Override
+	public @NotNull Optional<Entity> predictTargetEntity () {
+		Config config = ThirdPerson.getConfig();
+		// 候选目标实体
+		List<Entity> candidateTargets = Lists.newArrayList();
+		Vec3         cameraPos        = getRawCamera().getPosition();
+		Vector2d     cameraRot        = getRotation();
+		Vector3d     cameraViewVector = LMath.directionFromRotationDegree(cameraRot).normalize();
+		if (ThirdPerson.ENTITY_AGENT.isControlled()) {
+			Entity                    playerEntity = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
+			ClientLevel               clientLevel  = (ClientLevel)playerEntity.getLevel();
+			LevelEntityGetter<Entity> entityGetter = ((ClientLevelInvoker)clientLevel).invokeGetEntityGetter();
+			for (Entity target: entityGetter.getAll()) {
+				double distance = target.distanceTo(playerEntity);
+				// 排除距离太近和太远的
+				if (distance < 8 || distance > config.camera_ray_trace_length) {
+					continue;
+				}
+				if (!target.is(playerEntity)) {
+					AABB     targetAabb     = target.getBoundingBox();
+					Vec3     targetPos      = target.getPosition(ThirdPersonStatus.lastPartialTick);
+					Vector3d bottomY        = LMath.toVector3d(targetPos.with(Direction.Axis.Y, targetAabb.minY));
+					Vector3d vectorToBottom = bottomY.copy().sub(ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick));
+					if (LMath.rotationDegreeFromDirection(vectorToBottom).x() < cameraRot.x()) {
+						continue;
+					}
+					Vector3d vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalize();
+					double   angleRadian    = Math.acos(cameraViewVector.dot(vectorToTarget));
+					if (Math.toDegrees(angleRadian) < 30) {
+						candidateTargets.add(target);
+					}
+				}
+			}
+		}
+		if (!candidateTargets.isEmpty()) {
+			candidateTargets.sort(new AimingTargetComparator(cameraPos, cameraViewVector));
+			// candidateTargets.get(0).setYHeadRot((float)(System.currentTimeMillis() / 2d % 360)); // debug
+			return Optional.of(candidateTargets.get(0));
+		}
+		return Optional.empty();
+	}
+
+	/**
 	 * 根据角度、距离、偏移量计算假相机实际朝向和位置
 	 */
 	private void updateFakeCameraRotationPosition () {
@@ -229,7 +286,7 @@ public class CameraAgentImpl implements CameraAgent {
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		double minDistance       = initDistance;
-		assert level != null;
+		assert blockGetter != null;
 		for (int i = 0; i < 8; ++i) {
 			double offsetX = (i & 1) * 2 - 1;
 			double offsetY = (i >> 1 & 1) * 2 - 1;
@@ -239,7 +296,7 @@ public class CameraAgentImpl implements CameraAgent {
 			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			Vec3      pickEnd   = pickStart.add(smoothEyeToCamera);
-			HitResult hitResult = level.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+			HitResult hitResult = blockGetter.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickStart));
 			}

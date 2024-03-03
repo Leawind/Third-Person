@@ -122,7 +122,7 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
 		ThirdPersonStatus.lastPartialTick = partialTick;
-		ThirdPerson.CAMERA_AGENT.setLevel(level);
+		ThirdPerson.CAMERA_AGENT.setBlockGetter(level);
 		Minecraft mc = Minecraft.getInstance();
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;

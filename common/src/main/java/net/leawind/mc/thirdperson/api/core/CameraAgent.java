@@ -32,7 +32,7 @@ public interface CameraAgent {
 	/**
 	 * 设置维度
 	 */
-	void setLevel (@NotNull BlockGetter level);
+	void setBlockGetter (@NotNull BlockGetter blockGetter);
 
 	/**
 	 * 渲染前
@@ -61,6 +61,11 @@ public interface CameraAgent {
 	 * 获取原版相机对象
 	 */
 	@NotNull Camera getRawCamera ();
+
+	/**
+	 * 获取原始相机位置
+	 */
+	@NotNull Vector3d getRawCameraPosition ();
 
 	/**
 	 * 第三人称相机朝向
@@ -143,4 +148,9 @@ public interface CameraAgent {
 	 * 相机是否正在注视某个实体（无视其他实体或方块）
 	 */
 	boolean isLookingAt (@NotNull Entity entity);
+
+	/**
+	 * 预测玩家可能想要射击的目标实体
+	 */
+	@NotNull Optional<Entity> predictTargetEntity ();
 }

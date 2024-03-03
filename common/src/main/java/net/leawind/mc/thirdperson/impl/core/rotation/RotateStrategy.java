@@ -7,8 +7,10 @@ import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -40,7 +42,7 @@ public interface RotateStrategy {
 		return 0.01D;
 	};
 	Supplier<Double> AIMING                 = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_HIT_RESULT);
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.PREDICTED_TARGET_ENTITY);
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.HARD);
 		return 0D;
 	};

@@ -3,9 +3,12 @@ package net.leawind.mc.thirdperson.impl.core.rotation;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
+import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
+import net.minecraft.client.Camera;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -35,6 +38,34 @@ public enum RotateTarget {
 			Vector3d viewVector  = cameraHitPosition.get().sub(eyePosition);
 			return LMath.rotationDegreeFromDirection(viewVector);
 		}
+	}),
+	/**
+	 * 预测玩家想射击的目标实体
+	 * <p>
+	 * 玩家将朝向的目标点为 相机位置 + 相机射线单位向量*目标实体距离
+	 * <p>
+	 * 这样在射击远处的实体时，就不需要考虑玩家视线与相机视线间的偏移量了。
+	 * <p>
+	 * 但是问题在于，当周围有许多实体时，对目标实体的预测可能不准确。
+	 *
+	 * @see CameraAgent#predictTargetEntity()
+	 */
+	PREDICTED_TARGET_ENTITY(() -> {
+		Vector2d rotation = CAMERA_HIT_RESULT.getRotation();
+		if (ThirdPerson.ENTITY_AGENT.isControlled()) {
+			Optional<Entity> predicted = ThirdPerson.CAMERA_AGENT.predictTargetEntity();
+			if (predicted.isPresent()) {
+				Camera   camera       = ThirdPerson.CAMERA_AGENT.getRawCamera();
+				Entity   target       = predicted.get();
+				Vector3d playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
+				Vector3d cameraPos    = ThirdPerson.CAMERA_AGENT.getRawCameraPosition();
+				Vector3d targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
+				double   distance     = cameraPos.distance(targetPos);
+				Vector3d end          = LMath.toVector3d(camera.getLookVector()).normalize(distance).add(cameraPos);
+				return LMath.rotationDegreeFromDirection(end.copy().sub(playerEyePos));
+			}
+		}
+		return rotation;
 	}),
 	/**
 	 * 使用键盘控制的移动方向
