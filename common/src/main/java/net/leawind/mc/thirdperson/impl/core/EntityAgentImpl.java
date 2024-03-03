@@ -74,6 +74,7 @@ public class EntityAgentImpl implements EntityAgent {
 		if (isCameraEntityExist()) {
 			smoothEyePosition.set(getRawEyePosition(ThirdPersonStatus.lastPartialTick));
 		}
+		smoothOpacity.set(0d);
 		wasAiming      = false;
 		wasInterecting = false;
 	}
@@ -105,6 +106,7 @@ public class EntityAgentImpl implements EntityAgent {
 			return;
 		}
 		{
+			// NOW
 			double targetOpacity = 1.0;
 			if (ThirdPerson.getConfig().player_fade_out_enabled) {
 				final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;

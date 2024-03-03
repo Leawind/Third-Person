@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
@@ -222,9 +223,8 @@ public class CameraAgentImpl implements CameraAgent {
 					continue;
 				}
 				if (!target.is(playerEntity)) {
-					AABB     targetAabb     = target.getBoundingBox();
 					Vec3     targetPos      = target.getPosition(ThirdPersonStatus.lastPartialTick);
-					Vector3d bottomY        = LMath.toVector3d(targetPos.with(Direction.Axis.Y, targetAabb.minY));
+					Vector3d bottomY        = LMath.toVector3d(targetPos.with(Direction.Axis.Y, target.getBoundingBox().minY));
 					Vector3d vectorToBottom = bottomY.copy().sub(ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick));
 					if (LMath.rotationDegreeFromDirection(vectorToBottom).x() < cameraRot.x()) {
 						continue;

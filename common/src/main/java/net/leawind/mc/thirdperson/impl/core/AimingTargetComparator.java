@@ -11,6 +11,13 @@ import java.util.Comparator;
 /**
  * 在预测目标实体时，判断两个实体的优先级
  *
+ * <pre>
+ * # 快速装填5的弩
+ * /give @s crossbow{Enchantments:[{id:quick_charge,lvl:5}],Charged:1b}
+ * # 靶子村民
+ * /summon villager ~ ~ ~ {NoAI:1b}
+ * </pre>
+ *
  * @see CameraAgentImpl#predictTargetEntity()
  */
 public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements Comparator<Entity> {
@@ -21,8 +28,6 @@ public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements C
 
 	/**
 	 * 计算一个目标实体的代价，值越低越优先
-	 * <p>
-	 * /give @s crossbow{Enchantments:[{id:quick_charge,lvl:5}],Charged:1b}
 	 */
 	public double getCost (Entity entity) {
 		Vec3     entityPos      = entity.getPosition(1);

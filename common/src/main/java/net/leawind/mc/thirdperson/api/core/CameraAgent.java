@@ -151,6 +151,8 @@ public interface CameraAgent {
 
 	/**
 	 * 预测玩家可能想要射击的目标实体
+	 * <p>
+	 * TODO 预测不够准确
 	 */
 	@NotNull Optional<Entity> predictTargetEntity ();
 }
