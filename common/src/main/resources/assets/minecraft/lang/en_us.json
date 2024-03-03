@@ -81,6 +81,8 @@
 	"leawind_third_person.option.offset_center.desc": "Long-press a specific key to center the player. When centered, X offset is fixed at 0, and the player is in the middle of the screen. This option adjusts the Y offset in this centered state.",
 	"leawind_third_person.option.camera_ray_trace_length": "Camera Ray Trace Length",
 	"leawind_third_person.option.camera_ray_trace_length.desc": "When aiming at an object beyond this distance, the player's line of sight becomes parallel to the camera's line of sight.",
+	"leawind_third_person.option.enable_target_entity_predict": "Enable Target Entity Prediction When Aiming",
+	"leawind_third_person.option.enable_target_entity_predict.desc": "When aiming, predict the target entity to be shot, calculate the player's rotation based on this prediction for better targeting.",
 	"leawind_third_person.option.auto_rotate_interacting": "Auto-Rotate During Interaction",
 	"leawind_third_person.option.auto_rotate_interacting.desc": "The player will automatically rotate when pressing the interact key (attack, use, select).",
 	"leawind_third_person.option.rotate_interacting_type": "Rotation Type During Interaction",

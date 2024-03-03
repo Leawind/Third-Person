@@ -52,7 +52,7 @@ public enum RotateTarget {
 	 */
 	PREDICTED_TARGET_ENTITY(() -> {
 		Vector2d rotation = CAMERA_HIT_RESULT.getRotation();
-		if (ThirdPerson.ENTITY_AGENT.isControlled()) {
+		if (ThirdPerson.getConfig().enable_target_entity_predict && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			Optional<Entity> predicted = ThirdPerson.CAMERA_AGENT.predictTargetEntity();
 			if (predicted.isPresent()) {
 				Camera   camera       = ThirdPerson.CAMERA_AGENT.getRawCamera();

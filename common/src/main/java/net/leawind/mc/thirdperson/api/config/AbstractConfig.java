@@ -32,6 +32,7 @@ abstract class AbstractConfig {
 	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	@Expose public          boolean      turn_with_camera_when_enter_first_person  = true;
 	@Expose public          double       camera_ray_trace_length                   = 256;
+	@Expose public          boolean      enable_target_entity_predict              = true;
 	//------------------------------Player Fade out
 	@Expose public          boolean      player_fade_out_enabled                   = true;
 	//------------------------------Crosshair

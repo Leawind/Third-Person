@@ -69,6 +69,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 													 v -> config.turn_with_camera_when_enter_first_person = v,
 													 entryBuilder));
 			CATEGORY_MISC.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
+			CATEGORY_MISC.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
 			// SubCategory: Player Fade out
 			final SubCategoryBuilder Subcategory_Player_Fade_Out = buildSubCategory("player_fade_out", entryBuilder);
 			Subcategory_Player_Fade_Out.add(buildBooleanEntry("player_fade_out_enabled", defaults.player_fade_out_enabled, config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v, entryBuilder));

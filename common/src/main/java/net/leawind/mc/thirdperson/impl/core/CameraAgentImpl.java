@@ -7,7 +7,6 @@ import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.api.config.Config;
-import net.leawind.mc.thirdperson.api.core.AimingTargetComparator;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.ClientLevelInvoker;
@@ -202,7 +201,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	/**
-	 * @see AimingTargetComparator
+	 * @see AimingTargetComparator#getCost(Entity)
 	 */
 	@Override
 	public @NotNull Optional<Entity> predictTargetEntity () {
