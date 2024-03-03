@@ -85,7 +85,7 @@ public enum RotateTarget {
 			return NONE.getRotation();
 		} else {
 			double absoluteYRotDegree = LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulseHorizon);
-			return Vector2d.of(0, absoluteYRotDegree);
+			return Vector2d.of(0.1, absoluteYRotDegree);
 		}
 	});
 	private final Supplier<Vector2d> rotationGetter;
