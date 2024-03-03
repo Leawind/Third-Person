@@ -96,7 +96,7 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@Override
 	public float getSmoothOpacity () {
-		return smoothOpacity.get().floatValue();
+		return smoothOpacity.get(ThirdPersonStatus.lastPartialTick).floatValue();
 	}
 
 	@PerformanceSensitive
@@ -104,22 +104,6 @@ public class EntityAgentImpl implements EntityAgent {
 	public void onRenderTickPre (double now, double period, float partialTick) {
 		if (!isControlled()) {
 			return;
-		}
-		{
-			// NOW
-			double targetOpacity = 1.0;
-			if (ThirdPerson.getConfig().player_fade_out_enabled) {
-				final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
-				Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
-				final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
-				targetOpacity = (distance - C) / (1 - C);
-				if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
-					targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
-				}
-			}
-			smoothOpacity.setTarget(LMath.clamp(targetOpacity, 0, 1));
-			smoothOpacity.setHalflife(ThirdPersonConstants.OPACITY_HALFLIFE * (wasAiming ? 0.25: 1));
-			smoothOpacity.update(period);
 		}
 		Vector2d targetRotation = rotateTarget.getRotation();
 		smoothRotation.setTarget(targetRotation);
@@ -141,6 +125,7 @@ public class EntityAgentImpl implements EntityAgent {
 		wasAiming      = isAiming();
 		wasInterecting = isInterecting();
 		updateRotateStrategy();
+		updateSmoothOpacity(period, 1);
 		smoothRotation.update(period);
 		{
 			Vector3d eyePosition = getRawEyePosition(1);
@@ -158,36 +143,6 @@ public class EntityAgentImpl implements EntityAgent {
 			case LINEAR, EXP_LINEAR -> {
 				smoothRotation.setTarget(rotateTarget.getRotation());
 				smoothRotation.update(period);
-			}
-		}
-	}
-
-	/**
-	 * 更新旋转策略、平滑类型、平滑系数
-	 * <p>
-	 * 根据配置、游泳、飞行、瞄准等状态判断。
-	 */
-	private void updateRotateStrategy () {
-		setSmoothRotationHalflife(rotateDecisionMap.remake());
-		updateBodyRotation();
-	}
-
-	/**
-	 * 脖子最多左右转85度
-	 *
-	 * @see net.minecraft.client.renderer.entity.LivingEntityRenderer#render
-	 */
-	private void updateBodyRotation () {
-		// net.minecraft.client.renderer.entity.LivingEntityRenderer.render
-		Config config = ThirdPerson.getConfig();
-		if (config.auto_turn_body_drawing_a_bow && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			LocalPlayer player = getRawPlayerEntity();
-			if (player.isUsingItem() && player.getUseItem().is(Items.BOW)) {
-				double k = player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
-				if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
-					k = -k;
-				}
-				player.yBodyRot = (float)(k * 45 + player.getYRot());
 			}
 		}
 	}
@@ -300,5 +255,54 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public boolean wasInterecting () {
 		return wasInterecting;
+	}
+
+	/**
+	 * 更新旋转策略、平滑类型、平滑系数
+	 * <p>
+	 * 根据配置、游泳、飞行、瞄准等状态判断。
+	 */
+	private void updateRotateStrategy () {
+		setSmoothRotationHalflife(rotateDecisionMap.remake());
+		updateBodyRotation();
+	}
+
+	/**
+	 * 脖子最多左右转85度
+	 *
+	 * @see net.minecraft.client.renderer.entity.LivingEntityRenderer#render
+	 */
+	private void updateBodyRotation () {
+		// net.minecraft.client.renderer.entity.LivingEntityRenderer.render
+		Config config = ThirdPerson.getConfig();
+		if (config.auto_turn_body_drawing_a_bow && ThirdPerson.ENTITY_AGENT.isControlled()) {
+			LocalPlayer player = getRawPlayerEntity();
+			if (player.isUsingItem() && player.getUseItem().is(Items.BOW)) {
+				double k = player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
+				if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
+					k = -k;
+				}
+				player.yBodyRot = (float)(k * 45 + player.getYRot());
+			}
+		}
+	}
+
+	/**
+	 * 更新平滑的透明度
+	 */
+	private void updateSmoothOpacity (double period, float partialTick) {
+		double targetOpacity = 1.0;
+		if (ThirdPerson.getConfig().player_fade_out_enabled) {
+			final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
+			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
+			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
+			targetOpacity = (distance - C) / (1 - C);
+			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
+				targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
+			}
+		}
+		smoothOpacity.setTarget(LMath.clamp(targetOpacity, 0, 1));
+		smoothOpacity.setHalflife(ThirdPersonConstants.OPACITY_HALFLIFE * (wasAiming ? 0.25: 1));
+		smoothOpacity.update(period);
 	}
 }
