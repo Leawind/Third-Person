@@ -24,7 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
 	@Inject(method="render", at=@At("HEAD"))
 	public void pre_render (float particalTicks, long l, boolean bl, CallbackInfo ci) {
-		ThirdPersonEvents.onPreRender(particalTicks);
+		if (ThirdPerson.getConfig().is_mod_enable) {
+			ThirdPersonEvents.onPreRender(particalTicks);
+		}
 	}
 
 	/**

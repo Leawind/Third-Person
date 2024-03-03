@@ -66,8 +66,10 @@ public final class ThirdPersonEvents {
 	 * @see ClientPlayerEvent#CLIENT_PLAYER_RESPAWN
 	 */
 	private static void onClientPlayerRespawn (@NotNull LocalPlayer oldPlayer, @NotNull LocalPlayer newPlayer) {
-		onPlayerReset();
-		ThirdPerson.LOGGER.info("on Client player respawn");
+		if (ThirdPerson.getConfig().is_mod_enable) {
+			onPlayerReset();
+			ThirdPerson.LOGGER.info("on Client player respawn");
+		}
 	}
 
 	/**
@@ -76,8 +78,10 @@ public final class ThirdPersonEvents {
 	 * @see ClientPlayerEvent#CLIENT_PLAYER_JOIN
 	 */
 	private static void onClientPlayerJoin (@NotNull LocalPlayer player) {
-		onPlayerReset();
-		ThirdPerson.LOGGER.info("on Client player join");
+		if (ThirdPerson.getConfig().is_mod_enable) {
+			onPlayerReset();
+			ThirdPerson.LOGGER.info("on Client player join");
+		}
 	}
 
 	/**
@@ -164,7 +168,6 @@ public final class ThirdPersonEvents {
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			ThirdPersonStatus.isTemporaryFirstPerson = false;
 			if (ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
-				//				ThirdPersonStatus.isTemporaryFirstPerson |= livingEntity.isSleeping();
 				if (livingEntity.isUsingItem()) {
 					ThirdPersonStatus.isTemporaryFirstPerson |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns);
 				}
@@ -233,7 +236,7 @@ public final class ThirdPersonEvents {
 		 */
 		while (minecraft.options.keyTogglePerspective.consumeClick()) {
 			if (config.is_third_person_mode) {
-				ThirdPerson.CAMERA_AGENT.setTransiteToFirstPerson(!ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson());
+				ThirdPerson.CAMERA_AGENT.setTransitionToFirstPerson(!ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson());
 			} else {
 				config.is_third_person_mode = true;
 			}

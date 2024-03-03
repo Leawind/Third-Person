@@ -35,9 +35,9 @@ public interface CameraAgent {
 	 * <p>
 	 * 将平滑距离的目标设置为0，平滑系数设置为调整
 	 * <p>
-	 * 当相机与平滑眼睛距离足够近时，真正变成第一人称//NOW
+	 * 当相机与平滑眼睛距离足够近时，真正变成第一人称
 	 */
-	void setTransiteToFirstPerson (boolean value);
+	void setTransitionToFirstPerson (boolean value);
 
 	/**
 	 * 重置各种属性

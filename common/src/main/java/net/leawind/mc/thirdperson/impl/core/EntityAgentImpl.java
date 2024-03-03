@@ -299,7 +299,7 @@ public class EntityAgentImpl implements EntityAgent {
 			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
 			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
 			targetOpacity = (distance - C) / (1 - C);
-			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
+			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && !isFallFlying() && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
 				targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
 			}
 		}
