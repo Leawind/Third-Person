@@ -317,7 +317,7 @@ public class CameraAgentImpl implements CameraAgent {
 			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			Vec3      pickEnd   = pickStart.add(smoothEyeToCamera);
-			HitResult hitResult = blockGetter.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+			HitResult hitResult = blockGetter.clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickStart));
 			}
@@ -370,5 +370,11 @@ public class CameraAgentImpl implements CameraAgent {
 			mode.getOffsetRatio(smoothOffsetRatio.target);
 		}
 		smoothOffsetRatio.update(period);
+	}
+
+	private void keepCameraEntityInSight () {
+		//NOW
+		double edge         = 10;
+		double angleDegrees = ThirdPerson.mc.options.fov().get();
 	}
 }
