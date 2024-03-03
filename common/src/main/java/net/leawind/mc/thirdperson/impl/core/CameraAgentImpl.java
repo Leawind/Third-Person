@@ -36,13 +36,13 @@ import java.util.Optional;
 
 public class CameraAgentImpl implements CameraAgent {
 	private final @NotNull Minecraft         minecraft;
-	private final @NotNull Camera            fakeCamera              = new Camera();
+	private final @NotNull Camera            fakeCamera                   = new Camera();
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	private                double            lastCameraTurnTimeStamp = 0;
-	private final @NotNull ExpSmoothVector2d smoothRelativeRotation  = new ExpSmoothVector2d();
-	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
+	private                double            lastCameraTurnTimeStamp      = 0;
+	private final @NotNull ExpSmoothVector2d smoothRelativeRotation       = new ExpSmoothVector2d();
+	private final @NotNull Vector2d          relativeRotation             = Vector2d.of(0);
 	/**
 	 * 相机偏移量
 	 */
@@ -52,6 +52,20 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
 	private @Nullable      BlockGetter       blockGetter;
+	/**
+	 * 是否正在从第三人称过渡到第一人称
+	 */
+	private                boolean           isTransitioningToFirstPerson = false;//NOW
+
+	@Override
+	public boolean isTransitioningToFirstPerson () {
+		return isTransitioningToFirstPerson;
+	}
+
+	@Override
+	public void setTransiteToFirstPerson (boolean value) {
+		this.isTransitioningToFirstPerson = value;
+	}
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
@@ -64,6 +78,7 @@ public class CameraAgentImpl implements CameraAgent {
 	@Override
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
+		isTransitioningToFirstPerson = false;
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
@@ -97,6 +112,10 @@ public class CameraAgentImpl implements CameraAgent {
 
 	@Override
 	public void onClientTickPre () {
+		if (smoothDistanceToEye.get() < 0.05) {
+			isTransitioningToFirstPerson                 = false;
+			ThirdPerson.getConfig().is_third_person_mode = false;
+		}
 	}
 
 	public @NotNull Camera getRawCamera () {
@@ -323,8 +342,13 @@ public class CameraAgentImpl implements CameraAgent {
 		Config           config      = ThirdPerson.getConfig();
 		boolean          isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
-		smoothDistanceToEye.setSmoothFactor(isAdjusting ? config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
-		smoothDistanceToEye.setTarget(mode.getMaxDistance());
+		if (isTransitioningToFirstPerson()) {
+			smoothDistanceToEye.setSmoothFactor(config.adjusting_distance_smooth_factor * 0.5);
+			smoothDistanceToEye.setTarget(0);
+		} else {
+			smoothDistanceToEye.setSmoothFactor(isAdjusting ? config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
+			smoothDistanceToEye.setTarget(mode.getMaxDistance());
+		}
 		smoothDistanceToEye.update(period);
 		// 如果是非瞄准模式下，且距离过远则强行放回去
 		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {

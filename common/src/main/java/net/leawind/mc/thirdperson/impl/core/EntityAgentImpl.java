@@ -129,7 +129,9 @@ public class EntityAgentImpl implements EntityAgent {
 		smoothRotation.update(period);
 		{
 			Vector3d eyePosition = getRawEyePosition(1);
-			if (isFallFlying()) {
+			if (ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson()) {
+				smoothEyePosition.setSmoothFactor(0);
+			} else if (isFallFlying()) {
 				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
 			} else {
 				config.getCameraOffsetScheme().getMode().getEyeSmoothFactor(smoothEyePosition.smoothFactor);

@@ -87,7 +87,7 @@ public interface EntityAgent {
 	@NotNull LocalPlayer getRawPlayerEntity ();
 
 	/**
-	 * 直接从实体获取眼睛坐标
+	 * 直接从相机实体获取眼睛坐标
 	 */
 	@NotNull Vector3d getRawEyePosition (float partialTick);
 

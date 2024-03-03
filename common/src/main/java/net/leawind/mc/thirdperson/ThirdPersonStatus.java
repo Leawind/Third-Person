@@ -16,7 +16,13 @@ public final class ThirdPersonStatus {
 	public static                boolean  isToggleToAiming                     = false;
 	public static                float    lastPartialTick                      = 1;
 	public static                double   lastRenderTickTimeStamp              = 0;
+	/**
+	 * 上一tick中是否以第三人称视角渲染 mc.options.cameraType.isThirdPerson()
+	 */
 	public static                boolean  wasRenderInThirdPersonLastRenderTick = false;
+	/**
+	 * 在第三人称视角下暂时使用第一人称视角
+	 */
 	public static                boolean  isTemporaryFirstPerson               = false;
 
 	/**
