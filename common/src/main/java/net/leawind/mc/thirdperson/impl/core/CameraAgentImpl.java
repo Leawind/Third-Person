@@ -217,6 +217,9 @@ public class CameraAgentImpl implements CameraAgent {
 			ClientLevel               clientLevel  = (ClientLevel)playerEntity.getLevel();
 			LevelEntityGetter<Entity> entityGetter = ((ClientLevelInvoker)clientLevel).invokeGetEntityGetter();
 			for (Entity target: entityGetter.getAll()) {
+				if (!(target instanceof LivingEntity)) {
+					continue;
+				}
 				double distance = target.distanceTo(playerEntity);
 				// 排除距离太近和太远的
 				if (distance < 8 || distance > config.camera_ray_trace_length) {
