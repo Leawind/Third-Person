@@ -84,14 +84,6 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 		setMT(Vector3d.of(0.5), Vector3d.of(halflife));
 	}
 
-	public void setSmoothFactorWeight (double w) {
-		setSmoothFactorWeight(w, w, w);
-	}
-
-	public void setSmoothFactorWeight (@NotNull Vector3d w) {
-		this.smoothFactorWeight.set(w);
-	}
-
 	public void setSmoothFactorWeight (double x, double y, double z) {
 		this.smoothFactorWeight.set(x, y, z);
 	}

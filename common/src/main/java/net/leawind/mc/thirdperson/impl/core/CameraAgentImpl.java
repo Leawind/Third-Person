@@ -67,11 +67,9 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
-		this.minecraft    = minecraft;
-		smoothOffsetRatio = new ExpSmoothVector2d();
-		smoothOffsetRatio.setSmoothFactorWeight(ThirdPersonConstants.OFFSET_RATIO_SMOOTH_WEIGHT);
+		this.minecraft      = minecraft;
+		smoothOffsetRatio   = new ExpSmoothVector2d();
 		smoothDistanceToEye = new ExpSmoothDouble();
-		smoothDistanceToEye.setSmoothFactorWeight(ThirdPersonConstants.DISTANCE_TO_EYE_SMOOTH_WEIGHT);
 	}
 
 	@Override
@@ -111,7 +109,7 @@ public class CameraAgentImpl implements CameraAgent {
 
 	@Override
 	public void onClientTickPre () {
-		if (smoothDistanceToEye.get() < 0.05) {
+		if (smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD) {
 			isTransitioningToFirstPerson = false;
 			setTransitionToFirstPerson(true);
 			ThirdPerson.getConfig().is_third_person_mode = false;
@@ -343,10 +341,10 @@ public class CameraAgentImpl implements CameraAgent {
 		boolean          isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		if (isTransitioningToFirstPerson()) {
-			smoothDistanceToEye.setSmoothFactor(config.adjusting_distance_smooth_factor * 0.5);
+			smoothDistanceToEye.setHalflife(config.adjusting_distance_smooth_halflife * 0.5);
 			smoothDistanceToEye.setTarget(0);
 		} else {
-			smoothDistanceToEye.setSmoothFactor(isAdjusting ? config.adjusting_distance_smooth_factor: mode.getDistanceSmoothFactor());
+			smoothDistanceToEye.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
 			smoothDistanceToEye.setTarget(mode.getMaxDistance());
 		}
 		smoothDistanceToEye.update(period);
@@ -360,9 +358,9 @@ public class CameraAgentImpl implements CameraAgent {
 		Config           config = ThirdPerson.getConfig();
 		CameraOffsetMode mode   = config.getCameraOffsetScheme().getMode();
 		if (ThirdPersonStatus.isAdjustingCameraOffset()) {
-			smoothOffsetRatio.setSmoothFactor(config.adjusting_camera_offset_smooth_factor);
+			smoothOffsetRatio.setHalflife(config.adjusting_camera_offset_smooth_halflife);
 		} else {
-			mode.getOffsetSmoothFactor(smoothOffsetRatio.smoothFactor);
+			smoothOffsetRatio.setHalflife(mode.getOffsetSmoothHalflife());
 		}
 		if (config.center_offset_when_flying && ThirdPerson.ENTITY_AGENT.isFallFlying()) {
 			smoothOffsetRatio.setTarget(0, 0);

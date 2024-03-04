@@ -83,31 +83,43 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		//==================================================================================================================================================//
 		//==================================================================================================================================================//
 		// Category: smooth factors
-		final ConfigCategory CATEGORY_SMOOTH_FACTORS = builder.getOrCreateCategory(ConfigManager.getText("option_category.smooth_factors"));
+		final ConfigCategory CATEGORY_SMOOTH_FACTORS = builder.getOrCreateCategory(ConfigManager.getText("option_category.smooth_halflife"));
 		{
-			CATEGORY_SMOOTH_FACTORS.addEntry(buildSmoothFactorEntry("flying_smooth_factor", defaults.flying_smooth_factor, config.flying_smooth_factor, v -> config.flying_smooth_factor = v, entryBuilder));
+			CATEGORY_SMOOTH_FACTORS.addEntry(buildSmoothHalflifeEntry("flying_smooth_halflife", defaults.flying_smooth_halflife, config.flying_smooth_halflife, v -> config.flying_smooth_halflife = v, entryBuilder));
 			// SubCategory: Adjusting Camera
 			final SubCategoryBuilder Subcategory_Adjusting_Camera = buildSubCategory("adjusting_camera", entryBuilder);
-			Subcategory_Adjusting_Camera.add(buildSmoothFactorEntry("adjusting_camera_offset_smooth_factor",
-																	defaults.adjusting_camera_offset_smooth_factor,
-																	config.adjusting_camera_offset_smooth_factor,
-																	v -> config.adjusting_camera_offset_smooth_factor = v,
-																	entryBuilder));
-			Subcategory_Adjusting_Camera.add(buildSmoothFactorEntry("adjusting_distance_smooth_factor", defaults.adjusting_distance_smooth_factor, config.adjusting_distance_smooth_factor, v -> config.adjusting_distance_smooth_factor = v, entryBuilder));
+			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_camera_offset_smooth_halflife",
+																	  defaults.adjusting_camera_offset_smooth_halflife,
+																	  config.adjusting_camera_offset_smooth_halflife,
+																	  v -> config.adjusting_camera_offset_smooth_halflife = v,
+																	  entryBuilder));
+			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_distance_smooth_halflife",
+																	  defaults.adjusting_distance_smooth_halflife,
+																	  config.adjusting_distance_smooth_halflife,
+																	  v -> config.adjusting_distance_smooth_halflife = v,
+																	  entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Adjusting_Camera.build());
 			// SubCategory: Normal Mode
 			final SubCategoryBuilder SubCategory_Normal_Mode = buildSubCategory("normal_mode", entryBuilder);
-			SubCategory_Normal_Mode.add(buildSmoothFactorEntry("smooth_factor_horizon", defaults.normal_smooth_factor_horizon, config.normal_smooth_factor_horizon, v -> config.normal_smooth_factor_horizon = v, entryBuilder));
-			SubCategory_Normal_Mode.add(buildSmoothFactorEntry("smooth_factor_vertical", defaults.normal_smooth_factor_vertical, config.normal_smooth_factor_vertical, v -> config.normal_smooth_factor_vertical = v, entryBuilder));
-			SubCategory_Normal_Mode.add(buildSmoothFactorEntry("camera_offset_smooth_factor", defaults.normal_camera_offset_smooth_factor, config.normal_camera_offset_smooth_factor, v -> config.normal_camera_offset_smooth_factor = v, entryBuilder));
-			SubCategory_Normal_Mode.add(buildSmoothFactorEntry("distance_smooth_factor", defaults.normal_distance_smooth_factor, config.normal_distance_smooth_factor, v -> config.normal_distance_smooth_factor = v, entryBuilder));
+			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_horizon", defaults.normal_smooth_halflife_horizon, config.normal_smooth_halflife_horizon, v -> config.normal_smooth_halflife_horizon = v, entryBuilder));
+			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_vertical", defaults.normal_smooth_halflife_vertical, config.normal_smooth_halflife_vertical, v -> config.normal_smooth_halflife_vertical = v, entryBuilder));
+			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("camera_offset_smooth_halflife",
+																 defaults.normal_camera_offset_smooth_halflife,
+																 config.normal_camera_offset_smooth_halflife,
+																 v -> config.normal_camera_offset_smooth_halflife = v,
+																 entryBuilder));
+			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("distance_smooth_halflife", defaults.normal_distance_smooth_halflife, config.normal_distance_smooth_halflife, v -> config.normal_distance_smooth_halflife = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(SubCategory_Normal_Mode.build());
 			// SubCategory: Aiming Mode
 			final SubCategoryBuilder Subcategory_Aiming_Mode = buildSubCategory("aiming_mode", entryBuilder);
-			Subcategory_Aiming_Mode.add(buildSmoothFactorEntry("smooth_factor_horizon", defaults.aiming_smooth_factor_horizon, config.aiming_smooth_factor_horizon, v -> config.aiming_smooth_factor_horizon = v, entryBuilder));
-			Subcategory_Aiming_Mode.add(buildSmoothFactorEntry("smooth_factor_vertical", defaults.aiming_smooth_factor_vertical, config.aiming_smooth_factor_vertical, v -> config.aiming_smooth_factor_vertical = v, entryBuilder));
-			Subcategory_Aiming_Mode.add(buildSmoothFactorEntry("camera_offset_smooth_factor", defaults.aiming_camera_offset_smooth_factor, config.aiming_camera_offset_smooth_factor, v -> config.aiming_camera_offset_smooth_factor = v, entryBuilder));
-			Subcategory_Aiming_Mode.add(buildSmoothFactorEntry("distance_smooth_factor", defaults.aiming_distance_smooth_factor, config.aiming_distance_smooth_factor, v -> config.aiming_distance_smooth_factor = v, entryBuilder));
+			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_horizon", defaults.aiming_smooth_halflife_horizon, config.aiming_smooth_halflife_horizon, v -> config.aiming_smooth_halflife_horizon = v, entryBuilder));
+			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_vertical", defaults.aiming_smooth_halflife_vertical, config.aiming_smooth_halflife_vertical, v -> config.aiming_smooth_halflife_vertical = v, entryBuilder));
+			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("camera_offset_smooth_halflife",
+																 defaults.aiming_camera_offset_smooth_halflife,
+																 config.aiming_camera_offset_smooth_halflife,
+																 v -> config.aiming_camera_offset_smooth_halflife = v,
+																 entryBuilder));
+			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("distance_smooth_halflife", defaults.aiming_distance_smooth_halflife, config.aiming_distance_smooth_halflife, v -> config.aiming_distance_smooth_halflife = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Aiming_Mode.build());
 		}
 		//==================================================================================================================================================//
@@ -172,8 +184,8 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		return entryBuilder.startDoubleField(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).setMin(min).setMax(max).build();
 	}
 
-	private DoubleListEntry buildSmoothFactorEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
-		return buildDoubleEntry(name, 0, 1, defaultValue, currentValue, setter, entryBuilder);
+	private DoubleListEntry buildSmoothHalflifeEntry (String name, double defaultValue, double currentValue, Consumer<Double> setter, ConfigEntryBuilder entryBuilder) {
+		return buildDoubleEntry(name, 0, 4, defaultValue, currentValue, setter, entryBuilder);
 	}
 
 	private StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<List<String>> setter, ConfigEntryBuilder entryBuilder) {

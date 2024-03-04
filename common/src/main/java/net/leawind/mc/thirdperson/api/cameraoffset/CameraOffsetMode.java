@@ -14,19 +14,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface CameraOffsetMode {
 	/**
-	 * 眼睛平滑系数
+	 * 眼睛平滑半衰期
 	 */
-	void getEyeSmoothFactor (@NotNull Vector3d v);
+	@NotNull Vector3d getEyeSmoothHalflife ();
 
 	/**
 	 * 距离平滑系数
 	 */
-	double getDistanceSmoothFactor ();
+	double getDistanceSmoothHalflife ();
 
 	/**
 	 * 相机偏移平滑系数
 	 */
-	void getOffsetSmoothFactor (@NotNull Vector2d v);
+	@NotNull Vector2d getOffsetSmoothHalflife ();
 
 	/**
 	 * 相机到玩家的最大距离

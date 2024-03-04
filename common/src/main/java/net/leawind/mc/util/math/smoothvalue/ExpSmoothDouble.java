@@ -83,10 +83,6 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		this.smoothFactorWeight = weight;
 	}
 
-	public void setSmoothFactorWeight (@NotNull Double weight) {
-		this.smoothFactorWeight = weight;
-	}
-
 	public void setValue (double d) {
 		value = d;
 	}

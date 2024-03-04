@@ -92,8 +92,4 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 	 * 根据半衰期设置平滑系数
 	 */
 	abstract void setHalflife (double halflife);
-
-	abstract void setSmoothFactorWeight (double smoothFactorWeight);
-
-	abstract void setSmoothFactorWeight (@NotNull T smoothFactorWeight);
 }

@@ -13,18 +13,18 @@ public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 	}
 
 	@Override
-	public void getEyeSmoothFactor (@NotNull Vector3d v) {
-		v.set(config.aiming_smooth_factor_horizon, config.aiming_smooth_factor_vertical, config.aiming_smooth_factor_horizon);
+	public @NotNull Vector3d getEyeSmoothHalflife () {
+		return Vector3d.of(config.aiming_smooth_halflife_horizon, config.aiming_smooth_halflife_vertical, config.aiming_smooth_halflife_horizon);
 	}
 
 	@Override
-	public double getDistanceSmoothFactor () {
-		return config.aiming_distance_smooth_factor;
+	public double getDistanceSmoothHalflife () {
+		return config.aiming_distance_smooth_halflife;
 	}
 
 	@Override
-	public void getOffsetSmoothFactor (@NotNull Vector2d v) {
-		v.set(config.aiming_camera_offset_smooth_factor);
+	public 	@NotNull Vector2d getOffsetSmoothHalflife () {
+		return Vector2d.of(config.aiming_camera_offset_smooth_halflife);
 	}
 
 	@Override

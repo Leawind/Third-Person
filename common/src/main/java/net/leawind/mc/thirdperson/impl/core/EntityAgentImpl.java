@@ -53,7 +53,6 @@ public class EntityAgentImpl implements EntityAgent {
 		this.minecraft = minecraft;
 		{
 			smoothEyePosition = new ExpSmoothVector3d();
-			smoothEyePosition.setSmoothFactorWeight(ThirdPersonConstants.EYE_POSITIOIN_SMOOTH_WEIGHT);
 		}
 		{
 			smoothOpacity = new ExpSmoothDouble();
@@ -130,11 +129,11 @@ public class EntityAgentImpl implements EntityAgent {
 		{
 			Vector3d eyePosition = getRawEyePosition(1);
 			if (ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson()) {
-				smoothEyePosition.setSmoothFactor(0);
+				smoothEyePosition.setHalflife(0);
 			} else if (isFallFlying()) {
-				smoothEyePosition.setSmoothFactor(config.flying_smooth_factor);
+				smoothEyePosition.setHalflife(config.flying_smooth_halflife);
 			} else {
-				config.getCameraOffsetScheme().getMode().getEyeSmoothFactor(smoothEyePosition.smoothFactor);
+				smoothEyePosition.setHalflife(config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife());
 			}
 			smoothEyePosition.setTarget(eyePosition);
 			smoothEyePosition.update(period);
