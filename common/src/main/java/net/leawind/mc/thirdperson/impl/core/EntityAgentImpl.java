@@ -128,12 +128,18 @@ public class EntityAgentImpl implements EntityAgent {
 		smoothRotation.update(period);
 		{
 			Vector3d eyePosition = getRawEyePosition(1);
-			if (ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson()) {
-				smoothEyePosition.setHalflife(0);
-			} else if (isFallFlying()) {
-				smoothEyePosition.setHalflife(config.flying_smooth_halflife);
-			} else {
-				smoothEyePosition.setHalflife(config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife());
+			{
+				final Vector3d halflife;
+				if (ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson()) {
+					halflife = Vector3d.of(0);
+				} else if (isFallFlying()) {
+					halflife = Vector3d.of(config.flying_smooth_halflife);
+				} else {
+					halflife = config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife();
+				}
+				final double dist = getSmoothEyePosition(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
+				halflife.mul(dist * ThirdPersonConstants.EYE_HALFLIFE_AMPLIFIER);
+				smoothEyePosition.setHalflife(halflife);
 			}
 			smoothEyePosition.setTarget(eyePosition);
 			smoothEyePosition.update(period);

@@ -40,4 +40,8 @@ public final class ThirdPersonConstants {
 	 */
 	public static final                   float  RENDERED_OPACITY_THRESHOLD            = 0.01F;
 	public static final                   double FIRST_PERSON_TRANSITION_END_THRESHOLD = 0.05;
+	/**
+	 * 平滑眼睛的半衰期乘数
+	 */
+	public static final                   double EYE_HALFLIFE_AMPLIFIER                = 0.1;
 }

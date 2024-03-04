@@ -39,18 +39,18 @@ abstract class AbstractConfig {
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;
 	@Expose public          boolean      render_crosshair_when_aiming              = true;
 	// =================================================================================Smooth Factors //
-	@Expose public          double       flying_smooth_halflife                    = 0.1;
+	@Expose public          double       flying_smooth_halflife                    = 0.20;
 	//------------------------------Adjusting Camera
 	@Expose public          double       adjusting_camera_offset_smooth_halflife   = 0.04;
 	@Expose public          double       adjusting_distance_smooth_halflife        = 0.08;
 	//------------------------------Normal Mode
-	@Expose public          double       normal_smooth_halflife_horizon            = 0.08;
-	@Expose public          double       normal_smooth_halflife_vertical           = 0.04;
+	@Expose public          double       normal_smooth_halflife_horizon            = 0.25;
+	@Expose public          double       normal_smooth_halflife_vertical           = 0.20;
 	@Expose public          double       normal_camera_offset_smooth_halflife      = 0.08;
 	@Expose public          double       normal_distance_smooth_halflife           = 0.72;
 	//------------------------------Aiming Mode
-	@Expose public          double       aiming_smooth_halflife_horizon            = 0.01;
-	@Expose public          double       aiming_smooth_halflife_vertical           = 0.01;
+	@Expose public          double       aiming_smooth_halflife_horizon            = 0.05;
+	@Expose public          double       aiming_smooth_halflife_vertical           = 0.05;
 	@Expose public          double       aiming_camera_offset_smooth_halflife      = 0.03;
 	@Expose public          double       aiming_distance_smooth_halflife           = 0.04;
 	// =================================================================================Camera Offset //
