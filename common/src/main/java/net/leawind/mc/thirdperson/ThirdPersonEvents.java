@@ -29,6 +29,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -63,7 +64,8 @@ public final class ThirdPersonEvents {
 			Vec3     eyePos   = cameraEntity.getEyePosition();
 			BlockPos blockPos = new BlockPos(eyePos);
 			AABB     eyeAabb  = AABB.ofSize(eyePos, 0.8, 0.8, 0.8);
-			boolean  isInWall = cameraEntity.level.getBlockState(blockPos).getShape(cameraEntity.level, blockPos).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
+			boolean isInWall = ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER.get(cameraEntity.level.getBlockState(blockPos), cameraEntity.level, blockPos, CollisionContext.empty())//
+																					  .toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
 			if (isInWall) {
 				ThirdPersonStatus.isTemporaryFirstPerson = true;
 			}
