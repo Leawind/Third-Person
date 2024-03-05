@@ -30,7 +30,9 @@
 	"depends": {
 		"fabric": "*",
 		"minecraft": ">=${minecraft_version}",
-		"architectury": ">=${architectury_version}",
+		"architectury": ">=${architectury_version}"
+	},
+	"recommends": {
 		"cloth-config2": ">=${cloth_config_api_version}"
 	},
 	"custom": {

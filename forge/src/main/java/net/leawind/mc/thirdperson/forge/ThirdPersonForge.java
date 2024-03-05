@@ -12,14 +12,16 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(ThirdPersonConstants.MOD_ID)
-public class ThirdPersonForge {
+public final class ThirdPersonForge {
 	public ThirdPersonForge () {
 		// 仅在客户端运行 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			EventBuses.registerModEventBus(ThirdPersonConstants.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
 			ThirdPerson.init();
 			// 配置屏幕
-			ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> ThirdPerson.CONFIG_MANAGER.getConfigScreen(screen)));
+			if (ThirdPerson.CONFIG_MANAGER.isScreenAvailable()) {
+				ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> ThirdPerson.CONFIG_MANAGER.getConfigScreen(screen)));
+			}
 		});
 	}
 }

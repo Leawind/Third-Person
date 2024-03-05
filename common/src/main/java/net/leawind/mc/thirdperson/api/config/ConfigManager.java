@@ -66,6 +66,11 @@ public interface ConfigManager {
 	@Nullable Screen getConfigScreen (@Nullable Screen parent);
 
 	/**
+	 * 是否有可用的配置屏幕
+	 */
+	boolean isScreenAvailable ();
+
+	/**
 	 * 获取配置对象
 	 */
 	@NotNull Config getConfig ();

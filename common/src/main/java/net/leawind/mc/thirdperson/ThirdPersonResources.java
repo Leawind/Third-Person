@@ -8,7 +8,7 @@ import net.leawind.mc.util.itempattern.ItemPattern;
 /**
  * 自定义资源包
  */
-public class ThirdPersonResources {
+public final class ThirdPersonResources {
 	/**
 	 * 物品模式管理器
 	 *

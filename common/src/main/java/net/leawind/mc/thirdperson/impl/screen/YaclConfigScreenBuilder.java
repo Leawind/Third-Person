@@ -12,14 +12,4 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 	public @NotNull Screen build (@NotNull Config config, @Nullable Screen parent) {
 		throw new RuntimeException("Not implemented yet");
 	}
-
-	@Override
-	public boolean isAvailable () {
-		return false;
-	}
-
-	@Override
-	public boolean isImplemented () {
-		return false;
-	}
 }

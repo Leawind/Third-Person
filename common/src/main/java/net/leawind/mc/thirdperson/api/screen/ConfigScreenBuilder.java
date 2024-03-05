@@ -21,8 +21,4 @@ public interface ConfigScreenBuilder {
 	 * @return 配置屏幕
 	 */
 	@NotNull Screen build (@NotNull Config config, @Nullable Screen parent);
-
-	boolean isAvailable ();
-
-	boolean isImplemented ();
 }

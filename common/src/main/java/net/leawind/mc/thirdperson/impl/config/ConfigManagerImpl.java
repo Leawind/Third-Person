@@ -84,13 +84,18 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
-		Optional<ConfigScreenBuilder> availables = ConfigScreenBuilders.getBuilder();
-		if (availables.isPresent()) {
-			return availables.get().build(config, parent);
+		Optional<ConfigScreenBuilder> builder = ConfigScreenBuilders.getBuilder();
+		if (builder.isPresent()) {
+			return builder.get().build(config, parent);
 		} else {
 			ThirdPerson.LOGGER.warn("No config screen builder available.");
-			return parent;
+			return null;
 		}
+	}
+
+	@Override
+	public boolean isScreenAvailable () {
+		return !ConfigScreenBuilders.getAvailableBuidlers().isEmpty();
 	}
 
 	@Override

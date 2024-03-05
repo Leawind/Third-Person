@@ -30,11 +30,11 @@ modId = "architectury"
 mandatory = true
 versionRange = "[${architectury_version},)"
 ordering = "AFTER"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies."${mod_id}"]]
 modId = "cloth_config"
-mandatory = true
+mandatory = false
 versionRange = "[${cloth_config_api_version},)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
