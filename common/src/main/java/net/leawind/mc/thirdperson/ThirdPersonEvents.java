@@ -19,16 +19,20 @@ import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
-import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public final class ThirdPersonEvents {
@@ -54,7 +58,17 @@ public final class ThirdPersonEvents {
 		}
 		Config config = ThirdPerson.getConfig();
 		ThirdPersonStatus.isTemporaryFirstPerson = false;
-		if (ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
+		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		{
+			Vec3     eyePos   = cameraEntity.getEyePosition();
+			BlockPos blockPos = new BlockPos(eyePos);
+			AABB     eyeAabb  = AABB.ofSize(eyePos, 0.8, 0.8, 0.8);
+			boolean  isInWall = cameraEntity.level.getBlockState(blockPos).getShape(cameraEntity.level, blockPos).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
+			if (isInWall) {
+				ThirdPersonStatus.isTemporaryFirstPerson = true;
+			}
+		}
+		if (cameraEntity instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem()) {
 				ThirdPersonStatus.isTemporaryFirstPerson |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns);
 			}
@@ -248,7 +262,7 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onEnterFirstPerson () {
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
-			Optional<Vector3d> pickPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
+			Optional<Vector3d> pickPosition = Objects.requireNonNull(ThirdPerson.mc.getCameraEntity()).isSpectator() ? Optional.empty(): ThirdPerson.CAMERA_AGENT.getPickPosition();
 			if (pickPosition.isEmpty()) {
 				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
 			} else {
