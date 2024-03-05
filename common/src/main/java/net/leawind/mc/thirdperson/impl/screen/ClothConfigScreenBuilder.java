@@ -39,11 +39,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
-			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming",
-															  defaults.player_rotate_with_camera_when_not_aiming,
-															  config.player_rotate_with_camera_when_not_aiming,
-															  v -> config.player_rotate_with_camera_when_not_aiming = v,
-															  entryBuilder));
+			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_to_moving_direction", defaults.rotate_to_moving_direction, config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("auto_rotate_interacting", defaults.auto_rotate_interacting, config.auto_rotate_interacting, v -> config.auto_rotate_interacting = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_interacting_type", defaults.rotate_interacting_type, config.rotate_interacting_type, v -> config.rotate_interacting_type = v, entryBuilder));
@@ -63,11 +59,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		{
 			CATEGORY_MISC.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
-			CATEGORY_MISC.addEntry(buildBooleanEntry("turn_with_camera_when_enter_first_person",
-													 defaults.turn_with_camera_when_enter_first_person,
-													 config.turn_with_camera_when_enter_first_person,
-													 v -> config.turn_with_camera_when_enter_first_person = v,
-													 entryBuilder));
+			CATEGORY_MISC.addEntry(buildBooleanEntry("turn_with_camera_when_enter_first_person", defaults.turn_with_camera_when_enter_first_person, config.turn_with_camera_when_enter_first_person, v -> config.turn_with_camera_when_enter_first_person = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
 			// SubCategory: Player Fade out
@@ -88,37 +80,21 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_SMOOTH_FACTORS.addEntry(buildSmoothHalflifeEntry("flying_smooth_halflife", defaults.flying_smooth_halflife, config.flying_smooth_halflife, v -> config.flying_smooth_halflife = v, entryBuilder));
 			// SubCategory: Adjusting Camera
 			final SubCategoryBuilder Subcategory_Adjusting_Camera = buildSubCategory("adjusting_camera", entryBuilder);
-			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_camera_offset_smooth_halflife",
-																	  defaults.adjusting_camera_offset_smooth_halflife,
-																	  config.adjusting_camera_offset_smooth_halflife,
-																	  v -> config.adjusting_camera_offset_smooth_halflife = v,
-																	  entryBuilder));
-			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_distance_smooth_halflife",
-																	  defaults.adjusting_distance_smooth_halflife,
-																	  config.adjusting_distance_smooth_halflife,
-																	  v -> config.adjusting_distance_smooth_halflife = v,
-																	  entryBuilder));
+			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_camera_offset_smooth_halflife", defaults.adjusting_camera_offset_smooth_halflife, config.adjusting_camera_offset_smooth_halflife, v -> config.adjusting_camera_offset_smooth_halflife = v, entryBuilder));
+			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_distance_smooth_halflife", defaults.adjusting_distance_smooth_halflife, config.adjusting_distance_smooth_halflife, v -> config.adjusting_distance_smooth_halflife = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Adjusting_Camera.build());
 			// SubCategory: Normal Mode
 			final SubCategoryBuilder SubCategory_Normal_Mode = buildSubCategory("normal_mode", entryBuilder);
 			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_horizon", defaults.normal_smooth_halflife_horizon, config.normal_smooth_halflife_horizon, v -> config.normal_smooth_halflife_horizon = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_vertical", defaults.normal_smooth_halflife_vertical, config.normal_smooth_halflife_vertical, v -> config.normal_smooth_halflife_vertical = v, entryBuilder));
-			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("camera_offset_smooth_halflife",
-																 defaults.normal_camera_offset_smooth_halflife,
-																 config.normal_camera_offset_smooth_halflife,
-																 v -> config.normal_camera_offset_smooth_halflife = v,
-																 entryBuilder));
+			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("camera_offset_smooth_halflife", defaults.normal_camera_offset_smooth_halflife, config.normal_camera_offset_smooth_halflife, v -> config.normal_camera_offset_smooth_halflife = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildSmoothHalflifeEntry("distance_smooth_halflife", defaults.normal_distance_smooth_halflife, config.normal_distance_smooth_halflife, v -> config.normal_distance_smooth_halflife = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(SubCategory_Normal_Mode.build());
 			// SubCategory: Aiming Mode
 			final SubCategoryBuilder Subcategory_Aiming_Mode = buildSubCategory("aiming_mode", entryBuilder);
 			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_horizon", defaults.aiming_smooth_halflife_horizon, config.aiming_smooth_halflife_horizon, v -> config.aiming_smooth_halflife_horizon = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("smooth_halflife_vertical", defaults.aiming_smooth_halflife_vertical, config.aiming_smooth_halflife_vertical, v -> config.aiming_smooth_halflife_vertical = v, entryBuilder));
-			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("camera_offset_smooth_halflife",
-																 defaults.aiming_camera_offset_smooth_halflife,
-																 config.aiming_camera_offset_smooth_halflife,
-																 v -> config.aiming_camera_offset_smooth_halflife = v,
-																 entryBuilder));
+			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("camera_offset_smooth_halflife", defaults.aiming_camera_offset_smooth_halflife, config.aiming_camera_offset_smooth_halflife, v -> config.aiming_camera_offset_smooth_halflife = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildSmoothHalflifeEntry("distance_smooth_halflife", defaults.aiming_distance_smooth_halflife, config.aiming_distance_smooth_halflife, v -> config.aiming_distance_smooth_halflife = v, entryBuilder));
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Aiming_Mode.build());
 		}
@@ -149,21 +125,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		// Category: Aiming Check
 		final ConfigCategory CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("hold_to_aim_item_pattern_expressions",
-																defaults.hold_to_aim_item_pattern_expressions,
-																config.hold_to_aim_item_pattern_expressions,
-																v -> config.hold_to_aim_item_pattern_expressions = v,
-																entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_aim_item_pattern_expressions",
-																defaults.use_to_aim_item_pattern_expressions,
-																config.use_to_aim_item_pattern_expressions,
-																v -> config.use_to_aim_item_pattern_expressions = v,
-																entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_first_person_pattern_expressions",
-																defaults.use_to_first_person_pattern_expressions,
-																config.use_to_first_person_pattern_expressions,
-																v -> config.use_to_first_person_pattern_expressions = v,
-																entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_pattern_expressions, config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_pattern_expressions, config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_first_person_pattern_expressions", defaults.use_to_first_person_pattern_expressions, config.use_to_first_person_pattern_expressions, v -> config.use_to_first_person_pattern_expressions = v, entryBuilder));
 		}
 		return builder.build();
 	}
@@ -189,13 +153,6 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 	}
 
 	private StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<List<String>> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startStrList(ConfigManager.getText("option." + name), currentValue)
-						   .setTooltip(ConfigManager.getText("option." + name + ".desc"))
-						   .setSaveConsumer(setter)
-						   .setDefaultValue(defaultValue)
-						   .setDeleteButtonEnabled(true)
-						   .setCellErrorSupplier(ItemPattern::supplyError)
-						   .setExpanded(true)
-						   .build();
+		return entryBuilder.startStrList(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setSaveConsumer(setter).setDefaultValue(defaultValue).setDeleteButtonEnabled(true).setCellErrorSupplier(ItemPattern::supplyError).setExpanded(true).build();
 	}
 }

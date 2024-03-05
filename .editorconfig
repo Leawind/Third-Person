@@ -16,6 +16,7 @@ ij_smart_tabs               = true
 ij_visual_guides            = none
 ij_wrap_on_typing           = false
 
+
 [*.java]
 ij_continuation_indent_size                                     = 4
 ij_smart_tabs                                                   = false
@@ -266,6 +267,9 @@ ij_java_while_on_new_line                                       = false
 ij_java_wrap_comments                                           = true
 ij_java_wrap_first_method_in_call_chain                         = false
 ij_java_wrap_long_lines                                         = true
+
+[*ConfigScreenBuilder.java]
+max_line_length = 1048576
 
 [*.nbtt]
 max_line_length                     = 150
