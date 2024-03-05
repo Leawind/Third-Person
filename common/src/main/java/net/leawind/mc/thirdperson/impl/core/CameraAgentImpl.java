@@ -239,7 +239,7 @@ public class CameraAgentImpl implements CameraAgent {
 				}
 				double distance = target.distanceTo(playerEntity);
 				// 排除距离太近和太远的
-				if (distance < 8 || distance > config.camera_ray_trace_length) {
+				if (distance < 2 || distance > config.camera_ray_trace_length) {
 					continue;
 				}
 				if (!target.is(playerEntity)) {
