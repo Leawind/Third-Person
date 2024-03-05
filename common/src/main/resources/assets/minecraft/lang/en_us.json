@@ -31,6 +31,8 @@
 	"leawind_third_person.option.is_mod_enable.desc": "Disabling this will show the original third-person perspective, but you can still open the configuration screen with a key.",
 	"leawind_third_person.option.is_third_person_mode": "Is third-person mode enabled?",
 	"leawind_third_person.option.is_third_person_mode.desc": "Disabling this will switch to first-person mode.",
+	"leawind_third_person.option.config_screen_api": "Config Screen API",
+	"leawind_third_person.option.config_screen_api.desc": "",
 	"leawind_third_person.option.center_offset_when_flying": "Automatically center when flying",
 	"leawind_third_person.option.center_offset_when_flying.desc": "When the entity the camera is attached to is flying with elytra, do not use camera offset.",
 	"leawind_third_person.option.player_fade_out_enabled": "Enable player fade-out",

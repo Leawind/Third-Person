@@ -31,6 +31,8 @@
 	"leawind_third_person.option.is_mod_enable.desc": "禁用后将显示原版第三人称视角，但仍可以按键打开配置屏幕",
 	"leawind_third_person.option.is_third_person_mode": "是否启用第三人称模式",
 	"leawind_third_person.option.is_third_person_mode.desc": "禁用则变成第一人称",
+	"leawind_third_person.option.config_screen_api": "配置屏幕API",
+	"leawind_third_person.option.config_screen_api.desc": "",
 	"leawind_third_person.option.center_offset_when_flying": "飞行时自动居中",
 	"leawind_third_person.option.center_offset_when_flying.desc": "当相机附着的实体正在使用鞘翅飞行时，不使用相机偏移量",
 	"leawind_third_person.option.player_fade_out_enabled": "启用玩家半透明",
