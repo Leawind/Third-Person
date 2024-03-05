@@ -35,7 +35,7 @@ public class EntityMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public Vec3 pick_storePickStart (Vec3 pickStartFake) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			return ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
 		} else {
 			return pickStartFake;
@@ -55,7 +55,7 @@ public class EntityMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
 	public Vec3 pick_storeViewVector (Vec3 viewVectorFake) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (ThirdPersonStatus.shouldPickFromCamera()) {
 				Vector3d viewVector = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector()).normalize();
 				return LMath.toVec3(viewVector);

@@ -130,7 +130,7 @@ public class EntityAgentImpl implements EntityAgent {
 			Vector3d eyePosition = getRawEyePosition(1);
 			{
 				final Vector3d halflife;
-				if (ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson()) {
+				if (ThirdPersonStatus.isTransitioningToFirstPerson) {
 					halflife = Vector3d.of(0);
 				} else if (isFallFlying()) {
 					halflife = Vector3d.of(config.flying_smooth_halflife);

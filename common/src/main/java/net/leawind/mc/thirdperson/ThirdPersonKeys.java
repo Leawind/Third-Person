@@ -17,7 +17,7 @@ public final class ThirdPersonKeys {
 	public static final ModKeyMapping FORCE_AIMING      = ModKeyMapping.of(getId("force_aiming"), ThirdPersonConstants.KEY_CATEGORY);
 	public static final ModKeyMapping TOOGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
 		Config config = ThirdPerson.getConfig();
-		if (ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (config.is_mod_enable) {
 				ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
 			} else {
@@ -46,7 +46,7 @@ public final class ThirdPersonKeys {
 		ThirdPerson.getConfig().getCameraOffsetScheme().toNextSide();
 	});
 	public static final ModKeyMapping TOGGLE_AIMING     = ModKeyMapping.of(getId("toggle_aiming"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPersonStatus.isToggleToAiming = !ThirdPersonStatus.isToggleToAiming;
 		}
 	});

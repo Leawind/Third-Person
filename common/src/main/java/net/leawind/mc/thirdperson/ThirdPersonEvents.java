@@ -52,6 +52,13 @@ public final class ThirdPersonEvents {
 		if (!ThirdPerson.isAvailable()) {
 			return;
 		}
+		Config config = ThirdPerson.getConfig();
+		ThirdPersonStatus.isTemporaryFirstPerson = false;
+		if (ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
+			if (livingEntity.isUsingItem()) {
+				ThirdPersonStatus.isTemporaryFirstPerson |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns);
+			}
+		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		ThirdPerson.CAMERA_AGENT.onClientTickPre();
 	}
@@ -131,7 +138,7 @@ public final class ThirdPersonEvents {
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
 		}
-		if (ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.onCameraSetup();
 		}
 		if (mc.options.getCameraType().isMirrored()) {
@@ -151,28 +158,18 @@ public final class ThirdPersonEvents {
 		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
-		final boolean shouldRenderInThirdPerson = ThirdPersonStatus.shouldRenderInThirdPerson();
-		if (shouldRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
-			if (shouldRenderInThirdPerson) {
+		final boolean isRenderInThirdPerson = !ThirdPerson.mc.options.getCameraType().isFirstPerson();
+		if (isRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
+			if (isRenderInThirdPerson) {
 				onEnterThirdPerson();
-				ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 			} else {
 				onEnterFirstPerson();
-				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
 			ThirdPerson.mc.levelRenderer.needsUpdate();
-			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = shouldRenderInThirdPerson;
+			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderInThirdPerson;
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			ThirdPersonStatus.isTemporaryFirstPerson = false;
-			if (ThirdPerson.ENTITY_AGENT.getRawCameraEntity() instanceof LivingEntity livingEntity) {
-				if (livingEntity.isUsingItem()) {
-					ThirdPersonStatus.isTemporaryFirstPerson |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns);
-				}
-			}
-			if (ThirdPersonStatus.isThirdPerson()) {
+			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 				ThirdPerson.ENTITY_AGENT.onRenderTickPre(now, period, partialTick);
 				ThirdPerson.CAMERA_AGENT.onRenderTickPre(now, period, partialTick);
 			}
@@ -235,13 +232,9 @@ public final class ThirdPersonEvents {
 		  接管“切换视角”按键绑定
 		 */
 		while (minecraft.options.keyTogglePerspective.consumeClick()) {
-			if (config.is_third_person_mode) {
-				ThirdPerson.CAMERA_AGENT.setTransitionToFirstPerson(!ThirdPerson.CAMERA_AGENT.isTransitioningToFirstPerson());
-			} else {
-				config.is_third_person_mode = true;
-			}
+			config.is_third_person_mode = !config.is_third_person_mode;
 		}
-		if (ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
 				/*
 				  立即调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
@@ -257,6 +250,8 @@ public final class ThirdPersonEvents {
 	 * 进入第一人称视角
 	 */
 	public static void onEnterFirstPerson () {
+		ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
 			Optional<Vector3d> pickPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
 			if (pickPosition.isEmpty()) {
@@ -272,6 +267,8 @@ public final class ThirdPersonEvents {
 	 * 进入第三人称视角
 	 */
 	public static void onEnterThirdPerson () {
+		ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();

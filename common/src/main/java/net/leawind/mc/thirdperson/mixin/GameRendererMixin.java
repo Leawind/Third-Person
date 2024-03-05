@@ -35,7 +35,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public Vec3 pick_storePickStart (Vec3 pickStartFake) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			return ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
 		} else {
 			return pickStartFake;
@@ -52,7 +52,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=1)
 	public Vec3 pick_storeViewVector (Vec3 viewVectorFake) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (ThirdPersonStatus.shouldPickFromCamera()) {
 				return new Vec3(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector());
 			} else {
@@ -71,7 +71,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public double pick_storePickRange (double pickRange) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			pickRange += Math.max(0, ThirdPerson.ENTITY_AGENT.getRawEyePosition(1).distance(LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition())));
 		}
 		return pickRange;
@@ -82,7 +82,7 @@ public class GameRendererMixin {
 	 */
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public AABB pick_storeAabb (AABB aabb) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
 			aabb.move(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition().subtract(ThirdPerson.ENTITY_AGENT.getRawCameraEntity().getEyePosition()));
 		}
 		return aabb;

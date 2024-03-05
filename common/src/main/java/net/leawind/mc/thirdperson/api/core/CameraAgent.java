@@ -24,21 +24,6 @@ public interface CameraAgent {
 		return new CameraAgentImpl(mc);
 	}
 
-	boolean isTransitioningToFirstPerson ();
-
-	/**
-	 * 开始从第三人称过渡到第一人称
-	 * <p>
-	 * 实现方法：
-	 * <p>
-	 * 将平滑眼睛的平滑系数设置为0
-	 * <p>
-	 * 将平滑距离的目标设置为0，平滑系数设置为调整
-	 * <p>
-	 * 当相机与平滑眼睛距离足够近时，真正变成第一人称
-	 */
-	void setTransitionToFirstPerson (boolean value);
-
 	/**
 	 * 重置各种属性
 	 */

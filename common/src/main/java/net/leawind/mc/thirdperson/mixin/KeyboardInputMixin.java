@@ -22,7 +22,7 @@ public class KeyboardInputMixin {
 	@PerformanceSensitive
 	public void tick_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			// 相机坐标系下的impulse
 			double cameraLookImpulse = (that.up ? 1: 0) - (that.down ? 1: 0);
 			double cameraLeftImpulse = (that.left ? 1: 0) - (that.right ? 1: 0);

@@ -45,7 +45,7 @@ public class MouseHandlerMixin {
 	 */
 	@Redirect(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
 	public void turnPlayer_invoke (LocalPlayer instance, double dy, double dx) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
 		} else {
 			ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().turn(dy, dx);

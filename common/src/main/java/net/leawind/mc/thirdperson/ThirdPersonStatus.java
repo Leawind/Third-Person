@@ -24,6 +24,10 @@ public final class ThirdPersonStatus {
 	 * 在第三人称视角下暂时使用第一人称视角
 	 */
 	public static                boolean  isTemporaryFirstPerson               = false;
+	/**
+	 * 是否正在从第三人称过渡到第一人称
+	 */
+	public static                boolean  isTransitioningToFirstPerson         = false;
 
 	/**
 	 * 是否正在调整摄像机偏移量
@@ -36,21 +40,14 @@ public final class ThirdPersonStatus {
 	 * 检查相机距离是否正在调整。
 	 */
 	public static boolean isAdjustingCameraDistance () {
-		return ThirdPerson.isAvailable() && isThirdPerson() && ThirdPersonKeys.ADJUST_POSITION.isDown();
+		return ThirdPerson.isAvailable() && isRenderingInThirdPerson() && ThirdPersonKeys.ADJUST_POSITION.isDown();
 	}
 
 	/**
-	 * 根据 mc options 判断当前是否是第三人称
+	 * 当前是否以第三人称渲染
 	 */
-	public static boolean isThirdPerson () {
+	public static boolean isRenderingInThirdPerson () {
 		return !ThirdPerson.mc.options.getCameraType().isFirstPerson();
-	}
-
-	/**
-	 * 是否应该进入第三人称视角
-	 */
-	public static boolean shouldRenderInThirdPerson () {
-		return ThirdPerson.getConfig().is_third_person_mode && !isTemporaryFirstPerson;
 	}
 
 	/**

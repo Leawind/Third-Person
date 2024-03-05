@@ -17,6 +17,7 @@ import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Direction;
@@ -36,12 +37,12 @@ import java.util.Optional;
 
 public class CameraAgentImpl implements CameraAgent {
 	private final @NotNull Minecraft         minecraft;
-	private final @NotNull Camera            fakeCamera                   = new Camera();
+	private final @NotNull Camera            fakeCamera              = new Camera();
 	/**
 	 * 上次玩家操控转动视角的时间
 	 */
-	private                double            lastCameraTurnTimeStamp      = 0;
-	private final @NotNull Vector2d          relativeRotation             = Vector2d.of(0);
+	private                double            lastCameraTurnTimeStamp = 0;
+	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
 	/**
 	 * 相机偏移量
 	 */
@@ -51,20 +52,6 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
 	private @Nullable      BlockGetter       blockGetter;
-	/**
-	 * 是否正在从第三人称过渡到第一人称
-	 */
-	private                boolean           isTransitioningToFirstPerson = false;
-
-	@Override
-	public boolean isTransitioningToFirstPerson () {
-		return isTransitioningToFirstPerson;
-	}
-
-	@Override
-	public void setTransitionToFirstPerson (boolean value) {
-		this.isTransitioningToFirstPerson = value;
-	}
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft      = minecraft;
@@ -75,7 +62,6 @@ public class CameraAgentImpl implements CameraAgent {
 	@Override
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
-		isTransitioningToFirstPerson = false;
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
@@ -109,10 +95,22 @@ public class CameraAgentImpl implements CameraAgent {
 
 	@Override
 	public void onClientTickPre () {
-		if (smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD) {
-			isTransitioningToFirstPerson = false;
-			setTransitionToFirstPerson(true);
-			ThirdPerson.getConfig().is_third_person_mode = false;
+		ThirdPersonStatus.isTransitioningToFirstPerson = false;
+		boolean isTargetThirdPerson = ThirdPerson.getConfig().is_third_person_mode && !ThirdPersonStatus.isTemporaryFirstPerson;
+		if (isTargetThirdPerson) {
+			// 目标是第三人称，那就直接以第三人称渲染
+			ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+		} else if (!ThirdPerson.mc.options.getCameraType().isFirstPerson()) {
+			// 目标是第一人称，但是相机当前以第三人称渲染，那么开始过渡
+			ThirdPersonStatus.isTransitioningToFirstPerson = true;
+		}
+		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
+			// 正在从第三人称过渡到第一人称
+			if (smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD) {
+				// 距离足够近，结束过渡
+				ThirdPersonStatus.isTransitioningToFirstPerson = false;
+				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+			}
 		}
 	}
 
@@ -340,7 +338,7 @@ public class CameraAgentImpl implements CameraAgent {
 		Config           config      = ThirdPerson.getConfig();
 		boolean          isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
-		if (isTransitioningToFirstPerson()) {
+		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
 			smoothDistanceToEye.setHalflife(config.adjusting_distance_smooth_halflife * 0.5);
 			smoothDistanceToEye.setTarget(0);
 		} else {
@@ -368,11 +366,5 @@ public class CameraAgentImpl implements CameraAgent {
 			mode.getOffsetRatio(smoothOffsetRatio.target);
 		}
 		smoothOffsetRatio.update(period);
-	}
-
-	private void keepCameraEntityInSight () {
-		//NOW
-		double edge         = 10;
-		double angleDegrees = ThirdPerson.mc.options.fov().get();
 	}
 }
