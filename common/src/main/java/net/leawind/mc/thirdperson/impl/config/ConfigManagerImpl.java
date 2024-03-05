@@ -7,6 +7,7 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
+import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.leawind.mc.thirdperson.impl.screen.ConfigScreenBuilders;
 import net.minecraft.client.gui.screens.Screen;
 import org.apache.commons.io.FileUtils;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -82,7 +84,13 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
-		return ConfigScreenBuilders.CLOTH_CONFIG.build(config, parent);
+		Optional<ConfigScreenBuilder> availables = ConfigScreenBuilders.getBuilder();
+		if (availables.isPresent()) {
+			return availables.get().build(config, parent);
+		} else {
+			ThirdPerson.LOGGER.warn("No config screen builder available.");
+			return parent;
+		}
 	}
 
 	@Override

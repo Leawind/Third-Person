@@ -132,6 +132,21 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		return builder.build();
 	}
 
+	@Override
+	public boolean isAvailable () {
+		try {
+			Class.forName("me.shedaniel.clothconfig2.api.ConfigBuilder");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isImplemented () {
+		return true;
+	}
+
 	private BooleanListEntry buildBooleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {
 		return entryBuilder.startBooleanToggle(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter).build();
 	}

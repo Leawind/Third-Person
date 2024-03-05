@@ -28,6 +28,7 @@ abstract class AbstractConfig {
 	@Expose public          double       camera_distance_min                       = 0.5;
 	@Expose public          double       camera_distance_max                       = 8;
 	// ================================================================================Miscellaneous //
+	@Expose public          String       expected_config_screen_builder            = "Cloth Config";// "Cloth Config" | "YACL" | "Carbon Config"
 	@Expose public          boolean      center_offset_when_flying                 = true;
 	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	@Expose public          boolean      turn_with_camera_when_enter_first_person  = true;
