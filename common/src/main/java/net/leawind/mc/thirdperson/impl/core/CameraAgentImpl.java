@@ -100,6 +100,7 @@ public class CameraAgentImpl implements CameraAgent {
 		if (isTargetThirdPerson) {
 			// 目标是第三人称，那就直接以第三人称渲染
 			ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+			ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 		} else if (!ThirdPerson.mc.options.getCameraType().isFirstPerson()) {
 			// 目标是第一人称，但是相机当前以第三人称渲染，那么开始过渡
 			ThirdPersonStatus.isTransitioningToFirstPerson = true;
@@ -110,6 +111,7 @@ public class CameraAgentImpl implements CameraAgent {
 				// 距离足够近，结束过渡
 				ThirdPersonStatus.isTransitioningToFirstPerson = false;
 				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
 		}
 	}

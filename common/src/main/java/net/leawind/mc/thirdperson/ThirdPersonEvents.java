@@ -141,9 +141,6 @@ public final class ThirdPersonEvents {
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.onCameraSetup();
 		}
-		if (mc.options.getCameraType().isMirrored()) {
-			mc.options.setCameraType(CameraType.FIRST_PERSON);
-		}
 	}
 
 	/**
@@ -250,8 +247,6 @@ public final class ThirdPersonEvents {
 	 * 进入第一人称视角
 	 */
 	public static void onEnterFirstPerson () {
-		ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
 			Optional<Vector3d> pickPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
 			if (pickPosition.isEmpty()) {
@@ -267,8 +262,6 @@ public final class ThirdPersonEvents {
 	 * 进入第三人称视角
 	 */
 	public static void onEnterThirdPerson () {
-		ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
