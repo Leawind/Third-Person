@@ -10,7 +10,8 @@
 	"contact": {
 		"homepage": "${mod_url_home}",
 		"issues": "${mod_url_issue}",
-		"sources": "${mod_url_home}"
+		"sources": "${mod_url_home}",
+		"email": "leawind@yeah.net"
 	},
 	"license": "${mod_license}",
 	"icon": "${mod_icon}",
@@ -33,7 +34,8 @@
 		"architectury": ">=${architectury_version}"
 	},
 	"recommends": {
-		"cloth-config2": ">=${cloth_config_api_version}"
+		"cloth-config2": ">=${cloth_config_api_version}",
+		"modmenu": ">=${modmenu_version}"
 	},
 	"custom": {
 		"modmenu": {
@@ -46,5 +48,8 @@
 			}
 		},
 		"modmenu:clientsideOnly": true
-	}
+	},
+	"provides": [
+		"leawind_third_person_perspective"
+	]
 }
