@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson;
 
 
 @SuppressWarnings("unused")
-public class ExpectPlatform {
+public class ExpectPlatformExample {
 	/**
 	 * 虽然暂时没用，但是留着防止忘记，省的以后又去翻文档。
 	 */

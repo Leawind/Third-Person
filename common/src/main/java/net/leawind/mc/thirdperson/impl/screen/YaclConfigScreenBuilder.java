@@ -10,6 +10,6 @@ import org.jetbrains.annotations.Nullable;
 public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 	@Override
 	public @NotNull Screen build (@NotNull Config config, @Nullable Screen parent) {
-		throw new RuntimeException("Not implemented yet");
+		throw new AssertionError();
 	}
 }

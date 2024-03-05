@@ -37,7 +37,9 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_mod_enable", defaults.is_mod_enable, config.is_mod_enable, v -> config.is_mod_enable = v, entryBuilder));
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_third_person_mode", defaults.is_third_person_mode, config.is_third_person_mode, v -> config.is_third_person_mode = v, entryBuilder));
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
-			CATEGORY_GENERAL.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), defaults.config_screen_api, s -> s).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
+			if (ConfigScreenBuilders.getAvailableBuidlers().size() > 1) {
+				CATEGORY_GENERAL.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), defaults.config_screen_api, s -> s).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
+			}
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));

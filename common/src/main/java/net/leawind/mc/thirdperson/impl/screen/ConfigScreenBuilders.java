@@ -23,7 +23,6 @@ public final class ConfigScreenBuilders {
 
 	static {
 		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), packageExists("me.shedaniel.clothconfig2.api.ConfigBuilder")));
-		builders.put("Carbon Config", OptionalFunction.of(() -> new CarbonConfigScreenBuilder(), () -> false));
 		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), () -> false));
 		if (getAvailableBuidlers().isEmpty()) {
 			ThirdPerson.LOGGER.warn("No config screen API available.");
