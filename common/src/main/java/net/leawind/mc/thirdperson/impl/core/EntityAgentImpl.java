@@ -138,7 +138,7 @@ public class EntityAgentImpl implements EntityAgent {
 					halflife = config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife();
 				}
 				final double dist = getSmoothEyePosition(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
-				halflife.mul(dist * ThirdPersonConstants.EYE_HALFLIFE_AMPLIFIER);
+				halflife.mul(dist * ThirdPersonConstants.EYE_HALFLIFE_MULTIPLIER);
 				smoothEyePosition.setHalflife(halflife);
 			}
 			smoothEyePosition.setTarget(eyePosition);

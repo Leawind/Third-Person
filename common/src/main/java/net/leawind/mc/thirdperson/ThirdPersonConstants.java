@@ -44,9 +44,10 @@ public final class ThirdPersonConstants {
 	/**
 	 * 平滑眼睛的半衰期乘数
 	 */
-	public static final                   double            EYE_HALFLIFE_AMPLIFIER                = 0.1;
+	public static final                   double            EYE_HALFLIFE_MULTIPLIER               = 0.1;
+	public static final                   double            TRANSITION_HALFLIFE_MULTIPLIER        = 0.3;
 	/**
-	 * 阻挡相机的方块外形
+	 * 阻挡相机的方块外形获取器
 	 */
 	public static final                   ClipContext.Block CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER    = ClipContext.Block.OUTLINE;
 }
