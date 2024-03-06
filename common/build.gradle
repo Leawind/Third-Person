@@ -12,7 +12,7 @@ dependencies {
 publishing {
 	publications {
 		mavenCommon(MavenPublication) {
-			artifactId = rootProject.mod_id
+			artifactId = mod_id
 			from components.java
 		}
 	}

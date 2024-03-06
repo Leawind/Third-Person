@@ -1,5 +1,6 @@
 plugins {
 	id "architectury-plugin" version "3.4-SNAPSHOT"
+	// https://maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
 	id "dev.architectury.loom" version "1.3-SNAPSHOT" apply false
 }
 architectury {
@@ -36,6 +37,8 @@ allprojects {
 		maven { url "https://maven.shedaniel.me/" }
 		// Mod Menu
 		maven { url "https://maven.terraformersmc.com/releases" }
+		// Modrinth
+		gradlePluginPortal()
 		
 	}
 	tasks.withType(JavaCompile) {
@@ -52,7 +55,7 @@ allprojects {
 }
 
 // 生成文件名格式
-def archiveFileNameOfPlatform(String platform){
+String archiveFileNameOfPlatform(String platform){
 	switch(platform) {
 		case "forge":
 			return "${mod_id}-v${mod_version}-mc${minecraft_version}-forge";
@@ -61,4 +64,27 @@ def archiveFileNameOfPlatform(String platform){
 		default:
 			throw new IllegalArgumentException("Unknown platform: ${platform}");
 	}
+}
+
+// 读取更新日志
+String readChangeLog(){
+	File changelogFile = getProjectDir().toPath().resolve("changelog_latest.txt").toFile()
+	if(changelogFile.canRead()){
+		return changelogFile.text
+	}else{
+		return "No changelog"
+	}
+}
+
+tasks.register("testBuild") {
+	println "<<< Testing build scripts >>>"
+	
+	println "Enabled platforms: ${enabled_platforms}"
+	println "Archive file name for each platform:"
+	enabled_platforms.split(",").each {
+		println "\t$it: ${archiveFileNameOfPlatform(it)}"
+	}
+	println "\tModrinth API key exists: ${System.getenv("MODRINTH_TOKEN") != null}"
+	
+	println "Changelog: ${readChangeLog().replaceAll("^|\n", "\n\t")}"
 }
