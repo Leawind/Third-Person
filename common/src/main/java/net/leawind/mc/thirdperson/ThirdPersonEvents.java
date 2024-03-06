@@ -61,6 +61,10 @@ public final class ThirdPersonEvents {
 		ThirdPersonStatus.isTemporaryFirstPerson = false;
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		{
+			/*
+			  如果玩家在墙里边，就暂时切换到第一人称
+			  这可能是因为玩家窒息，或处于观察者模式穿墙
+			*/
 			Vec3     eyePos   = cameraEntity.getEyePosition();
 			BlockPos blockPos = new BlockPos(eyePos);
 			AABB     eyeAabb  = AABB.ofSize(eyePos, 0.8, 0.8, 0.8);
@@ -197,7 +201,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * 进入“相机跟随玩家转动”状态
 	 */
-	private static void onStartCameraTurnWithEntity () {
+	public static void onStartCameraTurnWithEntity () {
 		// 将玩家朝向设为与相机一致
 		ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
 	}
@@ -227,7 +231,7 @@ public final class ThirdPersonEvents {
 			return;
 		}
 		Config             config     = ThirdPerson.getConfig();
-		Window             window     = Minecraft.getInstance().getWindow();
+		Window             window     = ThirdPerson.mc.getWindow();
 		Vector2d           screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
 		CameraOffsetScheme scheme     = config.getCameraOffsetScheme();
 		CameraOffsetMode   mode       = scheme.getMode();

@@ -275,7 +275,7 @@ public class CameraAgentImpl implements CameraAgent {
 	 * 根据角度、距离、偏移量计算假相机实际朝向和位置
 	 */
 	private void updateFakeCameraRotationPosition () {
-		Minecraft mc = Minecraft.getInstance();
+		Minecraft mc = ThirdPerson.mc;
 		// 宽高比
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
@@ -300,7 +300,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	/**
-	 * 为防止穿墙，重新计算 smoothVirtualDistance 的值
+	 * 为防止穿墙，重新计算 {@link CameraAgentImpl#smoothDistanceToEye} 的值
 	 *
 	 * @see Camera#getMaxZoom(double)
 	 */
