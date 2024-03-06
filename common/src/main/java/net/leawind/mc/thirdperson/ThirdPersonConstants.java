@@ -35,6 +35,10 @@ public final class ThirdPersonConstants {
 	public static final                   double            GAZE_OPACITY                          = 0.32;
 	public static final                   double            OPACITY_HALFLIFE                      = 0.0625;
 	/**
+	 * 预测目标实体时仅考虑视锥角内的实体
+	 */
+	public static final                   double            TARGET_PREDICTION_DEGREES_LIMIT       = 30;
+	/**
 	 * 渲染相机实体的透明度阈值，当不透明度低于这个值时，将不渲染实体。
 	 *
 	 * @see EntityAgentImpl#getSmoothOpacity()

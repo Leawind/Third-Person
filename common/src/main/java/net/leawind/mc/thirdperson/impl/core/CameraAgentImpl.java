@@ -257,7 +257,7 @@ public class CameraAgentImpl implements CameraAgent {
 					}
 					Vector3d vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalize();
 					double   angleRadian    = Math.acos(cameraViewVector.dot(vectorToTarget));
-					if (Math.toDegrees(angleRadian) < 30) {
+					if (Math.toDegrees(angleRadian) < ThirdPersonConstants.TARGET_PREDICTION_DEGREES_LIMIT) {
 						candidateTargets.add(target);
 					}
 				}
