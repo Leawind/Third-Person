@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[44,)"
+loaderVersion = "[45,)"
 license = "${mod_license}"
 showAsResourcePack = true
 issueTrackerURL = "${mod_url_issue}"
@@ -16,7 +16,7 @@ displayURL = "${mod_url_home}"
 [[dependencies."${mod_id}"]]
 modId = "forge"
 mandatory = true
-versionRange = "[44,)"
+versionRange = "[45,)"
 ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://files.minecraftforge.net/"

@@ -3,6 +3,7 @@ package net.leawind.mc.util.math;
 
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.joml.Vector3f;
@@ -113,6 +114,11 @@ public interface LMath {
 	@Contract(pure=true)
 	static Vector3d toVector3d (Vector3f v) {
 		return Vector3d.of(v.x, v.y, v.z);
+	}
+
+	@Contract(pure=true)
+	static Vec3i toVec3i (Vec3 v) {
+		return new Vec3i((int)v.x, (int)v.y, (int)v.z);
 	}
 
 	@Contract(pure=true)

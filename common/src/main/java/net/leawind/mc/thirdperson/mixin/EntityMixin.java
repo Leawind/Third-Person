@@ -82,13 +82,13 @@ public class EntityMixin {
 			Entity entity     = entityHitResult.getEntity();
 			Vec3   viewVector = entity.getViewVector(1f);
 			if (ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getEyePosition().distanceTo(entityHitResult.getLocation()) > ThirdPersonConstants.MAX_INTERACTION_DISTANCE) {
-				hitResult = BlockHitResult.miss(hitResult.getLocation(), Direction.getNearest(viewVector.x, viewVector.y, viewVector.z), new BlockPos(hitResult.getLocation()));
+				hitResult = BlockHitResult.miss(hitResult.getLocation(), Direction.getNearest(viewVector.x, viewVector.y, viewVector.z), new BlockPos(LMath.toVec3i(entityHitResult.getLocation())));
 			}
 		} else if (hitResult instanceof BlockHitResult blockHitResult && hitResult.getType() != HitResult.Type.MISS) {
 			BlockPos blockPos         = blockHitResult.getBlockPos();
 			Vec3     centerOfBlockPos = Vec3.atCenterOf(blockPos);
 			if (ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getEyePosition().distanceTo(centerOfBlockPos) > ThirdPersonConstants.MAX_INTERACTION_DISTANCE) {
-				hitResult = BlockHitResult.miss(hitResult.getLocation(), blockHitResult.getDirection(), new BlockPos(hitResult.getLocation()));
+				hitResult = BlockHitResult.miss(hitResult.getLocation(), blockHitResult.getDirection(), (blockHitResult).getBlockPos());
 			}
 		}
 		ci.setReturnValue(hitResult);
