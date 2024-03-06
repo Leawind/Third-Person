@@ -82,6 +82,12 @@ public class CameraAgentImpl implements CameraAgent {
 			updateSmoothVirtualDistance(period);
 			// 平滑更新相机偏移量
 			updateSmoothOffsetRatio(period);
+			//
+			if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+				// 将相机朝向与相机实体朝向同步
+				Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
+				relativeRotation.set(-rot.x(), rot.y() - 180);
+			}
 		}
 	}
 
@@ -146,7 +152,7 @@ public class CameraAgentImpl implements CameraAgent {
 				double rx = getRelativeRotation().x() + dx;
 				double ry = getRelativeRotation().y() + dy;
 				rx = LMath.clamp(rx, -ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT, ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT);
-				getRelativeRotation().set(rx, ry % 360f);
+				relativeRotation.set(rx, ry % 360f);
 			}
 		}
 	}

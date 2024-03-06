@@ -48,7 +48,7 @@ public interface RotateStrategy {
 	};
 	Supplier<Double> FALL_FLYING            = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.HARD);
 		return 0D;
 	};
 	Supplier<Double> WITH_CAMERA_NOT_AIMING = () -> {

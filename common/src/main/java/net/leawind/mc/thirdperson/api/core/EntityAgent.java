@@ -40,12 +40,16 @@ public interface EntityAgent {
 	 */
 	void setRotateTarget (@NotNull RotateTarget rotateTarget);
 
+	@NotNull RotateTarget getRotateTarget ();
+
 	/**
 	 * 设置平滑类型
 	 * <p>
 	 * 在 clientTick 和 renderTick 中要根据平滑类型采用不同的处理方式
 	 */
 	void setRotationSmoothType (@NotNull SmoothType smoothType);
+
+	@NotNull SmoothType getRotationSmoothType ();
 
 	/**
 	 * 设置平滑转向的半衰期

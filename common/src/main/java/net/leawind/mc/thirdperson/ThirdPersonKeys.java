@@ -28,8 +28,8 @@ public final class ThirdPersonKeys {
 	});
 	public static final ModKeyMapping OPEN_CONFIG_MENU  = ModKeyMapping.of(getId("open_config_menu"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.screen == null) {
-			mc.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
+		if (ThirdPerson.mc.screen == null) {
+			ThirdPerson.mc.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
 		}
 	});
 	public static final ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {

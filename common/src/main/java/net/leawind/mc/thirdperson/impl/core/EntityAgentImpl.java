@@ -84,8 +84,19 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
+	@NotNull
+	public RotateTarget getRotateTarget () {
+		return rotateTarget;
+	}
+
+	@Override
 	public void setRotationSmoothType (@NotNull SmoothType smoothType) {
 		smoothRotationType = smoothType;
+	}
+
+	@Override
+	public @NotNull SmoothType getRotationSmoothType () {
+		return smoothRotationType;
 	}
 
 	@Override
@@ -104,14 +115,16 @@ public class EntityAgentImpl implements EntityAgent {
 		if (!isControlled()) {
 			return;
 		}
-		Vector2d targetRotation = rotateTarget.getRotation();
-		smoothRotation.setTarget(targetRotation);
-		switch (smoothRotationType) {
-			case HARD -> setRawRotation(targetRotation);
-			case LINEAR, EXP_LINEAR -> setRawRotation(smoothRotation.get(partialTick));
-			case EXP -> {
-				smoothRotation.update(period);
-				setRawRotation(smoothRotation.get());
+		if (!ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+			Vector2d targetRotation = rotateTarget.getRotation();
+			smoothRotation.setTarget(targetRotation);
+			switch (smoothRotationType) {
+				case HARD -> setRawRotation(targetRotation);
+				case LINEAR, EXP_LINEAR -> setRawRotation(smoothRotation.get(partialTick));
+				case EXP -> {
+					smoothRotation.update(period);
+					setRawRotation(smoothRotation.get());
+				}
 			}
 		}
 	}

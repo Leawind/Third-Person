@@ -2,6 +2,9 @@ package net.leawind.mc.thirdperson;
 
 
 import net.leawind.mc.thirdperson.api.config.Config;
+import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.impl.core.CameraAgentImpl;
+import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +31,7 @@ public final class ThirdPersonStatus {
 	 * 是否正在从第三人称过渡到第一人称
 	 */
 	public static                boolean  isTransitioningToFirstPerson         = false;
+	public static                boolean  wasSouldCameraTurnWithEntity         = false;
 
 	/**
 	 * 是否正在调整摄像机偏移量
@@ -84,5 +88,14 @@ public final class ThirdPersonStatus {
 	 */
 	public static boolean shouldRenderCameraEntity () {
 		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD;
+	}
+
+	/**
+	 * 第三人称下，通常是直接用鼠标控制相机的朝向{@link CameraAgentImpl#relativeRotation}，再根据一些因素决定玩家的朝向。
+	 * <p>
+	 * 但是为了与另一个模组兼容（Do a Barrel Roll），在特定情况下，允许直接用鼠标控制玩家朝向，而相机跟随玩家旋转。
+	 */
+	public static boolean shouldCameraTurnWithEntity () {
+		return ThirdPerson.ENTITY_AGENT.getRotateTarget() == RotateTarget.CAMERA_ROTATION && ThirdPerson.ENTITY_AGENT.getRotationSmoothType() == SmoothType.HARD;
 	}
 }

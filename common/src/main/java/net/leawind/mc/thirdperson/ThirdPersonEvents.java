@@ -150,7 +150,6 @@ public final class ThirdPersonEvents {
 	public static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
 		ThirdPersonStatus.lastPartialTick = partialTick;
 		ThirdPerson.CAMERA_AGENT.setBlockGetter(level);
-		Minecraft mc = Minecraft.getInstance();
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
 		}
@@ -166,11 +165,17 @@ public final class ThirdPersonEvents {
 	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
 	public static void onPreRender (float partialTick) {
-		Config config = ThirdPerson.getConfig();
 		// in seconds
 		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
+		{
+			boolean shouldCameraTurnWithEntity = ThirdPersonStatus.shouldCameraTurnWithEntity();
+			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasSouldCameraTurnWithEntity) {
+				onStartCameraTurnWithEntity();
+			}
+			ThirdPersonStatus.wasSouldCameraTurnWithEntity = shouldCameraTurnWithEntity;
+		}
 		final boolean isRenderInThirdPerson = !ThirdPerson.mc.options.getCameraType().isFirstPerson();
 		if (isRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
 			if (isRenderInThirdPerson) {
@@ -187,6 +192,14 @@ public final class ThirdPersonEvents {
 				ThirdPerson.CAMERA_AGENT.onRenderTickPre(now, period, partialTick);
 			}
 		}
+	}
+
+	/**
+	 * 进入“相机跟随玩家转动”状态
+	 */
+	private static void onStartCameraTurnWithEntity () {
+		// 将玩家朝向设为与相机一致
+		ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
 	}
 
 	/**
