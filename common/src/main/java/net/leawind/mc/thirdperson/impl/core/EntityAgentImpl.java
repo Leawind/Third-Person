@@ -133,9 +133,9 @@ public class EntityAgentImpl implements EntityAgent {
 	public void onClientTickPre () {
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
-		config.getCameraOffsetScheme().setAiming(ThirdPerson.ENTITY_AGENT.wasAiming());
-		wasAiming      = isAiming();
 		wasInterecting = isInterecting();
+		wasAiming      = isAiming();
+		config.getCameraOffsetScheme().setAiming(wasAiming());
 		updateRotateStrategy();
 		updateSmoothOpacity(period, 1);
 		smoothRotation.update(period);
@@ -256,6 +256,9 @@ public class EntityAgentImpl implements EntityAgent {
 	@Override
 	public boolean isAiming () {
 		Config config = ThirdPerson.getConfig();
+		if (ThirdPersonStatus.doesPlayerWantToAim()) {
+			return true;
+		}
 		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
 			boolean shouldBeAiming = ItemPattern.anyMatch(livingEntity.getMainHandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns) || //
 									 ItemPattern.anyMatch(livingEntity.getOffhandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns);
@@ -322,7 +325,7 @@ public class EntityAgentImpl implements EntityAgent {
 			}
 		}
 		smoothOpacity.setTarget(LMath.clamp(targetOpacity, 0, 1));
-		smoothOpacity.setHalflife(ThirdPersonConstants.OPACITY_HALFLIFE * (wasAiming ? 0.25: 1));
+		smoothOpacity.setHalflife(ThirdPersonConstants.OPACITY_HALFLIFE * (wasAiming() ? 0.25: 1));
 		smoothOpacity.update(period);
 	}
 }
