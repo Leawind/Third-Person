@@ -38,7 +38,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_third_person_mode", defaults.is_third_person_mode, config.is_third_person_mode, v -> config.is_third_person_mode = v, entryBuilder));
 			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
 			if (ConfigScreenBuilders.getAvailableBuidlers().size() > 1) {
-				CATEGORY_GENERAL.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), defaults.config_screen_api, s -> s).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
+				CATEGORY_GENERAL.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
 			}
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
