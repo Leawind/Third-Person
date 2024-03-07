@@ -44,3 +44,10 @@ versionRange = "[${cloth_config_api_version},)"
 ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://modrinth.com/mod/cloth-config"
+
+[[dependencies."${mod_id}"]]
+modId = "yet_another_config_lib_v3"
+mandatory = true
+versionRange = "[${yacl_version},)"
+ordering = "NONE"
+side = "CLIENT"

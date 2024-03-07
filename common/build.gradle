@@ -7,7 +7,10 @@ loom {
 dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 	modApi "dev.architectury:architectury:${architectury_version}"
+	// Cloth config
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_api_version}") { exclude(group: "net.fabricmc.fabric-api") }
+	// YACL
+	modImplementation "dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}"
 }
 publishing {
 	publications {
