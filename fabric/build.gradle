@@ -68,7 +68,7 @@ publishing {
 
 // https://github.com/modrinth/minotaur/blob/a151c425fb128cd5384242f25b6fbb0a1d18e325/README.md
 modrinth {
-	debugMode = !!publish_debug_mode
+	debugMode = Boolean.parseBoolean(publish_debug_mode)
 	
 	token = System.getenv("MODRINTH_TOKEN")
 	

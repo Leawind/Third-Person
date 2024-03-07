@@ -68,7 +68,7 @@ String archiveFileNameOfPlatform(String platform){
 
 // 读取更新日志
 String readChangeLog(){
-	File changelogFile = getProjectDir().toPath().resolve("changelog_latest.txt").toFile()
+	File changelogFile = getProjectDir().toPath().resolve("changelog_latest.md").toFile()
 	if(changelogFile.canRead()){
 		return changelogFile.text
 	}else{

@@ -1,7 +1,0 @@
-### Feature
-
-### Bug fix
-
-### Other
-
-* Update build scripts
