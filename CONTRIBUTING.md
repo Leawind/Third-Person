@@ -22,7 +22,7 @@ It's an independent branch for documentation.
 
 EditorConfig defines code format.
 
-### [`changelog_latest.txt`](./changelog_latest.txt)
+### [`changelog_latest.md`](./changelog_latest.md)
 
 It contains changes since last published version.
 
