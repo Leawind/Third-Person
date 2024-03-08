@@ -31,8 +31,6 @@ dependencies {
 	modApi "dev.architectury:architectury-forge:${architectury_version}"
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-forge:${cloth_config_api_version}"
-	// YACL
-	modImplementation "dev.isxander.yacl:yet-another-config-lib-forge:${yacl_mc_version}"
 }
 shadowJar {
 	exclude "fabric.mod.json"
