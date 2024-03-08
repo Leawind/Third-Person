@@ -32,6 +32,7 @@ public class ConfigImpl extends Config {
 
 	@Override
 	public void updateDistancesMonoList () {
+		ThirdPerson.LOGGER.debug("Updating distances mono list");
 		distanceMonoList = StaticMonoList.of(available_distance_count, camera_distance_min, camera_distance_max, i -> i * i, Math::sqrt);
 	}
 

@@ -71,6 +71,7 @@ public interface RotateStrategy {
 	 */
 	@SuppressWarnings("unused")
 	static void build (@NotNull DecisionMap<Double> map) {
+		ThirdPerson.LOGGER.debug("Building Rotate Strategy");
 		map.addRule(0, 0, DEFAULT)    //
 		   .addRule(~0, rotate_interacting.mask(), INTERECTING)    //
 		   .addRule(~0, should_rotate_with_camera_when_not_aiming.mask(), WITH_CAMERA_NOT_AIMING)    //

@@ -32,6 +32,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public void tryLoad () {
+		ThirdPerson.LOGGER.debug("Trying loading config from {}", ThirdPersonConstants.CONFIG_FILE);
 		try {
 			assert ThirdPersonConstants.CONFIG_FILE.getParentFile().mkdirs();
 			if (ThirdPersonConstants.CONFIG_FILE.exists()) {
@@ -49,6 +50,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public void trySave () {
+		ThirdPerson.LOGGER.debug("Trying saving config to {}", ThirdPersonConstants.CONFIG_FILE);
 		try {
 			save();
 			ThirdPerson.LOGGER.info("Config is saved.");
@@ -86,6 +88,7 @@ public class ConfigManagerImpl implements ConfigManager {
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
 		Optional<ConfigScreenBuilder> builder = ConfigScreenBuilders.getBuilder();
 		if (builder.isPresent()) {
+			ThirdPerson.LOGGER.debug("Building config screen");
 			return builder.get().build(config, parent);
 		} else {
 			ThirdPerson.LOGGER.warn("No config screen builder available.");

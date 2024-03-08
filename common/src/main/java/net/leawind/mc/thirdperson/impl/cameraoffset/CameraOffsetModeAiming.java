@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson.impl.cameraoffset;
 
 
+import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
@@ -54,6 +55,7 @@ public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 
 	@Override
 	public void toNextSide () {
+		ThirdPerson.LOGGER.debug("Switching camera to the other side");
 		if (isCentered()) {
 			setCentered(false);
 		} else {

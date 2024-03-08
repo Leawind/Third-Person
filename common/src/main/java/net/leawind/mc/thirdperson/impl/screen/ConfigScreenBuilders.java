@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -24,7 +25,11 @@ public final class ConfigScreenBuilders {
 	static {
 		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), packageExists("me.shedaniel.clothconfig2.api.ConfigBuilder")));
 		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), packageExists("dev.isxander.yacl3.api.YetAnotherConfigLib")));
-		if (getAvailableBuidlers().isEmpty()) {
+		Set<String> availables = getAvailableBuidlers().keySet();
+		availables.forEach(name -> {
+			ThirdPerson.LOGGER.debug("Found available config screen builder: {}", name);
+		});
+		if (availables.isEmpty()) {
 			ThirdPerson.LOGGER.warn("No config screen API available.");
 		}
 	}

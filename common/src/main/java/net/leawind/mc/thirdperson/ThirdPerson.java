@@ -28,6 +28,7 @@ public final class ThirdPerson {
 	public static       CameraAgent   CAMERA_AGENT;
 
 	public static void init () {
+		LOGGER.debug("Initializing mod {}", ThirdPersonConstants.MOD_NAME);
 		ENTITY_AGENT = EntityAgent.create(mc);
 		CAMERA_AGENT = CameraAgent.create(mc);
 		CONFIG_MANAGER.tryLoad();
