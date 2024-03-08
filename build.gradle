@@ -14,7 +14,7 @@ subprojects {
 	dependencies {
 		minecraft "com.mojang:minecraft:${minecraft_version}"
 		mappings loom.officialMojangMappings()
-//		mappings "net.fabricmc:yarn:$yarn_mappings:v2"
+		//		mappings "net.fabricmc:yarn:$yarn_mappings:v2"
 	}
 	processResources {
 		eachFile { expand rootProject.properties }
