@@ -19,9 +19,6 @@
 	"entrypoints": {
 		"client": [
 			"${mod_group_id}.fabric.ThirdPersonFabric"
-		],
-		"modmenu": [
-			"${mod_group_id}.fabric.ModMenuEntry"
 		]
 	},
 	"mixins": [
@@ -35,20 +32,9 @@
 	},
 	"recommends": {
 		"cloth-config2": ">=${cloth_config_api_version}",
-		"modmenu": ">=${modmenu_version}",
 		"yet_another_config_lib_v3": ">=${yacl_version}"
 	},
 	"custom": {
-		"modmenu": {
-			"links": {
-				"BuyMeACoffee": "https://www.buymeacoffee.com/leawind",
-				"Modrinth": "https://modrinth.com/mod/leawind-third-person",
-				"CurseForge": "https://www.curseforge.com/minecraft/mc-mods/leawind-third-person",
-				"MCMOD": "https://www.mcmod.cn/class/12699.html",
-				"Afdian": "https://afdian.net/a/Leawind"
-			}
-		},
-		"modmenu:clientsideOnly": true
 	},
 	"provides": [
 		"leawind_third_person_perspective"
