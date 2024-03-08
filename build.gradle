@@ -1,7 +1,7 @@
 plugins {
 	id "architectury-plugin" version "3.4-SNAPSHOT"
 	// https://maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
-	id "dev.architectury.loom" version "1.3-SNAPSHOT" apply false
+	id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
 }
 architectury {
 	minecraft = minecraft_version
