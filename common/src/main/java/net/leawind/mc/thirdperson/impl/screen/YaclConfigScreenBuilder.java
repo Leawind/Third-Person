@@ -32,7 +32,7 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 														  .option(option("config_screen_api", defaults.config_screen_api, () -> config.config_screen_api, v -> config.config_screen_api = v) //
 																																															 .controller(opt -> CyclingListControllerBuilder.create(opt) //
 																																																											.values(ConfigScreenBuilders.getAvailableBuidlers().keySet()) //
-																																																											.valueFormatter(Component::literal)) //
+																																																											.formatValue(Component::literal)) //
 																																															 .available(ConfigScreenBuilders.getAvailableBuidlers().size() > 1) //
 																																															 .build()) //
 														  .group(group("player_rotation") //
