@@ -68,7 +68,7 @@ public final class ThirdPersonEvents {
 			Vec3     eyePos   = cameraEntity.getEyePosition();
 			BlockPos blockPos = new BlockPos(LMath.toVec3i(eyePos));
 			AABB     eyeAabb  = AABB.ofSize(eyePos, 0.8, 0.8, 0.8);
-			boolean isInWall = ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER.get(cameraEntity.level.getBlockState(blockPos), cameraEntity.level, blockPos, CollisionContext.empty())//
+			boolean isInWall = ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER.get(cameraEntity.level().getBlockState(blockPos), cameraEntity.level(), blockPos, CollisionContext.empty())//
 																					  .toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
 			if (isInWall) {
 				ThirdPersonStatus.isTemporaryFirstPerson = true;

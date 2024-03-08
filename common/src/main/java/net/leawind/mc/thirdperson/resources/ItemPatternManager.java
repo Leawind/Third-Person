@@ -15,7 +15,6 @@ import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.level.storage.loot.LootTables;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -30,7 +29,6 @@ import java.util.Set;
  * 重载资源包时，mc会调用{@link ItemPatternManager#apply}方法处理读取到的json数据。
  *
  * @see ItemPattern
- * @see LootTables
  * @see SplashManager
  */
 @VersionSensitive("SimpleJsonResourceReloadListener may not exist in other mc version")
