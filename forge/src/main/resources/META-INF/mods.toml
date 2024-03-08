@@ -5,7 +5,7 @@ showAsResourcePack = true
 issueTrackerURL = "${mod_url_issue}"
 
 [[mods]]
-modId = "${mod_id}"
+modId = "leawind_third_person"
 version = "${mod_version}"
 displayName = "${mod_name}"
 description = "${mod_description}"
@@ -13,7 +13,7 @@ authors = "${mod_authors}"
 logoFile = "TODO"
 displayURL = "${mod_url_home}"
 
-[[dependencies."${mod_id}"]]
+[[dependencies.leawind_third_person]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
@@ -21,7 +21,7 @@ ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://files.minecraftforge.net/"
 
-[[dependencies."${mod_id}"]]
+[[dependencies.leawind_third_person]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[${minecraft_version},)"
@@ -29,7 +29,7 @@ ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://www.minecraft.net/"
 
-[[dependencies."${mod_id}"]]
+[[dependencies.leawind_third_person]]
 modId = "architectury"
 mandatory = true
 versionRange = "[${architectury_version},)"
@@ -37,7 +37,7 @@ ordering = "AFTER"
 side = "CLIENT"
 referraUrl = "https://modrinth.com/mod/architectury-api"
 
-[[dependencies."${mod_id}"]]
+[[dependencies.leawind_third_person]]
 modId = "cloth_config"
 mandatory = false
 versionRange = "[${cloth_config_api_version},)"
