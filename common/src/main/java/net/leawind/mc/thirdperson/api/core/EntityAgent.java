@@ -152,9 +152,4 @@ public interface EntityAgent {
 	 * 在上一个 clientTick 中是否在瞄准
 	 */
 	boolean wasAiming ();
-
-	/**
-	 * 在上一个 clientTick 中是否在交互
-	 */
-	boolean wasInterecting ();
 }

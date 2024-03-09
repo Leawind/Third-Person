@@ -265,7 +265,7 @@ public final class ThirdPersonEvents {
 			config.is_third_person_mode = !config.is_third_person_mode;
 		}
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-			if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
+			if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
 				// 立即调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
 				ThirdPerson.mc.gameRenderer.pick(1f);
 			}

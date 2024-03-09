@@ -275,11 +275,6 @@ public class EntityAgentImpl implements EntityAgent {
 		return wasAiming;
 	}
 
-	@Override
-	public boolean wasInterecting () {
-		return wasInterecting;
-	}
-
 	/**
 	 * 更新旋转策略、平滑类型、平滑系数
 	 * <p>
