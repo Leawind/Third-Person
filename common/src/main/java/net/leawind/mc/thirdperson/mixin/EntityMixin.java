@@ -26,14 +26,14 @@ public class EntityMixin {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			Entity         cameraEntity    = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			BlockHitResult cameraHitResult = ThirdPerson.CAMERA_AGENT.pickBlock(ThirdPerson.getConfig().camera_ray_trace_length);
-			Vec3           pickStart, pickEnd;
+			Vec3           pickFrom, pickTo;
 			BlockHitResult result;
 			if (ThirdPersonStatus.shouldPickFromCamera()) {
 				result = cameraHitResult;
 			} else {
-				pickStart = cameraEntity.getEyePosition(partialTick);
-				pickEnd   = cameraHitResult.getLocation();
-				result    = cameraEntity.level().clip(new ClipContext(pickStart, pickEnd, ClipContext.Block.OUTLINE, includeFluid ? net.minecraft.world.level.ClipContext.Fluid.ANY: net.minecraft.world.level.ClipContext.Fluid.NONE, cameraEntity));
+				pickFrom = cameraEntity.getEyePosition(partialTick);
+				pickTo   = cameraHitResult.getLocation();
+				result   = cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, includeFluid ? net.minecraft.world.level.ClipContext.Fluid.ANY: net.minecraft.world.level.ClipContext.Fluid.NONE, cameraEntity));
 			}
 			if (result.getType() != HitResult.Type.MISS) {
 				Vec3 centerOfBlockPos = Vec3.atCenterOf(result.getBlockPos());

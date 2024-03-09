@@ -20,6 +20,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -189,6 +190,9 @@ public class CameraAgentImpl implements CameraAgent {
 		return entityHitResult.filter(hitResult -> !(blockHitResultDistance < hitResult.getLocation().distanceTo(cameraPos))).orElse(blockHitResult);
 	}
 
+	/**
+	 * @see GameRenderer#pick(float)
+	 */
 	@Override
 	@VersionSensitive
 	public @NotNull Optional<EntityHitResult> pickEntity (double pickRange) {
@@ -198,21 +202,21 @@ public class CameraAgentImpl implements CameraAgent {
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		Camera camera       = getRawCamera();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
-		Vec3   pickEnd      = viewVector.scale(pickRange).add(camera.getPosition());
-		AABB   aabb         = cameraEntity.getBoundingBox().expandTowards(viewVector.scale(pickRange)).inflate(1.0D, 1.0D, 1.0D);
-		aabb = aabb.move(cameraEntity.getEyePosition(1).vectorTo(camera.getPosition()));
-		return Optional.ofNullable(ProjectileUtil.getEntityHitResult(cameraEntity, camera.getPosition(), pickEnd, aabb, (Entity target) -> !target.isSpectator() && target.isPickable(), pickRange));
+		Vec3   pickFrom     = camera.getPosition();
+		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
+		AABB   aabb         = new AABB(pickFrom, pickTo);
+		return Optional.ofNullable(ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, target -> !target.isSpectator() && target.isPickable(), pickRange));
 	}
 
 	@Override
 	@VersionSensitive
 	public @NotNull BlockHitResult pickBlock (double pickRange) {
 		Camera camera       = getRawCamera();
-		Vec3   pickStart    = camera.getPosition();
+		Vec3   pickFrom     = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
-		Vec3   pickEnd      = viewVector.scale(pickRange).add(pickStart);
+		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		return cameraEntity.level().clip(new ClipContext(pickStart, pickEnd, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
+		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
 	}
 
 	@VersionSensitive
@@ -319,11 +323,11 @@ public class CameraAgentImpl implements CameraAgent {
 			offsetX *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			offsetY *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
-			Vec3      pickStart = smoothEyePosition.add(offsetX, offsetY, offsetZ);
-			Vec3      pickEnd   = pickStart.add(smoothEyeToCamera);
-			HitResult hitResult = blockGetter.clip(new ClipContext(pickStart, pickEnd, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+			Vec3      pickFrom  = smoothEyePosition.add(offsetX, offsetY, offsetZ);
+			Vec3      pickTo    = pickFrom.add(smoothEyeToCamera);
+			HitResult hitResult = blockGetter.clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
-				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickStart));
+				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickFrom));
 			}
 		}
 		smoothDistanceToEye.setValue(smoothDistanceToEye.get() * minDistance / initDistance);
