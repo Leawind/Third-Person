@@ -2,8 +2,17 @@ Port from 2.0.7-mc1.19.4
 
 ### Features
 
-* Add YACL support
+* Use MixinExtras.
+	* Replace `@Redirect` with `@WrapWithCondition`, this should resolve the conflict with _Do a Barrel Roll_.
+* Remove YACL support for forge version due to some problems with YACL.
 
 ### Bug fix
 
-* fix: key `force_aiming`, `toggle_aiming` now working
+* Key `force_aiming`, `toggle_aiming` not working
+
+### Other
+
+* Update `changelog_latest.txt` to `changelog_latest.md`
+* Update deprecated method in YACL: `valueFormatter` -> `formatValue`
+* Update build scripts
+* add debug logs
