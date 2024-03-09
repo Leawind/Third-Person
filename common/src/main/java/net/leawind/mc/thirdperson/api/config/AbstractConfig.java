@@ -41,6 +41,7 @@ abstract class AbstractConfig {
 	@Expose public          boolean      render_crosshair_when_aiming              = true;
 	// =================================================================================Smooth Factors //
 	@Expose public          double       flying_smooth_halflife                    = 0.20;
+	@Expose public          double       t2f_transition_halflife                   = 0.1;
 	//------------------------------Adjusting Camera
 	@Expose public          double       adjusting_camera_offset_smooth_halflife   = 0.04;
 	@Expose public          double       adjusting_distance_smooth_halflife        = 0.08;

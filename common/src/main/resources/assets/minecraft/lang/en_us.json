@@ -59,6 +59,8 @@
 	"leawind_third_person.option.camera_distance_max.desc": "The maximum distance from the player when adjusting with the mouse wheel.",
 	"leawind_third_person.option.flying_smooth_halflife": "Smoothness for camera following player during flight",
 	"leawind_third_person.option.flying_smooth_halflife.desc": "",
+	"leawind_third_person.option.t2f_transition_halflife": "Transition smooth factor",
+	"leawind_third_person.option.t2f_transition_halflife.desc": "Smoothness when transition from third-person to first-person.",
 	"leawind_third_person.option.adjusting_camera_offset_smooth_halflife": "Smoothness for adjusting camera offset",
 	"leawind_third_person.option.adjusting_camera_offset_smooth_halflife.desc": "Smoothness for changes in camera offset as the mouse moves while adjusting the camera.",
 	"leawind_third_person.option.adjusting_distance_smooth_halflife": "Smoothness for adjusting camera distance",

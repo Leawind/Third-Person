@@ -347,7 +347,7 @@ public class CameraAgentImpl implements CameraAgent {
 		boolean          isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
-			smoothDistanceToEye.setHalflife(config.adjusting_distance_smooth_halflife * ThirdPersonConstants.TRANSITION_HALFLIFE_MULTIPLIER);
+			smoothDistanceToEye.setHalflife(config.t2f_transition_halflife);
 			smoothDistanceToEye.setTarget(0);
 		} else {
 			smoothDistanceToEye.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());

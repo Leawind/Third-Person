@@ -81,6 +81,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		final ConfigCategory CATEGORY_SMOOTH_FACTORS = builder.getOrCreateCategory(ConfigManager.getText("option_category.smooth_halflife"));
 		{
 			CATEGORY_SMOOTH_FACTORS.addEntry(buildSmoothHalflifeEntry("flying_smooth_halflife", defaults.flying_smooth_halflife, config.flying_smooth_halflife, v -> config.flying_smooth_halflife = v, entryBuilder));
+			CATEGORY_SMOOTH_FACTORS.addEntry(buildSmoothHalflifeEntry("t2f_transition_halflife", defaults.t2f_transition_halflife, config.t2f_transition_halflife, v -> config.t2f_transition_halflife = v, entryBuilder));
 			// SubCategory: Adjusting Camera
 			final SubCategoryBuilder Subcategory_Adjusting_Camera = buildSubCategory("adjusting_camera", entryBuilder);
 			Subcategory_Adjusting_Camera.add(buildSmoothHalflifeEntry("adjusting_camera_offset_smooth_halflife", defaults.adjusting_camera_offset_smooth_halflife, config.adjusting_camera_offset_smooth_halflife, v -> config.adjusting_camera_offset_smooth_halflife = v, entryBuilder));

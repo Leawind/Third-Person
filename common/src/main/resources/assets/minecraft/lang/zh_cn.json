@@ -59,6 +59,8 @@
 	"leawind_third_person.option.camera_distance_max.desc": "使用滚轮调整时相机到玩家的最大距离",
 	"leawind_third_person.option.flying_smooth_halflife": "飞行时相机跟随玩家的平滑系数",
 	"leawind_third_person.option.flying_smooth_halflife.desc": "",
+	"leawind_third_person.option.t2f_transition_halflife": "过渡平滑系数",
+	"leawind_third_person.option.t2f_transition_halflife.desc": "从第三人称平滑过渡到第一人称时的平滑系数",
 	"leawind_third_person.option.adjusting_camera_offset_smooth_halflife": "调整相机偏移量的平滑系数",
 	"leawind_third_person.option.adjusting_camera_offset_smooth_halflife.desc": "调整相机时，相机偏移量随鼠标移动而变化的平滑系数",
 	"leawind_third_person.option.adjusting_distance_smooth_halflife": "调整相机距离的平滑系数",
