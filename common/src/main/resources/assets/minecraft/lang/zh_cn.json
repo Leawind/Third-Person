@@ -1,6 +1,8 @@
 {
+	"modmenu.nameTranslation.leawind_third_person": "Leawind的第三人称",
+	"modmenu.descriptionTranslation.leawind_third_person": "一个实用、丝滑、功能丰富的第三人称模组",
 	"leawind_third_person.text.title": "Leawind的第三人称",
-	"leawind_third_person.text.description": "提供更好的第三人称视角",
+	"leawind_third_person.text.description": "一个实用、丝滑、功能丰富的第三人称模组",
 	"leawind_third_person.option_category.general": "通用",
 	"leawind_third_person.option_category.general.desc": "一些常用的配置",
 	"leawind_third_person.option_category.camera_offset": "相机偏移",

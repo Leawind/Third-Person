@@ -1,6 +1,8 @@
 {
+	"modmenu.nameTranslation.leawind_third_person": "Leawind's Third Person",
+	"modmenu.descriptionTranslation.leawind_third_person": "A practical, smooth, feature-rich third-person mod.",
 	"leawind_third_person.text.title": "Leawind's Third Person",
-	"leawind_third_person.text.description": "Enhanced third person perspective",
+	"leawind_third_person.text.description": "A practical, smooth, feature-rich third-person mod.",
 	"leawind_third_person.option_category.general": "General",
 	"leawind_third_person.option_category.general.desc": "general",
 	"leawind_third_person.option_category.camera_offset": "Camera Offset",
