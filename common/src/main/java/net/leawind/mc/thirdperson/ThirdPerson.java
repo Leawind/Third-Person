@@ -1,6 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.config.ConfigManager;
 import net.leawind.mc.thirdperson.api.core.CameraAgent;
@@ -29,6 +30,7 @@ public final class ThirdPerson {
 
 	public static void init () {
 		LOGGER.debug("Initializing mod {}", ThirdPersonConstants.MOD_NAME);
+		MixinExtrasBootstrap.init();
 		ENTITY_AGENT = EntityAgent.create(mc);
 		CAMERA_AGENT = CameraAgent.create(mc);
 		CONFIG_MANAGER.tryLoad();
