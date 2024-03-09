@@ -24,7 +24,7 @@ public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 	}
 
 	@Override
-	public 	@NotNull Vector2d getOffsetSmoothHalflife () {
+	public @NotNull Vector2d getOffsetSmoothHalflife () {
 		return Vector2d.of(config.aiming_camera_offset_smooth_halflife);
 	}
 

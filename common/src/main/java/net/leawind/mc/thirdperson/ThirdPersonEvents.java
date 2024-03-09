@@ -254,26 +254,20 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * 当玩家与环境交互时，趁交互事件处理前，让玩家看向相机落点
-	 *
 	 * @see MinecraftMixin#handleKeybinds_head(CallbackInfo)
 	 */
-	public static void onBeforeHandleKeybinds (@NotNull Minecraft minecraft) {
+	public static void onBeforeHandleKeybinds () {
 		Config config = ThirdPerson.getConfig();
 		/*
 		  接管“切换视角”按键绑定
 		 */
-		while (minecraft.options.keyTogglePerspective.consumeClick()) {
+		while (ThirdPerson.mc.options.keyTogglePerspective.consumeClick()) {
 			config.is_third_person_mode = !config.is_third_person_mode;
 		}
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (ThirdPerson.ENTITY_AGENT.wasInterecting()) {
-				/*
-				  立即调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
-				  <p>
-				  这个 pick 方法也被使用 mixin 修改了 pick 的方向，使玩家朝向相机准星的落点。
-				 */
-				minecraft.gameRenderer.pick(1f);
+				// 立即调用 gameRender.pick 方法来更新玩家注视着的目标 (minecraft.hitResult)
+				ThirdPerson.mc.gameRenderer.pick(1f);
 			}
 		}
 	}

@@ -7,10 +7,8 @@ import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
 import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
