@@ -95,5 +95,6 @@ modrinth {
 		required.project "architectury-api"
 		optional.project "modmenu"
 		optional.project "cloth-config"
+		optional.project "yacl"
 	}
 }
