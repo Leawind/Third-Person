@@ -90,6 +90,8 @@ public interface CameraAgent {
 	 */
 	@NotNull Vector2d getRelativeRotation ();
 
+	double getPickRange ();
+
 	/**
 	 * 从相机pick，使用默认距离
 	 * <p>
@@ -132,6 +134,11 @@ public interface CameraAgent {
 	@NotNull Optional<EntityHitResult> pickEntity (double pickRange);
 
 	/**
+	 * 同 {@link CameraAgent#pickEntity(double)}，使用默认距离
+	 */
+	@NotNull Optional<EntityHitResult> pickEntity ();
+
+	/**
 	 * 根据实体的视线确定所选方块。
 	 * <p>
 	 * 瞄准时会忽略草，因为使用的过滤器是 {@link ClipContext.Block#COLLIDER}
@@ -143,6 +150,11 @@ public interface CameraAgent {
 	 * @param pickRange 探测距离
 	 */
 	@NotNull BlockHitResult pickBlock (double pickRange);
+
+	/**
+	 * 同 {@link CameraAgent#pickBlock(double)}，使用默认距离
+	 */
+	@NotNull BlockHitResult pickBlock ();
 
 	/**
 	 * 相机是否正在注视某个实体（无视其他实体或方块）

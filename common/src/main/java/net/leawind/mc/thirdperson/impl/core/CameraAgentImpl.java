@@ -164,13 +164,18 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
+	public double getPickRange () {
+		return smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length;
+	}
+
+	@Override
 	public @NotNull HitResult pick () {
-		return pick(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
+		return pick(getPickRange());
 	}
 
 	@Override
 	public @NotNull Optional<Vector3d> getPickPosition () {
-		return getPickPosition(smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length);
+		return getPickPosition(getPickRange());
 	}
 
 	@Override
@@ -209,6 +214,11 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
+	public @NotNull Optional<EntityHitResult> pickEntity () {
+		return pickEntity(getPickRange());
+	}
+
+	@Override
 	@VersionSensitive
 	public @NotNull BlockHitResult pickBlock (double pickRange) {
 		Camera camera       = getRawCamera();
@@ -219,11 +229,16 @@ public class CameraAgentImpl implements CameraAgent {
 		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
 	}
 
+	@Override
+	public @NotNull BlockHitResult pickBlock () {
+		return pickBlock(getPickRange());
+	}
+
 	@VersionSensitive
 	@Override
 	public boolean isLookingAt (@NotNull Entity entity) {
 		Vec3 from = getRawCamera().getPosition();
-		Vec3 to   = from.add(new Vec3(getRawCamera().getLookVector()).scale(ThirdPerson.getConfig().camera_ray_trace_length));
+		Vec3 to   = from.add(new Vec3(getRawCamera().getLookVector()).scale(getPickRange()));
 		AABB aabb = entity.getBoundingBox();
 		return aabb.contains(from) || aabb.clip(from, to).isPresent();
 	}
@@ -343,7 +358,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	private @NotNull Vector3d calculatePositionWithoutOffset () {
-		return ThirdPerson.ENTITY_AGENT.getPossiblySmoothEyePosition(ThirdPersonStatus.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
+		return ThirdPerson.ENTITY_AGENT.getPossibleSmoothEyePosition(ThirdPersonStatus.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
 	}
 
 	private void updateSmoothVirtualDistance (double period) {

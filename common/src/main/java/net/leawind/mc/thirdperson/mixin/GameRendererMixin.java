@@ -6,6 +6,7 @@ import net.leawind.mc.thirdperson.ThirdPersonEvents;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,16 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * {@link GameRenderer#pick}会先调用{@link EntityMixin#pick_head}探测方块，再通过{@link ProjectileUtil#getEntityHitResult}探测实体，然后计算最终探测结果
  * <p>
- * 这里要修改实体探测规则。
- * <h3>需要修改的参数</h3>
- * <li>探测起点</li>
- * <li>探测终点，原版方法中的探测终点是根据viewVector和探测距离计算的，这里直接修改探测终点得了</li>
- * <li>探测区域盒子（从起点到终点）</li>
- * <h3>不需要修改的参数</h3>
- * <li>实体对象</li>
- * <li>判别器</li>
- *
- * @see EntityMixin#pick_head
+ * 此外，当没有探测结果时，它会通过 {@link BlockHitResult#miss} 创建一个表示结果为空的 BlockHitResult 对象，此时会根据玩家的朝向计算 Direction 参数。
+ * <p>
+ * 对方块的探测在{@link EntityMixin#pick_head}中修改
+ * <p>
+ * 对实体的探测在{@link GameRendererMixin#pick_storeEntityPickResult(EntityHitResult)}中修改
  */
 @Mixin(value=net.minecraft.client.renderer.GameRenderer.class, priority=2000)
 public class GameRendererMixin {
@@ -63,7 +59,7 @@ public class GameRendererMixin {
 	@ModifyVariable(method="pick", at=@At("STORE"), ordinal=0)
 	public EntityHitResult pick_storeEntityPickResult (EntityHitResult hitResult) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPersonStatus.shouldPickFromCamera()) {
-			return ThirdPerson.CAMERA_AGENT.pickEntity(ThirdPerson.getConfig().camera_ray_trace_length).orElse(null);
+			return ThirdPerson.CAMERA_AGENT.pickEntity().orElse(null);
 		} else {
 			return hitResult;
 		}

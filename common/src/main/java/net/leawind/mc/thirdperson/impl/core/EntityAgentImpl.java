@@ -217,7 +217,7 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
-	public @NotNull Vector3d getPossiblySmoothEyePosition (float partialTick) {
+	public @NotNull Vector3d getPossibleSmoothEyePosition (float partialTick) {
 		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
 		Vector3d rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
 		Vector3d smoothFactor           = smoothEyePosition.smoothFactor.copy();

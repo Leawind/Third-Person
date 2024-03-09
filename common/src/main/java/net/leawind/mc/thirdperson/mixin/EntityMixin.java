@@ -24,16 +24,14 @@ public class EntityMixin {
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
 	public void pick_head (double pickRange, float partialTick, boolean includeFluid, CallbackInfoReturnable<HitResult> ci) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-			Entity         cameraEntity    = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			BlockHitResult cameraHitResult = ThirdPerson.CAMERA_AGENT.pickBlock(ThirdPerson.getConfig().camera_ray_trace_length);
-			Vec3           pickFrom, pickTo;
+			Entity         cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			BlockHitResult result;
 			if (ThirdPersonStatus.shouldPickFromCamera()) {
-				result = cameraHitResult;
+				result = ThirdPerson.CAMERA_AGENT.pickBlock();
 			} else {
-				pickFrom = cameraEntity.getEyePosition(partialTick);
-				pickTo   = cameraHitResult.getLocation();
-				result   = cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, includeFluid ? net.minecraft.world.level.ClipContext.Fluid.ANY: net.minecraft.world.level.ClipContext.Fluid.NONE, cameraEntity));
+				Vec3 pickFrom = cameraEntity.getEyePosition(partialTick);
+				Vec3 pickTo   = ThirdPerson.CAMERA_AGENT.pickBlock().getLocation();
+				result = cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, includeFluid ? net.minecraft.world.level.ClipContext.Fluid.ANY: net.minecraft.world.level.ClipContext.Fluid.NONE, cameraEntity));
 			}
 			if (result.getType() != HitResult.Type.MISS) {
 				Vec3 centerOfBlockPos = Vec3.atCenterOf(result.getBlockPos());

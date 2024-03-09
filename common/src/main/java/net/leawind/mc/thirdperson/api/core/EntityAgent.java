@@ -120,7 +120,7 @@ public interface EntityAgent {
 	 * <p>
 	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
 	 */
-	@NotNull Vector3d getPossiblySmoothEyePosition (float partialTick);
+	@NotNull Vector3d getPossibleSmoothEyePosition (float partialTick);
 
 	/**
 	 * 实体是否在交互
