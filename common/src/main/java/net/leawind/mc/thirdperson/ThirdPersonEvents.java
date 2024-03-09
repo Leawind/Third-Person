@@ -203,7 +203,9 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onStartCameraTurnWithEntity () {
 		// 将玩家朝向设为与相机一致
-		ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
+			ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+		}
 	}
 
 	/**
