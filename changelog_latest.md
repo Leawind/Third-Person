@@ -4,9 +4,9 @@
 
 ### Bug fix
 
-* fix: Mouse sensitivity doubled in first person
+* fix: Mouse sensitivity doubled in first person #49
 * fix: MixinExtras not inited
-* fix: pick result error
+* picking error in forge version
 
 ### Other
 
