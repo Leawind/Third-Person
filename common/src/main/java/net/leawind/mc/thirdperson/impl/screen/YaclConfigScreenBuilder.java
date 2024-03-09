@@ -67,7 +67,7 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 														  .build()) //
 								  .category(ConfigCategory.createBuilder() //
 														  .name(ConfigManager.getText("option_category.smooth_halflife")) //
-														  .tooltip(ConfigManager.getText("option_category.misc.smooth_halflife")) //
+														  .tooltip(ConfigManager.getText("option_category.smooth_halflife.desc")) //
 														  .option(smoothingOption("flying_smooth_halflife", defaults.flying_smooth_halflife, () -> config.flying_smooth_halflife, v -> config.flying_smooth_halflife = v).build()) //
 														  .option(smoothingOption("t2f_transition_halflife", defaults.t2f_transition_halflife, () -> config.t2f_transition_halflife, v -> config.t2f_transition_halflife = v).build()) //
 														  .group(group("adjusting_camera") //
