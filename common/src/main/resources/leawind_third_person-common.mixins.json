@@ -5,7 +5,6 @@
 	"minVersion": "0.8",
 	"client": [
 		"CameraInvoker",
-		"LocalPlayerInvoker",
 		"ClientLevelInvoker",
 		"LevelRendererMixin",
 		"ModelPartCubeMixin",
