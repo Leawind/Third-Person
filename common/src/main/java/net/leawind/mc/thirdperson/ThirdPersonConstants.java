@@ -45,5 +45,5 @@ public final class ThirdPersonConstants {
 	/**
 	 * 阻挡相机的方块外形获取器
 	 */
-	public static final ClipContext.Block CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER    = ClipContext.Block.OUTLINE;
+	public static final ClipContext.Block CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER    = ClipContext.Block.VISUAL;
 }
