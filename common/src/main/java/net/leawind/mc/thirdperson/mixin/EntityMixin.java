@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * 方法{@link Entity#pick}用于计算玩家视线落点
  */
-@Mixin(value=net.minecraft.world.entity.Entity.class, priority=2000)
+@Mixin(value=Entity.class, priority=2000)
 public class EntityMixin {
 	/**
 	 * 第三人称下重新计算选取的方块

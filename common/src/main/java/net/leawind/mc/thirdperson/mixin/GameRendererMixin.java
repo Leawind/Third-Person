@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>
  * 对实体的探测在{@link GameRendererMixin#pick_storeEntityPickResult(EntityHitResult)}中修改
  */
-@Mixin(value=net.minecraft.client.renderer.GameRenderer.class, priority=2000)
+@Mixin(value=GameRenderer.class, priority=2000)
 public class GameRendererMixin {
 	@Inject(method="render", at=@At("HEAD"))
 	public void pre_render (float particalTicks, long l, boolean bl, CallbackInfo ci) {

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value=net.minecraft.client.Camera.class, priority=2000)
+@Mixin(value=Camera.class, priority=2000)
 public abstract class CameraMixin {
 	/**
 	 * 插入到 setup 方法中的第一个 move(DDD)V 调用之前

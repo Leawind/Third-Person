@@ -1,11 +1,12 @@
 package net.leawind.mc.thirdperson.mixin;
 
 
+import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(net.minecraft.client.Camera.class)
+@Mixin(Camera.class)
 public interface CameraInvoker {
 	@Invoker("setPosition")
 	void invokeSetPosition (Vec3 pos);
