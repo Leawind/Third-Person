@@ -39,10 +39,6 @@ import java.util.Optional;
 public class CameraAgentImpl implements CameraAgent {
 	private final @NotNull Minecraft         minecraft;
 	private final @NotNull Camera            fakeCamera              = new Camera();
-	/**
-	 * 上次玩家操控转动视角的时间
-	 */
-	private                double            lastCameraTurnTimeStamp = 0;
 	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
 	/**
 	 * 相机偏移量
@@ -52,6 +48,10 @@ public class CameraAgentImpl implements CameraAgent {
 	 * 虚相机到平滑眼睛的距离
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
+	/**
+	 * 上次玩家操控转动视角的时间
+	 */
+	private                double            lastCameraTurnTimeStamp = 0;
 	private @Nullable      BlockGetter       blockGetter;
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
@@ -219,14 +219,24 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	@VersionSensitive
-	public @NotNull BlockHitResult pickBlock (double pickRange) {
+	public @NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
 		Camera camera       = getRawCamera();
 		Vec3   pickFrom     = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
 		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cameraEntity));
+		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, blockShape, fluidShape, cameraEntity));
+	}
+
+	@Override
+	public @NotNull BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
+		return pickBlock(getPickRange(), blockShape, fluidShape);
+	}
+
+	@Override
+	@VersionSensitive
+	public @NotNull BlockHitResult pickBlock (double pickRange) {
+		return pickBlock(pickRange, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
 	}
 
 	@Override

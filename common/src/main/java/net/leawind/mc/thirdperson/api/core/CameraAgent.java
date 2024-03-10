@@ -139,6 +139,16 @@ public interface CameraAgent {
 	@NotNull Optional<EntityHitResult> pickEntity ();
 
 	/**
+	 * 从相机出发选取方块
+	 */
+	@NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
+
+	/**
+	 * 同 {@link CameraAgent#pickBlock(double, ClipContext.Block, ClipContext.Fluid)}，使用默认距离
+	 */
+	@NotNull BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
+
+	/**
 	 * 根据实体的视线确定所选方块。
 	 * <p>
 	 * 瞄准时会忽略草，因为使用的过滤器是 {@link ClipContext.Block#COLLIDER}
