@@ -1,5 +1,27 @@
 # Changelog
 
+## v2.0.8-beta.3-mc1.20.1
+
+### Features
+
+* Use ModifyExpressionValue instead of Redirect. This will have better compatibility.
+
+### Bug fix
+
+* Compatible  with _Better Combat_ and _First Person Model_ #50
+* Wrong translation key in YACL config screen
+* Camera forcing first person in tall grass #54
+* In third person, water is placed where player is looking at, rather than crosshair.
+
+### Other
+
+* Update translations
+* build script: add yacl dependency in fabric publishing script.
+* fix: Unexpected rotating when starting to use elytra in first person.
+* style: add comments.
+* Update README
+* Optimize code
+
 ## v2.0.8-beta.2-mc1.20.1
 
 ### Features
