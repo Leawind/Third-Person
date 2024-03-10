@@ -10,7 +10,7 @@
 	"contact": {
 		"homepage": "${mod_url_home}",
 		"issues": "${mod_url_issue}",
-		"sources": "${mod_url_home}",
+		"sources": "${mod_url_src}",
 		"email": "leawind@yeah.net"
 	},
 	"license": "${mod_license}",
