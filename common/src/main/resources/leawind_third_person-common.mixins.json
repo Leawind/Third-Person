@@ -17,6 +17,7 @@
 		"MouseHandlerMixin",
 		"EntityMixin",
 		"GameRendererMixin",
+		"ItemMixin",
 		"MouseHandlerMixin"
 	],
 	"mixins": [],
