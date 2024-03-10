@@ -3,6 +3,8 @@ package net.leawind.mc.thirdperson.mixin;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.api.core.EntityAgent;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.minecraft.Util;
@@ -43,7 +45,10 @@ public class RenderTypeMixin extends RenderStateShard {
 	 */
 	@VersionSensitive
 	@Inject(method="armorCutoutNoCull", at=@At(value="HEAD", target="Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"), cancellable=true)
-	private static void setTransparencyState (ResourceLocation resourceLocation, @NotNull CallbackInfoReturnable<RenderType> cir) {
-		cir.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(resourceLocation));
+	private static void setTransparencyState (ResourceLocation resourceLocation, @NotNull CallbackInfoReturnable<RenderType> ci) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+			ci.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(resourceLocation));
+			ci.cancel();
+		}
 	}
 }

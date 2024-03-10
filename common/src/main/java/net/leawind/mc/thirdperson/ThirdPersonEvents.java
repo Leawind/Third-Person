@@ -173,13 +173,6 @@ public final class ThirdPersonEvents {
 		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
-		{
-			boolean shouldCameraTurnWithEntity = ThirdPersonStatus.shouldCameraTurnWithEntity();
-			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasSouldCameraTurnWithEntity) {
-				onStartCameraTurnWithEntity();
-			}
-			ThirdPersonStatus.wasSouldCameraTurnWithEntity = shouldCameraTurnWithEntity;
-		}
 		final boolean isRenderInThirdPerson = !ThirdPerson.mc.options.getCameraType().isFirstPerson();
 		if (isRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
 			if (isRenderInThirdPerson) {
@@ -189,6 +182,13 @@ public final class ThirdPersonEvents {
 			}
 			ThirdPerson.mc.levelRenderer.needsUpdate();
 			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderInThirdPerson;
+		}
+		if (isRenderInThirdPerson) {
+			boolean shouldCameraTurnWithEntity = ThirdPersonStatus.shouldCameraTurnWithEntity();
+			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasSouldCameraTurnWithEntity) {
+				onStartCameraTurnWithEntity();
+			}
+			ThirdPersonStatus.wasSouldCameraTurnWithEntity = shouldCameraTurnWithEntity;
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
@@ -285,6 +285,7 @@ public final class ThirdPersonEvents {
 				ThirdPerson.ENTITY_AGENT.setRawRotation(LMath.rotationDegreeFromDirection(eyeToHitResult));
 			}
 		}
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.ENTITY_AGENT.getRawCameraEntity());
 	}
 
 	/**
@@ -294,5 +295,6 @@ public final class ThirdPersonEvents {
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 	}
 }
