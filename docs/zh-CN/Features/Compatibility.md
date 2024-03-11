@@ -10,7 +10,7 @@
 | [Do a Barrel Roll 滚筒飞行](https://github.com/enjarai/do-a-barrel-roll)     | 👫      |
 | [First-Person-Model 第一人称模型](https://github.com/tr7zw/FirstPersonModel) | 👫      |
 | [Better Combat 更好的战斗](https://github.com/ZsoltMolnarrr/BetterCombat)    | 👫      |
-| [EpicFight 史诗战斗](https://github.com/Yesssssman/epicfightmod)             | ❓      |
+| [EpicFight 史诗战斗](https://github.com/Yesssssman/epicfightmod)             | 👫⚔️     |
 | [Jade](https://github.com/Snownee/Jade)                                      | ❓      |
 | [MrCrayfish's Gun Mod](https://github.com/MrCrayfish/MrCrayfishGunMod)       | ❓      |
 | [ParCool](https://github.com/alRex-U/ParCool)                                | ❓      |
