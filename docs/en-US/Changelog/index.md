@@ -3,8 +3,8 @@ title: 🕗Changelog
 
 layout: home
 hero:
-  name: 🕗Changelog
-  text: 
+  name: 
+  text: 🕗Changelog
   tagline: 
   image: 
 features:

@@ -3,8 +3,8 @@ title: 🕗更新日志
 
 layout: home
 hero:
-  name: 🕗更新日志
-  text: 
+  name: 
+  text: 🕗更新日志
   tagline: 
   image: 
 features:

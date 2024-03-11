@@ -1,6 +1,5 @@
 # Beta channel
 
-
 ## v2.0.8-beta.3-mc1.20.1
 
 ### Features
