@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
 license = "${mod_license}"
-showAsResourcePack = true
+showAsResourcePack = false
 issueTrackerURL = "${mod_url_issue}"
 
 [[mods]]

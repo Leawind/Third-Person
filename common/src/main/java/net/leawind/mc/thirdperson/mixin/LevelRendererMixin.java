@@ -19,7 +19,7 @@ public class LevelRendererMixin {
 	 */
 	@Inject(method="renderEntity", at=@At("HEAD"), cancellable=true)
 	public void renderEntity_head (Entity entity, double x, double y, double z, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, CallbackInfo ci) {
-		if (ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
 			if (!ThirdPersonStatus.shouldRenderCameraEntity()) {
 				ci.cancel();
 			}
@@ -28,7 +28,7 @@ public class LevelRendererMixin {
 
 	@Inject(method="renderEntity", at=@At("TAIL"))
 	public void renderEntity_tail (Entity entity, double x, double y, double z, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, CallbackInfo ci) {
-		if (ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
 			if (ThirdPersonStatus.shouldRenderCameraEntity()) {
 				((MultiBufferSource.BufferSource)multiBufferSource).endLastBatch();
 			}
