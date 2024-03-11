@@ -19,23 +19,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value=Entity.class, priority=2000)
 public class EntityMixin {
 	/**
-	 * 第三人称下重新计算选取的方块
+	 * 探测方块
+	 *
+	 * @param pickRange    探测距离，目标与玩家眼睛间的最大距离
+	 * @param includeFluid 是否探测液体，如果是，则使用{@link ClipContext.Fluid#ANY}，否则使用{@link ClipContext.Fluid#NONE}
+	 * @see GameRendererMixin
 	 */
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
 	public void pick_head (double pickRange, float partialTick, boolean includeFluid, CallbackInfoReturnable<HitResult> ci) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-			Entity         cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			BlockHitResult result;
+			final ClipContext.Fluid fluidShape   = includeFluid ? ClipContext.Fluid.ANY: ClipContext.Fluid.NONE;
+			Entity                  cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			BlockHitResult          result;
 			if (ThirdPersonStatus.shouldPickFromCamera()) {
-				result = ThirdPerson.CAMERA_AGENT.pickBlock();
+				result = ThirdPerson.CAMERA_AGENT.pickBlock(ClipContext.Block.OUTLINE, fluidShape);
 			} else {
-				Vec3 pickFrom = cameraEntity.getEyePosition(partialTick);
-				Vec3 pickTo   = ThirdPerson.CAMERA_AGENT.pickBlock().getLocation();
-				result = cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, includeFluid ? net.minecraft.world.level.ClipContext.Fluid.ANY: net.minecraft.world.level.ClipContext.Fluid.NONE, cameraEntity));
+				Vec3 pickFrom   = cameraEntity.getEyePosition(partialTick);
+				Vec3 viewVector = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation().subtract(pickFrom).normalize().scale(pickRange);
+				Vec3 pickTo     = pickFrom.add(viewVector);
+				result = cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, fluidShape, cameraEntity));
 			}
+			// 如果玩家眼睛与探测结果之间的距离大于探测距离，则将结果设置为MISS
 			if (result.getType() != HitResult.Type.MISS) {
-				Vec3 centerOfBlockPos = Vec3.atCenterOf(result.getBlockPos());
-				if (cameraEntity.getEyePosition(partialTick).distanceTo(centerOfBlockPos) > pickRange) {
+				if (cameraEntity.getEyePosition(partialTick).distanceTo(result.getLocation()) > pickRange) {
 					result = BlockHitResult.miss(result.getLocation(), result.getDirection(), result.getBlockPos());
 				}
 			}
