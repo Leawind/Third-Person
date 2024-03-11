@@ -13,7 +13,7 @@ hero:
       link: ./#下载
     - theme: alt
       text: 🕗更新日志
-      link: ./changelog
+      link: ./Changelog/
     - theme: alt
       text: 💡遇到问题
       link: ./Q&A/

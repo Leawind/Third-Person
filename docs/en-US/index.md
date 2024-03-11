@@ -13,7 +13,7 @@ hero:
       link: ./#Download
     - theme: alt
       text: 🕗Changelog
-      link: ./changelog
+      link: ./Changelog/
     - theme: alt
       text: 💡Got Issue
       link: ./Q&A/
