@@ -1,6 +1,8 @@
 # Questions
 
-At the top of the page, there is a search box. If you cannot find a solution to the issue you are facing, please visit the [Issues page](https://github.com/LEAWIND/Third-Person/issues) to submit your problem.
+1. There is a search box at the top of the page. Please try searching.
+1. If you cannot find the information you need, please go to the [Issues page](https://github.com/LEAWIND/Third-Person/issues) and search.
+1. If you still cannot find what you're looking for, you can submit a new issue.
 
 ## Game Crashes/Freezes
 

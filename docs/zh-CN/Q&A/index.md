@@ -1,10 +1,12 @@
 # 常见问题
 
-页面顶部有搜索框。如果无法解决你遇到的问题，请前往[Issues 页面](https://github.com/LEAWIND/Third-Person/issues)提出你遇到的问题。
+1. 页面顶部有搜索框，请尝试搜索。
+1. 如果搜索不到，请前往[Issues 页面](https://github.com/LEAWIND/Third-Person/issues)搜索。
+1. 如果还搜不到，可以提交新的Issue。
 
 ## 游戏崩溃/卡死
 
-如果你正在是旧版本模组，请更新到最新版然后重试。
+如果你正在使用旧版本模组，请更新到最新版然后重试。
 
 ## 某个物品无法自动瞄准
 
