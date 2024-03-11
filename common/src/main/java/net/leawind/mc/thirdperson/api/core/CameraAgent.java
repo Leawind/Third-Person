@@ -90,6 +90,11 @@ public interface CameraAgent {
 	 */
 	@NotNull Vector2d getRelativeRotation ();
 
+	/**
+	 * render tick 开始时，相机的 hitResult
+	 */
+	@NotNull HitResult getHitResult ();
+
 	double getPickRange ();
 
 	/**
@@ -116,7 +121,7 @@ public interface CameraAgent {
 	@NotNull Optional<Vector3d> getPickPosition (double pickRange);
 
 	/**
-	 * 根据实体视线探测所选方块或实体。
+	 * 从相机出发探测所选方块或实体。
 	 * <p>
 	 * 当探测不到时，返回的是{@link HitResult.Type#MISS}类型。坐标将为探测终点
 	 *
@@ -125,7 +130,7 @@ public interface CameraAgent {
 	@NotNull HitResult pick (double pickRange);
 
 	/**
-	 * 根据实体的视线确定所选实体
+	 * 根据相机的视线确定所选实体
 	 * <p>
 	 * 如果探测不到就返回空值
 	 *
@@ -139,30 +144,37 @@ public interface CameraAgent {
 	@NotNull Optional<EntityHitResult> pickEntity ();
 
 	/**
-	 * 从相机出发选取方块
+	 * 根据相机的视线探测方块
+	 *
+	 * @param pickRange  从相机出发的探测距离
+	 * @param blockShape 方块形状获取器
+	 * @param fluidShape 液体形状获取器
 	 */
 	@NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
 
 	/**
 	 * 同 {@link CameraAgent#pickBlock(double, ClipContext.Block, ClipContext.Fluid)}，使用默认距离
+	 *
+	 * @param blockShape 方块形状获取器
+	 * @param fluidShape 液体形状获取器
 	 */
 	@NotNull BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
 
 	/**
-	 * 根据实体的视线确定所选方块。
+	 * 同 {@link CameraAgent#pickBlock(ClipContext.Block, ClipContext.Fluid)}，但是
 	 * <p>
-	 * 瞄准时会忽略草，因为使用的过滤器是 {@link ClipContext.Block#COLLIDER}
+	 * 瞄准时使用的方块形状获取器是 {@link ClipContext.Block#COLLIDER}，不包含草
 	 * <p>
-	 * 非瞄准时会包括所有方块，因为过滤器是 {@link ClipContext.Block#OUTLINE}
+	 * 非瞄准时使用的方块形状获取器是 {@link ClipContext.Block#OUTLINE}
 	 * <p>
-	 * 当目标无限远时，返回的是{@link HitResult.Type#MISS}类型，坐标将为探测终点，即 探测起点 + 视线向量.normalize(探测距离)
+	 * 当探测不到方块时，返回的是 {@link HitResult.Type#MISS} 类型，坐标将为探测终点，即 相机位置 + 视线向量.normalize(探测距离)
 	 *
-	 * @param pickRange 探测距离
+	 * @param pickRange 从相机出发的探测距离
 	 */
 	@NotNull BlockHitResult pickBlock (double pickRange);
 
 	/**
-	 * 同 {@link CameraAgent#pickBlock(double)}，使用默认距离
+	 * 同 {@link CameraAgent#pickBlock(double)}，使用默认探测距离
 	 */
 	@NotNull BlockHitResult pickBlock ();
 

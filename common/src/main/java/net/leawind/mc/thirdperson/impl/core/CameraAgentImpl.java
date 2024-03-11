@@ -21,6 +21,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,6 +54,10 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private                double            lastCameraTurnTimeStamp = 0;
 	private @Nullable      BlockGetter       blockGetter;
+	/**
+	 * 在 onRenderTickPre 中更新
+	 */
+	private @NotNull       HitResult         hitResult               = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft      = minecraft;
@@ -79,6 +84,8 @@ public class CameraAgentImpl implements CameraAgent {
 	@Override
 	public void onRenderTickPre (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
+			// 更新探测结果
+			hitResult = pick();
 			// 平滑更新距离
 			updateSmoothVirtualDistance(period);
 			// 平滑更新相机偏移量
@@ -161,6 +168,11 @@ public class CameraAgentImpl implements CameraAgent {
 	@Override
 	public @NotNull Vector2d getRelativeRotation () {
 		return relativeRotation;
+	}
+
+	@Override
+	public @NotNull HitResult getHitResult () {
+		return hitResult;
 	}
 
 	@Override

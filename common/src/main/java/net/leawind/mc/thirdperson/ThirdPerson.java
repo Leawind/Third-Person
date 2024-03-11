@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * # 快速装填5的弩
  * /give @s crossbow{Enchantments:[{id:quick_charge,lvl:5}]}
  * # 靶子村民
- * /summon villager ~ ~ ~ {NoAI:1b}
+ * /summon villager ~ ~ ~ {NoAI:1b,Invulnerable:1b}
  * </pre>
  */
 public final class ThirdPerson {
