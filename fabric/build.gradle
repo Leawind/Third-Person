@@ -2,7 +2,6 @@ plugins {
 	id "com.github.johnrengelman.shadow" version "7.1.2"
 	id "com.modrinth.minotaur" version "2.+"
 }
-
 architectury {
 	platformSetupLoomIde()
 	fabric()
@@ -20,9 +19,13 @@ configurations {
 dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 	modApi "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-	common(project(path: ":common", configuration: "namedElements")) { transitive false }
-	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-	
+	common(project(path: ":common", configuration: "namedElements")) {
+		transitive false
+	}
+	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
+		transitive false
+	}
+
 	// Architectury-api
 	modApi "dev.architectury:architectury-fabric:${architectury_version}"
 	// MixinExtras
@@ -52,7 +55,9 @@ remapJar {
 sourcesJar {
 	def commonSources = project(":common").sourcesJar
 	dependsOn commonSources
-	from commonSources.archiveFile.map { zipTree(it) }
+	from commonSources.archiveFile.map {
+		zipTree(it)
+	}
 }
 base {
 	archivesName = rootProject.archiveFileNameOfPlatform("fabric")
@@ -65,7 +70,6 @@ components.java {
 }
 publishing {
 	publications {}
-	
 	repositories {}
 }
 
@@ -73,15 +77,12 @@ publishing {
 // https://github.com/modrinth/minotaur/blob/a151c425fb128cd5384242f25b6fbb0a1d18e325/README.md
 modrinth {
 	debugMode = Boolean.parseBoolean(publish_debug_mode)
-	
 	token = System.getenv("MODRINTH_TOKEN")
-	
 	projectId = modrinth_project_id
 	versionNumber = mod_version
 	versionType = mod_version_type
 	versionName = "${mod_version}-mc${minecraft_version}-fabric"
 	changelog = readChangeLog()
-	
 	uploadFile = remapJar
 	autoAddDependsOn = false
 	dependencies {

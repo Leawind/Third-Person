@@ -17,10 +17,11 @@ subprojects {
 		//		mappings "net.fabricmc:yarn:$yarn_mappings:v2"
 	}
 	processResources {
-		eachFile { expand rootProject.properties }
+		eachFile {
+			expand rootProject.properties
+		}
 	}
 }
-
 allprojects {
 	apply plugin: "java"
 	apply plugin: "architectury-plugin"
@@ -33,18 +34,29 @@ allprojects {
 	repositories {
 		mavenLocal()
 		mavenCentral()
-		maven { url "https://jitpack.io" }
+		maven {
+			url "https://jitpack.io"
+		}
 		// Cloth Config API
-		maven { url "https://maven.shedaniel.me/" }
+		maven {
+			url "https://maven.shedaniel.me/"
+		}
 		// YACL
-		maven { url "https://maven.isxander.dev/releases" }
-		maven { url "https://maven.quiltmc.org/repository/release" }
-		maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+		maven {
+			url "https://maven.isxander.dev/releases"
+		}
+		maven {
+			url "https://maven.quiltmc.org/repository/release"
+		}
+		maven {
+			url "https://oss.sonatype.org/content/repositories/snapshots"
+		}
 		// Mod Menu
-		maven { url "https://maven.terraformersmc.com/releases" }
+		maven {
+			url "https://maven.terraformersmc.com/releases"
+		}
 		// Modrinth
 		gradlePluginPortal()
-		
 	}
 	tasks.withType(JavaCompile).configureEach {
 		options.encoding = "UTF-8"
@@ -60,29 +72,29 @@ allprojects {
 }
 
 // 生成文件名格式
-String archiveFileNameOfPlatform(String platform){
-	String[] platforms = enabled_platforms.split(",").each { it.trim() }
-	if(!platforms.contains(platform)){
+String archiveFileNameOfPlatform(String platform) {
+	String[] platforms = enabled_platforms.split(",").each {
+		it.trim()
+	}
+	if (!platforms.contains(platform)) {
 		throw new IllegalArgumentException("Unknown platform: ${platform}")
 	}
 	return "${mod_id}-v${mod_version}-mc${minecraft_version}-${platform}"
 }
 
 // 读取更新日志
-String readChangeLog(){
+String readChangeLog() {
 	File changelogFile = getProjectDir().toPath().resolve("changelog_latest.md").toFile()
 	return changelogFile.canRead() ? changelogFile.text : "No changelog"
 }
 
 tasks.register("testBuild") {
 	println "<<< Testing build scripts >>>"
-	
 	println "Enabled platforms: ${enabled_platforms}"
 	println "Archive file name for each platform:"
 	enabled_platforms.split(",").each {
 		println "\t$it: ${archiveFileNameOfPlatform(it)}"
 	}
 	println "\tModrinth API key exists: ${System.getenv("MODRINTH_TOKEN") != null}"
-	
 	println "Changelog: ${readChangeLog().replaceAll("^|\n", "\n\t")}"
 }

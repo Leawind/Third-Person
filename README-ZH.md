@@ -1,7 +1,7 @@
 <div align=center>
 
 | [English](./README.md) | 中文 |
-| ---------------------- | ---- |
+|------------------------|----|
 
 [![](https://img.shields.io/curseforge/dt/930880?style=flat&logo=curseforge&color=F1643%5E&cacheSeconds=3600&label=下载量)](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person)
 [![](https://img.shields.io/modrinth/dt/S3D3QF0M?style=flat&logo=modrinth&color=17B85A&cacheSeconds=3600&label=下载量)](https://modrinth.com/mod/leawind-third-person)
