@@ -11,7 +11,7 @@
 | [First-Person-Model 第一人称模型](https://github.com/tr7zw/FirstPersonModel) | 👫      |
 | [Better Combat 更好的战斗](https://github.com/ZsoltMolnarrr/BetterCombat)    | 👫      |
 | [EpicFight 史诗战斗](https://github.com/Yesssssman/epicfightmod)             | 👫⚔️     |
-| [Jade](https://github.com/Snownee/Jade)                                      | ❓      |
+| [Jade](https://github.com/Snownee/Jade)                                      | 👫⚔️     |
 | [MrCrayfish's Gun Mod](https://github.com/MrCrayfish/MrCrayfishGunMod)       | ❓      |
 | [ParCool](https://github.com/alRex-U/ParCool)                                | ❓      |
 | [Yes Steve Model 是的史蒂夫模型](https://github.com/TartaricAcid/ysm)        | ❓      |
