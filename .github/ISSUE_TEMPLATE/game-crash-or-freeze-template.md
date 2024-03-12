@@ -1,5 +1,5 @@
 ---
-name: Game crash or freeze template
+name: Game crash or freeze
 about: Game crash or freeze 游戏崩溃或卡死
 title: Crash when ...
 labels: bug, crash

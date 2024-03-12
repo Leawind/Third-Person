@@ -1,6 +1,6 @@
 ---
-name: Compatibility template
-about: Incompatible with other mod 不兼容另一个模组
+name: Compatibility
+about: Incompatible with other mod 不兼容其他模组
 title: Incompatible with '...'
 labels: compatibility
 assignees: ''
