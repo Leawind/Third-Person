@@ -46,7 +46,7 @@ allprojects {
 		gradlePluginPortal()
 		
 	}
-	tasks.withType(JavaCompile) {
+	tasks.withType(JavaCompile).configureEach {
 		options.encoding = "UTF-8"
 		options.release = JavaLanguageVersion.of(java_version).asInt()
 	}
@@ -61,24 +61,17 @@ allprojects {
 
 // 生成文件名格式
 String archiveFileNameOfPlatform(String platform){
-	switch(platform) {
-		case "forge":
-			return "${mod_id}-v${mod_version}-mc${minecraft_version}-forge";
-		case "fabric":
-			return "${mod_id}-v${mod_version}-mc${minecraft_version}-fabric";
-		default:
-			throw new IllegalArgumentException("Unknown platform: ${platform}");
+	String[] platforms = enabled_platforms.split(",").each { it.trim() }
+	if(!platforms.contains(platform)){
+		throw new IllegalArgumentException("Unknown platform: ${platform}")
 	}
+	return "${mod_id}-v${mod_version}-mc${minecraft_version}-${platform}"
 }
 
 // 读取更新日志
 String readChangeLog(){
 	File changelogFile = getProjectDir().toPath().resolve("changelog_latest.md").toFile()
-	if(changelogFile.canRead()){
-		return changelogFile.text
-	}else{
-		return "No changelog"
-	}
+	return changelogFile.canRead() ? changelogFile.text : "No changelog"
 }
 
 tasks.register("testBuild") {
