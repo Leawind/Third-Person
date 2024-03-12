@@ -342,11 +342,16 @@ public class CameraAgentImpl implements CameraAgent {
 
 	/**
 	 * 为防止穿墙，重新计算 {@link CameraAgentImpl#smoothDistanceToEye} 的值
+	 * <p>
+	 * 当相机实体的眼睛在墙里时，直接把相机放在眼睛上。
 	 *
 	 * @see Camera#getMaxZoom(double)
 	 */
 	private void preventThroughWall () {
-		// 防止穿墙
+		Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		if (entity.isSpectator() && ThirdPerson.ENTITY_AGENT.isEyeInWall(ClipContext.Block.VISUAL)) {
+			return;
+		}
 		Vec3   cameraPosition    = fakeCamera.getPosition();
 		Vec3   smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPersonStatus.lastPartialTick));
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);

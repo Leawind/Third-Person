@@ -22,11 +22,17 @@ import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.jetbrains.annotations.NotNull;
 
@@ -229,6 +235,16 @@ public class EntityAgentImpl implements EntityAgent {
 												 isHorizontalZero ? rawEyePosition.z(): smoothEyePositionValue.z());
 		}
 		return smoothEyePositionValue;
+	}
+
+	@Override
+	public boolean isEyeInWall (@NotNull ClipContext.ShapeGetter shapeGetter) {
+		final Entity   cameraEntity = getRawCameraEntity();
+		Vec3           eyePos       = cameraEntity.getEyePosition();
+		final BlockPos blockPos     = BlockPos.containing(eyePos.x(), eyePos.y(), eyePos.z());
+		final AABB     eyeAabb      = AABB.ofSize(eyePos, 0.8, 1e-6, 0.8);
+		BlockState     blockState   = cameraEntity.level().getBlockState(blockPos);
+		return shapeGetter.get(blockState, cameraEntity.level(), blockPos, CollisionContext.empty()).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
 	}
 
 	@Override

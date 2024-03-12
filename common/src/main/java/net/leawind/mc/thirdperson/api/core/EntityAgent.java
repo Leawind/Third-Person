@@ -9,6 +9,7 @@ import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ClipContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -121,6 +122,13 @@ public interface EntityAgent {
 	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
 	 */
 	@NotNull Vector3d getPossibleSmoothEyePosition (float partialTick);
+
+	/**
+	 * 实体的眼睛是否在墙里
+	 * <p>
+	 * 与{@link Entity#isInWall()}不同的是，旁观者模式下此方法仍然可以返回true
+	 */
+	boolean isEyeInWall (@NotNull ClipContext.ShapeGetter shapeGetter);
 
 	/**
 	 * 实体是否在交互
