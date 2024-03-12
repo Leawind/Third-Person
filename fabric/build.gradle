@@ -64,15 +64,9 @@ components.java {
 	}
 }
 publishing {
-	publications {
-		mavenFabric(MavenPublication) {
-			artifactId = mod_id + "-" + project.name
-			from components.java
-		}
-	}
+	publications {}
 	
-	repositories {
-	}
+	repositories {}
 }
 
 
