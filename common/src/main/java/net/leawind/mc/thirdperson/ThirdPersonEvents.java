@@ -23,13 +23,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -60,19 +56,9 @@ public final class ThirdPersonEvents {
 		Config config = ThirdPerson.getConfig();
 		ThirdPersonStatus.isTemporaryFirstPerson = false;
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		{
-			/*
-			  如果玩家在墙里边，就暂时切换到第一人称
-			  这可能是因为玩家窒息，或处于观察者模式穿墙
-			*/
-			Vec3     eyePos   = cameraEntity.getEyePosition();
-			BlockPos blockPos = new BlockPos(LMath.toVec3i(eyePos));
-			AABB     eyeAabb  = AABB.ofSize(eyePos, 0.8, 0.8, 0.8);
-			boolean isInWall = ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER.get(cameraEntity.level().getBlockState(blockPos), cameraEntity.level(), blockPos, CollisionContext.empty())//
-																					  .toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
-			if (isInWall) {
-				ThirdPersonStatus.isTemporaryFirstPerson = true;
-			}
+		if (!cameraEntity.isSpectator() && cameraEntity.isInWall()) {
+			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
+			ThirdPersonStatus.isTemporaryFirstPerson = true;
 		}
 		if (cameraEntity instanceof LivingEntity livingEntity) {
 			if (livingEntity.isUsingItem()) {
