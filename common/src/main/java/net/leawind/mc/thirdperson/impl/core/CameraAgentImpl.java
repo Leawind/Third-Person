@@ -85,7 +85,7 @@ public class CameraAgentImpl implements CameraAgent {
 	public void onRenderTickPre (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
 			// 更新探测结果
-			hitResult = pick();
+			hitResult = pick(getPickRange());
 			// 平滑更新距离
 			updateSmoothVirtualDistance(period);
 			// 平滑更新相机偏移量
@@ -181,11 +181,6 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public @NotNull HitResult pick () {
-		return pick(getPickRange());
-	}
-
-	@Override
 	public @NotNull Optional<Vector3d> getPickPosition () {
 		return getPickPosition(getPickRange());
 	}
@@ -249,11 +244,6 @@ public class CameraAgentImpl implements CameraAgent {
 	@VersionSensitive
 	public @NotNull BlockHitResult pickBlock (double pickRange) {
 		return pickBlock(pickRange, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
-	}
-
-	@Override
-	public @NotNull BlockHitResult pickBlock () {
-		return pickBlock(getPickRange());
 	}
 
 	@VersionSensitive

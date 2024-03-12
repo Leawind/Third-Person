@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson;
 
 
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.ClipContext;
 
@@ -16,7 +17,7 @@ public final class ThirdPersonConstants {
 	/**
 	 * 成像平面到相机的距离，这是一个固定值，硬编码在Minecraft源码中。
 	 *
-	 * @see net.minecraft.client.Camera#getNearPlane()
+	 * @see Camera#getNearPlane()
 	 */
 	public static final double            NEAR_PLANE_DISTANCE                   = 0.050;
 	public static final long              CAMERA_FOLLOW_DELAY                   = 5000L;

@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.api.config;
 
 import net.leawind.mc.thirdperson.api.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.impl.config.ConfigImpl;
+import net.leawind.mc.thirdperson.resources.ItemPatternManager;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.monolist.MonoList;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ public abstract class Config extends AbstractConfig {
 	 * <p>
 	 * aiming_item_tags 是解析好的nbt标签集合，用于匹配玩家手持物品
 	 *
-	 * @see net.leawind.mc.thirdperson.resources.ItemPatternManager#apply
+	 * @see ItemPatternManager#apply
 	 */
 	abstract public void updateItemPatterns ();
 

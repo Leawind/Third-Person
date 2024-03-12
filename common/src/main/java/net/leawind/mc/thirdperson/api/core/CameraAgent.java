@@ -98,15 +98,6 @@ public interface CameraAgent {
 	double getPickRange ();
 
 	/**
-	 * 从相机pick，使用默认距离
-	 * <p>
-	 * 默认距离是相机到玩家的距离加上配置中相机的pick距离
-	 * <p>
-	 * 结果可能是实体或方块
-	 */
-	@NotNull HitResult pick ();
-
-	/**
 	 * 获取pick结果坐标
 	 * <p>
 	 * 使用默认距离
@@ -172,11 +163,6 @@ public interface CameraAgent {
 	 * @param pickRange 从相机出发的探测距离
 	 */
 	@NotNull BlockHitResult pickBlock (double pickRange);
-
-	/**
-	 * 同 {@link CameraAgent#pickBlock(double)}，使用默认探测距离
-	 */
-	@NotNull BlockHitResult pickBlock ();
 
 	/**
 	 * 相机是否正在注视某个实体（无视其他实体或方块）

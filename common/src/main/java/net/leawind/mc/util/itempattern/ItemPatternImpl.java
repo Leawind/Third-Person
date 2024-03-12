@@ -12,7 +12,7 @@ public class ItemPatternImpl implements ItemPattern {
 	/**
 	 * 物品描述标识符
 	 * <p>
-	 * 可通过 {@link net.minecraft.world.item.ItemStack#getDescriptionId()} 获取
+	 * 可通过 {@link ItemStack#getDescriptionId()} 获取
 	 */
 	private final @Nullable String      descriptionId;
 	/**

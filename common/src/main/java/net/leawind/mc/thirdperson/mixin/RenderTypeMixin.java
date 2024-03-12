@@ -27,7 +27,7 @@ public class RenderTypeMixin extends RenderStateShard {
 	}
 
 	/**
-	 * 修改自 net.minecraft.client.renderer.RenderType#ARMOR_CUTOUT_NO_CULL
+	 * 修改自 RenderType#ARMOR_CUTOUT_NO_CULL
 	 * <p>
 	 * 将 NO_TRANSPARENCY 改成了 TRANSLUCENT_TRANSPARENCY
 	 */
