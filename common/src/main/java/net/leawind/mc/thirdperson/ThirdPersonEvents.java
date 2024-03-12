@@ -132,13 +132,12 @@ public final class ThirdPersonEvents {
 	 * <p>
 	 * 该调用位于真正渲染画面之前。
 	 * <p>
-	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
+	 * {@link GameRenderer#render} -> {@link GameRenderer#renderLevel} -> {@link Camera#setup}
 	 *
 	 * @see Camera#setup
-	 * @see CameraMixin#setup_head
+	 * @see CameraMixin#setup_invoke
 	 */
 	public static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
-		ThirdPersonStatus.lastPartialTick = partialTick;
 		ThirdPerson.CAMERA_AGENT.setBlockGetter(level);
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return;
@@ -155,6 +154,7 @@ public final class ThirdPersonEvents {
 	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
 	public static void onPreRender (float partialTick) {
+		ThirdPersonStatus.lastPartialTick = partialTick;
 		// in seconds
 		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;

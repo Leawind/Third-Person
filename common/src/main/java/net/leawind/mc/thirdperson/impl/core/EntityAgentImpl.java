@@ -122,7 +122,7 @@ public class EntityAgentImpl implements EntityAgent {
 			return;
 		}
 		if (!ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-			Vector2d targetRotation = rotateTarget.getRotation();
+			Vector2d targetRotation = getRotateTarget().getRotation();
 			smoothRotation.setTarget(targetRotation);
 			switch (smoothRotationType) {
 				case HARD -> setRawRotation(targetRotation);
@@ -167,7 +167,7 @@ public class EntityAgentImpl implements EntityAgent {
 			case HARD, EXP -> {
 			}
 			case LINEAR, EXP_LINEAR -> {
-				smoothRotation.setTarget(rotateTarget.getRotation());
+				smoothRotation.setTarget(getRotateTarget().getRotation());
 				smoothRotation.update(period);
 			}
 		}
