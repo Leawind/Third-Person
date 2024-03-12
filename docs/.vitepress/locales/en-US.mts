@@ -26,7 +26,7 @@ export default {
 			copyright: 'Copyright © 2024 Leawind',
 		},
 		editLink: {
-			pattern: 'https://github.com/LEAWIND/Third-Person/edit/Documentation/docs/:path',
+			pattern: 'https://github.com/LEAWIND/Third-Person/edit/gh-pages/docs/:path',
 			text: 'Edit this page on Github',
 		},
 		lastUpdated: { text: "Last updated", },
