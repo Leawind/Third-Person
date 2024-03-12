@@ -1,6 +1,6 @@
 # 兼容性
 
-* 👫 完美兼容。
+* 👫 主要功能完美兼容。
 * ⚔️ 冲突，造成游戏崩溃或卡死。
 * 👫⚔️ 不会崩溃，但不能正常工作。
 * ❓ 暂未测试。
@@ -18,3 +18,7 @@
 | [Exposure 曝光](https://github.com/mortuusars/Exposure)                      | ❓      |
 | [Celestisynth](https://github.com/AquexTheSeal/Celestisynth)                 | ❓      |
 | [IMBlocker 输入法冲突修复](https://github.com/reserveword/IMBlocker)         | ❓      |
+| [Not Enough Animations](https://github.com/tr7zw/NotEnoughAnimations)        | ❓      |
+| [Replay](https://github.com/ReplayMod/ReplayMod)                             | ❓      |
+| [Crosshair Bobbing](https://github.com/Krash220/CrosshairBobbingMod)         | ❓      |
+|                                                                              | ❓      |
