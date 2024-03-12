@@ -50,10 +50,6 @@ public class EntityAgentImpl implements EntityAgent {
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
 	private          boolean             wasAiming          = false;
-	/**
-	 * 上一个 client tick 中的 isInterecting 的值
-	 */
-	private          boolean             wasInterecting     = false;
 
 	public EntityAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft = minecraft;
@@ -80,8 +76,7 @@ public class EntityAgentImpl implements EntityAgent {
 			smoothEyePosition.set(getRawEyePosition(ThirdPersonStatus.lastPartialTick));
 		}
 		smoothOpacity.set(0d);
-		wasAiming      = false;
-		wasInterecting = false;
+		wasAiming = false;
 	}
 
 	@Override
@@ -139,8 +134,7 @@ public class EntityAgentImpl implements EntityAgent {
 	public void onClientTickPre () {
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
-		wasInterecting = isInterecting();
-		wasAiming      = isAiming();
+		wasAiming = isAiming();
 		config.getCameraOffsetScheme().setAiming(wasAiming());
 		updateRotateStrategy();
 		updateSmoothOpacity(period, 1);

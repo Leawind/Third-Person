@@ -3,7 +3,6 @@ package net.leawind.mc.thirdperson;
 
 import net.leawind.mc.thirdperson.api.config.Config;
 import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
-import net.leawind.mc.thirdperson.impl.core.CameraAgentImpl;
 import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
@@ -101,7 +100,7 @@ public final class ThirdPersonStatus {
 	}
 
 	/**
-	 * 第三人称下，通常是直接用鼠标控制相机的朝向{@link CameraAgentImpl#relativeRotation}，再根据一些因素决定玩家的朝向。
+	 * 第三人称下，通常是直接用鼠标控制相机的朝向 CameraAgentImpl#relativeRotation，再根据一些因素决定玩家的朝向。
 	 * <p>
 	 * 但为了与另一个模组 Do a Barrel Roll 兼容，在特定情况下，允许直接用鼠标控制玩家朝向，而相机跟随玩家旋转。
 	 */

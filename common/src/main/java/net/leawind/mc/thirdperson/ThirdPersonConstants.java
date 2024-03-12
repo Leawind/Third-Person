@@ -8,6 +8,7 @@ import net.minecraft.world.level.ClipContext;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 public final class ThirdPersonConstants {
 	public static final String            MOD_ID                                = "leawind_third_person";
 	public static final String            MOD_NAME                              = "Leawind's Third Person";
@@ -20,7 +21,6 @@ public final class ThirdPersonConstants {
 	 * @see Camera#getNearPlane()
 	 */
 	public static final double            NEAR_PLANE_DISTANCE                   = 0.050;
-	public static final long              CAMERA_FOLLOW_DELAY                   = 5000L;
 	public static final double            CAMERA_PITCH_DEGREE_LIMIT             = 89.800;
 	public static final double            CAMERA_THROUGH_WALL_DETECTION         = 0.180;
 	/**

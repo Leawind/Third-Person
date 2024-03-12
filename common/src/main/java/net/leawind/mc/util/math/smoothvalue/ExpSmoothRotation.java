@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * <li>y：偏航角，范围：[0， 360]</li>
  * <li>x：俯仰角，范围：[-90， 90]</li>
  */
+@SuppressWarnings("unused")
 public class ExpSmoothRotation {
 	private final ExpRotSmoothDouble y;
 	private final ExpSmoothDouble    x;

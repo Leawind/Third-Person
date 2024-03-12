@@ -11,6 +11,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+@SuppressWarnings("unused")
 @Mod(ThirdPersonConstants.MOD_ID)
 public final class ThirdPersonForge {
 	public ThirdPersonForge () {

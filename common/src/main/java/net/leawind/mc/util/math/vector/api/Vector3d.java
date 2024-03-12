@@ -66,7 +66,7 @@ public interface Vector3d {
 	@Contract("_,_ -> param2")
 	Vector3d sub (@NotNull Vector3d v, @NotNull Vector3d dest);
 
-	@Contract("_,_,_,_ -> param2")
+	@Contract("_,_,_,_ -> param4")
 	Vector3d sub (double x, double y, double z, @NotNull Vector3d dest);
 
 	@Contract("_ -> this")

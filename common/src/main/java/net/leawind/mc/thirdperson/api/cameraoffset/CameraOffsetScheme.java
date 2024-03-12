@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 默认有两种模式，按F5在第一人称和两种模式间切换
  */
+@SuppressWarnings("unused")
 public interface CameraOffsetScheme {
 	static CameraOffsetScheme of (Config that) {
 		return new CameraOffsetSchemeImpl(that);

@@ -15,6 +15,7 @@ import java.io.IOException;
  * <p>
  * 负则配置的加载与保存
  */
+@SuppressWarnings("unused")
 public interface ConfigManager {
 	/**
 	 * 在可翻译文本的键前加上modid前缀

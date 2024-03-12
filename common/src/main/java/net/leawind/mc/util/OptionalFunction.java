@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 public interface OptionalFunction<T> {
 	static <E> OptionalFunction<E> of (Supplier<E> supplier, Supplier<Boolean> availablePredicate) {
-		return new OptionalFunction<E>() {
+		return new OptionalFunction<>() {
 			@Override
 			public E get () {
 				return supplier.get();

@@ -13,6 +13,7 @@ import java.lang.annotation.RetentionPolicy;
  * <p>
  * 通常应当对实现方法，而非接口方法使用此注解。
  */
+@SuppressWarnings("unused")
 @Retention(RetentionPolicy.SOURCE)
 public @interface VersionSensitive {
 	String value () default "";

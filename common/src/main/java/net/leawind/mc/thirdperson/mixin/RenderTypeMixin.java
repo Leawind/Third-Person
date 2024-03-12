@@ -22,6 +22,7 @@ import java.util.function.Function;
 
 @Mixin(value=RenderType.class, priority=2000)
 public class RenderTypeMixin extends RenderStateShard {
+	@SuppressWarnings("unused")
 	public RenderTypeMixin (String name, Runnable setupState, Runnable clearState) {
 		super(name, setupState, clearState);
 	}

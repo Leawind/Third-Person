@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public interface CameraAgent {
 	@Contract("_ -> new")
 	static @NotNull CameraAgent create (@NotNull Minecraft mc) {
@@ -37,6 +38,7 @@ public interface CameraAgent {
 	/**
 	 * 渲染前
 	 */
+	@SuppressWarnings("unused")
 	void onPreRender (double now, double period, float partialTick);
 
 	/**

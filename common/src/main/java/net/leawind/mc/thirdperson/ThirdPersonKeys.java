@@ -32,19 +32,16 @@ public final class ThirdPersonKeys {
 			mc.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
 		}
 	});
-	public static final ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
-		CameraOffsetScheme scheme = ThirdPerson.getConfig().getCameraOffsetScheme();
-		if (scheme.isCentered()) {
-			scheme.toNextSide();
-			return true;
-		} else {
-			return false;
-		}
-	}).onHold(() -> {
-		ThirdPerson.getConfig().getCameraOffsetScheme().setCentered(true);
-	}).onPress(() -> {
-		ThirdPerson.getConfig().getCameraOffsetScheme().toNextSide();
-	});
+	public static final ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ThirdPersonConstants.KEY_CATEGORY) //
+																	   .onDown(() -> {
+																		   CameraOffsetScheme scheme = ThirdPerson.getConfig().getCameraOffsetScheme();
+																		   if (scheme.isCentered()) {
+																			   scheme.toNextSide();
+																		   }
+																		   return scheme.isCentered();
+																	   }) //
+																	   .onHold(() -> ThirdPerson.getConfig().getCameraOffsetScheme().setCentered(true)) //
+																	   .onPress(() -> ThirdPerson.getConfig().getCameraOffsetScheme().toNextSide());
 	public static final ModKeyMapping TOGGLE_AIMING     = ModKeyMapping.of(getId("toggle_aiming"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPersonStatus.isToggleToAiming = !ThirdPersonStatus.isToggleToAiming;

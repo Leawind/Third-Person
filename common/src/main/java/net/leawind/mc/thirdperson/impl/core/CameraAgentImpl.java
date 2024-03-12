@@ -39,8 +39,8 @@ import java.util.Optional;
 
 public class CameraAgentImpl implements CameraAgent {
 	private final @NotNull Minecraft         minecraft;
-	private final @NotNull Camera            fakeCamera              = new Camera();
-	private final @NotNull Vector2d          relativeRotation        = Vector2d.of(0);
+	private final @NotNull Camera            fakeCamera       = new Camera();
+	private final @NotNull Vector2d          relativeRotation = Vector2d.of(0);
 	/**
 	 * 相机偏移量
 	 */
@@ -49,15 +49,11 @@ public class CameraAgentImpl implements CameraAgent {
 	 * 虚相机到平滑眼睛的距离
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
-	/**
-	 * 上次玩家操控转动视角的时间
-	 */
-	private                double            lastCameraTurnTimeStamp = 0;
 	private @Nullable      BlockGetter       blockGetter;
 	/**
 	 * 在 {@link CameraAgent#onPreRender} 中更新
 	 */
-	private @NotNull       HitResult         hitResult               = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
+	private @NotNull       HitResult         hitResult        = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
 
 	public CameraAgentImpl (@NotNull Minecraft minecraft) {
 		this.minecraft      = minecraft;
@@ -156,7 +152,6 @@ public class CameraAgentImpl implements CameraAgent {
 			dy *= 0.15;
 			dx *= config.lock_camera_pitch_angle ? 0: -0.15;
 			if (dy != 0 || dx != 0) {
-				lastCameraTurnTimeStamp = System.currentTimeMillis() / 1000D;
 				double rx = getRelativeRotation().x() + dx;
 				double ry = getRelativeRotation().y() + dy;
 				rx = LMath.clamp(rx, -ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT, ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT);
@@ -334,8 +329,8 @@ public class CameraAgentImpl implements CameraAgent {
 	 * 为防止穿墙，重新计算 {@link CameraAgentImpl#smoothDistanceToEye} 的值
 	 * <p>
 	 * 当相机实体的眼睛在墙里时，直接把相机放在眼睛上。
-	 *
-	 * @see Camera#getMaxZoom(double)
+	 * <p>
+	 * 参考 Camera#getMaxZoom(double)
 	 */
 	private void preventThroughWall () {
 		Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();

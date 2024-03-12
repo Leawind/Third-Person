@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 当操控玩家时，玩家的旋转由本类接管。
  */
+@SuppressWarnings("unused")
 public interface EntityAgent {
 	@Contract("_ -> new")
 	static @NotNull EntityAgent create (@NotNull Minecraft mc) {
@@ -55,6 +56,7 @@ public interface EntityAgent {
 	/**
 	 * 设置平滑转向的半衰期
 	 */
+	@SuppressWarnings("unused")
 	void setSmoothRotationHalflife (double halflife);
 
 	/**
@@ -65,6 +67,7 @@ public interface EntityAgent {
 	/**
 	 * @param period 相邻两次 render tick 的时间差，单位：s
 	 */
+	@SuppressWarnings("unused")
 	void onPreRender (double now, double period, float partialTick);
 
 	/**

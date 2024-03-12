@@ -46,6 +46,7 @@ public class MouseHandlerMixin {
 	 * @param dx x轴角度（俯仰角）变化量
 	 * @param dy y轴角度（偏航角）变化量
 	 */
+	@SuppressWarnings("SameReturnValue")
 	@WrapWithCondition(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
 	public boolean turnPlayer_invoke (LocalPlayer instance, double dy, double dx) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {

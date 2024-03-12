@@ -32,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Objects;
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public final class ThirdPersonEvents {
 	public static void register () {
 		ClientTickEvent.CLIENT_PRE.register(ThirdPersonEvents::onClientTickPre);
@@ -197,6 +198,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * @see ThirdPersonKeys#ADJUST_POSITION
 	 */
+	@SuppressWarnings("EmptyMethod")
 	public static void onStartAdjustingCameraOffset () {
 	}
 

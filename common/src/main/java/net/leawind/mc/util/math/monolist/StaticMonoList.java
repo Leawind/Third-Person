@@ -12,6 +12,7 @@ import java.util.function.Function;
  * <p>
  * 列表中每一项的值会在列表对象被实例化时创建，不可更改
  */
+@SuppressWarnings("unused")
 public class StaticMonoList implements MonoList {
 	private final int      sgn;
 	private final double[] list;

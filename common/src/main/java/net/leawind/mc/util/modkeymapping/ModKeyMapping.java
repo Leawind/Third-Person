@@ -68,6 +68,7 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
 	 * <p>
 	 * 按键是否已按下
 	 */
+	@SuppressWarnings("EmptyMethod")
 	boolean isDown ();
 
 	/**
