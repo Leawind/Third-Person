@@ -178,8 +178,8 @@ public final class ThirdPersonEvents {
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				ThirdPerson.ENTITY_AGENT.onRenderTickPre(now, period, partialTick);
-				ThirdPerson.CAMERA_AGENT.onRenderTickPre(now, period, partialTick);
+				ThirdPerson.ENTITY_AGENT.onPreRender(now, period, partialTick);
+				ThirdPerson.CAMERA_AGENT.onPreRender(now, period, partialTick);
 			}
 		}
 	}

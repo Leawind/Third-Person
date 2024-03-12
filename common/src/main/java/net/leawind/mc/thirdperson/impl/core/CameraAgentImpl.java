@@ -55,7 +55,7 @@ public class CameraAgentImpl implements CameraAgent {
 	private                double            lastCameraTurnTimeStamp = 0;
 	private @Nullable      BlockGetter       blockGetter;
 	/**
-	 * 在 onRenderTickPre 中更新
+	 * 在 {@link CameraAgent#onPreRender} 中更新
 	 */
 	private @NotNull       HitResult         hitResult               = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
 
@@ -82,7 +82,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void onRenderTickPre (double now, double period, float partialTick) {
+	public void onPreRender (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
 			// 更新探测结果
 			hitResult = pick(getPickRange());
