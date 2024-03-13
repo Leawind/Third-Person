@@ -92,6 +92,17 @@ public class CameraAgentImpl implements CameraAgent {
 				Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
 				relativeRotation.set(-rot.x(), rot.y() - 180);
 			}
+			if (ThirdPersonStatus.isTransitioningToFirstPerson) {
+				// 正在从第三人称过渡到第一人称
+				if (smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD) {
+					// 距离足够近，结束过渡
+					ThirdPersonStatus.isTransitioningToFirstPerson = false;
+					ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+					ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
+					// 将玩家转到相机朝向
+					ThirdPerson.ENTITY_AGENT.setRawRotation(getRotation());
+				}
+			}
 		}
 	}
 
@@ -114,15 +125,6 @@ public class CameraAgentImpl implements CameraAgent {
 		} else if (!ThirdPerson.mc.options.getCameraType().isFirstPerson()) {
 			// 目标是第一人称，但是相机当前以第三人称渲染，那么开始过渡
 			ThirdPersonStatus.isTransitioningToFirstPerson = true;
-		}
-		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
-			// 正在从第三人称过渡到第一人称
-			if (smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD) {
-				// 距离足够近，结束过渡
-				ThirdPersonStatus.isTransitioningToFirstPerson = false;
-				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
-			}
 		}
 	}
 
