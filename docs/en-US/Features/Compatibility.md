@@ -10,15 +10,15 @@
 | [Do a Barrel Roll](https://github.com/enjarai/do-a-barrel-roll)        | 👫             |
 | [First-Person-Model](https://github.com/tr7zw/FirstPersonModel)        | 👫             |
 | [Better Combat](https://github.com/ZsoltMolnarrr/BetterCombat)         | 👫             |
-| [EpicFight](https://github.com/Yesssssman/epicfightmod)                | 👫⚔️            |
+| [Not Enough Animations](https://github.com/tr7zw/NotEnoughAnimations)  | 👫             |
 | [Jade](https://github.com/Snownee/Jade)                                | 👫⚔️            |
+| [Crosshair Bobbing](https://github.com/Krash220/CrosshairBobbingMod)   | 👫⚔️            |
+| [EpicFight](https://github.com/Yesssssman/epicfightmod)                | 👫⚔️            |
+| [Exposure](https://github.com/mortuusars/Exposure)                     | 👫⚔️            |
 | [MrCrayfish's Gun Mod](https://github.com/MrCrayfish/MrCrayfishGunMod) | ❓             |
 | [ParCool](https://github.com/alRex-U/ParCool)                          | ❓             |
 | [Yes Steve Model](https://github.com/TartaricAcid/ysm)                 | ❓             |
-| [Exposure](https://github.com/mortuusars/Exposure)                     | ❓             |
 | [Celestisynth](https://github.com/AquexTheSeal/Celestisynth)           | ❓             |
 | [IMBlocker](https://github.com/reserveword/IMBlocker)                  | ❓             |
-| [Not Enough Animations](https://github.com/tr7zw/NotEnoughAnimations)  | ❓             |
 | [Replay](https://github.com/ReplayMod/ReplayMod)                       | ❓             |
-| [Crosshair Bobbing](https://github.com/Krash220/CrosshairBobbingMod)   | ❓             |
 |                                                                        | ❓             |
