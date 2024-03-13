@@ -40,13 +40,13 @@ public class ConfigImpl extends Config {
 	public void updateItemPatterns () {
 		int count;
 		holdToAimItemPatterns.clear();
-		count = ItemPattern.addToSet(holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
+		count = ItemPattern.addToSet("minecraft", holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
 		ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", count);
 		useToAimItemPatterns.clear();
-		count = ItemPattern.addToSet(useToAimItemPatterns, use_to_aim_item_pattern_expressions);
+		count = ItemPattern.addToSet("minecraft", useToAimItemPatterns, use_to_aim_item_pattern_expressions);
 		ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", count);
 		useToFirstPersonItemPatterns.clear();
-		count = ItemPattern.addToSet(useToFirstPersonItemPatterns, use_to_first_person_pattern_expressions);
+		count = ItemPattern.addToSet("minecraft", useToFirstPersonItemPatterns, use_to_first_person_pattern_expressions);
 		ThirdPerson.LOGGER.info("Loaded {} use_to_first_person item patterns from configuration", count);
 	}
 

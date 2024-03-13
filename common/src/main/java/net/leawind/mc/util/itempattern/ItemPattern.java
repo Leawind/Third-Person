@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * <p>
  * 可用于根据物品 id 和 nbt 标签匹配物品
  * <p>
- * 使用 {@link ItemPattern#of(String)} 或 {@link ItemPattern#of(String, String)} 构建实例
+ * 使用 {@link ItemPattern#of(String, String)} 或 {@link ItemPattern#of(String, String, String)} 构建实例
  * <p>
  * 示例：
  * <pre>
@@ -69,7 +69,7 @@ public interface ItemPattern {
 	/**
 	 * 匹配一切物品
 	 */
-	ItemPattern ANY              = of(null, null);
+	ItemPattern ANY              = of("minecraft", null, null);
 
 	@SafeVarargs
 	static boolean anyMatch (@Nullable ItemStack itemStack, Iterable<ItemPattern> @NotNull ... itemPatternsList) {
@@ -91,7 +91,7 @@ public interface ItemPattern {
 	 */
 	static @NotNull Optional<Component> supplyError (@Nullable String expression) {
 		try {
-			of(expression);
+			of("minecraft", expression);
 			return Optional.empty();
 		} catch (IllegalArgumentException e) {
 			return Optional.of(Component.literal(e.getMessage()));
@@ -111,17 +111,17 @@ public interface ItemPattern {
 	 * <p>
 	 * item.minecraft.crossbow{Charged:1b}
 	 */
-	@Contract("_ -> new")
-	static @NotNull ItemPattern of (@Nullable String expression) {
+	@Contract("_,_ -> new")
+	static @NotNull ItemPattern of (@NotNull String defaultNamespace, @Nullable String expression) {
 		if (expression == null) {
 			return ANY;
 		} else if (RGX_ID.matcher(expression).matches()) {
-			return of(expression, null);
+			return of(defaultNamespace, expression, null);
 		} else if (RGX_ID_NBT.matcher(expression).matches()) {
 			int i = expression.indexOf('{');
-			return of(expression.substring(0, i), expression.substring(i));
+			return of(defaultNamespace, expression.substring(0, i), expression.substring(i));
 		} else if (RGX_NBT.matcher(expression).matches()) {
-			return of(null, expression);
+			return of(defaultNamespace, null, expression);
 		} else {
 			throw new IllegalArgumentException(String.format("Invalid item pattern expression: %s", expression));
 		}
@@ -131,9 +131,10 @@ public interface ItemPattern {
 	 * @param idExp  宽松规则的物品ID
 	 * @param tagExp NBT复合标签表达式
 	 */
-	@Contract("_,_ -> new")
-	static @NotNull ItemPattern of (@Nullable String idExp, @Nullable String tagExp) {
-		return new ItemPatternImpl(parseDescriptionId(idExp), parsePatternTag(tagExp));
+	@Contract("_,_,_ -> new")
+	@Deprecated
+	static @NotNull ItemPattern of (@NotNull String defaultNamespace, @Nullable String idExp, @Nullable String tagExp) {
+		return new ItemPatternImpl(parseDescriptionId(defaultNamespace, idExp), parsePatternTag(tagExp));
 	}
 
 	/**
@@ -145,16 +146,16 @@ public interface ItemPattern {
 	 * <li>"命名空间:ID"，例如 minecraft:snowball</li>
 	 * <li>"descriptionId"，例如 item.minecraft.snowball</li>
 	 *
-	 * @param idExp 宽松规则的物品ID，允许3种格式：
+	 * @param defaultNamespace 命名空间缺省值
 	 */
-	@Contract("null->null")
-	static @Nullable String parseDescriptionId (@Nullable String idExp) {
+	@Contract("_,null->null")
+	static @Nullable String parseDescriptionId (@NotNull String defaultNamespace, @Nullable String idExp) {
 		if (idExp == null || idExp.isEmpty()) {
 			return null;
 		} else if (RGX_REGULAR_ID.matcher(idExp).matches()) {
 			return idExp;
 		} else if (RGX_PURE_ID.matcher(idExp).matches()) {
-			return "item.minecraft." + idExp;
+			return "item." + defaultNamespace + "." + idExp;
 		} else if (RGX_NAMESPACE_ID.matcher(idExp).matches()) {
 			return "item." + idExp.replace(':', '.');
 		} else {
@@ -186,12 +187,12 @@ public interface ItemPattern {
 	 * @param itemPatterns 要添加到的物品模式集合
 	 * @param expressions  包含表达式的可迭代对象
 	 */
-	static int addToSet (@NotNull Set<ItemPattern> itemPatterns, @Nullable Iterable<String> expressions) {
+	static int addToSet (@NotNull String defaultNamespace, @NotNull Set<ItemPattern> itemPatterns, @Nullable Iterable<String> expressions) {
 		int count = 0;
 		if (expressions != null) {
 			for (String expression: expressions) {
 				try {
-					itemPatterns.add(of(expression));
+					itemPatterns.add(of(defaultNamespace, expression));
 					count++;
 				} catch (IllegalArgumentException e) {
 					ThirdPerson.LOGGER.error("Skip invalid item pattern expression: {}", expression);

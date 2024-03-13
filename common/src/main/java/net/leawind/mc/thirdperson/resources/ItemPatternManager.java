@@ -61,19 +61,20 @@ public class ItemPatternManager extends SimpleJsonResourceReloadListener {
 		map.forEach((resourceLocation, jsonElement) -> {
 			JsonArray aimingCheckObj = jsonElement.getAsJsonArray();
 			String[]  resourcePath   = resourceLocation.getPath().split("/");
+			String    namespace      = resourceLocation.getNamespace();
 			if (resourcePath.length >= 2) {
 				String resourceSetName = resourcePath[0];
 				switch (resourceSetName) {
 					case SET_HOLD_TO_AIM -> {
-						int count = addToSet(holdToAimItemPatterns, aimingCheckObj);
+						int count = addToSet(namespace, holdToAimItemPatterns, aimingCheckObj);
 						ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from {}", count, resourceLocation);
 					}
 					case SET_USE_TO_AIM -> {
-						int count = addToSet(useToAimItemPatterns, aimingCheckObj);
+						int count = addToSet(namespace, useToAimItemPatterns, aimingCheckObj);
 						ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from {}", count, resourceLocation);
 					}
 					case SET_USE_TO_FIRST_PERSON -> {
-						int count = addToSet(useToFirstPersonItemPatterns, aimingCheckObj);
+						int count = addToSet(namespace, useToFirstPersonItemPatterns, aimingCheckObj);
 						ThirdPerson.LOGGER.info("Loaded {}  use_to_first_person item patterns from {}", count, resourceLocation);
 					}
 				}
@@ -81,10 +82,10 @@ public class ItemPatternManager extends SimpleJsonResourceReloadListener {
 		});
 	}
 
-	private int addToSet (@NotNull Set<ItemPattern> set, @NotNull JsonArray arr) {
+	private int addToSet (@NotNull String defaultNamespace, @NotNull Set<ItemPattern> set, @NotNull JsonArray arr) {
 		arr.forEach(ele -> {
 			try {
-				set.add(ItemPattern.of(ele.getAsString()));
+				set.add(ItemPattern.of(defaultNamespace, ele.getAsString()));
 			} catch (Exception e) {
 				ThirdPerson.LOGGER.warn(e.getMessage());
 			}
