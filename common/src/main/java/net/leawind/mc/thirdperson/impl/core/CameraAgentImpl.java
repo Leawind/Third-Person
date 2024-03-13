@@ -341,7 +341,10 @@ public class CameraAgentImpl implements CameraAgent {
 		Vec3   smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPersonStatus.lastPartialTick));
 		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
-		double minDistance       = initDistance;
+		if (initDistance < 1e-5) {
+			return;
+		}
+		double minDistance = initDistance;
 		assert blockGetter != null;
 		for (int i = 0; i < 8; ++i) {
 			double offsetX = (i & 1) * 2 - 1;
