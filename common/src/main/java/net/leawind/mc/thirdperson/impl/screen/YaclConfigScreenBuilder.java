@@ -88,6 +88,24 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 																					  .build()) //
 														  .build()) //
 								  .category(ConfigCategory.createBuilder() //
+														  .name(ConfigManager.getText("option_category.camera_offset")) //
+														  .tooltip(ConfigManager.getText("option_category.camera_offset.desc")) //
+														  .group(group("normal_mode") //
+																					  .option(option("max_distance", defaults.normal_max_distance, 0.5D, 32D, 0.25, () -> config.normal_max_distance, v -> config.normal_max_distance = v).build()) //
+																					  .option(option("offset_x", defaults.normal_offset_x, -1D, +1D, 0.01, () -> config.normal_offset_x, v -> config.normal_offset_x = v).build()) //
+																					  .option(option("offset_y", defaults.normal_offset_y, -1D, +1D, 0.01, () -> config.normal_offset_y, v -> config.normal_offset_y = v).build()) //
+																					  .option(booleanOption("is_centered", defaults.normal_is_centered, () -> config.normal_is_centered, v -> config.normal_is_centered = v).build()) //
+																					  .option(option("offset_center", defaults.normal_offset_center, -1D, +1D, 0.01, () -> config.normal_offset_center, v -> config.normal_offset_center = v).build()) //
+																					  .build()) //
+														  .group(group("aiming_mode") //
+																					  .option(option("max_distance", defaults.aiming_max_distance, 0.5D, 32D, 0.25, () -> config.aiming_max_distance, v -> config.aiming_max_distance = v).build()) //
+																					  .option(option("offset_x", defaults.aiming_offset_x, -1D, +1D, 0.01, () -> config.aiming_offset_x, v -> config.aiming_offset_x = v).build()) //
+																					  .option(option("offset_y", defaults.aiming_offset_y, -1D, +1D, 0.01, () -> config.aiming_offset_y, v -> config.aiming_offset_y = v).build()) //
+																					  .option(booleanOption("is_centered", defaults.aiming_is_centered, () -> config.aiming_is_centered, v -> config.aiming_is_centered = v).build()) //
+																					  .option(option("offset_center", defaults.aiming_offset_center, -1D, +1D, 0.01, () -> config.aiming_offset_center, v -> config.aiming_offset_center = v).build()) //
+																					  .build()) //
+														  .build()) //
+								  .category(ConfigCategory.createBuilder() //
 														  .name(ConfigManager.getText("option_category.aiming_check")) //
 														  .tooltip(ConfigManager.getText("option_category.aiming_check.desc")) //
 														  .option(booleanOption("determine_aim_mode_by_animation", defaults.determine_aim_mode_by_animation, () -> config.determine_aim_mode_by_animation, v -> config.determine_aim_mode_by_animation = v).build()) //
