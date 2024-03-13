@@ -20,10 +20,6 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 		this.target = target;
 	}
 
-	public void setSmoothFactor (double k, double t) {
-		this.smoothFactor = Math.pow(k, 1 / t);
-	}
-
 	@Override
 	public void setTarget (@NotNull Double target) {
 		this.target = target;
