@@ -28,6 +28,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -270,11 +271,18 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@Override
 	public boolean isAiming () {
+		// TODO style, optimize
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.doesPlayerWantToAim()) {
 			return true;
 		}
 		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
+			if (config.determine_aim_mode_by_animation && livingEntity.isUsingItem()) {
+				UseAnim anim = livingEntity.getUseItem().getUseAnimation();
+				if (anim == UseAnim.BOW || anim == UseAnim.SPEAR) {
+					return true;
+				}
+			}
 			boolean shouldBeAiming = ItemPattern.anyMatch(livingEntity.getMainHandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns) || //
 									 ItemPattern.anyMatch(livingEntity.getOffhandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns);
 			if (livingEntity.isUsingItem()) {
