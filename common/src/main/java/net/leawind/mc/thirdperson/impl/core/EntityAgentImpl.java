@@ -128,6 +128,11 @@ public class EntityAgentImpl implements EntityAgent {
 				}
 			}
 		}
+		// NOW
+		Vector2d rot = getRawRotation(partialTick);
+		if (Double.isNaN(rot.x()) || Double.isNaN(rot.y())) {
+			ThirdPerson.LOGGER.error("Found NaN in camera entity rotation: x={}, y={}", rot.x(), rot.y());
+		}
 	}
 
 	@Override
