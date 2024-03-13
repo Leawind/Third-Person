@@ -9,6 +9,7 @@ import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -151,6 +152,13 @@ public interface EntityAgent {
 	 * 实体是否在奔跑
 	 */
 	boolean isSprinting ();
+
+	/**
+	 * 正在吃食物
+	 * <p>
+	 * 使用 {@link ItemStack#isEdible()} 判断是否是食物
+	 */
+	boolean isEating ();
 
 	/**
 	 * 根据实体的手持物品和使用状态判断是否在瞄准

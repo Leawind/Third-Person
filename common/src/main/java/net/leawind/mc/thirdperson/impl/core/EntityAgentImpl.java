@@ -269,6 +269,14 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	@Override
+	public boolean isEating () {
+		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
+			return livingEntity.getUseItem().isEdible();
+		}
+		return false;
+	}
+
+	@Override
 	public boolean isAiming () {
 		// TODO style, optimize
 		Config config = ThirdPerson.getConfig();
