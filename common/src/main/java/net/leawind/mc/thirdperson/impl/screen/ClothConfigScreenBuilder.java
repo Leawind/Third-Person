@@ -45,6 +45,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_to_moving_direction", defaults.rotate_to_moving_direction, config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("auto_rotate_interacting", defaults.auto_rotate_interacting, config.auto_rotate_interacting, v -> config.auto_rotate_interacting = v, entryBuilder));
+			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("do_not_rotate_when_eating", defaults.do_not_rotate_when_eating, config.do_not_rotate_when_eating, v -> config.do_not_rotate_when_eating = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_interacting_type", defaults.rotate_interacting_type, config.rotate_interacting_type, v -> config.rotate_interacting_type = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("auto_turn_body_drawing_a_bow", defaults.auto_turn_body_drawing_a_bow, config.auto_turn_body_drawing_a_bow, v -> config.auto_turn_body_drawing_a_bow = v, entryBuilder));
 			CATEGORY_GENERAL.addEntry(SUBCATEGORY_PLAYER_ROTATION.build());

@@ -91,6 +91,8 @@
 	"leawind_third_person.option.enable_target_entity_predict.desc": "瞄准时，预测想要射击的目标实体，据此计算玩家朝向，以便更好地瞄准目标。",
 	"leawind_third_person.option.auto_rotate_interacting": "交互时自动转身",
 	"leawind_third_person.option.auto_rotate_interacting.desc": "当按下交互键（攻击|使用|选取）时，玩家会自动转身",
+	"leawind_third_person.option.do_not_rotate_when_eating": "吃东西时不转身",
+	"leawind_third_person.option.do_not_rotate_when_eating.desc": "",
 	"leawind_third_person.option.rotate_interacting_type": "转身方式",
 	"leawind_third_person.option.rotate_interacting_type.desc": "",
 	"leawind_third_person.option.rotate_interacting_type.turn_to_crosshair": "转向准星",

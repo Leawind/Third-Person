@@ -19,7 +19,8 @@ public interface RotateStrategy {
 	@ADecisionFactor DecisionFactor is_aiming                                 = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isAiming() || ThirdPersonStatus.doesPlayerWantToAim());
 	@ADecisionFactor DecisionFactor is_fall_flying                            = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isFallFlying());
 	@ADecisionFactor DecisionFactor should_rotate_with_camera_when_not_aiming = DecisionFactor.of(() -> ThirdPerson.getConfig().player_rotate_with_camera_when_not_aiming);
-	@ADecisionFactor DecisionFactor rotate_interacting                        = DecisionFactor.of(() -> ThirdPerson.getConfig().auto_rotate_interacting && ThirdPerson.ENTITY_AGENT.isInterecting() && !ThirdPerson.ENTITY_AGENT.isEating());
+	@ADecisionFactor DecisionFactor rotate_interacting                        = DecisionFactor.of(() -> ThirdPerson.getConfig().auto_rotate_interacting && ThirdPerson.ENTITY_AGENT.isInterecting() &&
+																										!(ThirdPerson.getConfig().do_not_rotate_when_eating && ThirdPerson.ENTITY_AGENT.isEating()));
 	/**
 	 * 默认策略：移动时转向前进方向，静止时不旋转
 	 */

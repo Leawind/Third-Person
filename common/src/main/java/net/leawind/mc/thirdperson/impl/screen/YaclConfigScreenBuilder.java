@@ -39,6 +39,7 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 																						  .option(booleanOption("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, () -> config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v).build()) //
 																						  .option(booleanOption("rotate_to_moving_direction", defaults.rotate_to_moving_direction, () -> config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v).build()) //
 																						  .option(booleanOption("auto_rotate_interacting", defaults.auto_rotate_interacting, () -> config.auto_rotate_interacting, v -> config.auto_rotate_interacting = v).build()) //
+																						  .option(booleanOption("do_not_rotate_when_eating", defaults.do_not_rotate_when_eating, () -> config.do_not_rotate_when_eating, v -> config.do_not_rotate_when_eating = v).build()) //
 																						  .option(booleanOption("rotate_interacting_type", defaults.rotate_interacting_type, () -> config.rotate_interacting_type, v -> config.rotate_interacting_type = v).build()) //
 																						  .option(booleanOption("auto_turn_body_drawing_a_bow", defaults.auto_turn_body_drawing_a_bow, () -> config.auto_turn_body_drawing_a_bow, v -> config.auto_turn_body_drawing_a_bow = v).build()) //
 																						  .build()) //

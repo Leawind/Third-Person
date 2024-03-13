@@ -21,6 +21,7 @@ abstract class AbstractConfig {
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;
 	@Expose public          boolean      rotate_to_moving_direction                = true;
 	@Expose public          boolean      auto_rotate_interacting                   = true;
+	@Expose public          boolean      do_not_rotate_when_eating                 = true;
 	@Expose public          boolean      rotate_interacting_type                   = true;
 	@Expose public          boolean      auto_turn_body_drawing_a_bow              = false;
 	//------------------------------Camera Distance Adjustment

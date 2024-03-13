@@ -91,6 +91,8 @@
 	"leawind_third_person.option.enable_target_entity_predict.desc": "When aiming, predict the target entity you want to shoot, calculate the player's rotation based on this, for better aiming at the target.",
 	"leawind_third_person.option.auto_rotate_interacting": "Automatically rotate when interacting",
 	"leawind_third_person.option.auto_rotate_interacting.desc": "When pressing the interact key (attack|use|select), the player will automatically rotate.",
+	"leawind_third_person.option.do_not_rotate_when_eating": "Do not rotate when eating",
+	"leawind_third_person.option.do_not_rotate_when_eating.desc": "",
 	"leawind_third_person.option.rotate_interacting_type": "Rotation type",
 	"leawind_third_person.option.rotate_interacting_type.desc": "",
 	"leawind_third_person.option.rotate_interacting_type.turn_to_crosshair": "Turn to crosshair",
