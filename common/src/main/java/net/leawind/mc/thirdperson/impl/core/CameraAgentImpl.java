@@ -365,7 +365,10 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private void applyCamera () {
 		Camera camera = getRawCamera();
-		((CameraInvoker)camera).invokeSetRotation(fakeCamera.getYRot(), fakeCamera.getXRot());
+		float  yRot   = fakeCamera.getYRot();
+		float  xRot   = fakeCamera.getXRot();
+		assert !Float.isNaN(xRot + yRot);
+		((CameraInvoker)camera).invokeSetRotation(yRot, xRot);
 		((CameraInvoker)camera).invokeSetPosition(fakeCamera.getPosition());
 	}
 
@@ -389,6 +392,7 @@ public class CameraAgentImpl implements CameraAgent {
 		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
 		}
+		assert !Double.isNaN(smoothDistanceToEye.get());
 	}
 
 	private void updateSmoothOffsetRatio (double period) {

@@ -129,10 +129,9 @@ public class EntityAgentImpl implements EntityAgent {
 				}
 			}
 		}
-		// NOW
-		Vector2d rot = getRawRotation(partialTick);
-		if (Double.isNaN(rot.x()) || Double.isNaN(rot.y())) {
-			ThirdPerson.LOGGER.error("Found NaN in camera entity rotation: x={}, y={}", rot.x(), rot.y());
+		{
+			Vector2d rot = getRawRotation(partialTick);
+			assert !Double.isNaN(rot.x() + rot.y());
 		}
 	}
 
@@ -338,6 +337,7 @@ public class EntityAgentImpl implements EntityAgent {
 			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
 			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
 			targetOpacity = (distance - C) / (1 - C);
+			assert !Double.isNaN(targetOpacity);
 			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && !isFallFlying() && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
 				targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
 			}
