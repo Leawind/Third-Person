@@ -99,6 +99,8 @@
 	"leawind_third_person.option.turn_with_camera_when_enter_first_person.desc": "When entering first-person view, make the player face in the same direction as the camera in the just-ended third-person perspective.",
 	"leawind_third_person.option.projectile_auto_aim": "Automatically aim when shooting",
 	"leawind_third_person.option.projectile_auto_aim.desc": "When aiming at a block or entity, automatically adjust the shooting angle to hit the target.",
+	"leawind_third_person.option.determine_aim_mode_by_animation": "Determine aiming mode by animation",
+	"leawind_third_person.option.determine_aim_mode_by_animation.desc": "When specific animation is played, automatically enter aiming mode.",
 	"leawind_third_person.option.hold_to_aim_item_pattern_expressions": "Automatically aim when held",
 	"leawind_third_person.option.hold_to_aim_item_pattern_expressions.desc": "When the player's left or right hand is holding an item that matches any rule, automatically enter aiming mode.",
 	"leawind_third_person.option.use_to_aim_item_pattern_expressions": "Automatically aim when used",

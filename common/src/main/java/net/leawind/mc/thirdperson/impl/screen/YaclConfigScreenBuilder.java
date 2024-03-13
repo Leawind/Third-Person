@@ -90,6 +90,7 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 								  .category(ConfigCategory.createBuilder() //
 														  .name(ConfigManager.getText("option_category.aiming_check")) //
 														  .tooltip(ConfigManager.getText("option_category.aiming_check.desc")) //
+														  .option(booleanOption("determine_aim_mode_by_animation", defaults.determine_aim_mode_by_animation, () -> config.determine_aim_mode_by_animation, v -> config.determine_aim_mode_by_animation = v).build()) //
 														  .option(itemPatternsOption("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_pattern_expressions, () -> config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v).build()) //
 														  .option(itemPatternsOption("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_pattern_expressions, () -> config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v).build()) //
 														  .option(itemPatternsOption("use_to_first_person_pattern_expressions", defaults.use_to_first_person_pattern_expressions, () -> config.use_to_first_person_pattern_expressions, v -> config.use_to_first_person_pattern_expressions = v).build()) //
