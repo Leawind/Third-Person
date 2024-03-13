@@ -65,7 +65,7 @@ public class CameraAgentImpl implements CameraAgent {
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
 		smoothOffsetRatio.setValue(0, 0);
-		smoothDistanceToEye.set(ThirdPerson.getConfig().getDistanceMonoList().get(0));
+		smoothDistanceToEye.set(0D);
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			relativeRotation.set(-entity.getViewXRot(ThirdPersonStatus.lastPartialTick), entity.getViewYRot(ThirdPersonStatus.lastPartialTick) - 180);
