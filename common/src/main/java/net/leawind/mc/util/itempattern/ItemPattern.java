@@ -39,29 +39,29 @@ public interface ItemPattern {
 	/**
 	 * 正规的物品描述符
 	 */
-	Pattern     RGX_REGULAR_ID   = Pattern.compile("^item\\.[a-z_]+\\.[a-z_]+$");
+	Pattern     RGX_REGULAR_ID   = Pattern.compile("^item\\.[a-z0-9_]+\\.[a-z0-9_]+$");
 	/**
 	 * 纯物品名，没有命名空间。
 	 * <p>
 	 * 例如 bread
 	 */
-	Pattern     RGX_PURE_ID      = Pattern.compile("^[a-z_]+$");
+	Pattern     RGX_PURE_ID      = Pattern.compile("^[a-z0-9_]+$");
 	/**
 	 * <命名空间>:<物品ID>
 	 * <p>
 	 * 例如 minecraft:apple
 	 */
-	Pattern     RGX_NAMESPACE_ID = Pattern.compile("^[a-z_]+[.:][a-z_]+$");
+	Pattern     RGX_NAMESPACE_ID = Pattern.compile("^[a-z0-9_]+[.:][a-z0-9_]+$");
 	/**
 	 * 宽松规则的物品ID加上NBT标签
 	 * <p>
 	 * 例如 crossbow{Charged:1b}
 	 */
-	Pattern     RGX_ID_NBT       = Pattern.compile("^[a-z.:_]+\\{.*}$");
+	Pattern     RGX_ID_NBT       = Pattern.compile("^[a-z0-9.:_]+\\{.*}$");
 	/**
 	 * 宽松规则的物品ID
 	 */
-	Pattern     RGX_ID           = Pattern.compile("^[a-z.:_]+$");
+	Pattern     RGX_ID           = Pattern.compile("^[a-z0-9.:_]+$");
 	/**
 	 * NBT标签表达式
 	 */
