@@ -47,7 +47,7 @@ public class RenderTypeMixin extends RenderStateShard {
 	@VersionSensitive
 	@Inject(method="armorCutoutNoCull", at=@At(value="HEAD", target="Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"), cancellable=true)
 	private static void setTransparencyState (ResourceLocation resourceLocation, @NotNull CallbackInfoReturnable<RenderType> ci) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldRenderCameraEntityInVanilla()) {
 			ci.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(resourceLocation));
 			ci.cancel();
 		}

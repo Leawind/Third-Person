@@ -100,6 +100,15 @@ public final class ThirdPersonStatus {
 	}
 
 	/**
+	 * 根据不透明度判断是否以原版方式渲染相机实体
+	 *
+	 * @return 是否以原版方式渲染相机实体
+	 */
+	public static boolean shouldRenderCameraEntityInVanilla () {
+		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD_MAX;
+	}
+
+	/**
 	 * 第三人称下，通常是直接用鼠标控制相机的朝向 CameraAgentImpl#relativeRotation，再根据一些因素决定玩家的朝向。
 	 * <p>
 	 * 但为了与另一个模组 Do a Barrel Roll 兼容，在特定情况下，允许直接用鼠标控制玩家朝向，而相机跟随玩家旋转。
