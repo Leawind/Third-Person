@@ -12,18 +12,18 @@ hero:
       text: 📥下载
       link: ./#下载
     - theme: alt
-      text: 🕗更新日志
-      link: ./Changelog/
-    - theme: alt
-      text: 💡遇到问题
+      text: 💬Q&A
       link: ./Q&A/
+    - theme: alt
+      text: 💡提交问题
+      link: https://github.com/LEAWIND/Third-Person/issues/new/choose
 features:
-  - title: Features
-    details: 👁详细特性
+  - title: 👁详细特性
+    details: 
     link: ./Features/
-  - title: 💬Q&A
-    details: 问答
-    link: ./Q&A/
+  - title: 🕗更新日志
+    details: 
+    link: ./Changelog/
 ---
 
 <br>

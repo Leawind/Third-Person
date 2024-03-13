@@ -12,18 +12,18 @@ hero:
       text: 📥Download
       link: ./#Download
     - theme: alt
-      text: 🕗Changelog
-      link: ./Changelog/
-    - theme: alt
-      text: 💡Got Issue
+      text: 💬Q&A
       link: ./Q&A/
+    - theme: alt
+      text: Submit Issue
+      link: https://github.com/LEAWIND/Third-Person/issues/new/choose
 features:
-  - title: Features
-    details: 👁Features
+  - title: 👁Features
+    details: 
     link: ./Features/
-  - title: 💬Q&A
-    details: Questions and answers
-    link: ./Q&A/
+  - title: 🕗Changelog
+    details: 
+    link: ./Changelog/
 ---
 
 <br>
