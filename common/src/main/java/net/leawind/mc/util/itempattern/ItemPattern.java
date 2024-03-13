@@ -72,7 +72,10 @@ public interface ItemPattern {
 	ItemPattern ANY              = of("minecraft", null, null);
 
 	@SafeVarargs
-	static boolean anyMatch (@Nullable ItemStack itemStack, Iterable<ItemPattern> @NotNull ... itemPatternsList) {
+	static boolean anyMatch (@NotNull ItemStack itemStack, Iterable<ItemPattern> @NotNull ... itemPatternsList) {
+		if (itemStack.isEmpty()) {
+			return false;
+		}
 		for (Iterable<ItemPattern> patterns: itemPatternsList) {
 			for (ItemPattern ip: patterns) {
 				if (ip.match(itemStack)) {
