@@ -96,7 +96,7 @@ public final class ThirdPersonStatus {
 	 * @return 是否应当渲染相机实体
 	 */
 	public static boolean shouldRenderCameraEntity () {
-		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD;
+		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD_MIN;
 	}
 
 	/**

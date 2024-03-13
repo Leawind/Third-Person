@@ -29,12 +29,11 @@ public final class ThirdPersonConstants {
 	public static final double            GAZE_OPACITY                          = 0.32;
 	public static final double            OPACITY_HALFLIFE                      = 0.0625;
 	/**
-	 * 渲染相机实体的透明度阈值，当不透明度低于这个值时，将不渲染实体。
-	 * TODO rename
+	 * 渲染相机实体的不透明度下限阈值，当不透明度低于这个值时，将不渲染实体。
 	 *
 	 * @see EntityAgentImpl#getSmoothOpacity()
 	 */
-	public static final float             RENDERED_OPACITY_THRESHOLD            = 0.01F;
+	public static final float             RENDERED_OPACITY_THRESHOLD_MIN        = 0.01F;
 	/**
 	 * 渲染相机实体的不透明度上限阈值，当不透明度高于这个值时，将以原版方式渲染实体。
 	 */
