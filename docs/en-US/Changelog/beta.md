@@ -1,5 +1,21 @@
 # Beta channel
 
+## v2.0.8-beta.4-mc1.20.1
+
+### Bug fix
+
+* Mod is shown as resource pack in forge version. And the resource pack is disabled by default. #56 #52
+* Strange behavior in Spectator Mode #60
+* fix: cannot pick in survival mod #64
+* fix: partial tick isn't updated in preRender
+
+### Other
+
+* Add issue templates
+* Update CONTRIBUTING.md
+* Update mod source URL in `fabric.mod.json`
+* optimize
+
 ## v2.0.8-beta.3-mc1.20.1
 
 ### Features
