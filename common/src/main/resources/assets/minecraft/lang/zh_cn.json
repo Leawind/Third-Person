@@ -95,8 +95,6 @@
 	"leawind_third_person.option.rotate_interacting_type.desc": "",
 	"leawind_third_person.option.rotate_interacting_type.turn_to_crosshair": "转向准星",
 	"leawind_third_person.option.rotate_interacting_type.turn_with_camera": "与相机朝向相同",
-	"leawind_third_person.option.turn_with_camera_when_enter_first_person": "进入第一人称时玩家转向相机朝向",
-	"leawind_third_person.option.turn_with_camera_when_enter_first_person.desc": "进入第一人称视角时，让玩家面向刚刚结束的第三人称视角中相机的相同方向。",
 	"leawind_third_person.option.projectile_auto_aim": "射击时自动瞄准",
 	"leawind_third_person.option.projectile_auto_aim.desc": "瞄准方块或实体时，自动调整射击角度以击中该目标",
 	"leawind_third_person.option.determine_aim_mode_by_animation": "通过动画判断瞄准模式",

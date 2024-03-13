@@ -62,7 +62,6 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		{
 			CATEGORY_MISC.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
-			CATEGORY_MISC.addEntry(buildBooleanEntry("turn_with_camera_when_enter_first_person", defaults.turn_with_camera_when_enter_first_person, config.turn_with_camera_when_enter_first_person, v -> config.turn_with_camera_when_enter_first_person = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
 			CATEGORY_MISC.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
 			// SubCategory: Player Fade out

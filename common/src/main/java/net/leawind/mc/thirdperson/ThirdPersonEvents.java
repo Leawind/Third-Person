@@ -17,7 +17,6 @@ import net.leawind.mc.thirdperson.mixin.MouseHandlerMixin;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
-import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -28,9 +27,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @SuppressWarnings("unused")
 public final class ThirdPersonEvents {
@@ -264,15 +260,6 @@ public final class ThirdPersonEvents {
 	 * 进入第一人称视角
 	 */
 	public static void onEnterFirstPerson () {
-		if (ThirdPerson.getConfig().turn_with_camera_when_enter_first_person) {
-			Optional<Vector3d> pickPosition = Objects.requireNonNull(ThirdPerson.mc.getCameraEntity()).isSpectator() ? Optional.empty(): ThirdPerson.CAMERA_AGENT.getPickPosition();
-			if (pickPosition.isEmpty()) {
-				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
-			} else {
-				Vector3d eyeToHitResult = pickPosition.get().sub(ThirdPerson.ENTITY_AGENT.getRawEyePosition(1));
-				ThirdPerson.ENTITY_AGENT.setRawRotation(LMath.rotationDegreeFromDirection(eyeToHitResult));
-			}
-		}
 		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.ENTITY_AGENT.getRawCameraEntity());
 	}
 
@@ -281,8 +268,8 @@ public final class ThirdPersonEvents {
 	 */
 	public static void onEnterThirdPerson () {
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 		ThirdPerson.CAMERA_AGENT.reset();
 		ThirdPerson.ENTITY_AGENT.reset();
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 	}
 }

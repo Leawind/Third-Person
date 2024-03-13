@@ -31,7 +31,6 @@ abstract class AbstractConfig {
 	@Expose public          String       config_screen_api                         = "YACL";
 	@Expose public          boolean      center_offset_when_flying                 = true;
 	@Expose public          boolean      use_camera_pick_in_creative               = true;
-	@Expose public          boolean      turn_with_camera_when_enter_first_person  = true;
 	@Expose public          double       camera_ray_trace_length                   = 256;
 	@Expose public          boolean      enable_target_entity_predict              = true;
 	//------------------------------Player Fade out
