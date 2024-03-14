@@ -161,9 +161,11 @@ public interface EntityAgent {
 	boolean isEating ();
 
 	/**
-	 * 根据实体的手持物品和使用状态判断是否在瞄准
-	 * <p>
-	 * 不考虑玩家按键
+	 * 根据以下因素判断是否在瞄准
+	 * <li>是否在使用物品</li>
+	 * <li>实体拿着的物品</li>
+	 * <li>按键</li>
+	 * <li>使用物品时正在播放的动画</li>
 	 */
 	boolean isAiming ();
 

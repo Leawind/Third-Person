@@ -278,7 +278,6 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@Override
 	public boolean isAiming () {
-		// TODO style, optimize
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.doesPlayerWantToAim()) {
 			return true;
