@@ -5,20 +5,20 @@
 * 👫⚔️ 不会崩溃，但不能正常工作。
 * ❓ 暂未测试。
 
-| 名称                                                                         | 兼容性 |
-| ---------------------------------------------------------------------------- | ------ |
-| [Do a Barrel Roll 滚筒飞行](https://github.com/enjarai/do-a-barrel-roll)     | 👫      |
-| [First-Person-Model 第一人称模型](https://github.com/tr7zw/FirstPersonModel) | 👫      |
-| [Better Combat 更好的战斗](https://github.com/ZsoltMolnarrr/BetterCombat)    | 👫      |
-| [Not Enough Animations](https://github.com/tr7zw/NotEnoughAnimations)        | 👫      |
-| [Jade](https://github.com/Snownee/Jade)                                      | 👫⚔️     |
-| [Crosshair Bobbing](https://github.com/Krash220/CrosshairBobbingMod)         | 👫⚔️     |
-| [EpicFight 史诗战斗](https://github.com/Yesssssman/epicfightmod)             | 👫⚔️     |
-| [Exposure 曝光](https://github.com/mortuusars/Exposure)                      | 👫⚔️     |
-| [MrCrayfish's Gun Mod](https://github.com/MrCrayfish/MrCrayfishGunMod)       | ❓      |
-| [ParCool](https://github.com/alRex-U/ParCool)                                | ❓      |
-| [Yes Steve Model 是的史蒂夫模型](https://github.com/TartaricAcid/ysm)        | ❓      |
-| [Celestisynth](https://github.com/AquexTheSeal/Celestisynth)                 | ❓      |
-| [IMBlocker 输入法冲突修复](https://github.com/reserveword/IMBlocker)         | ❓      |
-| [Replay](https://github.com/ReplayMod/ReplayMod)                             | ❓      |
-|                                                                              | ❓      |
+| 名称                                                                   | 兼容性 | 中文名         |
+| ---------------------------------------------------------------------- | ------ | -------------- |
+| [Do a Barrel Roll](https://github.com/enjarai/do-a-barrel-roll)        | 👫      | 滚筒飞行       |
+| [First-Person-Model](https://github.com/tr7zw/FirstPersonModel)        | 👫      | 第一人称模型   |
+| [Better Combat](https://github.com/ZsoltMolnarrr/BetterCombat)         | 👫      | 更好的战斗     |
+| [Not Enough Animations](https://github.com/tr7zw/NotEnoughAnimations)  | 👫      | 更多动画       |
+| [Jade](https://github.com/Snownee/Jade)                                | 👫⚔️     |                |
+| [Crosshair Bobbing](https://github.com/Krash220/CrosshairBobbingMod)   | 👫⚔️     |                |
+| [EpicFight](https://github.com/Yesssssman/epicfightmod)                | 👫⚔️     | 史诗战斗       |
+| [Exposure](https://github.com/mortuusars/Exposure)                     | 👫⚔️     |                |
+| [MrCrayfish's Gun Mod](https://github.com/MrCrayfish/MrCrayfishGunMod) | ❓      |                |
+| [ParCool](https://github.com/alRex-U/ParCool)                          | ❓      |                |
+| [Yes Steve Model](https://github.com/TartaricAcid/ysm)                 | ❓      | 是的史蒂夫模型 |
+| [Celestisynth](https://github.com/AquexTheSeal/Celestisynth)           | ❓      |                |
+| [IMBlocker](https://github.com/reserveword/IMBlocker)                  | ❓      | 输入法冲突修复 |
+| [Replay](https://github.com/ReplayMod/ReplayMod)                       | ❓      |                |
+|                                                                        | ❓      |                |
