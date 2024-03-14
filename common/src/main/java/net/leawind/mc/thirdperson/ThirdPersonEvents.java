@@ -18,6 +18,7 @@ import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.minecraft.client.Camera;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
@@ -50,17 +51,23 @@ public final class ThirdPersonEvents {
 		if (!ThirdPerson.isAvailable()) {
 			return;
 		}
-		Config config = ThirdPerson.getConfig();
+		Config  config                  = ThirdPerson.getConfig();
+		boolean wasTemporaryFirstPerson = ThirdPersonStatus.isTemporaryFirstPerson;
 		ThirdPersonStatus.isTemporaryFirstPerson = false;
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		if (!cameraEntity.isSpectator() && cameraEntity.isInWall()) {
 			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
 			ThirdPersonStatus.isTemporaryFirstPerson = true;
 		}
-		if (cameraEntity instanceof LivingEntity livingEntity) {
-			if (livingEntity.isUsingItem()) {
-				ThirdPersonStatus.isTemporaryFirstPerson |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns);
+		if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
+			if (ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns)) {
+				ThirdPersonStatus.isTemporaryFirstPerson = true;
 			}
+		}
+		if (ThirdPersonStatus.isTemporaryFirstPerson && !wasTemporaryFirstPerson) {
+			ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+			ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+			ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		ThirdPerson.CAMERA_AGENT.onClientTickPre();
