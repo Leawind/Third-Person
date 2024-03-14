@@ -16,6 +16,8 @@ Expressions can have one of the following three structures:
 | NBT Tag              | Matches any item with the specified tag structure | `{Charged:1b}`         |
 | Item ID with NBT Tag | Matches items that satisfy both conditions        | `crossbow{Charged:1b}` |
 
+The namespace in item id can be omitted. In mod configuration, the default namespace is `minecraft`, in resource pack, the default namespace is the namespace of the resource file.
+
 Examples:
 
 | _ItemPattern_ Expression | Meaning                                           |

@@ -50,16 +50,17 @@ Currently, three types of sets are supported:
 
 Each set corresponds to a directory in the resource pack. For example, the `hold_to_aim` set corresponds to the directory `assets/<namespace>/item_patterns/hold_to_aim/`.
 
-This directory can contain multiple JSON files with arbitrary names, each containing several _ItemPattern Expressions_ (see the built-in resource pack example below).
+This directory can contain multiple JSON files with arbitrary names, each containing several _ItemPattern Expressions_ (see the built-in resource pack example above).
 
 All _ItemPattern_ in all files in this directory will be merged into the set it represents and will take effect in the game.
-
 
 ## Additional Resource Packs
 
 By adding additional resource packs, other items can also automatically enter aiming mode in third person view.
 
-`assets/<namespace>/item_patterns/<hold_to_aim|use_to_aim|use_to_first_person>/<anyname>.json`
+`assets/<namespace>/item_patterns/hold_to_aim/<anyname>.json`
+`assets/<namespace>/item_patterns/use_to_aim/<anyname>.json`
+`assets/<namespace>/item_patterns/use_to_first_person/<anyname>.json`
 
 :::warning
 Namespaces and names can be freely chosen, but JSON files with the same path in different resource packs will conflict with each other. The file with the highest priority in the resource pack will take effect.
