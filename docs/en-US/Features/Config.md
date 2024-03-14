@@ -1,3 +1,7 @@
+:::warning
+This doc needs to be updated
+:::
+
 ## Configuration File
 
 The configuration file for this mod is in JSON format and is located at `config/leawind_third_person.json` within the game's runtime directory.

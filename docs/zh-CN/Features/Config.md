@@ -1,3 +1,7 @@
+:::warning
+这篇文档需要更新
+:::
+
 # 配置文件
 
 此模组的配置文件是 json 格式。位于游戏运行目录下 `config/leawind_third_person.json`
