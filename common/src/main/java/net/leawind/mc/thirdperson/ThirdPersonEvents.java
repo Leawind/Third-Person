@@ -54,20 +54,22 @@ public final class ThirdPersonEvents {
 		Config  config                  = ThirdPerson.getConfig();
 		boolean wasTemporaryFirstPerson = ThirdPersonStatus.isTemporaryFirstPerson;
 		ThirdPersonStatus.isTemporaryFirstPerson = false;
-		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		if (!cameraEntity.isSpectator() && cameraEntity.isInWall()) {
-			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
-			ThirdPersonStatus.isTemporaryFirstPerson = true;
-		}
-		if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
-			if (ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns)) {
+		if (config.is_third_person_mode) {
+			Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			if (!cameraEntity.isSpectator() && cameraEntity.isInWall()) {
+				// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
 				ThirdPersonStatus.isTemporaryFirstPerson = true;
 			}
-		}
-		if (ThirdPersonStatus.isTemporaryFirstPerson && !wasTemporaryFirstPerson) {
-			ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
-			ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-			ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
+			if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
+				if (ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns)) {
+					ThirdPersonStatus.isTemporaryFirstPerson = true;
+				}
+			}
+			if (ThirdPersonStatus.isTemporaryFirstPerson && !wasTemporaryFirstPerson) {
+				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
+				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
+			}
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickPre();
 		ThirdPerson.CAMERA_AGENT.onClientTickPre();
