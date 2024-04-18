@@ -122,6 +122,10 @@ public final class ThirdPersonEvents {
 		}
 	}
 
+	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount, double unnecessary) {
+		return onMouseScrolled(minecraft, amount);
+	}
+
 	/**
 	 * 重置玩家
 	 *
