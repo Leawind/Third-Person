@@ -110,20 +110,16 @@ public final class ThirdPersonEvents {
 	 * @param amount    向前滚是+1，向后滚是-1
 	 * @see ClientRawInputEvent#MOUSE_SCROLLED
 	 */
-	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
+	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amountX, double amountY) {
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.isAdjustingCameraDistance()) {
 			double dist = config.getCameraOffsetScheme().getMode().getMaxDistance();
-			dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amount));
+			dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amountY));
 			config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
 			return EventResult.interruptFalse();
 		} else {
 			return EventResult.pass();
 		}
-	}
-
-	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount, double unnecessary) {
-		return onMouseScrolled(minecraft, amount);
 	}
 
 	/**
