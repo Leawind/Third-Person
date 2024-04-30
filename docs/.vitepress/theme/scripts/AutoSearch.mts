@@ -1,6 +1,4 @@
 /**
- * https://leawind.github.io/zh-CN/?search=%s
- * 
  * 如果没有 search 参数，则无操作。
  * 
  * 自动打开搜索框，将url参数中 search 的值填入框中。
