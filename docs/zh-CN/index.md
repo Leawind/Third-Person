@@ -10,7 +10,7 @@ hero:
   actions:
     - theme: alt
       text: 📥下载
-      link: ./#下载
+      link: https://modrinth.com/mod/leawind-third-person/versions
     - theme: alt
       text: 💬Q&A
       link: ./Q&A/
