@@ -14,7 +14,7 @@ export default {
 			{ text: '👁Features', link: `/${lang}/Features/` },
 			{ text: '💬Q&A', link: `/${lang}/Q&A/` },
 			{ text: 'Misc', link: `/${lang}/Misc/` },
-			{ text: '💰Donate', link: 'https://leawind.github.io/en/donate' },
+			{ text: '💰Donate', link: 'https://leawind.github.io/donate' },
 		],
 		sidebar: {
 			'/en-US/Changelog': buildSidebar(`${lang}/Changelog`),
