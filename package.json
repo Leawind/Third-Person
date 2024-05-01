@@ -15,6 +15,9 @@
 		"vitepress": "1.0.0-rc.44"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.19"
+		"@types/node": "^20.11.19",
+		"markdown-it-mathjax3": "^4.3.2",
+		"mermaid": "^10.9.1",
+		"vitepress-plugin-mermaid": "^2.0.16"
 	}
 }
