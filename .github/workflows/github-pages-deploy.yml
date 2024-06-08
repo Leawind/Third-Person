@@ -38,9 +38,6 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v4
 
-      - name: install pnpm
-        run: npm install -g pnpm
-
       - name: Install NPM dependencies
         run: pnpm install
 
