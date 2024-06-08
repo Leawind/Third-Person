@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["gh-pages"]
+    branches: [ gh-pages ]
 
   workflow_dispatch:
 
@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,28 +24,34 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.0
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20.11.0
-          cache: npm
+          node-version: 18.19.0
+          cache: pnpm
 
       - name: Configure Pages
         uses: actions/configure-pages@v4
 
-      - name: Install NPM dependencies
-        run: |
-          rm ./package-lock.json
-          rm -rf ./node_modules
-          npm i
+      - name: install pnpm
+        run: npm install -g pnpm
 
-      - name: Build with VitePress
-        run: |
-          npm run docs:build
+      - name: Install NPM dependencies
+        run: pnpm install
+
+      - name: Build
+        run:
+          pnpm docs:build
           touch docs/.vitepress/dist/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+
         with:
           path: docs/.vitepress/dist
 
