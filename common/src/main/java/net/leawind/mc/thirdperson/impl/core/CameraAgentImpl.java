@@ -293,7 +293,6 @@ public class CameraAgentImpl implements CameraAgent {
 		}
 		if (!candidateTargets.isEmpty()) {
 			candidateTargets.sort(new AimingTargetComparator(cameraPos, cameraViewVector));
-			// candidateTargets.get(0).setYHeadRot((float)(System.currentTimeMillis() / 2d % 360)); // debug
 			return Optional.of(candidateTargets.get(0));
 		}
 		return Optional.empty();

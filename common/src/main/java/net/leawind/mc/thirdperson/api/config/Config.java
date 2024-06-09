@@ -6,6 +6,7 @@ import net.leawind.mc.thirdperson.impl.config.ConfigImpl;
 import net.leawind.mc.thirdperson.resources.ItemPatternManager;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.monolist.MonoList;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -18,7 +19,8 @@ public abstract class Config extends AbstractConfig {
 	public static final @NotNull Class<? extends Config> IMPL     = ConfigImpl.class;
 	public static final @NotNull Config                  DEFAULTS = new DefaultConfig();
 
-	public static Config create () {
+	@Contract(" -> new")
+	public static @NotNull Config create () {
 		return new ConfigImpl();
 	}
 
@@ -94,7 +96,8 @@ public abstract class Config extends AbstractConfig {
 			throw illegalAccess();
 		}
 
-		private IllegalAccessError illegalAccess () {
+		@Contract(value=" -> new", pure=true)
+		private @NotNull IllegalAccessError illegalAccess () {
 			return new IllegalAccessError("This method should not be invoked on default config");
 		}
 	}

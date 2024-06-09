@@ -16,11 +16,8 @@ public class Vector2dImpl implements Vector2d {
 	@Override
 	public int hashCode () {
 		int  l = 31, r = 1;
-		long t;
-		t = Double.doubleToLongBits(x);
-		r = l * r + (int)(t ^ (t >>> 32));
-		t = Double.doubleToLongBits(y());
-		r = l * r + (int)(t ^ (t >>> 32));
+		r = l * r + Double.hashCode(x);
+		r = l * r + Double.hashCode(y);
 		return r;
 	}
 

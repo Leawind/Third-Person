@@ -19,13 +19,9 @@ public class Vector3dImpl implements Vector3d {
 	public int hashCode () {
 		final int l = 31;
 		int       r = 1;
-		long      t;
-		t = Double.doubleToLongBits(x());
-		r = l * r + (int)(t ^ (t >>> 32));
-		t = Double.doubleToLongBits(y());
-		r = l * r + (int)(t ^ (t >>> 32));
-		t = Double.doubleToLongBits(z());
-		r = l * r + (int)(t ^ (t >>> 32));
+		r = l * r + Double.hashCode(x);
+		r = l * r + Double.hashCode(y);
+		r = l * r + Double.hashCode(z);
 		return r;
 	}
 
