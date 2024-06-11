@@ -1,5 +1,11 @@
 # 测试
 
+## v2.0.8-beta.5-mc1.20.4
+
+* 移植自 1.20.1
+
+感谢 [ArctynFox](https://github.com/ArctynFox) [将它移植到1.20.4](https://github.com/Leawind/Third-Person/pull/88)！
+
 ## v2.0.8-beta.5-mc1.20.1
 
 ### 特性

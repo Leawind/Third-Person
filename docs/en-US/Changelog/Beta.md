@@ -1,5 +1,11 @@
 # Beta channel
 
+## v2.0.8-beta.5-mc1.20.4
+
+* Port from 1.20.1
+
+Thanks to [ArctynFox](https://github.com/ArctynFox) for [doing this port](https://github.com/Leawind/Third-Person/pull/88)!
+
 ## v2.0.8-beta.5-mc1.20.1
 
 ### Features
