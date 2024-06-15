@@ -28,9 +28,11 @@ public class LevelRendererMixin {
 
 	@Inject(method="renderEntity", at=@At("TAIL"))
 	public void renderEntity_tail (Entity entity, double x, double y, double z, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, CallbackInfo ci) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
-			if (ThirdPersonStatus.shouldRenderCameraEntity() && ThirdPersonStatus.useCameraEntityOpacity()) {
-				((MultiBufferSource.BufferSource)multiBufferSource).endLastBatch();
+		if (multiBufferSource instanceof MultiBufferSource.BufferSource) {
+			if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
+				if (ThirdPersonStatus.useCameraEntityOpacity() && ThirdPersonStatus.shouldRenderCameraEntity()) {
+					((MultiBufferSource.BufferSource)multiBufferSource).endLastBatch();
+				}
 			}
 		}
 	}
