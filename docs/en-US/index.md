@@ -3,27 +3,27 @@ title: 🏠Home Page
 
 layout: home
 hero:
-  name: Leawind's Third Person
-  text: 
-  tagline: A practical, smooth, feature-rich third-person mod.
-  image: 
-  actions:
-    - theme: alt
-      text: 📥Download
-      link: https://modrinth.com/mod/leawind-third-person/versions
-    - theme: alt
-      text: 💬Q&A
-      link: ./Q&A/
-    - theme: alt
-      text: Submit Issue
-      link: https://github.com/LEAWIND/Third-Person/issues/new/choose
+    name: Leawind's Third Person
+    text:
+    tagline: A practical, smooth, feature-rich third-person mod.
+    image:
+    actions:
+        - theme: alt
+          text: 📥Download
+          link: https://modrinth.com/mod/leawind-third-person/versions
+        - theme: alt
+          text: 💬Q&A
+          link: ./Q&A/
+        - theme: alt
+          text: Submit Issue
+          link: https://github.com/LEAWIND/Third-Person/issues/new/choose
 features:
-  - title: 👁Features
-    details: 
-    link: ./Features/
-  - title: 🕗Changelog
-    details: 
-    link: ./Changelog/
+    - title: 👁Features
+      details:
+      link: ./Features/
+    - title: 🕗Changelog
+      details:
+      link: ./Changelog/
 ---
 
 <br>
@@ -75,14 +75,14 @@ Options / Video Settings / Performance / Fast Math
 
 ## Related Links
 
-* [Github Repository](https://github.com/LEAWIND/Third-Person)
-* [Gitee Mirror Repository](https://gitee.com/leawind/Third-Person)
-* [Modrinth](https://modrinth.com/mod/leawind-third-person)
-* [CurseForge](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person)
-* [MC百科](https://www.mcmod.cn/class/12699.html)
+-   [Github Repository](https://github.com/LEAWIND/Third-Person)
+-   [Gitee Mirror Repository](https://gitee.com/leawind/Third-Person)
+-   [Modrinth](https://modrinth.com/mod/leawind-third-person)
+-   [CurseForge](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person)
+-   [MC百科](https://www.mcmod.cn/class/12699.html)
 
 ## Download
 
-* [Modrinth download](https://modrinth.com/mod/leawind-third-person)
-* [CurseForge download](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person/files/all)
-* [Github releases](https://github.com/LEAWIND/Third-Person/releases)
+-   [Modrinth download](https://modrinth.com/mod/leawind-third-person)
+-   [CurseForge download](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person/files/all)
+-   [Github releases](https://github.com/LEAWIND/Third-Person/releases)

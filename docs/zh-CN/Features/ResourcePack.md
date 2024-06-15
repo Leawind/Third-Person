@@ -4,8 +4,9 @@
 
 本模组内置资源包中仅包含适用于原版 Minecraft 的相关[物品模式](./ItemPattern)。
 
-* 持有这些物品时进入瞄准模式
-:::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
+-   持有这些物品时进入瞄准模式
+    :::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
+
 ```json
 [
 	"minecraft:crossbow{Charged:1b}",
@@ -17,34 +18,34 @@
 	"minecraft:experience_bottle"
 ]
 ```
+
 :::
 
-* 使用这些物品时进入瞄准模式
-:::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
+-   使用这些物品时进入瞄准模式
+    :::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
+
 ```json
-[
-	"minecraft:bow",
-	"minecraft:trident"
-]
+["minecraft:bow", "minecraft:trident"]
 ```
+
 :::
 
-* 使用这些物品时暂时进入第一人称视角
-:::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
+-   使用这些物品时暂时进入第一人称视角
+    :::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
+
 ```json
-[
-	"minecraft:spyglass"
-]
+["minecraft:spyglass"]
 ```
+
 :::
 
 ## 物品模式集合
 
 目前已支持的集合有 3 种：
 
-* `hold_to_aim` **手持即瞄准的 _物品模式_ 集合** 当玩家手持的任意物品符合集合中任意模式时，进入瞄准模式。
-* `use_to_aim` **使用即瞄准的 _物品模式_ 集合** 当玩家正在使用的物品符合集合中任意模式时，进入瞄准模式。
-* `use_to_first_person` **使用时暂时切换到第一人称的 _物品模式_ 集合** 当玩家正在使用的物品符合集合中任意模式时，暂时入第一人称模式。
+-   `hold_to_aim` **手持即瞄准的 _物品模式_ 集合** 当玩家手持的任意物品符合集合中任意模式时，进入瞄准模式。
+-   `use_to_aim` **使用即瞄准的 _物品模式_ 集合** 当玩家正在使用的物品符合集合中任意模式时，进入瞄准模式。
+-   `use_to_first_person` **使用时暂时切换到第一人称的 _物品模式_ 集合** 当玩家正在使用的物品符合集合中任意模式时，暂时入第一人称模式。
 
 每个集合都对应着资源包中的一个目录。例如集合 `hold_to_aim` 对应的资源包目录是 `assets/<命名空间>/item_patterns/hold_to_aim/`。
 

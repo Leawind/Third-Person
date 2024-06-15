@@ -3,13 +3,13 @@ title: 🕗Changelog
 
 layout: home
 hero:
-  name: 
-  text: 🕗Changelog
-  tagline: 
-  image: 
+    name:
+    text: 🕗Changelog
+    tagline:
+    image:
 features:
-  - title: Release Channel
-    link: ./Release
-  - title: Beta Channel
-    link: ./Beta
+    - title: Release Channel
+      link: ./Release
+    - title: Beta Channel
+      link: ./Beta
 ---

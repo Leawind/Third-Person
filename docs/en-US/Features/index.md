@@ -6,13 +6,13 @@ In third person view, the mod determines whether to enter aiming mode based on t
 
 During gameplay, the mod maintains two sets of [ItemPattern](./ItemPattern):
 
-* **Hold-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player holds any item that matches any pattern in this set.
-* **Use-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player is using any item that matches any pattern in this set.
+-   **Hold-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player holds any item that matches any pattern in this set.
+-   **Use-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player is using any item that matches any pattern in this set.
 
 _ItemPattern_ in the sets can originate from two sources:
 
-* **mod Configuration:** _ItemPattern_ can be defined in the mod's configuration interface.
-* **Resource Packs:** This includes built-in resource packs of this mod, resource packs from other mods, and manually installed resource packs by the player.
+-   **mod Configuration:** _ItemPattern_ can be defined in the mod's configuration interface.
+-   **Resource Packs:** This includes built-in resource packs of this mod, resource packs from other mods, and manually installed resource packs by the player.
 
 ## Temporary Switch to First Person when Using Specific Items
 

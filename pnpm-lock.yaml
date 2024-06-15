@@ -27,6 +27,9 @@ importers:
       mermaid:
         specifier: ^10.9.1
         version: 10.9.1
+      prettier:
+        specifier: ^3.3.2
+        version: 3.3.2
       vitepress-plugin-mermaid:
         specifier: ^2.0.16
         version: 2.0.16(mermaid@10.9.1)(vitepress@1.0.0-rc.44(@algolia/client-search@4.23.3)(@types/node@20.12.12)(markdown-it-mathjax3@4.3.2)(postcss@8.4.38)(search-insights@2.14.0))
@@ -1370,6 +1373,11 @@ packages:
 
   preact@10.22.0:
     resolution: {integrity: sha512-RRurnSjJPj4rp5K6XoP45Ui33ncb7e4H7WiOHVpjbkvqvA3U+N8Z6Qbo0AE6leGYBV66n8EhEaFixvIu3SkxFw==}
+
+  prettier@3.3.2:
+    resolution: {integrity: sha512-rAVeHYMcv8ATV5d508CFdn+8/pHPpXeIid1DdrPwXnaAdH7cqjVbpJaT5eq4yRAFU/lsbwYwSF/n5iNrdJHPQA==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   read-pkg@3.0.0:
     resolution: {integrity: sha512-BLq/cCO9two+lBgiTYNqD6GdtK8s4NpaWrl6/rCO9w0TUS8oJl7cmToOZfRYllKTISY6nt1U7jQ53brmKqY6BA==}
@@ -3211,6 +3219,8 @@ snapshots:
       source-map-js: 1.2.0
 
   preact@10.22.0: {}
+
+  prettier@3.3.2: {}
 
   read-pkg@3.0.0:
     dependencies:

@@ -3,27 +3,27 @@ title: 🏠首页
 
 layout: home
 hero:
-  name: Leawind的第三人称
-  text: 
-  tagline: 一个实用、丝滑、功能丰富的第三人称模组
-  image: 
-  actions:
-    - theme: alt
-      text: 📥下载
-      link: https://modrinth.com/mod/leawind-third-person/versions
-    - theme: alt
-      text: 💬Q&A
-      link: ./Q&A/
-    - theme: alt
-      text: 💡提交问题
-      link: https://github.com/LEAWIND/Third-Person/issues/new/choose
+    name: Leawind的第三人称
+    text:
+    tagline: 一个实用、丝滑、功能丰富的第三人称模组
+    image:
+    actions:
+        - theme: alt
+          text: 📥下载
+          link: https://modrinth.com/mod/leawind-third-person/versions
+        - theme: alt
+          text: 💬Q&A
+          link: ./Q&A/
+        - theme: alt
+          text: 💡提交问题
+          link: https://github.com/LEAWIND/Third-Person/issues/new/choose
 features:
-  - title: 👁详细特性
-    details: 
-    link: ./Features/
-  - title: 🕗更新日志
-    details: 
-    link: ./Changelog/
+    - title: 👁详细特性
+      details:
+      link: ./Features/
+    - title: 🕗更新日志
+      details:
+      link: ./Changelog/
 ---
 
 <br>
@@ -75,14 +75,14 @@ features:
 
 ## 相关链接
 
-* [Github 仓库](https://github.com/LEAWIND/Third-Person)
-* [Gitee 镜像仓库](https://gitee.com/leawind/Third-Person)
-* [Modrinth](https://modrinth.com/mod/leawind-third-person)
-* [CurseForge](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person)
-* [MC百科](https://www.mcmod.cn/class/12699.html)
+-   [Github 仓库](https://github.com/LEAWIND/Third-Person)
+-   [Gitee 镜像仓库](https://gitee.com/leawind/Third-Person)
+-   [Modrinth](https://modrinth.com/mod/leawind-third-person)
+-   [CurseForge](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person)
+-   [MC百科](https://www.mcmod.cn/class/12699.html)
 
 ## 下载
 
-* [Modrinth download](https://modrinth.com/mod/leawind-third-person)
-* [CurseForge download](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person/files/all)
-* [Github releases](https://github.com/LEAWIND/Third-Person/releases)
+-   [Modrinth download](https://modrinth.com/mod/leawind-third-person)
+-   [CurseForge download](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person/files/all)
+-   [Github releases](https://github.com/LEAWIND/Third-Person/releases)

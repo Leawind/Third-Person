@@ -1,12 +1,12 @@
-
 # Resource Packs
 
 ## Built-in Resource Pack
 
 The mod's built-in resource pack includes [ItemPattern](./ItemPattern.md) relevant to the vanilla Minecraft.
 
-* Enters aiming mode when holding these items
-:::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
+-   Enters aiming mode when holding these items
+    :::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
+
 ```json
 [
 	"minecraft:crossbow{Charged:1b}",
@@ -18,35 +18,34 @@ The mod's built-in resource pack includes [ItemPattern](./ItemPattern.md) releva
 	"minecraft:experience_bottle"
 ]
 ```
+
 :::
 
-* Enters aiming mode when using these items
-:::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
+-   Enters aiming mode when using these items
+    :::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
+
 ```json
-[
-	"minecraft:bow",
-	"minecraft:trident"
-]
+["minecraft:bow", "minecraft:trident"]
 ```
+
 :::
 
-* Temporarily switches to first-person when using these items
-:::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
+-   Temporarily switches to first-person when using these items
+    :::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
 
 ```json
-[
-	"minecraft:spyglass"
-]
+["minecraft:spyglass"]
 ```
+
 :::
 
 ## ItemPattern Sets
 
 Currently, three types of sets are supported:
 
-* `hold_to_aim`: **Hold-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player holds any item that matches any pattern in this set.
-* `use_to_aim`: **Use-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player is using any item that matches any pattern in this set.
-* `use_to_first_person`: **Temporary Switch to First Person _ItemPattern_ Set:** Temporarily switches to the first-person perspective when the player is using any item that matches any pattern in this set.
+-   `hold_to_aim`: **Hold-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player holds any item that matches any pattern in this set.
+-   `use_to_aim`: **Use-to-Aim _ItemPattern_ Set:** Enters aiming mode when the player is using any item that matches any pattern in this set.
+-   `use_to_first_person`: **Temporary Switch to First Person _ItemPattern_ Set:** Temporarily switches to the first-person perspective when the player is using any item that matches any pattern in this set.
 
 Each set corresponds to a directory in the resource pack. For example, the `hold_to_aim` set corresponds to the directory `assets/<namespace>/item_patterns/hold_to_aim/`.
 
