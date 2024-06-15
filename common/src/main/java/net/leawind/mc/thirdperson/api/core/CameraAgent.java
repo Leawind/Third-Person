@@ -62,22 +62,26 @@ public interface CameraAgent {
 	/**
 	 * 获取原版相机对象
 	 */
-	@NotNull Camera getRawCamera ();
+	@NotNull
+	Camera getRawCamera ();
 
 	/**
 	 * 获取原始相机位置
 	 */
-	@NotNull Vector3d getRawCameraPosition ();
+	@NotNull
+	Vector3d getRawCameraPosition ();
 
 	/**
 	 * 第三人称相机朝向
 	 */
-	@NotNull Vector2d getRotation ();
+	@NotNull
+	Vector2d getRotation ();
 
 	/**
 	 * 假相机
 	 */
-	@NotNull Camera getFakeCamera ();
+	@NotNull
+	Camera getFakeCamera ();
 
 	/**
 	 * 玩家控制的相机旋转
@@ -90,12 +94,14 @@ public interface CameraAgent {
 	/**
 	 * 获取相对旋转角度
 	 */
-	@NotNull Vector2d getRelativeRotation ();
+	@NotNull
+	Vector2d getRelativeRotation ();
 
 	/**
 	 * render tick 开始时，相机的 hitResult
 	 */
-	@NotNull HitResult getHitResult ();
+	@NotNull
+	HitResult getHitResult ();
 
 	double getPickRange ();
 
@@ -104,14 +110,16 @@ public interface CameraAgent {
 	 * <p>
 	 * 使用默认距离
 	 */
-	@NotNull Optional<Vector3d> getPickPosition ();
+	@NotNull
+	Optional<Vector3d> getPickPosition ();
 
 	/**
 	 * 获取相机视线落点坐标
 	 *
 	 * @param pickRange 最大探测距离
 	 */
-	@NotNull Optional<Vector3d> getPickPosition (double pickRange);
+	@NotNull
+	Optional<Vector3d> getPickPosition (double pickRange);
 
 	/**
 	 * 从相机出发探测所选方块或实体。
@@ -120,7 +128,8 @@ public interface CameraAgent {
 	 *
 	 * @param pickRange 探测距离限制
 	 */
-	@NotNull HitResult pick (double pickRange);
+	@NotNull
+	HitResult pick (double pickRange);
 
 	/**
 	 * 根据相机的视线确定所选实体
@@ -129,12 +138,14 @@ public interface CameraAgent {
 	 *
 	 * @param pickRange 探测距离
 	 */
-	@NotNull Optional<EntityHitResult> pickEntity (double pickRange);
+	@NotNull
+	Optional<EntityHitResult> pickEntity (double pickRange);
 
 	/**
 	 * 同 {@link CameraAgent#pickEntity(double)}，使用默认距离
 	 */
-	@NotNull Optional<EntityHitResult> pickEntity ();
+	@NotNull
+	Optional<EntityHitResult> pickEntity ();
 
 	/**
 	 * 根据相机的视线探测方块
@@ -143,7 +154,8 @@ public interface CameraAgent {
 	 * @param blockShape 方块形状获取器
 	 * @param fluidShape 液体形状获取器
 	 */
-	@NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
+	@NotNull
+	BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
 
 	/**
 	 * 同 {@link CameraAgent#pickBlock(double, ClipContext.Block, ClipContext.Fluid)}，使用默认距离
@@ -151,7 +163,8 @@ public interface CameraAgent {
 	 * @param blockShape 方块形状获取器
 	 * @param fluidShape 液体形状获取器
 	 */
-	@NotNull BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
+	@NotNull
+	BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape);
 
 	/**
 	 * 同 {@link CameraAgent#pickBlock(ClipContext.Block, ClipContext.Fluid)}，但是
@@ -164,7 +177,8 @@ public interface CameraAgent {
 	 *
 	 * @param pickRange 从相机出发的探测距离
 	 */
-	@NotNull BlockHitResult pickBlock (double pickRange);
+	@NotNull
+	BlockHitResult pickBlock (double pickRange);
 
 	/**
 	 * 相机是否正在注视某个实体（无视其他实体或方块）
@@ -176,5 +190,6 @@ public interface CameraAgent {
 	 * <p>
 	 * TODO 预测不够准确
 	 */
-	@NotNull Optional<Entity> predictTargetEntity ();
+	@NotNull
+	Optional<Entity> predictTargetEntity ();
 }

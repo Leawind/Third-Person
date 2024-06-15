@@ -43,7 +43,8 @@ public interface EntityAgent {
 	 */
 	void setRotateTarget (@NotNull RotateTarget rotateTarget);
 
-	@NotNull RotateTarget getRotateTarget ();
+	@NotNull
+	RotateTarget getRotateTarget ();
 
 	/**
 	 * 设置平滑类型
@@ -52,7 +53,8 @@ public interface EntityAgent {
 	 */
 	void setRotationSmoothType (@NotNull SmoothType smoothType);
 
-	@NotNull SmoothType getRotationSmoothType ();
+	@NotNull
+	SmoothType getRotationSmoothType ();
 
 	/**
 	 * 设置平滑转向的半衰期
@@ -88,27 +90,32 @@ public interface EntityAgent {
 	 *
 	 * @see EntityAgent#isCameraEntityExist
 	 */
-	@NotNull Entity getRawCameraEntity ();
+	@NotNull
+	Entity getRawCameraEntity ();
 
 	/**
 	 * 获取玩家实体
 	 */
-	@NotNull LocalPlayer getRawPlayerEntity ();
+	@NotNull
+	LocalPlayer getRawPlayerEntity ();
 
 	/**
 	 * 直接从相机实体获取眼睛坐标
 	 */
-	@NotNull Vector3d getRawEyePosition (float partialTick);
+	@NotNull
+	Vector3d getRawEyePosition (float partialTick);
 
 	/**
 	 * 直接从实体获取坐标
 	 */
-	@NotNull Vector3d getRawPosition (float partialTick);
+	@NotNull
+	Vector3d getRawPosition (float partialTick);
 
 	/**
 	 * 直接从实体获取朝向
 	 */
-	@NotNull Vector2d getRawRotation (float partialTick);
+	@NotNull
+	Vector2d getRawRotation (float partialTick);
 
 	/**
 	 * 设置实体朝向
@@ -118,14 +125,16 @@ public interface EntityAgent {
 	/**
 	 * 获取平滑的眼睛坐标
 	 */
-	@NotNull Vector3d getSmoothEyePosition (float partialTick);
+	@NotNull
+	Vector3d getSmoothEyePosition (float partialTick);
 
 	/**
 	 * 如果平滑系数为0，则返回完全不平滑的值
 	 * <p>
 	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
 	 */
-	@NotNull Vector3d getPossibleSmoothEyePosition (float partialTick);
+	@NotNull
+	Vector3d getPossibleSmoothEyePosition (float partialTick);
 
 	/**
 	 * 实体的眼睛是否在墙里

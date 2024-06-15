@@ -64,7 +64,8 @@ public interface ConfigManager {
 	/**
 	 * 获取配置屏幕
 	 */
-	@Nullable Screen getConfigScreen (@Nullable Screen parent);
+	@Nullable
+	Screen getConfigScreen (@Nullable Screen parent);
 
 	/**
 	 * 是否有可用的配置屏幕
@@ -74,5 +75,6 @@ public interface ConfigManager {
 	/**
 	 * 获取配置对象
 	 */
-	@NotNull Config getConfig ();
+	@NotNull
+	Config getConfig ();
 }

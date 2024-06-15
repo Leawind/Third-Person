@@ -16,7 +16,8 @@ public interface CameraOffsetMode {
 	/**
 	 * 眼睛平滑半衰期
 	 */
-	@NotNull Vector3d getEyeSmoothHalflife ();
+	@NotNull
+	Vector3d getEyeSmoothHalflife ();
 
 	/**
 	 * 距离平滑系数
@@ -26,7 +27,8 @@ public interface CameraOffsetMode {
 	/**
 	 * 相机偏移平滑系数
 	 */
-	@NotNull Vector2d getOffsetSmoothHalflife ();
+	@NotNull
+	Vector2d getOffsetSmoothHalflife ();
 
 	/**
 	 * 相机到玩家的最大距离
@@ -88,5 +90,6 @@ public interface CameraOffsetMode {
 	 * @param v 将取得的数据存入该向量
 	 * @return 与传入参数是同一个对象
 	 */
-	@NotNull Vector2d getSideOffsetRatio (@NotNull Vector2d v);
+	@NotNull
+	Vector2d getSideOffsetRatio (@NotNull Vector2d v);
 }

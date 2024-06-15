@@ -50,7 +50,8 @@ public interface DecisionMap<T> {
 	 *
 	 * @param flagBits 因素位图
 	 */
-	@NotNull Optional<Supplier<T>> getStrategy (int flagBits);
+	@NotNull
+	Optional<Supplier<T>> getStrategy (int flagBits);
 
 	/**
 	 * 更新因素并做出决策
@@ -73,7 +74,8 @@ public interface DecisionMap<T> {
 	 * 构建
 	 */
 	@Contract("-> this")
-	@NotNull DecisionMap<T> build ();
+	@NotNull
+	DecisionMap<T> build ();
 
 	/**
 	 * 是否已经构建
@@ -81,7 +83,8 @@ public interface DecisionMap<T> {
 	boolean isBuilt ();
 
 	@Contract("_-> this")
-	@NotNull DecisionMap<T> addRule (@NotNull Function<boolean[], Supplier<T>> func);
+	@NotNull
+	DecisionMap<T> addRule (@NotNull Function<boolean[], Supplier<T>> func);
 
 	/**
 	 * 添加规则
@@ -95,7 +98,8 @@ public interface DecisionMap<T> {
 	 * @return 原对象
 	 */
 	@Contract("_-> this")
-	@NotNull DecisionMap<T> addRule (@NotNull BiFunction<Integer, boolean[], Supplier<T>> func);
+	@NotNull
+	DecisionMap<T> addRule (@NotNull BiFunction<Integer, boolean[], Supplier<T>> func);
 
 	/**
 	 * 添加规则
@@ -104,7 +108,8 @@ public interface DecisionMap<T> {
 	 * @return 原对象
 	 */
 	@Contract("_,_ -> this")
-	@NotNull DecisionMap<T> addRule (int flagBits, @NotNull Supplier<T> strategy);
+	@NotNull
+	DecisionMap<T> addRule (int flagBits, @NotNull Supplier<T> strategy);
 
 	/**
 	 * 添加规则
@@ -115,5 +120,6 @@ public interface DecisionMap<T> {
 	 * @return 原对象
 	 */
 	@Contract("_,_,_ -> this")
-	@NotNull DecisionMap<T> addRule (int flagBits, int mask, @NotNull Supplier<T> strategy);
+	@NotNull
+	DecisionMap<T> addRule (int flagBits, int mask, @NotNull Supplier<T> strategy);
 }

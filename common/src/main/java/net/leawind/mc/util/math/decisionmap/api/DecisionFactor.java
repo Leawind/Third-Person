@@ -27,7 +27,8 @@ public interface DecisionFactor {
 	 */
 	boolean get ();
 
-	@NotNull String getName ();
+	@NotNull
+	String getName ();
 
 	void setName (@NotNull String name);
 

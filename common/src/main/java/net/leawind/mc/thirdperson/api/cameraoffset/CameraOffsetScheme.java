@@ -21,12 +21,14 @@ public interface CameraOffsetScheme {
 	/**
 	 * 获取当前模式
 	 */
-	@NotNull CameraOffsetMode getMode ();
+	@NotNull
+	CameraOffsetMode getMode ();
 
 	/**
 	 * 获取当前未启用的模式
 	 */
-	@NotNull CameraOffsetMode getAnotherMode ();
+	@NotNull
+	CameraOffsetMode getAnotherMode ();
 
 	/**
 	 * 设置相机相对于玩家的方向
