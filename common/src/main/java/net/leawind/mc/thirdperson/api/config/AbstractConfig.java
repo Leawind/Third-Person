@@ -35,7 +35,8 @@ abstract class AbstractConfig {
 	@Expose public          double       camera_ray_trace_length                   = 256;
 	@Expose public          boolean      enable_target_entity_predict              = true;
 	//------------------------------Player Fade out
-	@Expose public          boolean      player_fade_out_enabled                   = true;
+	@Expose public          boolean      player_fade_out_enabled                   = false;
+	@Expose public          double       player_invisible_threshold                = 0.5;
 	//------------------------------Crosshair
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;
 	@Expose public          boolean      render_crosshair_when_aiming              = true;

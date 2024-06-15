@@ -39,6 +39,8 @@
 	"leawind_third_person.option.center_offset_when_flying.desc": "When the entity the camera is attached to is flying with elytra, do not use camera offset.",
 	"leawind_third_person.option.player_fade_out_enabled": "Enable player fade-out",
 	"leawind_third_person.option.player_fade_out_enabled.desc": "When the camera is close to the player, make the player semi-transparent.",
+	"leawind_third_person.option.player_invisible_threshold": "Player invisible threshold",
+	"leawind_third_person.option.player_invisible_threshold.desc": "When camera is close enough, player becomes invisible.",
 	"leawind_third_person.option.use_camera_pick_in_creative": "Use camera pick in creative mode",
 	"leawind_third_person.option.use_camera_pick_in_creative.desc": "In creative mode, the player's line of sight will not be obstructed, and the crosshair indicates the interaction point.",
 	"leawind_third_person.option.lock_camera_pitch_angle": "Lock camera pitch angle",

@@ -173,4 +173,14 @@ public interface EntityAgent {
 	 * 在上一个 clientTick 中是否在瞄准
 	 */
 	boolean wasAiming ();
+
+	/**
+	 * 计算点到碰撞箱的距离
+	 * <p>
+	 * 如果点在碰撞箱内，则返回0
+	 *
+	 * @param p 点
+	 * @return 距离
+	 */
+	double boxDistanceTo (Vector3d p);
 }

@@ -304,6 +304,16 @@ public class EntityAgentImpl implements EntityAgent {
 		return wasAiming;
 	}
 
+	@Override
+	public double boxDistanceTo (@NotNull Vector3d p) {
+		AABB     box = this.getRawCameraEntity().getBoundingBox();
+		Vector3d c   = Vector3d.of();
+		c.x(LMath.clamp(p.x(), box.minX, box.maxX));
+		c.y(LMath.clamp(p.y(), box.minY, box.maxY));
+		c.z(LMath.clamp(p.z(), box.minZ, box.maxZ));
+		return c.distance(p);
+	}
+
 	/**
 	 * 更新旋转策略、平滑类型、平滑系数
 	 * <p>

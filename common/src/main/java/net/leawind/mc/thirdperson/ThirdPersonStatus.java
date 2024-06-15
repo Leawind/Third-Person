@@ -91,12 +91,15 @@ public final class ThirdPersonStatus {
 	}
 
 	/**
-	 * 根据不透明度判断是否需要渲染相机实体
+	 * 是否渲染相机实体
+	 * <p>
+	 * 当透明度小于阈值，或相机距离实体太近时，不渲染相机实体
 	 *
-	 * @return 是否应当渲染相机实体
+	 * @return 是否渲染相机实体
 	 */
 	public static boolean shouldRenderCameraEntity () {
-		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD_MIN;
+		return ThirdPerson.ENTITY_AGENT.getSmoothOpacity() > ThirdPersonConstants.RENDERED_OPACITY_THRESHOLD_MIN //
+			   && ThirdPerson.ENTITY_AGENT.boxDistanceTo(ThirdPerson.CAMERA_AGENT.getRawCameraPosition()) > ThirdPerson.getConfig().player_invisible_threshold;
 	}
 
 	/**

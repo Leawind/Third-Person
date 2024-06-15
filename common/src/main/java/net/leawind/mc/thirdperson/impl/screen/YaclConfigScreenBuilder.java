@@ -59,6 +59,7 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 														  .option(booleanOption("enable_target_entity_predict", defaults.enable_target_entity_predict, () -> config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v).build()) //
 														  .group(group("player_fade_out")//
 																						 .option(booleanOption("player_fade_out_enabled", defaults.player_fade_out_enabled, () -> config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v).build()) //
+																						 .option(option("player_invisible_threshold", defaults.player_invisible_threshold, 0D, 1D, 0.05D, () -> config.player_invisible_threshold, v -> config.player_invisible_threshold = v).build()) //
 																						 .build()) //
 														  .group(group("crosshair") //
 																					.option(booleanOption("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, () -> config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v).build()) //

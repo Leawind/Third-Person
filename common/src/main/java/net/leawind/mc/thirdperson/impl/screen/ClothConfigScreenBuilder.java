@@ -68,6 +68,7 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			// SubCategory: Player Fade out
 			final SubCategoryBuilder Subcategory_Player_Fade_Out = buildSubCategory("player_fade_out", entryBuilder);
 			Subcategory_Player_Fade_Out.add(buildBooleanEntry("player_fade_out_enabled", defaults.player_fade_out_enabled, config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v, entryBuilder));
+			Subcategory_Player_Fade_Out.add(buildDoubleEntry("player_invisible_threshold", 0D, 1D, defaults.player_invisible_threshold, config.player_invisible_threshold, v -> config.player_invisible_threshold = v, entryBuilder));
 			CATEGORY_MISC.addEntry(Subcategory_Player_Fade_Out.build());
 			// SubCategory: Crosshair
 			final SubCategoryBuilder Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);
