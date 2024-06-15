@@ -3,6 +3,7 @@ package net.leawind.mc.util.itempattern;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,7 @@ public class ItemPatternImpl implements ItemPattern {
 	/**
 	 * 物品描述标识符
 	 * <p>
-	 * 可通过 {@link ItemStack#getDescriptionId()} 获取
+	 * 可通过 {@link Item#getDescriptionId()} 获取
 	 */
 	private final @Nullable String      descriptionId;
 	/**
@@ -46,7 +47,7 @@ public class ItemPatternImpl implements ItemPattern {
 		} else if (itemStack == null) {
 			return false;
 		} else {
-			return descriptionId.equals(itemStack.getDescriptionId());
+			return descriptionId.equals(itemStack.getItem().getDescriptionId());
 		}
 	}
 
