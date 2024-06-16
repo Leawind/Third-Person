@@ -143,6 +143,12 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
+	public @NotNull Vector2d getRawRotation () {
+		Camera cam = getRawCamera();
+		return Vector2d.of(-cam.getXRot(), cam.getYRot());
+	}
+
+	@Override
 	public @NotNull Camera getFakeCamera () {
 		return fakeCamera;
 	}

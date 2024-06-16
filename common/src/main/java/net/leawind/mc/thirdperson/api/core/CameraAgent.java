@@ -78,6 +78,12 @@ public interface CameraAgent {
 	Vector2d getRotation ();
 
 	/**
+	 * 原始相机的朝向
+	 */
+	@NotNull
+	Vector2d getRawRotation ();
+
+	/**
 	 * 假相机
 	 */
 	@NotNull
