@@ -28,6 +28,6 @@ A practical, smooth, feature-rich third person mod for all Minecraft players.
 
 * **Quick Perspective Shifts:** Short press of CapsLock for left or right shifts, long press for centering.
 
-* **Player Transparency:** Player entity becomes semi-transparent when the camera is close or the crosshair is aimed at the player.
+* **Player Transparency:** Player entity becomes semi-transparent when the camera is close or the crosshair is aimed at the player. (Not compatible with Sodium)
 
 * **Toggle mod enable/disable：** Key binding is also available.

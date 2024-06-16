@@ -38,7 +38,7 @@ This is a client-side mod.
 :::
 
 :::tip
-This documentation is only applicable to version 2.0.7 and above.
+This documentation is only applicable to the latest version of mod.
 :::
 
 ## Features
@@ -68,9 +68,7 @@ It automatically enters aim mode based on the player holding certain items. For 
 When the camera is close to the player or the crosshair is pointed at the player, the player becomes semi-transparent.
 
 ::: warning
-If you have Optifine installed, please disable the following option; otherwise, rotating the viewpoint in third person may not be smooth.
-
-Options / Video Settings / Performance / Fast Math
+This feature is incompatible with Sodium.
 :::
 
 ## Related Links

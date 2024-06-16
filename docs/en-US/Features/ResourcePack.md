@@ -5,7 +5,8 @@
 The mod's built-in resource pack includes [ItemPattern](./ItemPattern.md) relevant to the vanilla Minecraft.
 
 -   Enters aiming mode when holding these items
-    :::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
+
+:::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
 
 ```json
 [
@@ -22,7 +23,8 @@ The mod's built-in resource pack includes [ItemPattern](./ItemPattern.md) releva
 :::
 
 -   Enters aiming mode when using these items
-    :::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
+
+:::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
 
 ```json
 ["minecraft:bow", "minecraft:trident"]
@@ -31,7 +33,8 @@ The mod's built-in resource pack includes [ItemPattern](./ItemPattern.md) releva
 :::
 
 -   Temporarily switches to first-person when using these items
-    :::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
+
+:::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
 
 ```json
 ["minecraft:spyglass"]

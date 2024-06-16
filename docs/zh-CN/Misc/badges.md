@@ -9,7 +9,7 @@
 [![](https://img.shields.io/modrinth/dt/S3D3QF0M?style=flat&logo=modrinth&color=17B85A&cacheSeconds=3600&label=Modrinth%20Downloads)](https://modrinth.com/mod/leawind-third-person)
 [![](https://img.shields.io/github/stars/LEAWIND/Third-Person?style=flat&logo=github&cacheSeconds=3600&label=Github%20Stars)](https://github.com/LEAWIND/Third-Person)
 [![](https://img.shields.io/badge/MC百科-Leawind的第三人称-9D7CDD)](https://www.mcmod.cn/class/12699.html)
-[![](https://img.shields.io/badge/爱发电-Leawind-9D7CDD)](https://afdian.net/a/Leawind)
+[![](https://img.shields.io/badge/爱发电-Leawind-9D7CDD)](https://afdian.com/a/Leawind)
 
 ## 实时数据
 

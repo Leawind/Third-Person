@@ -5,7 +5,8 @@
 本模组内置资源包中仅包含适用于原版 Minecraft 的相关[物品模式](./ItemPattern)。
 
 -   持有这些物品时进入瞄准模式
-    :::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
+
+:::details `assets/minecraft/item_patterns/hold_to_aim/vanilla.json`
 
 ```json
 [
@@ -22,7 +23,8 @@
 :::
 
 -   使用这些物品时进入瞄准模式
-    :::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
+
+:::details `assets/minecraft/item_patterns/use_to_aim/vanilla.json`
 
 ```json
 ["minecraft:bow", "minecraft:trident"]
@@ -31,7 +33,8 @@
 :::
 
 -   使用这些物品时暂时进入第一人称视角
-    :::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
+
+:::details `assets/minecraft/item_patterns/use_to_first_person/vanilla.json`
 
 ```json
 ["minecraft:spyglass"]

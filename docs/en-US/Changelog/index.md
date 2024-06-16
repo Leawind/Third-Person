@@ -7,9 +7,30 @@ hero:
     text: 🕗Changelog
     tagline:
     image:
-features:
-    - title: Release Channel
-      link: ./Release
-    - title: Beta Channel
-      link: ./Beta
+    actions:
+        - theme: alt
+          text: All
+          link: ./All
 ---
+
+# Preview
+
+Next version may contain following contents.
+
+### Add
+
+-   Disable touble-tap sprinting in third person mode
+    -   Add config `allow_double_tap_sprint`
+-   Always use post effect of attached entity in spectator mode
+
+### Change
+
+### Remove
+
+-   Config `sprint_impulse_threshold`
+
+### Fix
+
+### Compatibility
+
+### Other
