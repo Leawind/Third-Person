@@ -191,7 +191,7 @@ public class EntityAgentImpl implements EntityAgent {
 
 	@Override
 	public boolean isControlled () {
-		return getRawPlayerEntity() == getRawCameraEntity();
+		return getRawPlayerEntity() == minecraft.cameraEntity;
 	}
 
 	@Override
