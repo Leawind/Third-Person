@@ -12,10 +12,8 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 		exclude module: 'modmenu'
 	}
-	// YACL
-	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}") {
-		exclude module: 'modmenu'
-	}
+	// MixinExtras
+	compileOnly("io.github.llamalad7:mixinextras-fabric:${fabric_mixin_extras_version}")
 }
 publishing {
 	publications {}

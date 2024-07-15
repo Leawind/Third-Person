@@ -35,10 +35,6 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 		exclude module: 'modmenu'
 	}
-	// YACL
-	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}") {
-		exclude module: 'modmenu'
-	}
 	// ModMenu
 	modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
 }
@@ -90,6 +86,5 @@ modrinth {
 		required.project "architectury-api"
 		optional.project "modmenu"
 		optional.project "cloth-config"
-		optional.project "yacl"
 	}
 }

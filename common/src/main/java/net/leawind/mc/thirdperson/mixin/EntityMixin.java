@@ -42,7 +42,7 @@ public class EntityMixin {
 			}
 			Vec3           viewVector = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation().subtract(pickFrom).normalize().scale(pickRange);
 			Vec3           pickTo     = pickFrom.add(viewVector);
-			BlockHitResult result     = cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, includeFluid ? ClipContext.Fluid.ANY: ClipContext.Fluid.NONE, cameraEntity));
+			BlockHitResult result     = cameraEntity.level.clip(new ClipContext(pickFrom, pickTo, ClipContext.Block.OUTLINE, includeFluid ? ClipContext.Fluid.ANY: ClipContext.Fluid.NONE, cameraEntity));
 			// 如果玩家眼睛与探测结果之间的距离大于探测距离，则将结果设置为MISS
 			if (result.getType() != HitResult.Type.MISS) {
 				if (eyePosition.distanceTo(result.getLocation()) > playerReach) {

@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.mixin;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
@@ -20,7 +21,7 @@ public class KeyboardInputMixin {
 	 */
 	@Inject(method="tick", at=@At(value="TAIL"))
 	@PerformanceSensitive
-	public void tick_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
+	public void tick_tail (boolean isMoveSlowly, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			// 相机坐标系下的impulse
@@ -47,8 +48,8 @@ public class KeyboardInputMixin {
 				that.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
 				that.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
 				if (isMoveSlowly) {
-					that.forwardImpulse *= sneakingSpeedBonus;
-					that.leftImpulse *= sneakingSpeedBonus;
+					that.forwardImpulse *= ThirdPersonConstants.SLOWLY_MULTIPLIER;
+					that.leftImpulse *= ThirdPersonConstants.SLOWLY_MULTIPLIER;
 				}
 			}
 		}

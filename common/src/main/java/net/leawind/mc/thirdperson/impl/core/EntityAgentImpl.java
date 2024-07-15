@@ -245,10 +245,10 @@ public class EntityAgentImpl implements EntityAgent {
 	public boolean isEyeInWall (@NotNull ClipContext.ShapeGetter shapeGetter) {
 		final Entity   cameraEntity = getRawCameraEntity();
 		Vec3           eyePos       = cameraEntity.getEyePosition();
-		final BlockPos blockPos     = BlockPos.containing(eyePos.x(), eyePos.y(), eyePos.z());
+		final BlockPos blockPos     = new BlockPos(eyePos.x(), eyePos.y(), eyePos.z());
 		final AABB     eyeAabb      = AABB.ofSize(eyePos, 0.8, 1e-6, 0.8);
-		BlockState     blockState   = cameraEntity.level().getBlockState(blockPos);
-		return shapeGetter.get(blockState, cameraEntity.level(), blockPos, CollisionContext.empty()).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
+		BlockState     blockState   = cameraEntity.level.getBlockState(blockPos);
+		return shapeGetter.get(blockState, cameraEntity.level, blockPos, CollisionContext.empty()).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
 	}
 
 	@Override
@@ -341,7 +341,7 @@ public class EntityAgentImpl implements EntityAgent {
 			LocalPlayer player = getRawPlayerEntity();
 			if (player.isUsingItem() && player.getUseItem().is(Items.BOW)) {
 				double k = player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
-				if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
+				if (minecraft.options.mainHand == HumanoidArm.LEFT) {
 					k = -k;
 				}
 				player.yBodyRot = (float)(k * 45 + player.getYRot());

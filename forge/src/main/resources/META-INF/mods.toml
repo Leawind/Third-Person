@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[40,)"
 license = "${mod_license}"
 showAsResourcePack = false
 issueTrackerURL = "${mod_url_issue}"
@@ -16,7 +16,7 @@ displayURL = "${mod_url_home}"
 [[dependencies.leawind_third_person]]
 modId = "forge"
 mandatory = true
-versionRange = "[47,)"
+versionRange = "[40,)"
 ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://files.minecraftforge.net/"

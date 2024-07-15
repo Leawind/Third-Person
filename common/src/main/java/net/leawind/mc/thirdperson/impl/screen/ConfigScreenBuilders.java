@@ -24,7 +24,6 @@ public final class ConfigScreenBuilders {
 
 	static {
 		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), packageExists("me.shedaniel.clothconfig2.api.ConfigBuilder")));
-		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), packageExists("dev.isxander.yacl3.api.YetAnotherConfigLib")));
 		Set<String> availables = getAvailableBuidlers().keySet();
 		availables.forEach(name -> {
 			ThirdPerson.LOGGER.debug("Found available config screen builder: {}", name);

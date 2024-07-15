@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson;
 import net.leawind.mc.thirdperson.impl.core.EntityAgentImpl;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.KeyboardInput;
 import net.minecraft.world.level.ClipContext;
 
 import java.io.File;
@@ -21,6 +22,12 @@ public final class ThirdPersonConstants {
 	 * @see Camera#getNearPlane()
 	 */
 	public static final double            NEAR_PLANE_DISTANCE                   = 0.050;
+	/**
+	 * 蹲下前进时的速度乘数，硬编码
+	 *
+	 * @see KeyboardInput#tick(boolean)
+	 */
+	public static final double            SLOWLY_MULTIPLIER                     = 0.3;
 	public static final double            CAMERA_PITCH_DEGREE_LIMIT             = 89.800;
 	public static final double            CAMERA_THROUGH_WALL_DETECTION         = 0.180;
 	/**

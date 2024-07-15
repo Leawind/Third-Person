@@ -35,8 +35,7 @@
 	},
 	"recommends": {
 		"cloth-config2": ">=${cloth_config_api_version}",
-		"modmenu": ">=${modmenu_version}",
-		"yet_another_config_lib_v3": ">=${yacl_version}"
+		"modmenu": ">=${modmenu_version}"
 	},
 	"custom": {
 		"modmenu": {

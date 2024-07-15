@@ -235,7 +235,7 @@ public class CameraAgentImpl implements CameraAgent {
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
 		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
 		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, blockShape, fluidShape, cameraEntity));
+		return cameraEntity.level.clip(new ClipContext(pickFrom, pickTo, blockShape, fluidShape, cameraEntity));
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class CameraAgentImpl implements CameraAgent {
 		Vector3d     cameraViewVector = LMath.directionFromRotationDegree(cameraRot).normalize();
 		if (ThirdPerson.ENTITY_AGENT.isControlled()) {
 			Entity                    playerEntity = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
-			ClientLevel               clientLevel  = (ClientLevel)playerEntity.level();
+			ClientLevel               clientLevel  = (ClientLevel)playerEntity.level;
 			LevelEntityGetter<Entity> entityGetter = ((ClientLevelInvoker)clientLevel).invokeGetEntityGetter();
 			for (Entity target: entityGetter.getAll()) {
 				if (!(target instanceof LivingEntity)) {
@@ -312,7 +312,7 @@ public class CameraAgentImpl implements CameraAgent {
 		// 宽高比
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
-		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
+		double verticalRadianHalf = Math.toRadians(mc.options.fov) / 2;
 		// 成像平面宽高
 		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;

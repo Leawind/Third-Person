@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -97,7 +98,7 @@ public interface ItemPattern {
 			of("minecraft", expression);
 			return Optional.empty();
 		} catch (IllegalArgumentException e) {
-			return Optional.of(Component.literal(e.getMessage()));
+			return Optional.of(new TextComponent(e.getMessage()));
 		}
 	}
 
