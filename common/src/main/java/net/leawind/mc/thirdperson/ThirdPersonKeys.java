@@ -34,11 +34,12 @@ public final class ThirdPersonKeys {
 	});
 	public static final ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ThirdPersonConstants.KEY_CATEGORY) //
 																	   .onDown(() -> {
-																		   CameraOffsetScheme scheme = ThirdPerson.getConfig().getCameraOffsetScheme();
-																		   if (scheme.isCentered()) {
+																		   CameraOffsetScheme scheme      = ThirdPerson.getConfig().getCameraOffsetScheme();
+																		   boolean            wasCentered = scheme.isCentered();
+																		   if (wasCentered) {
 																			   scheme.toNextSide();
 																		   }
-																		   return scheme.isCentered();
+																		   return wasCentered;
 																	   }) //
 																	   .onHold(() -> ThirdPerson.getConfig().getCameraOffsetScheme().setCentered(true)) //
 																	   .onPress(() -> ThirdPerson.getConfig().getCameraOffsetScheme().toNextSide());
