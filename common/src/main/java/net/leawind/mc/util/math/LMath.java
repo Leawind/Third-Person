@@ -113,7 +113,7 @@ public interface LMath {
 
 	@Contract(pure=true)
 	static Vector3d toVector3d (Vector3f v) {
-		return Vector3d.of(v.x, v.y, v.z);
+		return Vector3d.of(v.x(), v.y(), v.z());
 	}
 
 	@Contract(pure=true)
