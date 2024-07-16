@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.impl.screen;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.leawind.mc.util.OptionalFunction;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -34,6 +35,9 @@ public final class ConfigScreenBuilders {
 		}
 	}
 
+	/**
+	 * 根据配置获取屏幕构建器
+	 */
 	public static @NotNull Optional<ConfigScreenBuilder> getBuilder () {
 		final Map<String, OptionalFunction<ConfigScreenBuilder>> availables = getAvailableBuidlers();
 		final String                                             expected   = ThirdPerson.getConfig().config_screen_api;
@@ -44,6 +48,9 @@ public final class ConfigScreenBuilders {
 		}
 	}
 
+	/**
+	 * 获取全部可用的构建器
+	 */
 	public static @NotNull Map<String, OptionalFunction<ConfigScreenBuilder>> getAvailableBuidlers () {
 		final Map<String, OptionalFunction<ConfigScreenBuilder>> availableBuilders = new HashMap<>();
 		builders.forEach((name, builder) -> {
@@ -54,7 +61,8 @@ public final class ConfigScreenBuilders {
 		return availableBuilders;
 	}
 
-	private static Supplier<Boolean> packageExists (String packageName) {
+	@Contract(pure=true)
+	private static @NotNull Supplier<Boolean> packageExists (String packageName) {
 		return () -> {
 			try {
 				Class.forName(packageName);
