@@ -1,17 +1,16 @@
 package net.leawind.mc.thirdperson.impl.screen;
 
 
+import dev.architectury.platform.Platform;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.api.screen.ConfigScreenBuilder;
 import net.leawind.mc.util.OptionalFunction;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * 配置屏幕构建器
@@ -24,8 +23,8 @@ public final class ConfigScreenBuilders {
 	private static final Map<String, OptionalFunction<ConfigScreenBuilder>> builders = new HashMap<>();
 
 	static {
-		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), packageExists("me.shedaniel.clothconfig2.api.ConfigBuilder")));
-		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), packageExists("dev.isxander.yacl3.api.YetAnotherConfigLib")));
+		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), () -> Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config")));
+		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), () -> Platform.isModLoaded("yet_another_config_lib_v3")));
 		Set<String> availables = getAvailableBuidlers().keySet();
 		availables.forEach(name -> {
 			ThirdPerson.LOGGER.debug("Found available config screen builder: {}", name);
@@ -59,17 +58,5 @@ public final class ConfigScreenBuilders {
 			}
 		});
 		return availableBuilders;
-	}
-
-	@Contract(pure=true)
-	private static @NotNull Supplier<Boolean> packageExists (String packageName) {
-		return () -> {
-			try {
-				Class.forName(packageName);
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		};
 	}
 }
