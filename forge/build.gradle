@@ -28,7 +28,7 @@ dependencies {
 		transitive false
 	}
 	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
-		transitive = false
+		transitive false
 	}
 	// Architectury-api
 	modApi "dev.architectury:architectury-forge:${architectury_version}"
