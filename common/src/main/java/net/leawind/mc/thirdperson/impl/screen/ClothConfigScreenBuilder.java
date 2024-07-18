@@ -30,16 +30,12 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		final ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 		Config                   defaults     = Config.DEFAULTS;
 		//==================================================================================================================================================//
-		//==================================================================================================================================================//
-		// Category: general
-		final ConfigCategory CATEGORY_GENERAL = builder.getOrCreateCategory(ConfigManager.getText("option_category.general"));
+		final ConfigCategory CATEGORY_COMMON = builder.getOrCreateCategory(ConfigManager.getText("option_category.common"));
 		{
-			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_mod_enable", defaults.is_mod_enable, config.is_mod_enable, v -> config.is_mod_enable = v, entryBuilder));
-			CATEGORY_GENERAL.addEntry(buildBooleanEntry("is_third_person_mode", defaults.is_third_person_mode, config.is_third_person_mode, v -> config.is_third_person_mode = v, entryBuilder));
-			CATEGORY_GENERAL.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
-			if (ConfigScreenBuilders.getAvailableBuidlers().size() > 1) {
-				CATEGORY_GENERAL.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
-			}
+			CATEGORY_COMMON.addEntry(buildBooleanEntry("is_mod_enable", defaults.is_mod_enable, config.is_mod_enable, v -> config.is_mod_enable = v, entryBuilder));
+			CATEGORY_COMMON.addEntry(buildBooleanEntry("is_third_person_mode", defaults.is_third_person_mode, config.is_third_person_mode, v -> config.is_third_person_mode = v, entryBuilder));
+			CATEGORY_COMMON.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
+			CATEGORY_COMMON.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
 			// SubCategory: Player Rotation
 			final SubCategoryBuilder SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));
@@ -48,35 +44,19 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("do_not_rotate_when_eating", defaults.do_not_rotate_when_eating, config.do_not_rotate_when_eating, v -> config.do_not_rotate_when_eating = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_interacting_type", defaults.rotate_interacting_type, config.rotate_interacting_type, v -> config.rotate_interacting_type = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("auto_turn_body_drawing_a_bow", defaults.auto_turn_body_drawing_a_bow, config.auto_turn_body_drawing_a_bow, v -> config.auto_turn_body_drawing_a_bow = v, entryBuilder));
-			CATEGORY_GENERAL.addEntry(SUBCATEGORY_PLAYER_ROTATION.build());
+			CATEGORY_COMMON.addEntry(SUBCATEGORY_PLAYER_ROTATION.build());
+			// SubCategory: Player Fade out
+			final SubCategoryBuilder Subcategory_Player_Fade_Out = buildSubCategory("player_fade_out", entryBuilder);
+			Subcategory_Player_Fade_Out.add(buildBooleanEntry("player_fade_out_enabled", defaults.player_fade_out_enabled, config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v, entryBuilder));
+			Subcategory_Player_Fade_Out.add(buildDoubleEntry("player_invisible_threshold", 0D, 1D, defaults.player_invisible_threshold, config.player_invisible_threshold, v -> config.player_invisible_threshold = v, entryBuilder));
+			CATEGORY_COMMON.addEntry(Subcategory_Player_Fade_Out.build());
 			// SubCategory: Camera Distance Adjustment
 			final SubCategoryBuilder Subcategory_Camera_Distance_Adjustment = buildSubCategory("camera_distance_adjustment", entryBuilder);
 			Subcategory_Camera_Distance_Adjustment.add(buildIntSliderEntry("available_distance_count", 2, 64, defaults.available_distance_count, config.available_distance_count, v -> config.available_distance_count = v, entryBuilder));
 			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_min", 0.5, 2.0, defaults.camera_distance_min, config.camera_distance_min, v -> config.camera_distance_min = v, entryBuilder));
 			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_max", 2.0, 16D, defaults.camera_distance_max, config.camera_distance_max, v -> config.camera_distance_max = v, entryBuilder));
-			CATEGORY_GENERAL.addEntry(Subcategory_Camera_Distance_Adjustment.build());
+			CATEGORY_COMMON.addEntry(Subcategory_Camera_Distance_Adjustment.build());
 		}
-		//==================================================================================================================================================//
-		//==================================================================================================================================================//
-		// Category: Miscellaneous
-		final ConfigCategory CATEGORY_MISC = builder.getOrCreateCategory(ConfigManager.getText("option_category.misc"));
-		{
-			CATEGORY_MISC.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
-			CATEGORY_MISC.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
-			CATEGORY_MISC.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
-			CATEGORY_MISC.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
-			// SubCategory: Player Fade out
-			final SubCategoryBuilder Subcategory_Player_Fade_Out = buildSubCategory("player_fade_out", entryBuilder);
-			Subcategory_Player_Fade_Out.add(buildBooleanEntry("player_fade_out_enabled", defaults.player_fade_out_enabled, config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v, entryBuilder));
-			Subcategory_Player_Fade_Out.add(buildDoubleEntry("player_invisible_threshold", 0D, 1D, defaults.player_invisible_threshold, config.player_invisible_threshold, v -> config.player_invisible_threshold = v, entryBuilder));
-			CATEGORY_MISC.addEntry(Subcategory_Player_Fade_Out.build());
-			// SubCategory: Crosshair
-			final SubCategoryBuilder Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);
-			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v, entryBuilder));
-			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v, entryBuilder));
-			CATEGORY_MISC.addEntry(Subcategory_Crosshair.build());
-		}
-		//==================================================================================================================================================//
 		//==================================================================================================================================================//
 		// Category: smooth factors
 		final ConfigCategory CATEGORY_SMOOTH_FACTORS = builder.getOrCreateCategory(ConfigManager.getText("option_category.smooth_halflife"));
@@ -104,7 +84,6 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_SMOOTH_FACTORS.addEntry(Subcategory_Aiming_Mode.build());
 		}
 		//==================================================================================================================================================//
-		//==================================================================================================================================================//
 		// Category: Camera Offset
 		final ConfigCategory CATEGORY_CAMERA_OFFSET = builder.getOrCreateCategory(ConfigManager.getText("option_category.camera_offset"));
 		{
@@ -126,7 +105,6 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_CAMERA_OFFSET.addEntry(Subcategory_Aiming_Mode.build());
 		}
 		//==================================================================================================================================================//
-		//==================================================================================================================================================//
 		// Category: Aiming Check
 		final ConfigCategory CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
@@ -134,6 +112,21 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_pattern_expressions, config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v, entryBuilder));
 			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_pattern_expressions, config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v, entryBuilder));
 			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_first_person_pattern_expressions", defaults.use_to_first_person_pattern_expressions, config.use_to_first_person_pattern_expressions, v -> config.use_to_first_person_pattern_expressions = v, entryBuilder));
+		}
+		//==================================================================================================================================================//
+		final ConfigCategory CATEGORY_OTHER = builder.getOrCreateCategory(ConfigManager.getText("option_category.other"));
+		{
+			if (ConfigScreenBuilders.getAvailableBuidlers().size() > 1) {
+				CATEGORY_OTHER.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
+			}
+			CATEGORY_OTHER.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
+			// SubCategory: Crosshair
+			final SubCategoryBuilder Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);
+			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v, entryBuilder));
+			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(Subcategory_Crosshair.build());
 		}
 		return builder.build();
 	}

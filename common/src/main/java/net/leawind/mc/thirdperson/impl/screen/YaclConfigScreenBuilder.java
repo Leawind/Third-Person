@@ -24,17 +24,12 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 								  .title(ConfigManager.getText("text.title")) //
 								  .save(ThirdPerson.CONFIG_MANAGER::trySave) //
 								  .category(ConfigCategory.createBuilder() //
-														  .name(ConfigManager.getText("option_category.general")) //
-														  .tooltip(ConfigManager.getText("option_category.general.desc")) //
+														  .name(ConfigManager.getText("option_category.common")) //
+														  .tooltip(ConfigManager.getText("option_category.common.desc")) //
 														  .option(booleanOption("is_mod_enable", defaults.is_mod_enable, () -> config.is_mod_enable, v -> config.is_mod_enable = v).build()) //
 														  .option(booleanOption("is_third_person_mode", defaults.is_third_person_mode, () -> config.is_third_person_mode, v -> config.is_third_person_mode = v).build()) //
-														  .option(booleanOption("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, () -> config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v).build()) //
-														  .option(option("config_screen_api", defaults.config_screen_api, () -> config.config_screen_api, v -> config.config_screen_api = v) //
-																																															 .controller(opt -> CyclingListControllerBuilder.create(opt) //
-																																																											.values(ConfigScreenBuilders.getAvailableBuidlers().keySet()) //
-																																																											.formatValue(Component::literal)) //
-																																															 .available(ConfigScreenBuilders.getAvailableBuidlers().size() > 1) //
-																																															 .build()) //
+														  .option(booleanOption("center_offset_when_flying", defaults.center_offset_when_flying, () -> config.center_offset_when_flying, v -> config.center_offset_when_flying = v).build()) //
+														  .option(booleanOption("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, () -> config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v).build()) //
 														  .group(group("player_rotation") //
 																						  .option(booleanOption("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, () -> config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v).build()) //
 																						  .option(booleanOption("rotate_to_moving_direction", defaults.rotate_to_moving_direction, () -> config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v).build()) //
@@ -43,28 +38,15 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 																						  .option(booleanOption("rotate_interacting_type", defaults.rotate_interacting_type, () -> config.rotate_interacting_type, v -> config.rotate_interacting_type = v).build()) //
 																						  .option(booleanOption("auto_turn_body_drawing_a_bow", defaults.auto_turn_body_drawing_a_bow, () -> config.auto_turn_body_drawing_a_bow, v -> config.auto_turn_body_drawing_a_bow = v).build()) //
 																						  .build()) //
-														  // SubCategory: Camera Distance Adjustment
+														  .group(group("player_fade_out")//
+																						 .option(booleanOption("player_fade_out_enabled", defaults.player_fade_out_enabled, () -> config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v).build()) //
+																						 .option(option("player_invisible_threshold", defaults.player_invisible_threshold, 0D, 1D, 0.05D, () -> config.player_invisible_threshold, v -> config.player_invisible_threshold = v).build()) //
+																						 .build()) //
 														  .group(group("camera_distance_adjustment") //
 																									 .option(option("available_distance_count", defaults.available_distance_count, 2, 64, 1, () -> config.available_distance_count, v -> config.available_distance_count = v).build()) //
 																									 .option(option("camera_distance_min", defaults.camera_distance_min, 0.5D, 2.0D, 0.1D, () -> config.camera_distance_min, v -> config.camera_distance_min = v).build()) //
 																									 .option(option("camera_distance_max", defaults.camera_distance_max, 2D, 16D, 1D, () -> config.camera_distance_max, v -> config.camera_distance_max = v).build()) //
 																									 .build()) //
-														  .build()) //
-								  .category(ConfigCategory.createBuilder() //
-														  .name(ConfigManager.getText("option_category.misc")) //
-														  .tooltip(ConfigManager.getText("option_category.misc.desc")) //
-														  .option(booleanOption("center_offset_when_flying", defaults.center_offset_when_flying, () -> config.center_offset_when_flying, v -> config.center_offset_when_flying = v).build()) //
-														  .option(booleanOption("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, () -> config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v).build()) //
-														  .option(option("camera_ray_trace_length", defaults.camera_ray_trace_length, 32D, 2048D, 1D, () -> config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v).build()) //
-														  .option(booleanOption("enable_target_entity_predict", defaults.enable_target_entity_predict, () -> config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v).build()) //
-														  .group(group("player_fade_out")//
-																						 .option(booleanOption("player_fade_out_enabled", defaults.player_fade_out_enabled, () -> config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v).build()) //
-																						 .option(option("player_invisible_threshold", defaults.player_invisible_threshold, 0D, 1D, 0.05D, () -> config.player_invisible_threshold, v -> config.player_invisible_threshold = v).build()) //
-																						 .build()) //
-														  .group(group("crosshair") //
-																					.option(booleanOption("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, () -> config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v).build()) //
-																					.option(booleanOption("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, () -> config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v).build()) //
-																					.build()) //
 														  .build()) //
 								  .category(ConfigCategory.createBuilder() //
 														  .name(ConfigManager.getText("option_category.smooth_halflife")) //
@@ -113,6 +95,23 @@ public class YaclConfigScreenBuilder implements ConfigScreenBuilder {
 														  .option(itemPatternsOption("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_pattern_expressions, () -> config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v).build()) //
 														  .option(itemPatternsOption("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_pattern_expressions, () -> config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v).build()) //
 														  .option(itemPatternsOption("use_to_first_person_pattern_expressions", defaults.use_to_first_person_pattern_expressions, () -> config.use_to_first_person_pattern_expressions, v -> config.use_to_first_person_pattern_expressions = v).build()) //
+														  .build()) //
+								  .category(ConfigCategory.createBuilder() //
+														  .name(ConfigManager.getText("option_category.other")) //
+														  .tooltip(ConfigManager.getText("option_category.other.desc")) //
+														  .option(option("config_screen_api", defaults.config_screen_api, () -> config.config_screen_api, v -> config.config_screen_api = v) //
+																																															 .controller(opt -> CyclingListControllerBuilder.create(opt) //
+																																																											.values(ConfigScreenBuilders.getAvailableBuidlers().keySet()) //
+																																																											.formatValue(Component::literal)) //
+																																															 .available(ConfigScreenBuilders.getAvailableBuidlers().size() > 1) //
+																																															 .build()) //
+														  .option(option("camera_ray_trace_length", defaults.camera_ray_trace_length, 32D, 2048D, 1D, () -> config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v).build()) //
+														  .option(booleanOption("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, () -> config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v).build()) //
+														  .option(booleanOption("enable_target_entity_predict", defaults.enable_target_entity_predict, () -> config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v).build()) //
+														  .group(group("crosshair") //
+																					.option(booleanOption("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, () -> config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v).build()) //
+																					.option(booleanOption("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, () -> config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v).build()) //
+																					.build()) //
 														  .build()) //
 								  .build().generateScreen(parent);
 	}

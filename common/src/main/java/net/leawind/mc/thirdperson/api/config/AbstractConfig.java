@@ -16,6 +16,8 @@ abstract class AbstractConfig {
 	// ================================================================================常用 //
 	@Expose public          boolean      is_mod_enable                             = true;
 	@Expose public          boolean      is_third_person_mode                      = true;
+	@Expose public          boolean      center_offset_when_flying                 = true;
+	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	//------------------------------玩家旋转
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;
 	@Expose public          boolean      rotate_to_moving_direction                = true;
@@ -23,9 +25,6 @@ abstract class AbstractConfig {
 	@Expose public          boolean      do_not_rotate_when_eating                 = true;
 	@Expose public          boolean      rotate_interacting_type                   = true;
 	@Expose public          boolean      auto_turn_body_drawing_a_bow              = false;
-	// ================================================================================不常用 //
-	@Expose public          boolean      center_offset_when_flying                 = true;
-	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	//------------------------------玩家实体虚化
 	@Expose public          boolean      player_fade_out_enabled                   = false;
 	@Expose public          double       player_invisible_threshold                = 0.5;
