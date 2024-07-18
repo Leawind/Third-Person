@@ -354,14 +354,15 @@ public class EntityAgentImpl implements EntityAgent {
 	 */
 	private void updateSmoothOpacity (double period, float partialTick) {
 		double targetOpacity = 1.0;
-		if (ThirdPerson.getConfig().player_fade_out_enabled) {
+		Config config        = ThirdPerson.getConfig();
+		if (config.player_fade_out_enabled) {
 			final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
 			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
 			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
 			targetOpacity = (distance - C) / (1 - C);
 			assert !Double.isNaN(targetOpacity);
-			if (targetOpacity > ThirdPersonConstants.GAZE_OPACITY && !isFallFlying() && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
-				targetOpacity = ThirdPersonConstants.GAZE_OPACITY;
+			if (targetOpacity > config.gaze_opacity && !isFallFlying() && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
+				targetOpacity = config.gaze_opacity;
 			}
 		}
 		smoothOpacity.setTarget(LMath.clamp(targetOpacity, 0, 1));

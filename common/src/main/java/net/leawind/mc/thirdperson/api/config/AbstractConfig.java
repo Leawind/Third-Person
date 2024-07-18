@@ -27,6 +27,7 @@ abstract class AbstractConfig {
 	@Expose public          boolean      auto_turn_body_drawing_a_bow              = false;
 	//------------------------------玩家实体虚化
 	@Expose public          boolean      player_fade_out_enabled                   = false;
+	@Expose public          double       gaze_opacity                              = 0.28;
 	@Expose public          double       player_invisible_threshold                = 0.5;
 	//------------------------------相机到玩家距离调节
 	@Expose public          int          available_distance_count                  = 16;
