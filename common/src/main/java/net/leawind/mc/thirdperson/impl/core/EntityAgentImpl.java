@@ -78,11 +78,6 @@ public class EntityAgentImpl implements EntityAgent {
 		}
 		smoothOpacity.set(0d);
 		wasAiming = false;
-		if (isControlled()) {
-			Vector2d rot = ThirdPerson.CAMERA_AGENT.getRawRotation();
-			setRawRotation(rot);
-			smoothRotation.set(rot);
-		}
 	}
 
 	@Override
