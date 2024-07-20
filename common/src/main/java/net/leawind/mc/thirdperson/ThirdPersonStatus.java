@@ -122,7 +122,7 @@ public final class ThirdPersonStatus {
 	/**
 	 * 第三人称下，通常是直接用鼠标控制相机的朝向 CameraAgentImpl#relativeRotation，再根据一些因素决定玩家的朝向。
 	 * <p>
-	 * 但为了与另一个模组 Do a Barrel Roll 兼容，在特定情况下，允许直接用鼠标控制玩家朝向，而相机跟随玩家旋转。
+	 * 当飞行时，实体的旋转目标是相机朝向，且平滑类型是 {@link SmoothType#HARD}，相当于鼠标直接控制玩家朝向，而相机跟随玩家旋转。这样就可以兼容 Do a Barrel Roll
 	 */
 	public static boolean shouldCameraTurnWithEntity () {
 		return ThirdPerson.ENTITY_AGENT.getRotateTarget() == RotateTarget.CAMERA_ROTATION && ThirdPerson.ENTITY_AGENT.getRotationSmoothType() == SmoothType.HARD;
