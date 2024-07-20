@@ -15,9 +15,9 @@ import java.util.function.Supplier;
  * <p>
  * 使用方法：
  * <p>
- * 在模组初始化时，首先实例化所有按键映射，并绑定需要的的事件处理函数。
+ * 在模组初始化时，首先使用{@link ModKeyMapping#of}实例化所有按键映射，并绑定需要的的事件处理函数。
  * <p>
- * 最后调用 {@link ModKeyMapping#registerAll()}方法即可注册。
+ * 最后调用 {@link ModKeyMapping#registerAll()}方法使用 Architectury API 注册按键。
  * <p>
  * 示例：
  * <pre>
