@@ -52,6 +52,6 @@ public class MouseHandlerMixin {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
 		}
-		return true;
+		return false;
 	}
 }
