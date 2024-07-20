@@ -51,7 +51,8 @@ public class MouseHandlerMixin {
 	public boolean turnPlayer_invoke (LocalPlayer instance, double dy, double dx) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
+			return false;
 		}
-		return false;
+		return true;
 	}
 }
