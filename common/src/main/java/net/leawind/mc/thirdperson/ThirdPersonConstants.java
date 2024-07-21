@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.mod.core.EntityAgentImpl;
+import net.leawind.mc.thirdperson.mod.core.EntityAgent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.ClipContext;
@@ -27,7 +27,7 @@ public final class ThirdPersonConstants {
 	/**
 	 * 渲染相机实体的不透明度下限阈值，当不透明度低于这个值时，将不渲染实体。
 	 *
-	 * @see EntityAgentImpl#getSmoothOpacity()
+	 * @see EntityAgent#getSmoothOpacity()
 	 */
 	public static final float             RENDERED_OPACITY_THRESHOLD_MIN        = 0.01F;
 	/**

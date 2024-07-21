@@ -4,17 +4,17 @@ package net.leawind.mc.thirdperson;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
 import net.leawind.mc.thirdperson.interfaces.config.ConfigManager;
-import net.leawind.mc.thirdperson.interfaces.core.EntityAgent;
 import net.leawind.mc.thirdperson.mod.config.ConfigManagerImpl;
 import net.leawind.mc.thirdperson.mod.core.CameraAgent;
+import net.leawind.mc.thirdperson.mod.core.EntityAgent;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ThirdPerson {
-	public static final Minecraft     mc             = Minecraft.getInstance();
-	public static final Logger        LOGGER         = LoggerFactory.getLogger(ThirdPersonConstants.MOD_NAME);
+	public static final Minecraft       mc             = Minecraft.getInstance();
+	public static final Logger          LOGGER         = LoggerFactory.getLogger(ThirdPersonConstants.MOD_NAME);
 	public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 	public static       EntityAgent   ENTITY_AGENT;
 	public static       CameraAgent   CAMERA_AGENT;
@@ -23,6 +23,7 @@ public final class ThirdPerson {
 		LOGGER.debug("Initializing mod {}", ThirdPersonConstants.MOD_NAME);
 		MixinExtrasBootstrap.init();
 		ENTITY_AGENT = EntityAgent.create(mc);
+		ENTITY_AGENT = new EntityAgent(mc);
 		CAMERA_AGENT = new CameraAgent(mc);
 		CONFIG_MANAGER.tryLoad();
 		ThirdPersonResources.register();

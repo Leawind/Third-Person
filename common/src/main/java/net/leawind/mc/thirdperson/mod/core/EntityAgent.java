@@ -6,7 +6,6 @@ import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonResources;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
-import net.leawind.mc.thirdperson.interfaces.core.EntityAgent;
 import net.leawind.mc.thirdperson.interfaces.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.mod.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.mod.core.rotation.RotateTarget;
@@ -27,6 +26,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.ClipContext;
@@ -35,11 +35,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.apache.logging.log4j.util.PerformanceSensitive;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class EntityAgentImpl implements EntityAgent {
+public class EntityAgent {
 	private final    Minecraft           minecraft;
 	private final    ExpSmoothVector3d   smoothEyePosition;
 	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
@@ -52,7 +53,7 @@ public class EntityAgentImpl implements EntityAgent {
 	 */
 	private          boolean             wasAiming          = false;
 
-	public EntityAgentImpl (@NotNull Minecraft minecraft) {
+	public EntityAgent (@NotNull Minecraft minecraft) {
 		this.minecraft = minecraft;
 		{
 			smoothEyePosition = new ExpSmoothVector3d();
@@ -64,12 +65,23 @@ public class EntityAgentImpl implements EntityAgent {
 		ThirdPerson.LOGGER.debug(rotateDecisionMap.toString());
 	}
 
-	@Override
+	@Contract("_ -> new")
+	public static @NotNull EntityAgent create (@NotNull Minecraft mc) {
+		return new EntityAgent(mc);
+	}
+
+	/**
+	 * 相机实体 {@link Minecraft#cameraEntity} 是否已经存在
+	 */
 	public boolean isCameraEntityExist () {
 		return minecraft.cameraEntity != null;
 	}
 
-	@Override
+	/**
+	 * 重置各种属性
+	 * <p>
+	 * 当初始化或进入第三人称时调用
+	 */
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset EntityAgent");
 		ThirdPersonStatus.lastPartialTick = minecraft.getFrameTime();
@@ -80,39 +92,51 @@ public class EntityAgentImpl implements EntityAgent {
 		wasAiming = false;
 	}
 
-	@Override
+	/**
+	 * 设置旋转目标
+	 */
 	public void setRotateTarget (@NotNull RotateTarget rotateTarget) {
 		this.rotateTarget = rotateTarget;
 	}
 
-	@Override
 	@NotNull
 	public RotateTarget getRotateTarget () {
 		return rotateTarget;
 	}
 
-	@Override
+	/**
+	 * 设置平滑类型
+	 * <p>
+	 * 在 clientTick 和 renderTick 中要根据平滑类型采用不同的处理方式
+	 */
 	public void setRotationSmoothType (@NotNull SmoothType smoothType) {
 		smoothRotationType = smoothType;
 	}
 
-	@Override
 	public @NotNull SmoothType getRotationSmoothType () {
 		return smoothRotationType;
 	}
 
-	@Override
+	/**
+	 * 设置平滑转向的半衰期
+	 */
+	@SuppressWarnings("unused")
 	public void setSmoothRotationHalflife (double halflife) {
 		smoothRotation.setHalflife(halflife);
 	}
 
-	@Override
+	/**
+	 * 获取相机实体不透明度
+	 */
 	public float getSmoothOpacity () {
 		return smoothOpacity.get(ThirdPersonStatus.lastPartialTick).floatValue();
 	}
 
+	/**
+	 * @param period 相邻两次 render tick 的时间差，单位：s
+	 */
+	@SuppressWarnings("unused")
 	@PerformanceSensitive
-	@Override
 	public void onPreRender (double now, double period, float partialTick) {
 		if (!isControlled()) {
 			return;
@@ -135,7 +159,11 @@ public class EntityAgentImpl implements EntityAgent {
 		}
 	}
 
-	@Override
+	/**
+	 * 在 client tick 之前
+	 * <p>
+	 * 通常频率固定为 20Hz
+	 */
 	public void onClientTickPre () {
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
@@ -173,55 +201,72 @@ public class EntityAgentImpl implements EntityAgent {
 	}
 
 	/**
-	 * 立即设置玩家朝向
-	 * <p>
-	 * 同时修改原始玩家实体的朝向和旧朝向
+	 * 设置实体朝向
 	 */
-	@Override
 	public void setRawRotation (@NotNull Vector2d rot) {
 		Entity entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());
 		entity.setXRot(entity.xRotO = (float)rot.x());
 	}
 
-	@Override
+	/**
+	 * 玩家当前是否在操控这个实体
+	 */
 	public boolean isControlled () {
 		return getRawPlayerEntity() == minecraft.cameraEntity;
 	}
 
-	@Override
+	/**
+	 * 获取相机附着的实体
+	 *
+	 * @see EntityAgent#isCameraEntityExist
+	 */
 	public @NotNull Entity getRawCameraEntity () {
 		return Objects.requireNonNull(minecraft.cameraEntity);
 	}
 
-	@Override
+	/**
+	 * 获取玩家实体
+	 */
 	public @NotNull LocalPlayer getRawPlayerEntity () {
 		return Objects.requireNonNull(minecraft.player);
 	}
 
-	@Override
+	/**
+	 * 直接从相机实体获取眼睛坐标
+	 */
 	public @NotNull Vector3d getRawEyePosition (float partialTick) {
 		return LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
 	}
 
-	@Override
+	/**
+	 * 直接从实体获取坐标
+	 */
 	public @NotNull Vector3d getRawPosition (float partialTick) {
 		return LMath.toVector3d(Objects.requireNonNull(getRawCameraEntity()).getPosition(partialTick));
 	}
 
-	@Override
+	/**
+	 * 直接从实体获取朝向
+	 */
 	@VersionSensitive
 	public @NotNull Vector2d getRawRotation (float partialTick) {
 		Entity entity = getRawCameraEntity();
 		return Vector2d.of(entity.getViewXRot(partialTick), entity.getViewYRot(partialTick));
 	}
 
-	@Override
+	/**
+	 * 获取平滑的眼睛坐标
+	 */
 	public @NotNull Vector3d getSmoothEyePosition (float partialTick) {
 		return smoothEyePosition.get(partialTick);
 	}
 
-	@Override
+	/**
+	 * 如果平滑系数为0，则返回完全不平滑的值
+	 * <p>
+	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
+	 */
 	public @NotNull Vector3d getPossibleSmoothEyePosition (float partialTick) {
 		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
 		Vector3d rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
@@ -236,7 +281,11 @@ public class EntityAgentImpl implements EntityAgent {
 		return smoothEyePositionValue;
 	}
 
-	@Override
+	/**
+	 * 实体的眼睛是否在墙里
+	 * <p>
+	 * 与{@link Entity#isInWall()}不同的是，旁观者模式下此方法仍然可以返回true
+	 */
 	public boolean isEyeInWall (@NotNull ClipContext.ShapeGetter shapeGetter) {
 		final Entity   cameraEntity = getRawCameraEntity();
 		Vec3           eyePos       = cameraEntity.getEyePosition();
@@ -246,7 +295,13 @@ public class EntityAgentImpl implements EntityAgent {
 		return shapeGetter.get(blockState, cameraEntity.level(), blockPos, CollisionContext.empty()).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
 	}
 
-	@Override
+	/**
+	 * 实体是否在交互
+	 * <p>
+	 * 当控制玩家时，相当于是否按下了 使用|攻击|选取 键
+	 * <p>
+	 * 当附身其他实体时，另做判断
+	 */
 	@VersionSensitive
 	public boolean isInterecting () {
 		if (isControlled()) {
@@ -257,18 +312,26 @@ public class EntityAgentImpl implements EntityAgent {
 		}
 	}
 
-	@Override
+	/**
+	 * 实体是否在飞行
+	 */
 	@VersionSensitive
 	public boolean isFallFlying () {
 		return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isFallFlying();
 	}
 
-	@Override
+	/**
+	 * 实体是否在奔跑
+	 */
 	public boolean isSprinting () {
 		return getRawCameraEntity().isSprinting();
 	}
 
-	@Override
+	/**
+	 * 正在吃食物
+	 * <p>
+	 * 使用 {@link ItemStack#isEdible()} 判断是否是食物
+	 */
 	public boolean isEating () {
 		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
 			return livingEntity.getUseItem().isEdible();
@@ -276,7 +339,13 @@ public class EntityAgentImpl implements EntityAgent {
 		return false;
 	}
 
-	@Override
+	/**
+	 * 根据以下因素判断是否在瞄准
+	 * <li>是否在使用物品</li>
+	 * <li>实体拿着的物品</li>
+	 * <li>按键</li>
+	 * <li>使用物品时正在播放的动画</li>
+	 */
 	public boolean isAiming () {
 		Config config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.doesPlayerWantToAim()) {
@@ -299,12 +368,21 @@ public class EntityAgentImpl implements EntityAgent {
 		return false;
 	}
 
-	@Override
+	/**
+	 * 在上一个 clientTick 中是否在瞄准
+	 */
 	public boolean wasAiming () {
 		return wasAiming;
 	}
 
-	@Override
+	/**
+	 * 计算点到碰撞箱的距离
+	 * <p>
+	 * 如果点在碰撞箱内，则返回0
+	 *
+	 * @param p 点
+	 * @return 距离
+	 */
 	public double boxDistanceTo (@NotNull Vector3d p) {
 		AABB     box = this.getRawCameraEntity().getBoundingBox();
 		Vector3d c   = Vector3d.of();
