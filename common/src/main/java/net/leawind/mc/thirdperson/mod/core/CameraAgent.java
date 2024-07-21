@@ -3,14 +3,14 @@ package net.leawind.mc.thirdperson.mod.core;
 
 import com.google.common.collect.Lists;
 import net.leawind.mc.api.client.events.CameraSetupEvent;
-import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.ThirdPersonConstants;
-import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.mixin.CameraInvoker;
 import net.leawind.mc.mixin.CameraMixin;
 import net.leawind.mc.mixin.ClientLevelInvoker;
+import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
+import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.mod.cameraoffset.AbstractCameraOffsetMode;
+import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
@@ -460,8 +460,8 @@ public class CameraAgent {
 	}
 
 	private void updateSmoothVirtualDistance (double period) {
-		Config  config      = ThirdPerson.getConfig();
-		boolean isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
+		Config                   config      = ThirdPerson.getConfig();
+		boolean                  isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		AbstractCameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
 			smoothDistanceToEye.setHalflife(config.t2f_transition_halflife);

@@ -221,8 +221,8 @@ public final class ThirdPersonEvents {
 		if (movement.lengthSquared() == 0) {
 			return;
 		}
-		Config config = ThirdPerson.getConfig();
-		Window window = ThirdPerson.mc.getWindow();
+		Config                   config     = ThirdPerson.getConfig();
+		Window                   window     = ThirdPerson.mc.getWindow();
 		Vector2d                 screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
 		CameraOffsetScheme       scheme     = config.getCameraOffsetScheme();
 		AbstractCameraOffsetMode mode       = scheme.getMode();

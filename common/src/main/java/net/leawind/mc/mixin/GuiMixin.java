@@ -3,7 +3,6 @@ package net.leawind.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.leawind.mc.api.client.ApiStatus;
-import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.minecraft.client.gui.Gui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
