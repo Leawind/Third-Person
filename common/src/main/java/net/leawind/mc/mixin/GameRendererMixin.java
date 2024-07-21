@@ -4,7 +4,6 @@ package net.leawind.mc.mixin;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.MinecraftPickEvent;
 import net.leawind.mc.api.client.events.PreRenderTickEvent;
-import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -114,7 +113,7 @@ public class GameRendererMixin {
 					}
 				}
 				ci.cancel();
-				ThirdPerson.mc.getProfiler().pop();
+				minecraft.getProfiler().pop();
 			}
 		}
 	}
