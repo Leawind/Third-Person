@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.fabric;
+package net.leawind.mc.fabric.thirdperson;
 
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;

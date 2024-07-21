@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.mixin;
+package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;

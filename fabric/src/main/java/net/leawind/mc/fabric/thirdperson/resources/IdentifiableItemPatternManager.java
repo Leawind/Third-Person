@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.fabric.resources;
+package net.leawind.mc.fabric.thirdperson.resources;
 
 
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;

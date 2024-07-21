@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "net.leawind.mc.thirdperson.forge.mixin",
+	"package": "net.leawind.mc.forge.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"minVersion": "0.8",
 	"client": [],

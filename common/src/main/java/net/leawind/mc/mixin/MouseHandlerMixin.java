@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.mixin;
+package net.leawind.mc.mixin;
 
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;

@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.forge;
+package net.leawind.mc.forge.thirdperson;
 
 
 import dev.architectury.platform.forge.EventBuses;
