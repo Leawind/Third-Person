@@ -1,12 +1,12 @@
 package net.leawind.mc.api.client.events;
 
 
+import net.leawind.mc.api.base.ModEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.Vec3;
 
-public final class CameraSetupEvent {
-	public       boolean     set = false;
+public final class CameraSetupEvent implements ModEvent {
 	public final BlockGetter level;
 	public final Entity      attachedEntity;
 	public final boolean     detached;
@@ -22,14 +22,13 @@ public final class CameraSetupEvent {
 	}
 
 	public Vec3  pos;
-	public float xRot;
-	public float yRot;
+	public float xRot = 0;
+	public float yRot = 0;
 
 	/**
 	 * Set camera position
 	 */
 	public void setPosition (Vec3 pos) {
-		set      = true;
 		this.pos = pos;
 	}
 
@@ -37,8 +36,11 @@ public final class CameraSetupEvent {
 	 * Set camera rotation
 	 */
 	public void setRotation (float xRot, float yRot) {
-		set       = true;
 		this.xRot = xRot;
 		this.yRot = yRot;
+	}
+
+	public boolean set () {
+		return pos != null;
 	}
 }

@@ -1,7 +1,7 @@
 package net.leawind.mc.mixin;
 
 
-import net.leawind.mc.api.client.GameEvents;
+import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +25,7 @@ public abstract class CameraMixin {
 		if (GameEvents.setupCamera != null) {
 			CameraSetupEvent event = new CameraSetupEvent(level, attachedEntity, detached, reversedView, partialTick);
 			GameEvents.setupCamera.accept(event);
-			if (event.set) {
+			if (event.set()) {
 				Camera camera = (Camera)(Object)this;
 				((CameraInvoker)camera).invokeSetPosition(event.pos);
 				((CameraInvoker)camera).invokeSetRotation(event.yRot, event.xRot);

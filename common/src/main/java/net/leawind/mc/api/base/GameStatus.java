@@ -1,4 +1,4 @@
-package net.leawind.mc.api.client;
+package net.leawind.mc.api.base;
 
 
 public class GameStatus {

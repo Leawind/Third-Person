@@ -7,9 +7,10 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
-import net.leawind.mc.api.client.GameEvents;
-import net.leawind.mc.api.client.GameStatus;
+import net.leawind.mc.api.base.GameEvents;
+import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.events.CameraSetupEvent;
+import net.leawind.mc.api.client.events.MinecraftPickEvent;
 import net.leawind.mc.mixin.GameRendererMixin;
 import net.leawind.mc.mixin.MinecraftMixin;
 import net.leawind.mc.mixin.MouseHandlerMixin;
@@ -26,6 +27,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -38,7 +40,26 @@ public final class ThirdPersonEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 		{
-			GameEvents.setupCamera = ThirdPersonEvents::onCameraSetup;
+			GameEvents.setupCamera   = ThirdPersonEvents::onCameraSetup;
+			GameEvents.minecraftPick = ThirdPersonEvents::onMinecraftPickEvent;
+		}
+	}
+
+	public static void onMinecraftPickEvent (MinecraftPickEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+			Entity cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			Vec3   cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
+			Vec3   eyePosition       = cameraEntity.getEyePosition(event.partialTick);
+			Vec3   cameraHitPosition = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
+			event.pickTo(cameraHitPosition);
+			double pickRange;
+			if (ThirdPersonStatus.shouldPickFromCamera()) {
+				event.pickFrom(cameraPosition);
+				event.setPickRange(cameraHitPosition.distanceTo(cameraPosition) + 1e-5);
+			} else {
+				event.pickFrom(eyePosition);
+				event.setPickRange(event.playerReach);
+			}
 		}
 	}
 

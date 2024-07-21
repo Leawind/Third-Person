@@ -1,9 +1,10 @@
 package net.leawind.mc.mixin;
 
 
+import net.leawind.mc.api.base.GameEvents;
+import net.leawind.mc.api.client.events.MinecraftPickEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonEvents;
-import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -13,16 +14,23 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * {@link GameRenderer#pick(float)} 方法在{@link Minecraft#tick()}开头，tick 完 chatListener 和 gui 之后调用
+ * {@link GameRenderer#pick(float)} 的作用是更新{@link Minecraft#hitResult}和{@link Minecraft#crosshairPickEntity}
  * <p>
- * 在 {@link GameRenderer#renderLevel} 中也会在开头更新完相机实体后调用
+ * 在原版中它有两处调用：
+ * <p>
+ * 1. 在{@link Minecraft#tick()}开头，tick 完 chatListener 和 gui 之后调用
+ * <p>
+ * 2. 在{@link GameRenderer#renderLevel}的开头，更新完相机实体后调用
  * <p>
  * {@link GameRenderer#pick}会先调用{@link Entity#pick}探测方块，再通过{@link ProjectileUtil#getEntityHitResult}探测实体，然后计算最终探测结果
  * <p>
@@ -49,64 +57,65 @@ public class GameRendererMixin {
 	@VersionSensitive("Entity predicate")
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
 	public void pick_storeViewVector (float partialTick, CallbackInfo ci) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-			ThirdPerson.mc.getProfiler().push("pick");
-			BlockHitResult  blockHitResult;
-			EntityHitResult entityHitResult;
-			ThirdPerson.mc.crosshairPickEntity = null;
-			assert ThirdPerson.mc.gameMode != null;
-			double playerReach         = ThirdPerson.mc.gameMode.getPickRange();
-			Entity cameraEntity        = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			Vec3   eyePosition         = cameraEntity.getEyePosition(partialTick);
-			Vec3   cameraPosition      = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
-			Vec3   cameraToEye         = eyePosition.subtract(cameraPosition);
-			double cameraToEyeDistance = cameraToEye.length();
-			double cameraReachMax      = cameraToEyeDistance + playerReach;
-			// 选取方块
-			{
-				blockHitResult = (BlockHitResult)cameraEntity.pick(playerReach, partialTick, false);
-			}
-			// 选取实体
-			{
-				Vec3 cameraLookVector = new Vec3(ThirdPerson.mc.gameRenderer.getMainCamera().getLookVector());
-				Vec3 pickFrom;
-				Vec3 pickTo;
-				if (ThirdPersonStatus.shouldPickFromCamera()) {
-					pickFrom = cameraPosition;
-					pickTo   = pickFrom.add(cameraLookVector.scale(cameraReachMax));
-				} else {
-					pickFrom = eyePosition;
-					pickTo   = blockHitResult.getLocation();
+		if (GameEvents.minecraftPick != null) {
+			MinecraftPickEvent event = new MinecraftPickEvent(partialTick, 4.5);
+			GameEvents.minecraftPick.accept(event);
+			if (event.set()) {
+				GameRenderer that      = (GameRenderer)(Object)this;
+				Minecraft    minecraft = that.getMinecraft();
+				assert minecraft.gameMode != null;
+				Entity cameraEntity = minecraft.getCameraEntity();
+				assert cameraEntity != null;
+				minecraft.getProfiler().push("pick");
+				minecraft.crosshairPickEntity = null;
+				// pick距离，创造模式为5，否则为4.5
+				double playerReach = minecraft.gameMode.getPickRange();
+				// 选取方块
+				minecraft.hitResult = cameraEntity.pick(playerReach, partialTick, false);
+				Vec3 pickFrom = event.pickFrom();
+				assert pickFrom != null;
+				// 选取实体
+				boolean notCreativeMode = false;
+				double  dist            = playerReach;
+				if (minecraft.gameMode.hasFarPickRange()) {
+					// 如果当前是创造模式，则距离为6
+					dist        = 6.0D;
+					playerReach = dist;
+				} else if (playerReach > 3.0D) {
+					// 实际上一定大于3
+					notCreativeMode = true;
 				}
+				// dist 变成了 dist的平方
+				dist *= dist;
+				if (minecraft.hitResult != null) {
+					// 如果pick到了方块，则更新 dist 为玩家眼睛到目标的距离平方
+					dist = minecraft.hitResult.getLocation().distanceToSqr(pickFrom);
+				}
+				Vec3 viewVector = event.getPickVector();
+				Vec3 pickTo     = event.pickTo();
+				assert pickTo != null;
+				// 计算可能和目标实体发生碰撞的碰撞盒
 				AABB aabb = new AABB(pickFrom, pickTo);
-				entityHitResult = ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, (entity) -> !entity.isSpectator() && entity.isPickable(), cameraReachMax * cameraReachMax);
-				if (entityHitResult != null && entityHitResult.getLocation().subtract(eyePosition).length() > playerReach) {
-					entityHitResult = null;
+				// 探测实体
+				EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, entity -> !entity.isSpectator() && entity.isPickable(), dist);
+				if (entityHitResult != null) {
+					Entity targetEntity   = entityHitResult.getEntity();
+					Vec3   targetLocation = entityHitResult.getLocation();
+					double entityDistSqr  = pickFrom.distanceToSqr(targetLocation);
+					if (notCreativeMode && entityDistSqr > 9.0D) {
+						// 如果不是创造模式且目标实体距离超过3
+						minecraft.hitResult = BlockHitResult.miss(targetLocation, Direction.getNearest(viewVector.x, viewVector.y, viewVector.z), BlockPos.containing(targetLocation));
+					} else if (entityDistSqr < dist || minecraft.hitResult == null) {
+						// 如果目标实体距离小于目标方块距离，或者没探测到目标方块，则采用目标实体作为结果
+						minecraft.hitResult = entityHitResult;
+						if (targetEntity instanceof LivingEntity || targetEntity instanceof ItemFrame) {
+							minecraft.crosshairPickEntity = targetEntity;
+						}
+					}
 				}
+				ci.cancel();
+				ThirdPerson.mc.getProfiler().pop();
 			}
-			if (entityHitResult == null) {
-				ThirdPerson.mc.hitResult = blockHitResult;
-			} else if (blockHitResult.getType() == HitResult.Type.MISS) {
-				ThirdPerson.mc.hitResult = entityHitResult;
-			} else {
-				Vec3   pickFrom         = ThirdPersonStatus.shouldPickFromCamera() ? cameraPosition: eyePosition;
-				double blockResultDist  = blockHitResult.getLocation().subtract(pickFrom).length();
-				double entityResultDist = entityHitResult.getLocation().subtract(pickFrom).length();
-				if (blockResultDist < entityResultDist) {
-					ThirdPerson.mc.hitResult = blockHitResult;
-				} else {
-					ThirdPerson.mc.hitResult = entityHitResult;
-				}
-			}
-			if (ThirdPerson.mc.hitResult.getType() == HitResult.Type.ENTITY) {
-				assert entityHitResult != null;
-				Entity targetEntity = entityHitResult.getEntity();
-				if (targetEntity instanceof LivingEntity || targetEntity instanceof ItemFrame) {
-					ThirdPerson.mc.crosshairPickEntity = targetEntity;
-				}
-			}
-			ci.cancel();
-			ThirdPerson.mc.getProfiler().pop();
 		}
 	}
 }
