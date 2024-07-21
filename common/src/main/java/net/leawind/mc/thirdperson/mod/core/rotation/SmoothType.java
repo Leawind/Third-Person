@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.interfaces.core.rotation;
+package net.leawind.mc.thirdperson.mod.core.rotation;
 
 
 /**
