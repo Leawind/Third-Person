@@ -10,7 +10,6 @@ import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.interfaces.screen.ConfigScreenBuilder;
 import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.thirdperson.mod.config.ConfigManager;
 import net.leawind.mc.util.itempattern.ItemPattern;
@@ -21,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
+public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 	public @NotNull Screen build (@NotNull Config config, @Nullable Screen parent) {
 		final ConfigBuilder builder = ConfigBuilder.create()    //
 												   .setParentScreen(parent)    //
@@ -117,8 +116,8 @@ public class ClothConfigScreenBuilder implements ConfigScreenBuilder {
 		//==================================================================================================================================================//
 		final ConfigCategory CATEGORY_OTHER = builder.getOrCreateCategory(ConfigManager.getText("option_category.other"));
 		{
-			if (ConfigScreenBuilders.getAvailableBuidlers().size() > 1) {
-				CATEGORY_OTHER.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(ConfigScreenBuilders.getAvailableBuidlers().keySet()).build());
+			if (ConfigScreenBuilder.getAvailableBuidlers().size() > 1) {
+				CATEGORY_OTHER.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(ConfigScreenBuilder.getAvailableBuidlers().keySet()).build());
 			}
 			CATEGORY_OTHER.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));

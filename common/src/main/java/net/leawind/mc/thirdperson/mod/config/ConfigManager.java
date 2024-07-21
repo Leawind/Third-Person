@@ -5,8 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
-import net.leawind.mc.thirdperson.interfaces.screen.ConfigScreenBuilder;
-import net.leawind.mc.thirdperson.mod.screen.ConfigScreenBuilders;
+import net.leawind.mc.thirdperson.mod.screen.ConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
@@ -117,7 +116,7 @@ public class ConfigManager {
 	 * 获取配置屏幕
 	 */
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
-		Optional<ConfigScreenBuilder> builder = ConfigScreenBuilders.getBuilder();
+		Optional<ConfigScreenBuilder> builder = ConfigScreenBuilder.getBuilder();
 		if (builder.isPresent()) {
 			ThirdPerson.LOGGER.debug("Building config screen");
 			return builder.get().build(config, parent);
@@ -131,7 +130,7 @@ public class ConfigManager {
 	 * 是否有可用的配置屏幕
 	 */
 	public boolean isScreenAvailable () {
-		return !ConfigScreenBuilders.getAvailableBuidlers().isEmpty();
+		return !ConfigScreenBuilder.getAvailableBuidlers().isEmpty();
 	}
 
 	/**

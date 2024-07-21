@@ -3,9 +3,12 @@ package net.leawind.mc.thirdperson.mod.screen;
 
 import dev.architectury.platform.Platform;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.interfaces.screen.ConfigScreenBuilder;
+import net.leawind.mc.thirdperson.mod.config.Config;
+import net.leawind.mc.thirdperson.mod.config.ConfigManager;
 import net.leawind.mc.util.OptionalFunction;
+import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,18 +17,30 @@ import java.util.Set;
 
 /**
  * 配置屏幕构建器
+ *
+ * @see ConfigManager#getConfigScreen(Screen)
  */
 @SuppressWarnings("all")
-public final class ConfigScreenBuilders {
+public abstract class ConfigScreenBuilder {
+	/**
+	 * 构建配置屏幕
+	 *
+	 * @param config 配置实例
+	 * @param parent 父屏幕
+	 * @return 配置屏幕
+	 */
+	@NotNull
+	public abstract Screen build (@NotNull Config config, @Nullable Screen parent);
+
 	/**
 	 * 已经实现或将来可能实现的构建器们
 	 */
-	private static final Map<String, OptionalFunction<ConfigScreenBuilder>> builders = new HashMap<>();
+	static Map<String, OptionalFunction<ConfigScreenBuilder>> builders = new HashMap<>();
 
 	static {
 		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), () -> Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config")));
 		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), () -> Platform.isModLoaded("yet_another_config_lib_v3")));
-		Set<String> availables = getAvailableBuidlers().keySet();
+		Set<String> availables = ConfigScreenBuilder.getAvailableBuidlers().keySet();
 		availables.forEach(name -> {
 			ThirdPerson.LOGGER.debug("Found available config screen builder: {}", name);
 		});
