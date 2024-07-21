@@ -2,11 +2,11 @@ package net.leawind.mc.thirdperson;
 
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
-import net.leawind.mc.thirdperson.api.config.Config;
-import net.leawind.mc.thirdperson.api.config.ConfigManager;
-import net.leawind.mc.thirdperson.api.core.CameraAgent;
-import net.leawind.mc.thirdperson.api.core.EntityAgent;
-import net.leawind.mc.thirdperson.impl.config.ConfigManagerImpl;
+import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.interfaces.config.ConfigManager;
+import net.leawind.mc.thirdperson.interfaces.core.CameraAgent;
+import net.leawind.mc.thirdperson.interfaces.core.EntityAgent;
+import net.leawind.mc.thirdperson.mod.config.ConfigManagerImpl;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

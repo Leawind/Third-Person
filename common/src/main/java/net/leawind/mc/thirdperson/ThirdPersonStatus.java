@@ -1,9 +1,9 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.api.config.Config;
-import net.leawind.mc.thirdperson.api.core.rotation.SmoothType;
-import net.leawind.mc.thirdperson.impl.core.rotation.RotateTarget;
+import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.interfaces.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.mod.core.rotation.RotateTarget;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.world.entity.player.Player;
