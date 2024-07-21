@@ -8,17 +8,17 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.api.client.ApiStatus;
+import net.leawind.mc.api.client.ApiUtils;
+import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
-import net.leawind.mc.thirdperson.mixin.CameraMixin;
 import net.leawind.mc.thirdperson.mixin.GameRendererMixin;
 import net.leawind.mc.thirdperson.mixin.MinecraftMixin;
 import net.leawind.mc.thirdperson.mixin.MouseHandlerMixin;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
-import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -26,7 +26,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.BlockGetter;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -38,6 +37,21 @@ public final class ThirdPersonEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register(ThirdPersonEvents::onClientPlayerRespawn);
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
+		{
+			ApiUtils.setupCamera = ThirdPersonEvents::onCameraSetup;
+		}
+	}
+
+	public static void onCameraSetup (CameraSetupEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+			ThirdPerson.CAMERA_AGENT.setBlockGetter(event.level);
+			if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
+				return;
+			}
+			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
+				ThirdPerson.CAMERA_AGENT.onCameraSetup(event);
+			}
+		}
 	}
 
 	/**
@@ -132,26 +146,6 @@ public final class ThirdPersonEvents {
 	private static void onPlayerReset () {
 		ThirdPerson.ENTITY_AGENT.reset();
 		ThirdPerson.CAMERA_AGENT.reset();
-	}
-
-	/**
-	 * 调用Camera.setup时触发
-	 * <p>
-	 * 该调用位于真正渲染画面之前。
-	 * <p>
-	 * {@link GameRenderer#render} -> {@link GameRenderer#renderLevel} -> {@link Camera#setup}
-	 *
-	 * @see Camera#setup
-	 * @see CameraMixin#setup_invoke
-	 */
-	public static void onCameraSetup (@NotNull BlockGetter level, float partialTick) {
-		ThirdPerson.CAMERA_AGENT.setBlockGetter(level);
-		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			return;
-		}
-		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-			ThirdPerson.CAMERA_AGENT.onCameraSetup();
-		}
 	}
 
 	/**

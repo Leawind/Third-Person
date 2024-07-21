@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.mod.core;
 
 
 import com.google.common.collect.Lists;
+import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
@@ -107,11 +108,15 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	@Override
-	public void onCameraSetup () {
+	public void onCameraSetup (@NotNull CameraSetupEvent event) {
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
 		updateFakeCameraRotationPosition();
-		applyCamera();
+		float yRot = fakeCamera.getYRot();
+		float xRot = fakeCamera.getXRot();
+		assert !Float.isNaN(xRot + yRot);
+		event.setPosition(fakeCamera.getPosition());
+		event.setRotation(xRot, yRot);
 	}
 
 	@Override
@@ -368,18 +373,6 @@ public class CameraAgentImpl implements CameraAgent {
 			}
 		}
 		smoothDistanceToEye.setValue(smoothDistanceToEye.get() * minDistance / initDistance);
-	}
-
-	/**
-	 * 将假相机的朝向和位置应用到真相机上
-	 */
-	private void applyCamera () {
-		Camera camera = getRawCamera();
-		float  yRot   = fakeCamera.getYRot();
-		float  xRot   = fakeCamera.getXRot();
-		assert !Float.isNaN(xRot + yRot);
-		((CameraInvoker)camera).invokeSetRotation(yRot, xRot);
-		((CameraInvoker)camera).invokeSetPosition(fakeCamera.getPosition());
 	}
 
 	private @NotNull Vector3d calculatePositionWithoutOffset () {

@@ -1,8 +1,9 @@
 package net.leawind.mc.thirdperson.interfaces.core;
 
 
-import net.leawind.mc.thirdperson.mod.core.CameraAgentImpl;
+import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.leawind.mc.thirdperson.mixin.CameraMixin;
+import net.leawind.mc.thirdperson.mod.core.CameraAgentImpl;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
@@ -50,7 +51,7 @@ public interface CameraAgent {
 	 * <p>
 	 * {@link CameraMixin#setup_invoke}
 	 */
-	void onCameraSetup ();
+	void onCameraSetup (CameraSetupEvent event);
 
 	/**
 	 * client tick 前
