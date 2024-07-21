@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.interfaces.cameraoffset;
 
 
 import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.mod.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.thirdperson.mod.cameraoffset.CameraOffsetSchemeImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,13 +23,13 @@ public interface CameraOffsetScheme {
 	 * 获取当前模式
 	 */
 	@NotNull
-	CameraOffsetMode getMode ();
+	AbstractCameraOffsetMode getMode ();
 
 	/**
 	 * 获取当前未启用的模式
 	 */
 	@NotNull
-	CameraOffsetMode getAnotherMode ();
+	AbstractCameraOffsetMode getAnotherMode ();
 
 	/**
 	 * 设置相机相对于玩家的方向

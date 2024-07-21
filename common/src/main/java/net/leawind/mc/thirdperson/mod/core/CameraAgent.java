@@ -6,11 +6,11 @@ import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
 import net.leawind.mc.thirdperson.mixin.CameraMixin;
 import net.leawind.mc.thirdperson.mixin.ClientLevelInvoker;
+import net.leawind.mc.thirdperson.mod.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
@@ -460,9 +460,9 @@ public class CameraAgent {
 	}
 
 	private void updateSmoothVirtualDistance (double period) {
-		Config           config      = ThirdPerson.getConfig();
-		boolean          isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
-		CameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
+		Config                   config      = ThirdPerson.getConfig();
+		boolean                  isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
+		AbstractCameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
 			smoothDistanceToEye.setHalflife(config.t2f_transition_halflife);
 			smoothDistanceToEye.setTarget(0);
@@ -479,8 +479,8 @@ public class CameraAgent {
 	}
 
 	private void updateSmoothOffsetRatio (double period) {
-		Config           config = ThirdPerson.getConfig();
-		CameraOffsetMode mode   = config.getCameraOffsetScheme().getMode();
+		Config                   config = ThirdPerson.getConfig();
+		AbstractCameraOffsetMode mode   = config.getCameraOffsetScheme().getMode();
 		if (ThirdPersonStatus.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setHalflife(config.adjusting_camera_offset_smooth_halflife);
 		} else {

@@ -1,15 +1,14 @@
 package net.leawind.mc.thirdperson.mod.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 public class CameraOffsetSchemeImpl implements CameraOffsetScheme {
-	private final @NotNull CameraOffsetMode normalMode;
-	private final @NotNull CameraOffsetMode aimingMode;
-	private                boolean          isAiming = false;
+	private final @NotNull AbstractCameraOffsetMode normalMode;
+	private final @NotNull AbstractCameraOffsetMode aimingMode;
+	private                boolean                  isAiming = false;
 
 	public CameraOffsetSchemeImpl (@NotNull Config config) {
 		normalMode = new CameraOffsetModeNormal(config);
@@ -17,12 +16,12 @@ public class CameraOffsetSchemeImpl implements CameraOffsetScheme {
 	}
 
 	@Override
-	public @NotNull CameraOffsetMode getMode () {
+	public @NotNull AbstractCameraOffsetMode getMode () {
 		return isAiming() ? aimingMode: normalMode;
 	}
 
 	@Override
-	public @NotNull CameraOffsetMode getAnotherMode () {
+	public @NotNull AbstractCameraOffsetMode getAnotherMode () {
 		return isAiming() ? normalMode: aimingMode;
 	}
 
