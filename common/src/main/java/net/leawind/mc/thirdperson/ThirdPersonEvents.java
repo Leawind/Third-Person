@@ -11,6 +11,7 @@ import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.leawind.mc.api.client.events.MinecraftPickEvent;
+import net.leawind.mc.api.client.events.PreRenderTickEvent;
 import net.leawind.mc.mixin.GameRendererMixin;
 import net.leawind.mc.mixin.MinecraftMixin;
 import net.leawind.mc.mixin.MouseHandlerMixin;
@@ -42,6 +43,7 @@ public final class ThirdPersonEvents {
 		{
 			GameEvents.setupCamera   = ThirdPersonEvents::onCameraSetup;
 			GameEvents.minecraftPick = ThirdPersonEvents::onMinecraftPickEvent;
+			GameEvents.preRenderTick = ThirdPersonEvents::onPreRender;
 		}
 	}
 
@@ -178,8 +180,11 @@ public final class ThirdPersonEvents {
 	 * @see GameRenderer#render(float, long, boolean)
 	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
-	public static void onPreRender (float partialTick) {
-		ThirdPersonStatus.lastPartialTick = partialTick;
+	public static void onPreRender (PreRenderTickEvent event) {
+		if (!ThirdPerson.getConfig().is_mod_enable) {
+			return;
+		}
+		ThirdPersonStatus.lastPartialTick = event.partialTick;
 		// in seconds
 		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
@@ -203,8 +208,8 @@ public final class ThirdPersonEvents {
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				ThirdPerson.ENTITY_AGENT.onPreRender(now, period, partialTick);
-				ThirdPerson.CAMERA_AGENT.onPreRender(now, period, partialTick);
+				ThirdPerson.ENTITY_AGENT.onPreRender(now, period, event.partialTick);
+				ThirdPerson.CAMERA_AGENT.onPreRender(now, period, event.partialTick);
 			}
 		}
 		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
