@@ -7,6 +7,7 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import net.leawind.mc.api.client.ApiStatus;
 import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
@@ -188,6 +189,7 @@ public final class ThirdPersonEvents {
 				ThirdPerson.CAMERA_AGENT.onPreRender(now, period, partialTick);
 			}
 		}
+		ApiStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
 	}
 
 	/**
