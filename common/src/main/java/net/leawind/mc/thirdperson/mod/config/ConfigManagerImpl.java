@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
-import net.leawind.mc.thirdperson.interfaces.config.Config;
 import net.leawind.mc.thirdperson.interfaces.config.ConfigManager;
 import net.leawind.mc.thirdperson.interfaces.screen.ConfigScreenBuilder;
 import net.leawind.mc.thirdperson.mod.screen.ConfigScreenBuilders;
@@ -22,9 +21,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ConfigManagerImpl implements ConfigManager {
-	private final @NotNull Gson    GSON                = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
-	private @NotNull       Config  config              = Config.create();
-	private final          Timer   lazySaveTimer       = new Timer();
+	private final @NotNull Gson   GSON          = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
+	private @NotNull       Config config        = new Config();
+	private final          Timer  lazySaveTimer = new Timer();
 	private                boolean isLazySaveScheduled = false;
 
 	public ConfigManagerImpl () {
@@ -76,7 +75,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
 	@Override
 	public void load () throws IOException {
-		config = GSON.fromJson(Files.readString(ThirdPersonConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.IMPL);
+		config = GSON.fromJson(Files.readString(ThirdPersonConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
 	}
 
 	@Override

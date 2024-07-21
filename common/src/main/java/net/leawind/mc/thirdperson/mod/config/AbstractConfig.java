@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.interfaces.config;
+package net.leawind.mc.thirdperson.mod.config;
 
 
 import com.google.gson.annotations.Expose;
@@ -12,7 +12,7 @@ import java.util.List;
  * <p>
  * 定义了所有配置选项及其默认值，可以依照此类编辑配置屏幕
  */
-abstract class AbstractConfig {
+public abstract class AbstractConfig {
 	// ================================================================================常用 //
 	@Expose public          boolean      is_mod_enable                             = true;
 	@Expose public          boolean      is_third_person_mode                      = true;

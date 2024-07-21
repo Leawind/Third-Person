@@ -4,7 +4,7 @@ package net.leawind.mc.thirdperson.mod.screen;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.thirdperson.interfaces.config.ConfigManager;
 import net.leawind.mc.thirdperson.interfaces.screen.ConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;

@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson;
 
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
-import net.leawind.mc.thirdperson.interfaces.config.Config;
 import net.leawind.mc.thirdperson.interfaces.config.ConfigManager;
+import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.thirdperson.mod.config.ConfigManagerImpl;
 import net.leawind.mc.thirdperson.mod.core.CameraAgent;
 import net.leawind.mc.thirdperson.mod.core.EntityAgent;

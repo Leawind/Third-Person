@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.mod.cameraoffset;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;

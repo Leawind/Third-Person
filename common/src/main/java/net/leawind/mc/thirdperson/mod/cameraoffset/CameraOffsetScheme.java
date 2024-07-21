@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson.mod.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.mod.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,10 +19,6 @@ public class CameraOffsetScheme {
 	public CameraOffsetScheme (@NotNull Config config) {
 		normalMode = new CameraOffsetModeNormal(config);
 		aimingMode = new CameraOffsetModeAiming(config);
-	}
-
-	public static CameraOffsetScheme of (Config that) {
-		return new CameraOffsetScheme(that);
 	}
 
 	/**
