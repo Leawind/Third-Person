@@ -1,7 +1,7 @@
 package net.leawind.mc.mixin;
 
 
-import net.leawind.mc.api.client.ApiUtils;
+import net.leawind.mc.api.client.GameEvents;
 import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
@@ -22,9 +22,9 @@ public abstract class CameraMixin {
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE), cancellable=true)
 	public void setup_invoke (BlockGetter level, Entity attachedEntity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
-		if (ApiUtils.setupCamera != null) {
+		if (GameEvents.setupCamera != null) {
 			CameraSetupEvent event = new CameraSetupEvent(level, attachedEntity, detached, reversedView, partialTick);
-			ApiUtils.setupCamera.accept(event);
+			GameEvents.setupCamera.accept(event);
 			if (event.set) {
 				Camera camera = (Camera)(Object)this;
 				((CameraInvoker)camera).invokeSetPosition(event.pos);
@@ -32,9 +32,5 @@ public abstract class CameraMixin {
 				ci.cancel();
 			}
 		}
-		//		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-		//			ThirdPersonEvents.onCameraSetup(level, partialTick);
-		//			ci.cancel();
-		//		}
 	}
 }

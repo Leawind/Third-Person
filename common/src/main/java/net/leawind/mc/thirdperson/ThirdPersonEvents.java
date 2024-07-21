@@ -7,8 +7,8 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
-import net.leawind.mc.api.client.ApiStatus;
-import net.leawind.mc.api.client.ApiUtils;
+import net.leawind.mc.api.client.GameEvents;
+import net.leawind.mc.api.client.GameStatus;
 import net.leawind.mc.api.client.events.CameraSetupEvent;
 import net.leawind.mc.mixin.GameRendererMixin;
 import net.leawind.mc.mixin.MinecraftMixin;
@@ -38,10 +38,13 @@ public final class ThirdPersonEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 		{
-			ApiUtils.setupCamera = ThirdPersonEvents::onCameraSetup;
+			GameEvents.setupCamera = ThirdPersonEvents::onCameraSetup;
 		}
 	}
 
+	/**
+	 * 设置相机位置和朝向
+	 */
 	public static void onCameraSetup (CameraSetupEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPerson.CAMERA_AGENT.setBlockGetter(event.level);
@@ -183,7 +186,7 @@ public final class ThirdPersonEvents {
 				ThirdPerson.CAMERA_AGENT.onPreRender(now, period, partialTick);
 			}
 		}
-		ApiStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
+		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
 	}
 
 	/**
