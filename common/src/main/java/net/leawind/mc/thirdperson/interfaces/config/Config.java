@@ -21,7 +21,7 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public abstract class Config extends AbstractConfig {
 	public static final @NotNull Class<? extends Config> IMPL     = ConfigImpl.class;
-	public static final @NotNull Config                  DEFAULTS = new DefaultConfig();
+	public static final @NotNull Config                  DEFAULTS = Config.create();
 
 	/**
 	 * 创建一个新的用户配置，其中的值均为默认值。
@@ -61,51 +61,4 @@ public abstract class Config extends AbstractConfig {
 	abstract public @NotNull CameraOffsetScheme getCameraOffsetScheme ();
 
 	abstract public @NotNull MonoList getDistanceMonoList ();
-
-	private static final class DefaultConfig extends Config {
-		@Override
-		public void update () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public void updateDistancesMonoList () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public void updateItemPatterns () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public @NotNull Set<ItemPattern> getHoldToAimItemPatterns () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public @NotNull Set<ItemPattern> getUseToAimItemPatterns () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public @NotNull Set<ItemPattern> getUseToFirstPersonItemPatterns () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public @NotNull CameraOffsetScheme getCameraOffsetScheme () {
-			throw illegalAccess();
-		}
-
-		@Override
-		public @NotNull MonoList getDistanceMonoList () {
-			throw illegalAccess();
-		}
-
-		@Contract(value=" -> new", pure=true)
-		private @NotNull IllegalAccessError illegalAccess () {
-			return new IllegalAccessError("This method should not be invoked on default config");
-		}
-	}
 }
