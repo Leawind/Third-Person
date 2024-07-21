@@ -6,7 +6,7 @@ import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonResources;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.mod.config.Config;
-import net.leawind.mc.thirdperson.interfaces.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.mod.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.mod.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.mod.core.rotation.RotateTarget;
 import net.leawind.mc.util.annotations.VersionSensitive;

@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.interfaces.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.mod.core.rotation.SmoothType;
 import net.leawind.mc.thirdperson.mod.config.Config;
 import net.leawind.mc.thirdperson.mod.core.rotation.RotateTarget;
 import net.leawind.mc.util.math.vector.api.Vector2d;

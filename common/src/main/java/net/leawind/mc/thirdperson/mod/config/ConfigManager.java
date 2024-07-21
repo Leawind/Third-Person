@@ -5,11 +5,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
-import net.leawind.mc.thirdperson.interfaces.config.ConfigManager;
 import net.leawind.mc.thirdperson.interfaces.screen.ConfigScreenBuilder;
 import net.leawind.mc.thirdperson.mod.screen.ConfigScreenBuilders;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,16 +21,33 @@ import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ConfigManagerImpl implements ConfigManager {
-	private final @NotNull Gson   GSON          = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
-	private @NotNull       Config config        = new Config();
-	private final          Timer  lazySaveTimer = new Timer();
+public class ConfigManager {
+	private final @NotNull Gson    GSON                = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().disableHtmlEscaping().create();
+	private @NotNull       Config  config              = new Config();
+	private final          Timer   lazySaveTimer       = new Timer();
 	private                boolean isLazySaveScheduled = false;
 
-	public ConfigManagerImpl () {
+	public ConfigManager () {
 	}
 
-	@Override
+	/**
+	 * 在可翻译文本的键前加上modid前缀
+	 *
+	 * @param name 键名
+	 * @return ${MODID}.${id}
+	 */
+	@Contract(value="_ -> new", pure=true)
+	public static @NotNull Component getText (@NotNull String name) {
+		return Component.translatable(ThirdPersonConstants.MOD_ID + "." + name);
+	}
+
+	/**
+	 * 加载配置
+	 * <p>
+	 * 如果找不到文件，则保存一份。
+	 * <p>
+	 * 如果失败，则记录错误到日志
+	 */
 	public void tryLoad () {
 		ThirdPerson.LOGGER.debug("Trying loading config from {}", ThirdPersonConstants.CONFIG_FILE);
 		try {
@@ -47,7 +65,11 @@ public class ConfigManagerImpl implements ConfigManager {
 		config.update();
 	}
 
-	@Override
+	/**
+	 * 尝试保存配置文件
+	 * <p>
+	 * 如果失败，则记录错误到日志
+	 */
 	public void trySave () {
 		ThirdPerson.LOGGER.debug("Trying saving config to {}", ThirdPersonConstants.CONFIG_FILE);
 		try {
@@ -59,7 +81,11 @@ public class ConfigManagerImpl implements ConfigManager {
 		config.update();
 	}
 
-	@Override
+	/**
+	 * 惰性保存
+	 * <p>
+	 * 两次保存时间间隔至少为 {@link ThirdPersonConstants#CONFIG_LAZY_SAVE_DELAY}
+	 */
 	public void lazySave () {
 		if (!isLazySaveScheduled) {
 			isLazySaveScheduled = true;
@@ -73,17 +99,23 @@ public class ConfigManagerImpl implements ConfigManager {
 		}
 	}
 
-	@Override
+	/**
+	 * 直接读取配置文件
+	 */
 	public void load () throws IOException {
 		config = GSON.fromJson(Files.readString(ThirdPersonConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8), Config.class);
 	}
 
-	@Override
+	/**
+	 * 直接保存配置文件
+	 */
 	public void save () throws IOException {
 		FileUtils.writeStringToFile(ThirdPersonConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
 	}
 
-	@Override
+	/**
+	 * 获取配置屏幕
+	 */
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
 		Optional<ConfigScreenBuilder> builder = ConfigScreenBuilders.getBuilder();
 		if (builder.isPresent()) {
@@ -95,12 +127,16 @@ public class ConfigManagerImpl implements ConfigManager {
 		}
 	}
 
-	@Override
+	/**
+	 * 是否有可用的配置屏幕
+	 */
 	public boolean isScreenAvailable () {
 		return !ConfigScreenBuilders.getAvailableBuidlers().isEmpty();
 	}
 
-	@Override
+	/**
+	 * 获取配置对象
+	 */
 	public @NotNull Config getConfig () {
 		return this.config;
 	}

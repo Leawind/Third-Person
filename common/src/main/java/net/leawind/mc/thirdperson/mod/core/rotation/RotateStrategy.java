@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson.mod.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.interfaces.core.rotation.SmoothType;
 import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
