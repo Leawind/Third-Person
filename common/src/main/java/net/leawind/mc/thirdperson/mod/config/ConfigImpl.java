@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson.mod.config;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.mod.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.monolist.MonoList;
 import net.leawind.mc.util.math.monolist.StaticMonoList;
@@ -13,11 +13,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigImpl extends Config {
-	private final @NotNull CameraOffsetScheme cameraOffsetScheme           = CameraOffsetScheme.of(this);
-	private final @NotNull Set<ItemPattern>   holdToAimItemPatterns        = new HashSet<>();
-	private final @NotNull Set<ItemPattern>   useToAimItemPatterns         = new HashSet<>();
-	public final @NotNull  Set<ItemPattern>   useToFirstPersonItemPatterns = new HashSet<>();
-	private                MonoList           distanceMonoList;
+	private final @NotNull CameraOffsetScheme cameraOffsetScheme    = CameraOffsetScheme.of(this);
+	private final @NotNull Set<ItemPattern>   holdToAimItemPatterns = new HashSet<>();
+	private final @NotNull Set<ItemPattern>       useToAimItemPatterns         = new HashSet<>();
+	public final @NotNull  Set<ItemPattern>       useToFirstPersonItemPatterns = new HashSet<>();
+	private                MonoList               distanceMonoList;
 
 	public ConfigImpl () {
 		super();

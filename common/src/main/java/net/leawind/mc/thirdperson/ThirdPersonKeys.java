@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson;
 
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
+import net.leawind.mc.thirdperson.mod.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.mod.core.rotation.RotateTarget;
 import net.leawind.mc.util.modkeymapping.ModKeyMapping;
 import net.minecraft.client.Minecraft;
