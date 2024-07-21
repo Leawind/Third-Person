@@ -11,7 +11,7 @@ import java.util.Comparator;
 /**
  * 在预测目标实体时，判断两个实体的优先级
  *
- * @see CameraAgentImpl#predictTargetEntity()
+ * @see CameraAgent#predictTargetEntity()
  */
 public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements Comparator<Entity> {
 	@Override

@@ -8,8 +8,8 @@ import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.interfaces.cameraoffset.CameraOffsetMode;
 import net.leawind.mc.thirdperson.interfaces.config.Config;
-import net.leawind.mc.thirdperson.interfaces.core.CameraAgent;
 import net.leawind.mc.thirdperson.mixin.CameraInvoker;
+import net.leawind.mc.thirdperson.mixin.CameraMixin;
 import net.leawind.mc.thirdperson.mixin.ClientLevelInvoker;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
@@ -21,7 +21,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CameraAgentImpl implements CameraAgent {
+public class CameraAgent {
 	private final @NotNull Minecraft         minecraft;
 	private final @NotNull Camera            fakeCamera       = new Camera();
 	private final @NotNull Vector2d          relativeRotation = Vector2d.of(0);
@@ -56,13 +55,15 @@ public class CameraAgentImpl implements CameraAgent {
 	 */
 	private @NotNull       HitResult         hitResult        = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
 
-	public CameraAgentImpl (@NotNull Minecraft minecraft) {
+	public CameraAgent (@NotNull Minecraft minecraft) {
 		this.minecraft      = minecraft;
 		smoothOffsetRatio   = new ExpSmoothVector2d();
 		smoothDistanceToEye = new ExpSmoothDouble();
 	}
 
-	@Override
+	/**
+	 * 重置各种属性
+	 */
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
 		smoothOffsetRatio.setValue(0, 0);
@@ -73,12 +74,17 @@ public class CameraAgentImpl implements CameraAgent {
 		}
 	}
 
-	@Override
+	/**
+	 * 设置维度
+	 */
 	public void setBlockGetter (@NotNull BlockGetter blockGetter) {
 		this.blockGetter = blockGetter;
 	}
 
-	@Override
+	/**
+	 * 渲染前
+	 */
+	@SuppressWarnings("unused")
 	public void onPreRender (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
 			// 更新探测结果
@@ -107,7 +113,15 @@ public class CameraAgentImpl implements CameraAgent {
 		}
 	}
 
-	@Override
+	/**
+	 * 渲染过程中放置相机
+	 * <p>
+	 * 在原版的渲染方法中，会调用{@link Camera#setup}来设置相机的位置和朝向。
+	 * <p>
+	 * 在第三人称下，咱需要覆盖该方法的行为，重新设置相机的位置和朝向。
+	 * <p>
+	 * {@link CameraMixin#setup_invoke}
+	 */
 	public void onCameraSetup (@NotNull CameraSetupEvent event) {
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
@@ -119,7 +133,11 @@ public class CameraAgentImpl implements CameraAgent {
 		event.setRotation(xRot, yRot);
 	}
 
-	@Override
+	/**
+	 * client tick 前
+	 * <p>
+	 * 通常频率固定为 20Hz
+	 */
 	public void onClientTickPre () {
 		ThirdPersonStatus.isTransitioningToFirstPerson = false;
 		boolean isTargetThirdPerson = ThirdPerson.getConfig().is_third_person_mode && !ThirdPersonStatus.isTemporaryFirstPerson;
@@ -133,32 +151,48 @@ public class CameraAgentImpl implements CameraAgent {
 		}
 	}
 
+	/**
+	 * 获取原版相机对象
+	 */
 	public @NotNull Camera getRawCamera () {
 		return Objects.requireNonNull(Minecraft.getInstance().gameRenderer.getMainCamera());
 	}
 
-	@Override
+	/**
+	 * 获取原始相机位置
+	 */
 	public @NotNull Vector3d getRawCameraPosition () {
 		return LMath.toVector3d(getRawCamera().getPosition());
 	}
 
-	@Override
+	/**
+	 * 第三人称相机朝向
+	 */
 	public @NotNull Vector2d getRotation () {
 		return Vector2d.of(-relativeRotation.x(), relativeRotation.y() + 180);
 	}
 
-	@Override
+	/**
+	 * 原始相机的朝向
+	 */
 	public @NotNull Vector2d getRawRotation () {
 		Camera cam = getRawCamera();
 		return Vector2d.of(-cam.getXRot(), cam.getYRot());
 	}
 
-	@Override
+	/**
+	 * 假相机
+	 */
 	public @NotNull Camera getFakeCamera () {
 		return fakeCamera;
 	}
 
-	@Override
+	/**
+	 * 玩家控制的相机旋转
+	 *
+	 * @param dy 方向角变化量
+	 * @param dx 俯仰角变化量
+	 */
 	public void onCameraTurn (double dy, double dx) {
 		Config config = ThirdPerson.getConfig();
 		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
@@ -173,33 +207,50 @@ public class CameraAgentImpl implements CameraAgent {
 		}
 	}
 
-	@Override
+	/**
+	 * 获取相对旋转角度
+	 */
 	public @NotNull Vector2d getRelativeRotation () {
 		return relativeRotation;
 	}
 
-	@Override
+	/**
+	 * render tick 开始时，相机的 hitResult
+	 */
 	public @NotNull HitResult getHitResult () {
 		return hitResult;
 	}
 
-	@Override
 	public double getPickRange () {
 		return smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length;
 	}
 
-	@Override
+	/**
+	 * 获取pick结果坐标
+	 * <p>
+	 * 使用默认距离
+	 */
 	public @NotNull Optional<Vector3d> getPickPosition () {
 		return getPickPosition(getPickRange());
 	}
 
-	@Override
+	/**
+	 * 获取相机视线落点坐标
+	 *
+	 * @param pickRange 最大探测距离
+	 */
 	public @NotNull Optional<Vector3d> getPickPosition (double pickRange) {
 		HitResult hitResult = pick(pickRange);
 		return Optional.ofNullable(hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation()));
 	}
 
-	@Override
+	/**
+	 * 从相机出发探测所选方块或实体。
+	 * <p>
+	 * 当探测不到时，返回的是{@link HitResult.Type#MISS}类型。坐标将为探测终点
+	 *
+	 * @param pickRange 探测距离限制
+	 */
 	@VersionSensitive
 	public @NotNull HitResult pick (double pickRange) {
 		Camera              camera                 = getRawCamera();
@@ -211,9 +262,12 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	/**
-	 * @see GameRenderer#pick(float)
+	 * 根据相机的视线确定所选实体
+	 * <p>
+	 * 如果探测不到就返回空值
+	 *
+	 * @param pickRange 探测距离
 	 */
-	@Override
 	@VersionSensitive
 	public @NotNull Optional<EntityHitResult> pickEntity (double pickRange) {
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
@@ -228,12 +282,20 @@ public class CameraAgentImpl implements CameraAgent {
 		return Optional.ofNullable(ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, target -> !target.isSpectator() && target.isPickable(), pickRange));
 	}
 
-	@Override
+	/**
+	 * 同 {@link CameraAgent#pickEntity(double)}，使用默认距离
+	 */
 	public @NotNull Optional<EntityHitResult> pickEntity () {
 		return pickEntity(getPickRange());
 	}
 
-	@Override
+	/**
+	 * 根据相机的视线探测方块
+	 *
+	 * @param pickRange  从相机出发的探测距离
+	 * @param blockShape 方块形状获取器
+	 * @param fluidShape 液体形状获取器
+	 */
 	public @NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
 		Camera camera       = getRawCamera();
 		Vec3   pickFrom     = camera.getPosition();
@@ -243,19 +305,36 @@ public class CameraAgentImpl implements CameraAgent {
 		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, blockShape, fluidShape, cameraEntity));
 	}
 
-	@Override
+	/**
+	 * 同 {@link CameraAgent#pickBlock(double, ClipContext.Block, ClipContext.Fluid)}，使用默认距离
+	 *
+	 * @param blockShape 方块形状获取器
+	 * @param fluidShape 液体形状获取器
+	 */
 	public @NotNull BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
 		return pickBlock(getPickRange(), blockShape, fluidShape);
 	}
 
-	@Override
+	/**
+	 * 同 {@link CameraAgent#pickBlock(ClipContext.Block, ClipContext.Fluid)}，但是
+	 * <p>
+	 * 瞄准时使用的方块形状获取器是 {@link ClipContext.Block#COLLIDER}，不包含草
+	 * <p>
+	 * 非瞄准时使用的方块形状获取器是 {@link ClipContext.Block#OUTLINE}
+	 * <p>
+	 * 当探测不到方块时，返回的是 {@link HitResult.Type#MISS} 类型，坐标将为探测终点，即 相机位置 + 视线向量.normalize(探测距离)
+	 *
+	 * @param pickRange 从相机出发的探测距离
+	 */
 	@VersionSensitive
 	public @NotNull BlockHitResult pickBlock (double pickRange) {
 		return pickBlock(pickRange, ThirdPerson.ENTITY_AGENT.wasAiming() ? ClipContext.Block.COLLIDER: ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
 	}
 
+	/**
+	 * 相机是否正在注视某个实体（无视其他实体或方块）
+	 */
 	@VersionSensitive
-	@Override
 	public boolean isLookingAt (@NotNull Entity entity) {
 		Vec3 from = getRawCamera().getPosition();
 		Vec3 to   = from.add(new Vec3(getRawCamera().getLookVector()).scale(getPickRange()));
@@ -264,9 +343,10 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	/**
-	 * @see AimingTargetComparator#getCost(Entity)
+	 * 预测玩家可能想要射击的目标实体
+	 * <p>
+	 * TODO 预测不够准确
 	 */
-	@Override
 	public @NotNull Optional<Entity> predictTargetEntity () {
 		Config config = ThirdPerson.getConfig();
 		// 候选目标实体
@@ -338,7 +418,7 @@ public class CameraAgentImpl implements CameraAgent {
 	}
 
 	/**
-	 * 为防止穿墙，重新计算 {@link CameraAgentImpl#smoothDistanceToEye} 的值
+	 * 为防止穿墙，重新计算 {@link CameraAgent#smoothDistanceToEye} 的值
 	 * <p>
 	 * 当相机实体的眼睛在墙里时，直接把相机放在眼睛上。
 	 * <p>
