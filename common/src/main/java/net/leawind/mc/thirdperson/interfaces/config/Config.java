@@ -12,13 +12,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
- * 定义配置项的默认值、额外方法等信息
+ * 定义配置项的额外方法
+ * <p>
+ * AbstractConfig 中包含了用户可以直接修改的配置项及默认值。
+ * <p>
+ * 但要在模组中使用这些配置项，还需要进行进一步的处理。
  */
 @SuppressWarnings("unused")
 public abstract class Config extends AbstractConfig {
 	public static final @NotNull Class<? extends Config> IMPL     = ConfigImpl.class;
 	public static final @NotNull Config                  DEFAULTS = new DefaultConfig();
 
+	/**
+	 * 创建一个新的用户配置，其中的值均为默认值。
+	 */
 	@Contract(" -> new")
 	public static @NotNull Config create () {
 		return new ConfigImpl();
