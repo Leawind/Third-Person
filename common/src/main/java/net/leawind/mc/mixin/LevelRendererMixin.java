@@ -2,6 +2,8 @@ package net.leawind.mc.mixin;
 
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.leawind.mc.api.base.GameEvents;
+import net.leawind.mc.api.client.events.RenderEntityEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -19,8 +21,9 @@ public class LevelRendererMixin {
 	 */
 	@Inject(method="renderEntity", at=@At("HEAD"), cancellable=true)
 	public void renderEntity_head (Entity entity, double x, double y, double z, float partialTick, PoseStack poseStack, MultiBufferSource multiBufferSource, CallbackInfo ci) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
-			if (!ThirdPersonStatus.shouldRenderCameraEntity()) {
+		if (GameEvents.renderEntity != null) {
+			RenderEntityEvent event = new RenderEntityEvent(entity, partialTick);
+			if (!GameEvents.renderEntity.apply(event)) {
 				ci.cancel();
 			}
 		}

@@ -9,10 +9,7 @@ import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
-import net.leawind.mc.api.client.events.CalculateMoveImpulseEvent;
-import net.leawind.mc.api.client.events.CameraSetupEvent;
-import net.leawind.mc.api.client.events.MinecraftPickEvent;
-import net.leawind.mc.api.client.events.PreRenderTickEvent;
+import net.leawind.mc.api.client.events.*;
 import net.leawind.mc.mixin.GameRendererMixin;
 import net.leawind.mc.mixin.MinecraftMixin;
 import net.leawind.mc.mixin.MouseHandlerMixin;
@@ -43,11 +40,19 @@ public final class ThirdPersonEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 		{
-			GameEvents.setupCamera   = ThirdPersonEvents::onCameraSetup;
-			GameEvents.minecraftPick = ThirdPersonEvents::onMinecraftPickEvent;
-			GameEvents.preRenderTick = ThirdPersonEvents::onPreRender;
+			GameEvents.setupCamera          = ThirdPersonEvents::onCameraSetup;
+			GameEvents.minecraftPick        = ThirdPersonEvents::onMinecraftPickEvent;
+			GameEvents.preRenderTick        = ThirdPersonEvents::onPreRender;
 			GameEvents.calculateMoveImpulse = ThirdPersonEvents::onCalculateMoveImpulse;
+			GameEvents.renderEntity         = ThirdPersonEvents::onRenderEntity;
 		}
+	}
+
+	public static boolean onRenderEntity (RenderEntityEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && event.entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
+			return ThirdPersonStatus.shouldRenderCameraEntity();
+		}
+		return true;
 	}
 
 	public static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
