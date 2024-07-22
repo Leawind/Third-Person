@@ -1,8 +1,7 @@
 package net.leawind.mc.mixin;
 
 
-import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.ThirdPersonEvents;
+import net.leawind.mc.api.base.GameEvents;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +18,8 @@ public class MinecraftMixin {
 	 */
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
 	public void handleKeybinds_head (CallbackInfo ci) {
-		if (ThirdPerson.isAvailable()) {
-			ThirdPersonEvents.onBeforeHandleKeybinds();
+		if (GameEvents.preHandleKeybinds != null) {
+			GameEvents.preHandleKeybinds.run();
 		}
 	}
 }

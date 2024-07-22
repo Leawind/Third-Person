@@ -12,4 +12,5 @@ public class GameEvents {
 	public static Consumer<PreRenderTickEvent>         preRenderTick        = null;
 	public static Consumer<CalculateMoveImpulseEvent>  calculateMoveImpulse = null;
 	public static Function<RenderEntityEvent, Boolean> renderEntity         = null;
+	public static Runnable                             preHandleKeybinds    = null;
 }

@@ -45,6 +45,7 @@ public final class ThirdPersonEvents {
 			GameEvents.preRenderTick        = ThirdPersonEvents::onPreRender;
 			GameEvents.calculateMoveImpulse = ThirdPersonEvents::onCalculateMoveImpulse;
 			GameEvents.renderEntity         = ThirdPersonEvents::onRenderEntity;
+			GameEvents.preHandleKeybinds    = ThirdPersonEvents::onPreHandleKeybinds;
 		}
 	}
 
@@ -311,18 +312,20 @@ public final class ThirdPersonEvents {
 	/**
 	 * @see MinecraftMixin#handleKeybinds_head(CallbackInfo)
 	 */
-	public static void onBeforeHandleKeybinds () {
-		Config config = ThirdPerson.getConfig();
+	public static void onPreHandleKeybinds () {
+		if (ThirdPerson.isAvailable()) {
+			Config config = ThirdPerson.getConfig();
 		/*
 		  接管“切换视角”按键绑定
 		 */
-		while (ThirdPerson.mc.options.keyTogglePerspective.consumeClick()) {
-			config.is_third_person_mode = !config.is_third_person_mode;
-		}
-		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-			if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
-				// 立即更新玩家注视着的目标 Minecraft#hitResult
-				ThirdPerson.mc.gameRenderer.pick(1f);
+			while (ThirdPerson.mc.options.keyTogglePerspective.consumeClick()) {
+				config.is_third_person_mode = !config.is_third_person_mode;
+			}
+			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
+				if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
+					// 立即更新玩家注视着的目标 Minecraft#hitResult
+					ThirdPerson.mc.gameRenderer.pick(1f);
+				}
 			}
 		}
 	}
