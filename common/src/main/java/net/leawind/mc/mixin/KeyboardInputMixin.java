@@ -20,7 +20,7 @@ public class KeyboardInputMixin {
 	 */
 	@Inject(method="tick", at=@At(value="TAIL"))
 	@PerformanceSensitive
-	public void tick_tail (boolean isMoveSlowly, float sneakingSpeedBonus, CallbackInfo ci) {
+	public void tick_tail (boolean multiplyImpulse, float impulseMultiplier, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			// 相机坐标系下的impulse
@@ -46,9 +46,9 @@ public class KeyboardInputMixin {
 				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
 				that.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
 				that.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
-				if (isMoveSlowly) {
-					that.forwardImpulse *= sneakingSpeedBonus;
-					that.leftImpulse *= sneakingSpeedBonus;
+				if (multiplyImpulse) {
+					that.forwardImpulse *= impulseMultiplier;
+					that.leftImpulse *= impulseMultiplier;
 				}
 			}
 		}
