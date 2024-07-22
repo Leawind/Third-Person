@@ -1,8 +1,8 @@
 package net.leawind.mc.mixin;
 
 
-import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.ThirdPersonStatus;
+import net.leawind.mc.api.base.GameEvents;
+import net.leawind.mc.api.client.events.MinecraftPickEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ClipContext;
@@ -18,11 +18,17 @@ public class ItemMixin {
 	/**
 	 * 当使用船、水瓶、水桶、末影之眼、刷怪蛋、PlaceOnWaterBlockItem 时，计算视线落点。
 	 */
-	@Inject(method="getPlayerPOVHitResult", at=@At("HEAD"), cancellable=true)
-	private static void getPlayerPOVHitResult (Level level, Player player, ClipContext.Fluid fluidShape, CallbackInfoReturnable<BlockHitResult> ci) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-			ci.setReturnValue(ThirdPerson.CAMERA_AGENT.pickBlock(ClipContext.Block.OUTLINE, fluidShape));
-			ci.cancel();
+	@Inject(method="getPlayerPOVHitResult", at=@At(value="INVOKE", target="Lnet/minecraft/world/level/ClipContext;<init>(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/level/ClipContext$Block;" +
+																		  "Lnet/minecraft/world/level/ClipContext$Fluid;Lnet/minecraft/world/entity/Entity;)V"), cancellable=true)
+	private static void a (Level level, Player player, ClipContext.Fluid fluid, CallbackInfoReturnable<BlockHitResult> ci) {
+		if (GameEvents.minecraftPick != null) {
+			MinecraftPickEvent event = new MinecraftPickEvent(1, 5.0);
+			GameEvents.minecraftPick.accept(event);
+			if (event.set()) {
+				BlockHitResult result = level.clip(new ClipContext(event.pickFrom(), event.pickTo(), ClipContext.Block.OUTLINE, fluid, player));
+				ci.setReturnValue(result);
+				ci.cancel();
+			}
 		}
 	}
 }
