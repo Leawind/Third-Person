@@ -35,12 +35,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>
  * 当探测结果为空时，它会通过 {@link BlockHitResult#miss(Vec3, Direction, BlockPos)} 创建一个表示结果为空的 BlockHitResult 对象，此时会根据玩家的朝向计算 Direction 参数。
  * <p>
- * {@link EntityMixin#pick_head}修改了探测方块的逻辑
+ * {@link EntityMixin#pick}修改了探测方块的逻辑
  */
 @Mixin(value=GameRenderer.class, priority=2000)
 public class GameRendererMixin {
 	/**
-	 * on pre render
+	 * 渲染tick前
 	 */
 	@Inject(method="render", at=@At("HEAD"))
 	public void pre_render (float partialTick, long nanoTime, boolean doRenderLevel, CallbackInfo ci) {
@@ -50,8 +50,7 @@ public class GameRendererMixin {
 	}
 
 	/**
-	 * @see Minecraft#hitResult
-	 * @see Minecraft#crosshairPickEntity
+	 * 更新{@link Minecraft#hitResult}和{@link Minecraft#crosshairPickEntity}
 	 */
 	@VersionSensitive("Entity predicate")
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)

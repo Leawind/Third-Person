@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.mod.core;
 
 
 import com.google.common.collect.Lists;
-import net.leawind.mc.api.client.events.CameraSetupEvent;
+import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
 import net.leawind.mc.mixin.CameraInvoker;
 import net.leawind.mc.mixin.CameraMixin;
 import net.leawind.mc.mixin.ClientLevelInvoker;
@@ -120,9 +120,9 @@ public class CameraAgent {
 	 * <p>
 	 * 在第三人称下，咱需要覆盖该方法的行为，重新设置相机的位置和朝向。
 	 * <p>
-	 * {@link CameraMixin#setup_invoke}
+	 * {@link CameraMixin#preMoveCamera}
 	 */
-	public void onCameraSetup (@NotNull CameraSetupEvent event) {
+	public void onCameraSetup (@NotNull ThirdPersonCameraSetupEvent event) {
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
 		updateFakeCameraRotationPosition();

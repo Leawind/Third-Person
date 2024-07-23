@@ -40,13 +40,13 @@ public final class ThirdPersonEvents {
 		ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(ThirdPersonEvents::onClientPlayerJoin);
 		ClientRawInputEvent.MOUSE_SCROLLED.register(ThirdPersonEvents::onMouseScrolled);
 		{
-			GameEvents.setupCamera          = ThirdPersonEvents::onCameraSetup;
-			GameEvents.minecraftPick        = ThirdPersonEvents::onMinecraftPickEvent;
-			GameEvents.preRenderTick        = ThirdPersonEvents::onPreRender;
-			GameEvents.calculateMoveImpulse = ThirdPersonEvents::onCalculateMoveImpulse;
-			GameEvents.renderEntity         = ThirdPersonEvents::onRenderEntity;
-			GameEvents.preHandleKeybinds    = ThirdPersonEvents::onPreHandleKeybinds;
-			GameEvents.preMouseTurnPlayer   = ThirdPersonEvents::onPreMouseTurnPlayer;
+			GameEvents.thirdPersonCameraSetup = ThirdPersonEvents::onThirdPersonCameraSetup;
+			GameEvents.minecraftPick          = ThirdPersonEvents::onMinecraftPickEvent;
+			GameEvents.preRenderTick          = ThirdPersonEvents::onPreRender;
+			GameEvents.calculateMoveImpulse   = ThirdPersonEvents::onCalculateMoveImpulse;
+			GameEvents.renderEntity           = ThirdPersonEvents::onRenderEntity;
+			GameEvents.preHandleKeybinds      = ThirdPersonEvents::onPreHandleKeybinds;
+			GameEvents.preMouseTurnPlayer     = ThirdPersonEvents::onPreMouseTurnPlayer;
 		}
 	}
 
@@ -107,8 +107,8 @@ public final class ThirdPersonEvents {
 	/**
 	 * 设置相机位置和朝向
 	 */
-	public static void onCameraSetup (CameraSetupEvent event) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+	public static void onThirdPersonCameraSetup (ThirdPersonCameraSetupEvent event) {
+		if (ThirdPerson.isAvailable()) {
 			ThirdPerson.CAMERA_AGENT.setBlockGetter(event.level);
 			if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 				return;
@@ -313,7 +313,7 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * @see MinecraftMixin#handleKeybinds_head(CallbackInfo)
+	 * @see MinecraftMixin#preHandleKeybinds(CallbackInfo)
 	 */
 	public static void onPreHandleKeybinds () {
 		if (ThirdPerson.isAvailable()) {

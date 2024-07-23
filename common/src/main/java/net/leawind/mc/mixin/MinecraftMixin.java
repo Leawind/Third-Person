@@ -17,7 +17,7 @@ public class MinecraftMixin {
 	 * 注入到 handleKeybinds 头部，触发相应事件
 	 */
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
-	public void handleKeybinds_head (CallbackInfo ci) {
+	public void preHandleKeybinds (CallbackInfo ci) {
 		if (GameEvents.preHandleKeybinds != null) {
 			GameEvents.preHandleKeybinds.run();
 		}
