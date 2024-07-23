@@ -14,4 +14,5 @@ public class GameEvents {
 	public static Function<RenderEntityEvent, Boolean>  renderEntity           = null;
 	public static Runnable                              preHandleKeybinds      = null;
 	public static Consumer<PreMouseTurnPlayerEvent>     preMouseTurnPlayer     = null;
+	public static Function<TurnPlayerEvent, Boolean>    turnPlayer             = null;
 }

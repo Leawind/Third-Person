@@ -47,7 +47,16 @@ public final class ThirdPersonEvents {
 			GameEvents.renderEntity           = ThirdPersonEvents::onRenderEntity;
 			GameEvents.preHandleKeybinds      = ThirdPersonEvents::onPreHandleKeybinds;
 			GameEvents.preMouseTurnPlayer     = ThirdPersonEvents::onPreMouseTurnPlayer;
+			GameEvents.turnPlayer             = ThirdPersonEvents::onTurnPlayer;
 		}
+	}
+
+	private static boolean onTurnPlayer (TurnPlayerEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+			ThirdPerson.CAMERA_AGENT.turnCamera(event.dy, event.dx);
+			return false;
+		}
+		return true;
 	}
 
 	public static boolean onRenderEntity (RenderEntityEvent event) {

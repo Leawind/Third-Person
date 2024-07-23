@@ -4,8 +4,7 @@ package net.leawind.mc.mixin;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.PreMouseTurnPlayerEvent;
-import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.ThirdPersonStatus;
+import net.leawind.mc.api.client.events.TurnPlayerEvent;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,19 +38,19 @@ public class MouseHandlerMixin {
 	}
 
 	/**
-	 * 在计算完dx，dy之后，原本会调用LocalPlayer.turn方法来旋转玩家
+	 * 在根据鼠标位移计算完朝向变化量(dy,dx)后，会调用{@link LocalPlayer#turn}方法来旋转玩家
 	 * <p>
-	 * 这里可以重定向该方法，改成旋转咱的相机
+	 * 这里可以阻止其旋转玩家。
 	 *
-	 * @param dx x轴角度（俯仰角）变化量
 	 * @param dy y轴角度（偏航角）变化量
+	 * @param dx x轴角度（俯仰角）变化量
 	 */
-	@SuppressWarnings("SameReturnValue")
 	@WrapWithCondition(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
-	public boolean turnPlayer_invoke (LocalPlayer instance, double dy, double dx) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-			ThirdPerson.CAMERA_AGENT.onCameraTurn(dy, dx);
-			return false;
+	public boolean turnPlayer (LocalPlayer player, double dy, double dx) {
+		if (GameEvents.turnPlayer != null) {
+			MouseHandler    that  = (MouseHandler)(Object)this;
+			TurnPlayerEvent event = new TurnPlayerEvent(that, player, dx, dy);
+			return GameEvents.turnPlayer.apply(event);
 		}
 		return true;
 	}

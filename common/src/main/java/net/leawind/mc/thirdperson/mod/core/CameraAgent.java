@@ -193,7 +193,7 @@ public class CameraAgent {
 	 * @param dy 方向角变化量
 	 * @param dx 俯仰角变化量
 	 */
-	public void onCameraTurn (double dy, double dx) {
+	public void turnCamera (double dy, double dx) {
 		Config config = ThirdPerson.getConfig();
 		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
 			dy *= 0.15;
