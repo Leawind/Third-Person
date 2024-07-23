@@ -2,10 +2,10 @@ package net.leawind.mc.mixin;
 
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import net.leawind.mc.api.base.GameEvents;
+import net.leawind.mc.api.client.events.PreMouseTurnPlayerEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.ThirdPersonEvents;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,21 +20,21 @@ public class MouseHandlerMixin {
 	@Shadow private double accumulatedDY;
 
 	/**
-	 * 在 MouseHandler 尝试转动玩家前，阻止其行为。
+	 * 在根据鼠标位移转动玩家前触发
 	 * <p>
-	 * 如果此时相机跟随玩家旋转，那么不作更改
-	 * <p>
-	 * 如果此时正在调整相机，那么不转动玩家，而是触发转动相机事件
-	 * <p>
-	 * 处理完后要重置累积变化量（accumulatedDX|Y）
+	 * 如果在事件处理函数中调用了{@link PreMouseTurnPlayerEvent#cancelDefault()}，则后续处理将会取消，好像鼠标没有移动一样。
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
-	public void turnPlayer_head (CallbackInfo ci) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-			ThirdPersonEvents.onAdjustingCameraOffset(Vector2d.of(accumulatedDX, accumulatedDY));
-			accumulatedDX = 0;
-			accumulatedDY = 0;
-			ci.cancel();
+	public void preTurnPlayer (CallbackInfo ci) {
+		if (GameEvents.preMouseTurnPlayer != null) {
+			PreMouseTurnPlayerEvent event = new PreMouseTurnPlayerEvent(accumulatedDX, accumulatedDY);
+			GameEvents.preMouseTurnPlayer.accept(event);
+			if (event.isDefaultCancelled()) {
+				// 重置累积变化量
+				accumulatedDX = 0;
+				accumulatedDY = 0;
+				ci.cancel();
+			}
 		}
 	}
 

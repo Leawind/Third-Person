@@ -13,4 +13,5 @@ public class GameEvents {
 	public static Consumer<CalculateMoveImpulseEvent>  calculateMoveImpulse = null;
 	public static Function<RenderEntityEvent, Boolean> renderEntity         = null;
 	public static Runnable                             preHandleKeybinds    = null;
+	public static Consumer<PreMouseTurnPlayerEvent>    preMouseTurnPlayer   = null;
 }

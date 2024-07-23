@@ -46,6 +46,7 @@ public final class ThirdPersonEvents {
 			GameEvents.calculateMoveImpulse = ThirdPersonEvents::onCalculateMoveImpulse;
 			GameEvents.renderEntity         = ThirdPersonEvents::onRenderEntity;
 			GameEvents.preHandleKeybinds    = ThirdPersonEvents::onPreHandleKeybinds;
+			GameEvents.preMouseTurnPlayer   = ThirdPersonEvents::onPreMouseTurnPlayer;
 		}
 	}
 
@@ -278,34 +279,36 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * 移动鼠标调整相机偏移
+	 * 如果此时相机跟随玩家旋转，那么不做修改，让鼠标直接控制玩家旋转。
 	 *
-	 * @param movement 移动的像素
 	 * @see MouseHandler#turnPlayer()
-	 * @see MouseHandlerMixin#turnPlayer_head(CallbackInfo)
+	 * @see MouseHandlerMixin#preTurnPlayer(CallbackInfo)
 	 */
-	public static void onAdjustingCameraOffset (@NotNull Vector2d movement) {
-		if (movement.lengthSquared() == 0) {
-			return;
-		}
-		Config                   config     = ThirdPerson.getConfig();
-		Window                   window     = ThirdPerson.mc.getWindow();
-		Vector2d                 screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
-		CameraOffsetScheme       scheme     = config.getCameraOffsetScheme();
-		AbstractCameraOffsetMode mode       = scheme.getMode();
-		if (mode.isCentered()) {
-			// 相机在头顶，只能上下调整
-			double topOffset = mode.getCenterOffsetRatio();
-			topOffset += -movement.y() / screenSize.y();
-			topOffset = LMath.clamp(topOffset, -1, 1);
-			mode.setCenterOffsetRatio(topOffset);
-		} else {
-			// 相机没固定在头顶，可以上下左右调整
-			Vector2d offset = mode.getSideOffsetRatio(Vector2d.of());
-			offset.sub(movement.div(screenSize));
-			offset.clamp(-1, 1);
-			scheme.setSide(Math.signum(offset.x()));
-			mode.setSideOffsetRatio(offset);
+	public static void onPreMouseTurnPlayer (PreMouseTurnPlayerEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+			if (event.accumulatedDX == 0 || event.accumulatedDY == 0) {
+				return;
+			}
+			Config                   config     = ThirdPerson.getConfig();
+			Window                   window     = ThirdPerson.mc.getWindow();
+			Vector2d                 screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
+			CameraOffsetScheme       scheme     = config.getCameraOffsetScheme();
+			AbstractCameraOffsetMode mode       = scheme.getMode();
+			if (mode.isCentered()) {
+				// 相机在头顶，只能上下调整
+				double topOffset = mode.getCenterOffsetRatio();
+				topOffset += -event.accumulatedDY / screenSize.y();
+				topOffset = LMath.clamp(topOffset, -1, 1);
+				mode.setCenterOffsetRatio(topOffset);
+			} else {
+				// 相机没固定在头顶，可以上下左右调整
+				Vector2d offset = mode.getSideOffsetRatio(Vector2d.of());
+				offset.sub(Vector2d.of(event.accumulatedDX, event.accumulatedDY).div(screenSize));
+				offset.clamp(-1, 1);
+				scheme.setSide(Math.signum(offset.x()));
+				mode.setSideOffsetRatio(offset);
+			}
+			event.cancelDefault();
 		}
 	}
 
