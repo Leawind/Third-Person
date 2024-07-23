@@ -1,7 +1,7 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.mod.core.EntityAgent;
+import net.leawind.mc.thirdperson.core.EntityAgent;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.ClipContext;

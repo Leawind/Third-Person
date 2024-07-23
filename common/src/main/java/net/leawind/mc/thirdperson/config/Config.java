@@ -1,8 +1,8 @@
-package net.leawind.mc.thirdperson.mod.config;
+package net.leawind.mc.thirdperson.config;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.mod.cameraoffset.CameraOffsetScheme;
+import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.resources.ItemPatternManager;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.monolist.MonoList;

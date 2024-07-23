@@ -1,10 +1,10 @@
-package net.leawind.mc.thirdperson.mod.screen;
+package net.leawind.mc.thirdperson.screen;
 
 
 import dev.architectury.platform.Platform;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.mod.config.Config;
-import net.leawind.mc.thirdperson.mod.config.ConfigManager;
+import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.util.OptionalFunction;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;

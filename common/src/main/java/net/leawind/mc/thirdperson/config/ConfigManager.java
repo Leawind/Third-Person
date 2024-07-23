@@ -1,11 +1,11 @@
-package net.leawind.mc.thirdperson.mod.config;
+package net.leawind.mc.thirdperson.config;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
-import net.leawind.mc.thirdperson.mod.screen.ConfigScreenBuilder;
+import net.leawind.mc.thirdperson.screen.ConfigScreenBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;

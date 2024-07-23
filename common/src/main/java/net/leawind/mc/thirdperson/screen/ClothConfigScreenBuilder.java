@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.mod.screen;
+package net.leawind.mc.thirdperson.screen;
 
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -10,8 +10,8 @@ import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.mod.config.Config;
-import net.leawind.mc.thirdperson.mod.config.ConfigManager;
+import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;

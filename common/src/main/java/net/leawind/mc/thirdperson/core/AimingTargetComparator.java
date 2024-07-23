@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.mod.core;
+package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.util.math.LMath;

@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.mod.config.Config;
+import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.minecraft.client.resources.SplashManager;

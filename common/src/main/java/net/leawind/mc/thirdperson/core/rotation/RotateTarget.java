@@ -1,9 +1,9 @@
-package net.leawind.mc.thirdperson.mod.core.rotation;
+package net.leawind.mc.thirdperson.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.mod.core.CameraAgent;
+import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;

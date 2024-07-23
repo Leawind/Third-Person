@@ -1,7 +1,7 @@
-package net.leawind.mc.thirdperson.mod.cameraoffset;
+package net.leawind.mc.thirdperson.cameraoffset;
 
 
-import net.leawind.mc.thirdperson.mod.config.Config;
+import net.leawind.mc.thirdperson.config.Config;
 import org.jetbrains.annotations.NotNull;
 
 /**

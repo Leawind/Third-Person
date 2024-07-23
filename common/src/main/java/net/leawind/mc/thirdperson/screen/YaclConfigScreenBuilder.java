@@ -1,11 +1,11 @@
-package net.leawind.mc.thirdperson.mod.screen;
+package net.leawind.mc.thirdperson.screen;
 
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.mod.config.Config;
-import net.leawind.mc.thirdperson.mod.config.ConfigManager;
+import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -101,9 +101,9 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .tooltip(ConfigManager.getText("option_category.other.desc")) //
 														  .option(option("config_screen_api", defaults.config_screen_api, () -> config.config_screen_api, v -> config.config_screen_api = v) //
 																																															 .controller(opt -> CyclingListControllerBuilder.create(opt) //
-																																																											.values(ConfigScreenBuilder.getAvailableBuidlers().keySet()) //
+																																																											.values(getAvailableBuidlers().keySet()) //
 																																																											.formatValue(Component::literal)) //
-																																															 .available(ConfigScreenBuilder.getAvailableBuidlers().size() > 1) //
+																																															 .available(getAvailableBuidlers().size() > 1) //
 																																															 .build()) //
 														  .option(option("camera_ray_trace_length", defaults.camera_ray_trace_length, 32D, 2048D, 1D, () -> config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v).build()) //
 														  .option(booleanOption("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, () -> config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v).build()) //

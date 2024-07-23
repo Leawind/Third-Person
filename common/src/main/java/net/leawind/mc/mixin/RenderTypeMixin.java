@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.mod.core.EntityAgent;
+import net.leawind.mc.thirdperson.core.EntityAgent;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;

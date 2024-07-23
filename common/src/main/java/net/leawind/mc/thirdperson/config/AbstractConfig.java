@@ -1,4 +1,4 @@
-package net.leawind.mc.thirdperson.mod.config;
+package net.leawind.mc.thirdperson.config;
 
 
 import com.google.gson.annotations.Expose;

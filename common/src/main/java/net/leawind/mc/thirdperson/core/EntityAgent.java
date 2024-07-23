@@ -1,14 +1,14 @@
-package net.leawind.mc.thirdperson.mod.core;
+package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonResources;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.mod.config.Config;
-import net.leawind.mc.thirdperson.mod.core.rotation.RotateStrategy;
-import net.leawind.mc.thirdperson.mod.core.rotation.RotateTarget;
-import net.leawind.mc.thirdperson.mod.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.config.Config;
+import net.leawind.mc.thirdperson.core.rotation.RotateStrategy;
+import net.leawind.mc.thirdperson.core.rotation.RotateTarget;
+import net.leawind.mc.thirdperson.core.rotation.SmoothType;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
