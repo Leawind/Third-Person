@@ -1,6 +1,9 @@
-package net.leawind.mc.mixin;
+package net.leawind.mc.fabric.mixin;
 
 
+import net.leawind.mc.api.base.GameEvents;
+import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
+import net.leawind.mc.mixin.CameraInvoker;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -10,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value=Camera.class, priority=2000)
-public abstract class CameraMixin {
+public class CameraMixin {
 	/**
 	 * setup 方法中第三人称下移动相机之前
 	 * <p>
@@ -20,6 +23,15 @@ public abstract class CameraMixin {
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE), cancellable=true)
 	public void preMoveCamera (BlockGetter level, Entity attachedEntity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
-		//NOW remove all
+		if (GameEvents.thirdPersonCameraSetup != null) {
+			ThirdPersonCameraSetupEvent event = new ThirdPersonCameraSetupEvent(attachedEntity, partialTick);
+			GameEvents.thirdPersonCameraSetup.accept(event);
+			if (event.set()) {
+				Camera camera = (Camera)(Object)this;
+				((CameraInvoker)camera).invokeSetPosition(event.pos);
+				((CameraInvoker)camera).invokeSetRotation(event.yRot, event.xRot);
+				ci.cancel();
+			}
+		}
 	}
 }

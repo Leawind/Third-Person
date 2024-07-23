@@ -45,6 +45,9 @@ public class EntityAgent {
 	private final    ExpSmoothVector3d   smoothEyePosition;
 	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
 	private final    ExpSmoothDouble     smoothOpacity;
+	/**
+	 * @see RotateStrategy#build
+	 */
 	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
 	private @NotNull RotateTarget        rotateTarget       = RotateTarget.NONE;
 	private @NotNull SmoothType          smoothRotationType = SmoothType.EXP_LINEAR;

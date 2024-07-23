@@ -3,7 +3,9 @@
 	"package": "net.leawind.mc.fabric.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"minVersion": "0.8",
-	"client": [],
+	"client": [
+		"CameraMixin"
+	],
 	"mixins": [],
 	"injectors": {
 		"defaultRequire": 1

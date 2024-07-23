@@ -26,12 +26,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +47,6 @@ public class CameraAgent {
 	 * 虚相机到平滑眼睛的距离
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
-	private @Nullable      BlockGetter       blockGetter;
 	/**
 	 * 在 {@link CameraAgent#onPreRender} 中更新
 	 */
@@ -72,13 +69,6 @@ public class CameraAgent {
 			Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			relativeRotation.set(-entity.getViewXRot(ThirdPersonStatus.lastPartialTick), entity.getViewYRot(ThirdPersonStatus.lastPartialTick) - 180);
 		}
-	}
-
-	/**
-	 * 设置维度
-	 */
-	public void setBlockGetter (@NotNull BlockGetter blockGetter) {
-		this.blockGetter = blockGetter;
 	}
 
 	/**
@@ -297,7 +287,7 @@ public class CameraAgent {
 	 * @param fluidShape 液体形状获取器
 	 */
 	public @NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
-		Camera camera       = getRawCamera();
+		Camera camera       = getFakeCamera();
 		Vec3   pickFrom     = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
 		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
@@ -437,7 +427,6 @@ public class CameraAgent {
 			return;
 		}
 		double minDistance = initDistance;
-		assert blockGetter != null;
 		for (int i = 0; i < 8; ++i) {
 			double offsetX = (i & 1) * 2 - 1;
 			double offsetY = (i >> 1 & 1) * 2 - 1;
@@ -447,7 +436,7 @@ public class CameraAgent {
 			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			Vec3      pickFrom  = smoothEyePosition.add(offsetX, offsetY, offsetZ);
 			Vec3      pickTo    = pickFrom.add(smoothEyeToCamera);
-			HitResult hitResult = blockGetter.clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+			HitResult hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickFrom));
 			}
