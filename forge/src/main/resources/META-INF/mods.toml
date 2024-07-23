@@ -48,7 +48,7 @@ referraUrl = "https://modrinth.com/mod/cloth-config"
 [[dependencies.leawind_third_person]]
 modId = "yet_another_config_lib_v3"
 mandatory = false
-versionRange = "(,${yacl_version}]"
+versionRange = "(,${yacl_mc_version}]"
 ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://modrinth.com/mod/yacl"
