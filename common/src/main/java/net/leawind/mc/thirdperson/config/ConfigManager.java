@@ -130,13 +130,6 @@ public class ConfigManager {
 	}
 
 	/**
-	 * 是否有可用的配置屏幕
-	 */
-	public boolean isScreenAvailable () {
-		return !ConfigScreenBuilder.getAvailableBuidlers().isEmpty();
-	}
-
-	/**
 	 * 获取配置对象
 	 */
 	public @NotNull Config getConfig () {

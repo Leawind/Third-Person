@@ -57,14 +57,10 @@ public class EntityAgent {
 	private          boolean             wasAiming          = false;
 
 	public EntityAgent (@NotNull Minecraft minecraft) {
-		this.minecraft = minecraft;
-		{
-			smoothEyePosition = new ExpSmoothVector3d();
-		}
-		{
-			smoothOpacity = new ExpSmoothDouble();
-			smoothOpacity.set(1d);
-		}
+		this.minecraft    = minecraft;
+		smoothEyePosition = new ExpSmoothVector3d();
+		smoothOpacity     = new ExpSmoothDouble();
+		smoothOpacity.set(1d);
 		ThirdPerson.LOGGER.debug(rotateDecisionMap.toString());
 	}
 
@@ -156,10 +152,8 @@ public class EntityAgent {
 				}
 			}
 		}
-		{
-			Vector2d rot = getRawRotation(partialTick);
-			assert !Double.isNaN(rot.x() + rot.y());
-		}
+		Vector2d rot = getRawRotation(partialTick);
+		assert !Double.isNaN(rot.x() + rot.y());
 	}
 
 	/**
@@ -240,13 +234,6 @@ public class EntityAgent {
 	 */
 	public @NotNull Vector3d getRawEyePosition (float partialTick) {
 		return LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
-	}
-
-	/**
-	 * 直接从实体获取坐标
-	 */
-	public @NotNull Vector3d getRawPosition (float partialTick) {
-		return LMath.toVector3d(Objects.requireNonNull(getRawCameraEntity()).getPosition(partialTick));
 	}
 
 	/**

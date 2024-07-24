@@ -17,7 +17,7 @@ public class ThirdPersonEventsForge {
 	public static void cameraSetupEvent (ViewportEvent.ComputeCameraAngles event) {
 		if (GameEvents.thirdPersonCameraSetup != null) {
 			Camera                      camera = event.getCamera();
-			ThirdPersonCameraSetupEvent evt    = new ThirdPersonCameraSetupEvent(camera.getEntity(), (float)event.getPartialTick());
+			ThirdPersonCameraSetupEvent evt    = new ThirdPersonCameraSetupEvent((float)event.getPartialTick());
 			GameEvents.thirdPersonCameraSetup.accept(evt);
 			if (evt.set()) {
 				((CameraInvoker)camera).invokeSetPosition(evt.pos);

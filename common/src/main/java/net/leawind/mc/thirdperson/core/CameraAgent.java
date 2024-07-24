@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.core;
 import com.google.common.collect.Lists;
 import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
 import net.leawind.mc.mixin.CameraInvoker;
-import net.leawind.mc.mixin.CameraMixin;
 import net.leawind.mc.mixin.ClientLevelInvoker;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
@@ -105,12 +104,6 @@ public class CameraAgent {
 
 	/**
 	 * 渲染过程中放置相机
-	 * <p>
-	 * 在原版的渲染方法中，会调用{@link Camera#setup}来设置相机的位置和朝向。
-	 * <p>
-	 * 在第三人称下，咱需要覆盖该方法的行为，重新设置相机的位置和朝向。
-	 * <p>
-	 * {@link CameraMixin#preMoveCamera}
 	 */
 	public void onCameraSetup (@NotNull ThirdPersonCameraSetupEvent event) {
 		updateFakeCameraRotationPosition();
@@ -160,21 +153,6 @@ public class CameraAgent {
 	 */
 	public @NotNull Vector2d getRotation () {
 		return Vector2d.of(-relativeRotation.x(), relativeRotation.y() + 180);
-	}
-
-	/**
-	 * 原始相机的朝向
-	 */
-	public @NotNull Vector2d getRawRotation () {
-		Camera cam = getRawCamera();
-		return Vector2d.of(-cam.getXRot(), cam.getYRot());
-	}
-
-	/**
-	 * 假相机
-	 */
-	public @NotNull Camera getFakeCamera () {
-		return fakeCamera;
 	}
 
 	/**
@@ -273,13 +251,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 同 {@link CameraAgent#pickEntity(double)}，使用默认距离
-	 */
-	public @NotNull Optional<EntityHitResult> pickEntity () {
-		return pickEntity(getPickRange());
-	}
-
-	/**
 	 * 根据相机的视线探测方块
 	 *
 	 * @param pickRange  从相机出发的探测距离
@@ -287,7 +258,6 @@ public class CameraAgent {
 	 * @param fluidShape 液体形状获取器
 	 */
 	public @NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
-		// NOW camera 的 rotation 一直在变
 		Camera camera       = getRawCamera();
 		Vec3   pickFrom     = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
@@ -297,18 +267,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 同 {@link CameraAgent#pickBlock(double, ClipContext.Block, ClipContext.Fluid)}，使用默认距离
-	 *
-	 * @param blockShape 方块形状获取器
-	 * @param fluidShape 液体形状获取器
-	 */
-	public @NotNull BlockHitResult pickBlock (@NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
-		return pickBlock(getPickRange(), blockShape, fluidShape);
-	}
-
-	/**
-	 * 同 {@link CameraAgent#pickBlock(ClipContext.Block, ClipContext.Fluid)}，但是
-	 * <p>
 	 * 瞄准时使用的方块形状获取器是 {@link ClipContext.Block#COLLIDER}，不包含草
 	 * <p>
 	 * 非瞄准时使用的方块形状获取器是 {@link ClipContext.Block#OUTLINE}

@@ -59,9 +59,8 @@ public enum RotateTarget {
 				Entity   target       = predicted.get();
 				Vector3d playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
 				Vector3d cameraPos    = LMath.toVector3d(camera.getPosition());
-				Vector3d targetPos = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
-				double   distance  = cameraPos.distance(targetPos);
-				Vector3d end       = LMath.toVector3d(camera.getLookVector()).normalize(distance).add(cameraPos);
+				Vector3d targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
+				Vector3d end          = LMath.toVector3d(camera.getLookVector()).normalize(cameraPos.distance(targetPos)).add(cameraPos);
 				return LMath.rotationDegreeFromDirection(end.copy().sub(playerEyePos));
 			}
 		}

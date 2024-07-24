@@ -9,7 +9,6 @@
 		"LevelRendererMixin",
 		"ModelPartCubeMixin",
 		"RenderTypeMixin",
-		"CameraMixin",
 		"MinecraftMixin",
 		"GuiMixin",
 		"KeyboardInputMixin",

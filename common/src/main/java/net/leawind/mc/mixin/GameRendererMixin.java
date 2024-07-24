@@ -77,8 +77,7 @@ public class GameRendererMixin {
 				double  dist            = playerReach;
 				if (minecraft.gameMode.hasFarPickRange()) {
 					// 如果当前是创造模式，则距离为6
-					dist        = 6.0D;
-					playerReach = dist;
+					dist = 6.0D;
 				} else if (playerReach > 3.0D) {
 					// 实际上一定大于3
 					notCreativeMode = true;

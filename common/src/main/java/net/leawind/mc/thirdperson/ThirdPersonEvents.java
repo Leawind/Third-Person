@@ -98,7 +98,7 @@ public final class ThirdPersonEvents {
 	public static void onMinecraftPickEvent (MinecraftPickEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			Entity cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			Vec3   cameraPosition    = ThirdPerson.CAMERA_AGENT.getFakeCamera().getPosition();
+			Vec3   cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
 			Vec3   eyePosition       = cameraEntity.getEyePosition(event.partialTick);
 			Vec3   cameraHitPosition = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
 			event.pickTo(cameraHitPosition);

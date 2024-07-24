@@ -24,8 +24,6 @@ public final class ThirdPersonStatus {
 	public static                boolean  isToggleToAiming                     = false;
 	/**
 	 * 最近一次 renderTick 的 partialTick
-	 * <p>
-	 * 在{@link ThirdPersonEvents#onPreRender(float)}开头更新
 	 */
 	public static                float    lastPartialTick                      = 1;
 	public static                double   lastRenderTickTimeStamp              = 0;

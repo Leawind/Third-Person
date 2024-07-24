@@ -9,7 +9,7 @@ import net.minecraft.server.packs.PackType;
  * 自定义资源包
  */
 public final class ThirdPersonResources {
-	public static ItemPatternManager itemPatternManager = new ItemPatternManager();
+	public final static ItemPatternManager itemPatternManager = new ItemPatternManager();
 
 	public static void register () {
 		ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, ThirdPersonResources.itemPatternManager);
