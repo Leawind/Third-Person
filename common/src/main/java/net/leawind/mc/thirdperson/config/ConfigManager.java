@@ -3,6 +3,7 @@ package net.leawind.mc.thirdperson.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.screen.ConfigScreenBuilder;
@@ -60,6 +61,8 @@ public class ConfigManager {
 			}
 		} catch (IOException e) {
 			ThirdPerson.LOGGER.error("Failed to load config.", e);
+		} catch (JsonSyntaxException e) {
+			ThirdPerson.LOGGER.error("Config file is broken.", e);
 		}
 		config.update();
 	}
