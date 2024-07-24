@@ -12,7 +12,9 @@ public interface CameraInvoker {
 	void invokeSetPosition (Vec3 pos);
 
 	/**
-	 * 单位：角度制
+	 * 设置相机朝向，单位是角度制
+	 * <p>
+	 * 该方法除了会设置对象的 yRot和xRot属性外，还会更新 rotation, forwards, up, left 属性
 	 *
 	 * @param yRot 偏航角，z轴正向是0，顺时针为正向
 	 * @param xRot 俯仰角，俯正仰负 [-90,90]

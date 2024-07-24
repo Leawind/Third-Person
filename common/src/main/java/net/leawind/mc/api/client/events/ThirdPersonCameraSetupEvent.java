@@ -2,6 +2,7 @@ package net.leawind.mc.api.client.events;
 
 
 import net.leawind.mc.api.base.ModEvent;
+import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 

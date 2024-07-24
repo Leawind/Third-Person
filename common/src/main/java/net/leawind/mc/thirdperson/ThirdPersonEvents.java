@@ -72,8 +72,8 @@ public final class ThirdPersonEvents {
 			double cameraLookImpulse = (event.input.up ? 1: 0) - (event.input.down ? 1: 0);
 			double cameraLeftImpulse = (event.input.left ? 1: 0) - (event.input.right ? 1: 0);
 			// 计算世界坐标系下的向前和向左 impulse
-			Vector3d lookImpulse        = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getFakeCamera().getLookVector()).normalize();    // 视线向量
-			Vector3d leftImpulse        = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getFakeCamera().getLeftVector()).normalize();
+			Vector3d lookImpulse        = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector()).normalize();    // 视线向量
+			Vector3d leftImpulse        = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getLeftVector()).normalize();
 			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize();    // 水平方向上的视线向量
 			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize();
 			lookImpulse.mul(cameraLookImpulse);    // 这才是 impulse

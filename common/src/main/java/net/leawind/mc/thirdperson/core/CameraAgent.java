@@ -116,10 +116,10 @@ public class CameraAgent {
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
 		updateFakeCameraRotationPosition();
+		event.setPosition(fakeCamera.getPosition());
 		float yRot = fakeCamera.getYRot();
 		float xRot = fakeCamera.getXRot();
 		assert !Float.isNaN(xRot + yRot);
-		event.setPosition(fakeCamera.getPosition());
 		event.setRotation(xRot, yRot);
 	}
 
@@ -287,7 +287,8 @@ public class CameraAgent {
 	 * @param fluidShape 液体形状获取器
 	 */
 	public @NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
-		Camera camera       = getFakeCamera();
+		// NOW camera 的 rotation 一直在变
+		Camera camera       = getRawCamera();
 		Vec3   pickFrom     = camera.getPosition();
 		Vec3   viewVector   = new Vec3(camera.getLookVector());
 		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
