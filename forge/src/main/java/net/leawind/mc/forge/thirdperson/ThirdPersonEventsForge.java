@@ -13,6 +13,7 @@ public class ThirdPersonEventsForge {
 	/**
 	 * 低优先级意味着在其他模组之后执行，可以覆盖其他模组对相机位置、朝向所做的修改。
 	 */
+	@SuppressWarnings("unused")
 	@SubscribeEvent(priority=EventPriority.LOW)
 	public static void cameraSetupEvent (ViewportEvent.ComputeCameraAngles event) {
 		if (GameEvents.thirdPersonCameraSetup != null) {
