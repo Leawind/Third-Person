@@ -59,14 +59,14 @@ public final class ThirdPersonEvents {
 		return true;
 	}
 
-	public static boolean onRenderEntity (RenderEntityEvent event) {
+	private static boolean onRenderEntity (RenderEntityEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && event.entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
 			return ThirdPersonStatus.shouldRenderCameraEntity();
 		}
 		return true;
 	}
 
-	public static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
+	private static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			// 相机坐标系下的impulse
 			double cameraLookImpulse = (event.input.up ? 1: 0) - (event.input.down ? 1: 0);
@@ -95,7 +95,7 @@ public final class ThirdPersonEvents {
 		}
 	}
 
-	public static void onMinecraftPickEvent (MinecraftPickEvent event) {
+	private static void onMinecraftPickEvent (MinecraftPickEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 			Entity cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			Vec3   cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
@@ -116,7 +116,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * 设置相机位置和朝向
 	 */
-	public static void onThirdPersonCameraSetup (ThirdPersonCameraSetupEvent event) {
+	private static void onThirdPersonCameraSetup (ThirdPersonCameraSetupEvent event) {
 		if (ThirdPerson.isAvailable()) {
 			if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 				return;
@@ -227,7 +227,7 @@ public final class ThirdPersonEvents {
 	 * @see GameRenderer#render(float, long, boolean)
 	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
-	public static void onPreRender (PreRenderTickEvent event) {
+	private static void onPreRender (PreRenderTickEvent event) {
 		if (!ThirdPerson.getConfig().is_mod_enable) {
 			return;
 		}
@@ -265,7 +265,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * 进入“相机跟随玩家转动”状态
 	 */
-	public static void onStartCameraTurnWithEntity () {
+	private static void onStartCameraTurnWithEntity () {
 		// 将玩家朝向设为与相机一致
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
@@ -292,7 +292,7 @@ public final class ThirdPersonEvents {
 	 * @see MouseHandler#turnPlayer()
 	 * @see MouseHandlerMixin#preMouseTurnPlayer(CallbackInfo)
 	 */
-	public static void onPreMouseTurnPlayer (PreMouseTurnPlayerEvent event) {
+	private static void onPreMouseTurnPlayer (PreMouseTurnPlayerEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			if (event.accumulatedDX == 0 || event.accumulatedDY == 0) {
 				return;
@@ -323,7 +323,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * @see MinecraftMixin#preHandleKeybinds(CallbackInfo)
 	 */
-	public static void onPreHandleKeybinds () {
+	private static void onPreHandleKeybinds () {
 		if (ThirdPerson.isAvailable()) {
 			Config config = ThirdPerson.getConfig();
 		/*
@@ -344,7 +344,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * 进入第一人称视角
 	 */
-	public static void onEnterFirstPerson () {
+	private static void onEnterFirstPerson () {
 		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.ENTITY_AGENT.getRawCameraEntity());
 	}
 

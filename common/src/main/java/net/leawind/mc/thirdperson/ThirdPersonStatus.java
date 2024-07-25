@@ -40,7 +40,7 @@ public final class ThirdPersonStatus {
 	 */
 	public static                boolean  isTransitioningToFirstPerson         = false;
 	/**
-	 * 在 {@link ThirdPersonEvents#onPreRender} 中更新
+	 * 在 ThirdPersonEvents#onPreRender 中更新
 	 *
 	 * @see ThirdPersonStatus#shouldCameraTurnWithEntity
 	 */
