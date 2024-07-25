@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson;
 
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
-import dev.architectury.platform.Mod;
 import dev.architectury.platform.Platform;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class ThirdPerson {
-	public static final Mod           mod            = Platform.getMod(ThirdPersonConstants.MOD_ID);
 	public static final Minecraft     mc             = Minecraft.getInstance();
 	public static final Logger        LOGGER         = LoggerFactory.getLogger(ThirdPersonConstants.MOD_NAME);
 	public static final ConfigManager CONFIG_MANAGER = new ConfigManager();
@@ -31,7 +29,7 @@ public final class ThirdPerson {
 		ThirdPersonResources.register();
 		ThirdPersonKeys.register();
 		ThirdPersonEvents.register();
-		mod.registerConfigurationScreen(ThirdPerson.CONFIG_MANAGER::getConfigScreen);
+		Platform.getMod(ThirdPersonConstants.MOD_ID).registerConfigurationScreen(ThirdPerson.CONFIG_MANAGER::getConfigScreen);
 	}
 
 	/**
