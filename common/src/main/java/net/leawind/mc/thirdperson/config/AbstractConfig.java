@@ -75,4 +75,5 @@ public abstract class AbstractConfig {
 	//------------------------------准星
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;
 	@Expose public          boolean      render_crosshair_when_aiming              = true;
+	@Expose public          boolean      hide_crosshair_when_flying                = true;
 }

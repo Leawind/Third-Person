@@ -57,6 +57,8 @@
 	"leawind_third_person.option.render_crosshair_when_aiming.desc": "在瞄准状态下显示准星",
 	"leawind_third_person.option.render_crosshair_when_not_aiming": "未瞄准时显示准星",
 	"leawind_third_person.option.render_crosshair_when_not_aiming.desc": "在未瞄准状态下显示准星",
+	"leawind_third_person.option.hide_crosshair_when_flying": "飞行时隐藏准星",
+	"leawind_third_person.option.hide_crosshair_when_flying.desc": "飞行时隐藏准星",
 	"leawind_third_person.option.available_distance_count": "可选的距离数量",
 	"leawind_third_person.option.available_distance_count.desc": "使用鼠标滚轮可以调整相机到玩家距离，该选项的值是距离的档位数量",
 	"leawind_third_person.option.camera_distance_min": "距离下限",

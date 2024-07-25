@@ -44,7 +44,7 @@ public final class ThirdPersonStatus {
 	 *
 	 * @see ThirdPersonStatus#shouldCameraTurnWithEntity
 	 */
-	public static                boolean  wasSouldCameraTurnWithEntity         = false;
+	public static                boolean  wasShouldCameraTurnWithEntity        = false;
 
 	/**
 	 * 是否正在调整摄像机偏移量
@@ -72,7 +72,7 @@ public final class ThirdPersonStatus {
 	 */
 	public static boolean shouldRenderCrosshair () {
 		Config config = ThirdPerson.getConfig();
-		return ThirdPerson.isAvailable() && (ThirdPerson.ENTITY_AGENT.wasAiming() ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming);
+		return ThirdPerson.isAvailable() && (ThirdPerson.ENTITY_AGENT.wasAiming() ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming && (!(ThirdPerson.ENTITY_AGENT.isFallFlying() && config.hide_crosshair_when_flying)));
 	}
 
 	/**

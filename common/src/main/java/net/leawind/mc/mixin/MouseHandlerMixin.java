@@ -24,7 +24,7 @@ public class MouseHandlerMixin {
 	 * 如果在事件处理函数中调用了{@link PreMouseTurnPlayerEvent#cancelDefault()}，则后续处理将会取消，好像鼠标没有移动一样。
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
-	public void preTurnPlayer (CallbackInfo ci) {
+	public void preMouseTurnPlayer (CallbackInfo ci) {
 		if (GameEvents.preMouseTurnPlayer != null) {
 			PreMouseTurnPlayerEvent event = new PreMouseTurnPlayerEvent(accumulatedDX, accumulatedDY);
 			GameEvents.preMouseTurnPlayer.accept(event);

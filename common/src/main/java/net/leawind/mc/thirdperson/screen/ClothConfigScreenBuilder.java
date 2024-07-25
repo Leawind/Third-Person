@@ -126,6 +126,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			final SubCategoryBuilder Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);
 			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v, entryBuilder));
 			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v, entryBuilder));
+			Subcategory_Crosshair.add(buildBooleanEntry("hide_crosshair_when_flying", defaults.hide_crosshair_when_flying, config.hide_crosshair_when_flying, v -> config.hide_crosshair_when_flying = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(Subcategory_Crosshair.build());
 		}
 		return builder.build();

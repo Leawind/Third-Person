@@ -111,6 +111,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .group(group("crosshair") //
 																					.option(booleanOption("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, () -> config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v).build()) //
 																					.option(booleanOption("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, () -> config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v).build()) //
+																					.option(booleanOption("hide_crosshair_when_flying", defaults.hide_crosshair_when_flying, () -> config.hide_crosshair_when_flying, v -> config.hide_crosshair_when_flying = v).build()) //
 																					.build()) //
 														  .build()) //
 								  .build().generateScreen(parent);

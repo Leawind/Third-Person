@@ -248,10 +248,10 @@ public final class ThirdPersonEvents {
 		}
 		if (isRenderInThirdPerson) {
 			boolean shouldCameraTurnWithEntity = ThirdPersonStatus.shouldCameraTurnWithEntity();
-			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasSouldCameraTurnWithEntity) {
+			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasShouldCameraTurnWithEntity) {
 				onStartCameraTurnWithEntity();
 			}
-			ThirdPersonStatus.wasSouldCameraTurnWithEntity = shouldCameraTurnWithEntity;
+			ThirdPersonStatus.wasShouldCameraTurnWithEntity = shouldCameraTurnWithEntity;
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
@@ -290,7 +290,7 @@ public final class ThirdPersonEvents {
 	 * 如果此时相机跟随玩家旋转，那么不做修改，让鼠标直接控制玩家旋转。
 	 *
 	 * @see MouseHandler#turnPlayer()
-	 * @see MouseHandlerMixin#preTurnPlayer(CallbackInfo)
+	 * @see MouseHandlerMixin#preMouseTurnPlayer(CallbackInfo)
 	 */
 	public static void onPreMouseTurnPlayer (PreMouseTurnPlayerEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
