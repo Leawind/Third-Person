@@ -25,7 +25,7 @@ public class EntityMixin {
 	 * @see GameRendererMixin
 	 */
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
-	public void pick (double playerReach, float partialTick, boolean includeFluid, CallbackInfoReturnable<HitResult> ci) {
+	private void pick (double playerReach, float partialTick, boolean includeFluid, CallbackInfoReturnable<HitResult> ci) {
 		if (GameEvents.minecraftPick != null) {
 			Entity             entity = (Entity)(Object)this;
 			MinecraftPickEvent event  = new MinecraftPickEvent(partialTick, playerReach);

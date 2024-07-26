@@ -43,7 +43,7 @@ public class GameRendererMixin {
 	 * 渲染tick前
 	 */
 	@Inject(method="render", at=@At("HEAD"))
-	public void pre_render (float partialTick, long nanoTime, boolean doRenderLevel, CallbackInfo ci) {
+	private void pre_render (float partialTick, long nanoTime, boolean doRenderLevel, CallbackInfo ci) {
 		if (GameEvents.preRenderTick != null) {
 			GameEvents.preRenderTick.accept(new PreRenderTickEvent(partialTick));
 		}
@@ -54,7 +54,7 @@ public class GameRendererMixin {
 	 */
 	@VersionSensitive("Entity predicate")
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
-	public void pick_storeViewVector (float partialTick, CallbackInfo ci) {
+	private void pick_storeViewVector (float partialTick, CallbackInfo ci) {
 		if (GameEvents.minecraftPick != null) {
 			MinecraftPickEvent event = new MinecraftPickEvent(partialTick, 4.5);
 			GameEvents.minecraftPick.accept(event);

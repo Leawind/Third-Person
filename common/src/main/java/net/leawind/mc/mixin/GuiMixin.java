@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value=Gui.class, priority=2000)
 public class GuiMixin {
 	@ModifyExpressionValue(method="renderCrosshair", at=@At(value="INVOKE", target="Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
-	public boolean r (boolean isFirstPersonReally) {
+	private boolean isFirstPerson (boolean isFirstPersonReally) {
 		return isFirstPersonReally || GameStatus.allowThirdPersonCrosshair;
 	}
 }

@@ -24,7 +24,7 @@ public class MouseHandlerMixin {
 	 * 如果在事件处理函数中调用了{@link PreMouseTurnPlayerEvent#cancelDefault()}，则后续处理将会取消，好像鼠标没有移动一样。
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
-	public void preMouseTurnPlayer (CallbackInfo ci) {
+	private void preMouseTurnPlayer (CallbackInfo ci) {
 		if (GameEvents.preMouseTurnPlayer != null) {
 			PreMouseTurnPlayerEvent event = new PreMouseTurnPlayerEvent(accumulatedDX, accumulatedDY);
 			GameEvents.preMouseTurnPlayer.accept(event);
@@ -46,7 +46,7 @@ public class MouseHandlerMixin {
 	 * @param dx x轴角度（俯仰角）变化量
 	 */
 	@WrapWithCondition(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
-	public boolean turnPlayer (LocalPlayer player, double dy, double dx) {
+	private boolean turnPlayer (LocalPlayer player, double dy, double dx) {
 		if (GameEvents.turnPlayer != null) {
 			MouseHandler    that  = (MouseHandler)(Object)this;
 			TurnPlayerEvent event = new TurnPlayerEvent(that, player, dx, dy);

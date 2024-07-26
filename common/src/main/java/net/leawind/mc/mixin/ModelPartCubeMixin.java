@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(value=ModelPart.Cube.class, priority=2000)
 public class ModelPartCubeMixin {
 	@ModifyVariable(at=@At("HEAD"), method="compile", index=8, argsOnly=true)
-	public float compile (float opacity) {
+	private float compile (float opacity) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPersonStatus.useCameraEntityOpacity()) {
 			return Math.min(opacity, ThirdPerson.ENTITY_AGENT.getSmoothOpacity());
 		}
