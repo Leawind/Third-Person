@@ -25,7 +25,7 @@ public interface RotateStrategy {
 	Supplier<Double> DEFAULT                = () -> {
 		RotateTarget rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction    //
 									? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION    //
-									: RotateTarget.NONE;
+									: RotateTarget.DEFAULT;
 		SmoothType smoothType = ThirdPerson.mc.options.keySprint.isDown() || ThirdPerson.ENTITY_AGENT.isSprinting()    //
 								? SmoothType.HARD    //
 								: SmoothType.EXP_LINEAR;

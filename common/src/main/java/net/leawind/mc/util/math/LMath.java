@@ -180,4 +180,29 @@ public interface LMath {
 	static long floorMod (long x, long y) {
 		return Math.floorMod(x, y);
 	}
+
+	/**
+	 * 角度a是否在角度x与y的夹角中
+	 */
+	static boolean isWithinRadian (double x, double a, double b) {
+		double tp = Math.sin(b - a);
+		return Math.sin(b - x) * tp > 0 && Math.sin(x - a) * tp > 0;
+	}
+
+	/**
+	 * 两角度的夹角大小
+	 */
+	static double subtractRadian (double a, double b) {
+		double x = Math.abs(Math.IEEEremainder(a - b, 6.283185307179586));
+		return x > 3.141592653589793 ? 6.283185307179586 - x: x;
+	}
+
+	static boolean isWithinDegrees (double x, double a, double b) {
+		return isWithinRadian(x * 0.017453292519943295, a * 0.017453292519943295, b * 0.017453292519943295);
+	}
+
+	static double subtractDegrees (double a, double b) {
+		double x = Math.abs(Math.IEEEremainder(a - b, 360));
+		return x > 180 ? 360 - x: x;
+	}
 }

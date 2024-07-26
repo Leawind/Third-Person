@@ -47,4 +47,8 @@ public final class ThirdPersonConstants {
 	 * 阻挡相机的方块外形获取器
 	 */
 	public static final ClipContext.Block CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER    = ClipContext.Block.VISUAL;
+	/**
+	 * 玩家转头角度限制
+	 */
+	public static final float             PLAYER_HEAD_ROTATE_LIMIT_DEGREES      = 50;
 }

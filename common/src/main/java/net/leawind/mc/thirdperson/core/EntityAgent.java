@@ -49,7 +49,7 @@ public class EntityAgent {
 	 * @see RotateStrategy#build
 	 */
 	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
-	private @NotNull RotateTarget        rotateTarget       = RotateTarget.NONE;
+	private @NotNull RotateTarget        rotateTarget       = RotateTarget.DEFAULT;
 	private @NotNull SmoothType          smoothRotationType = SmoothType.EXP_LINEAR;
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值

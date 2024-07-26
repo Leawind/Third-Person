@@ -2,12 +2,14 @@ package net.leawind.mc.thirdperson.core.rotation;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
 import net.minecraft.client.Camera;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +24,24 @@ public enum RotateTarget {
 	 * 保持当前朝向，不旋转
 	 */
 	NONE(() -> ThirdPerson.ENTITY_AGENT.getRawRotation(1)),
+	CAMERA_ROTATION_WEAK(() -> {
+		LocalPlayer player     = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
+		Vector2d    playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+		Vector2d    cameraRot  = ThirdPerson.CAMERA_AGENT.getRotation();
+		double      y          = cameraRot.y();
+		double      leftBound  = player.yBodyRot - ThirdPersonConstants.PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		double      rightBound = player.yBodyRot + ThirdPersonConstants.PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		if (LMath.isWithinDegrees(y, leftBound, rightBound)) {
+			playerRot.y(y);
+			playerRot.x(cameraRot.x());
+		} else {
+			y = LMath.subtractDegrees(y, leftBound) < LMath.subtractDegrees(y, rightBound) ? leftBound: rightBound;
+			playerRot.y(y);
+			playerRot.x(cameraRot.x() * 0.5);
+		}
+		return playerRot;
+	}),
+	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_with_camera_slightly ? CAMERA_ROTATION_WEAK.getRotation(): NONE.getRotation()),
 	/**
 	 * 与相机朝向相同
 	 */
@@ -72,7 +92,7 @@ public enum RotateTarget {
 	 * 当没有使用键盘控制时保持当前朝向
 	 */
 	IMPULSE_DIRECTION(() -> ThirdPersonStatus.impulseHorizon.length() < 1e-5    //
-							? NONE.getRotation()    //
+							? DEFAULT.getRotation()    //
 							: LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulse)),
 	/**
 	 * 使用键盘控制的移动方向（仅水平）
@@ -81,7 +101,7 @@ public enum RotateTarget {
 	 */
 	HORIZONTAL_IMPULSE_DIRECTION(() -> {
 		if (ThirdPersonStatus.impulseHorizon.length() < 1e-5) {
-			return NONE.getRotation();
+			return DEFAULT.getRotation();
 		} else {
 			double absoluteYRotDegree = LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulseHorizon);
 			return Vector2d.of(0.1, absoluteYRotDegree);
