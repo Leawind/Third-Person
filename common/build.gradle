@@ -13,9 +13,7 @@ dependencies {
 		exclude module: 'modmenu'
 	}
 	// YACL
-	modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${yacl_mc_version}") {
-		exclude module: 'modmenu'
-	}
+	modImplementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-fabric"
 }
 publishing {
 	publications {}

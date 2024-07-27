@@ -37,6 +37,10 @@ dependencies {
 	implementation(include("io.github.llamalad7:mixinextras-forge:${forge_mixin_extras_version}"))
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-forge:${cloth_config_api_version}"
+	// YACL
+	// https://modrinth.com/mod/yacl/version/3.4.0+1.20.1-forge
+	// > you will from now on depend on the fabric version of YACL
+	implementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-fabric"
 }
 shadowJar {
 	exclude "fabric.mod.json"
