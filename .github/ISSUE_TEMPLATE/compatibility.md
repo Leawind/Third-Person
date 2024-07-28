@@ -1,10 +1,9 @@
 ---
 name: Compatibility
 about: Incompatible with other mod 不兼容其他模组
-title: Incompatible with '...'
+title: "That mod's name"
 labels: compatibility
 assignees: ''
-
 ---
 
 ## Describe

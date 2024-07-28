@@ -4,7 +4,6 @@ about: Game crash or freeze 游戏崩溃或卡死
 title: Crash when ...
 labels: bug, crash
 assignees: ''
-
 ---
 
 > **Burn after reading:** Before submitting this issue, please make sure the mod version you are using matches the Minecraft version.

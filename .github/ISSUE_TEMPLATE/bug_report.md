@@ -4,7 +4,6 @@ about: Encounter a bug 遇到故障
 title: Something doesn't work
 labels: bug
 assignees: ''
-
 ---
 
 ## Describe the bug
