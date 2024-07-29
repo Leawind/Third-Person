@@ -1,12 +1,9 @@
 package net.leawind.mc.mixin;
 
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.PreMouseTurnPlayerEvent;
-import net.leawind.mc.api.client.events.TurnPlayerEvent;
 import net.minecraft.client.MouseHandler;
-import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,23 +32,5 @@ public class MouseHandlerMixin {
 				ci.cancel();
 			}
 		}
-	}
-
-	/**
-	 * 在根据鼠标位移计算完朝向变化量(dy,dx)后，会调用{@link LocalPlayer#turn}方法来旋转玩家
-	 * <p>
-	 * 这里可以阻止其旋转玩家。
-	 *
-	 * @param dy y轴角度（偏航角）变化量
-	 * @param dx x轴角度（俯仰角）变化量
-	 */
-	@WrapWithCondition(method="turnPlayer()V", at=@At(value="INVOKE", target="Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
-	private boolean turnPlayer (LocalPlayer player, double dy, double dx) {
-		if (GameEvents.turnPlayer != null) {
-			MouseHandler    that  = (MouseHandler)(Object)this;
-			TurnPlayerEvent event = new TurnPlayerEvent(that, player, dx, dy);
-			return GameEvents.turnPlayer.apply(event);
-		}
-		return true;
 	}
 }

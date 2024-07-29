@@ -3,13 +3,16 @@ package net.leawind.mc.mixin;
 
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.MinecraftPickEvent;
+import net.leawind.mc.api.client.events.PreEntityTurnEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -38,6 +41,18 @@ public class EntityMixin {
 					}
 				}
 				ci.setReturnValue(result);
+				ci.cancel();
+			}
+		}
+	}
+
+	@Inject(method="turn", at=@At("HEAD"), cancellable=true)
+	private void turn (double yRot, double xRot, @NotNull CallbackInfo ci) {
+		if (GameEvents.preEntityTurn != null) {
+			Entity             entity = (Entity)(Object)this;
+			PreEntityTurnEvent event  = new PreEntityTurnEvent(entity, yRot * 0.15, xRot * 0.15);
+			GameEvents.preEntityTurn.accept(event);
+			if (event.isDefaultCancelled()) {
 				ci.cancel();
 			}
 		}

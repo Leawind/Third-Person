@@ -158,19 +158,21 @@ public class CameraAgent {
 	/**
 	 * 玩家控制的相机旋转
 	 *
-	 * @param dy 方向角变化量
-	 * @param dx 俯仰角变化量
+	 * @param dYRot 方向角变化量
+	 * @param dXRot 俯仰角变化量
 	 */
-	public void turnCamera (double dy, double dx) {
+	public void turnCamera (double dYRot, double dXRot) {
 		Config config = ThirdPerson.getConfig();
 		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
-			dy *= 0.15;
-			dx *= config.lock_camera_pitch_angle ? 0: -0.15;
-			if (dy != 0 || dx != 0) {
-				double rx = getRelativeRotation().x() + dx;
-				double ry = getRelativeRotation().y() + dy;
-				rx = LMath.clamp(rx, -ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT, ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT);
-				relativeRotation.set(rx, ry % 360f);
+			if (config.lock_camera_pitch_angle) {
+				dXRot = 0;
+			}
+			if (dYRot != 0 || dXRot != 0) {
+				double yRot = getRelativeRotation().y() + dYRot;
+				double xRot = getRelativeRotation().x() - dXRot;
+				yRot %= 360f;
+				xRot = LMath.clamp(xRot, -ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT, ThirdPersonConstants.CAMERA_PITCH_DEGREE_LIMIT);
+				relativeRotation.set(xRot, yRot);
 			}
 		}
 	}
