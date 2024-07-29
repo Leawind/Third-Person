@@ -20,16 +20,12 @@ public class KeyboardInputMixin {
 	private void tick_tail (boolean multiplyImpulse, float impulseMultiplier, CallbackInfo ci) {
 		KeyboardInput that = ((KeyboardInput)(Object)this);
 		if (GameEvents.calculateMoveImpulse != null) {
-			CalculateMoveImpulseEvent event = new CalculateMoveImpulseEvent(that);
+			CalculateMoveImpulseEvent event = new CalculateMoveImpulseEvent(that, multiplyImpulse ? impulseMultiplier: 1);
 			event.forwardImpulse = that.forwardImpulse;
 			event.leftImpulse    = that.leftImpulse;
 			GameEvents.calculateMoveImpulse.accept(event);
 			that.forwardImpulse = event.forwardImpulse;
 			that.leftImpulse    = event.leftImpulse;
-			if (multiplyImpulse) {
-				that.forwardImpulse *= impulseMultiplier;
-				that.leftImpulse *= impulseMultiplier;
-			}
 		}
 	}
 }

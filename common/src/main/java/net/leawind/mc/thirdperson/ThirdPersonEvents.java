@@ -89,8 +89,8 @@ public final class ThirdPersonEvents {
 				float    playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
 				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
 				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
-				event.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
-				event.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
+				event.forwardImpulse = event.impulseMultiplier * (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
+				event.leftImpulse    = event.impulseMultiplier * (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
 			}
 		}
 	}
