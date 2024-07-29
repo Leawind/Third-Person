@@ -51,7 +51,7 @@ public class ConfigManager {
 	public void tryLoad () {
 		ThirdPerson.LOGGER.debug("Trying loading config from {}", ThirdPersonConstants.CONFIG_FILE);
 		try {
-			assert ThirdPersonConstants.CONFIG_FILE.getParentFile().mkdirs();
+			ThirdPersonConstants.CONFIG_FILE.getParentFile().mkdirs();
 			if (ThirdPersonConstants.CONFIG_FILE.exists()) {
 				load();
 				ThirdPerson.LOGGER.info("Config is loaded from {}", ThirdPersonConstants.CONFIG_FILE);
