@@ -3,7 +3,7 @@ package net.leawind.mc.mixin;
 
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.MinecraftPickEvent;
-import net.leawind.mc.api.client.events.PreEntityTurnEvent;
+import net.leawind.mc.api.client.events.EntityTurnStartEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
@@ -48,10 +48,10 @@ public class EntityMixin {
 
 	@Inject(method="turn", at=@At("HEAD"), cancellable=true)
 	private void turn (double yRot, double xRot, @NotNull CallbackInfo ci) {
-		if (GameEvents.preEntityTurn != null) {
-			Entity             entity = (Entity)(Object)this;
-			PreEntityTurnEvent event  = new PreEntityTurnEvent(entity, yRot * 0.15, xRot * 0.15);
-			GameEvents.preEntityTurn.accept(event);
+		if (GameEvents.entityTurnStart != null) {
+			Entity               entity = (Entity)(Object)this;
+			EntityTurnStartEvent event  = new EntityTurnStartEvent(entity, yRot * 0.15, xRot * 0.15);
+			GameEvents.entityTurnStart.accept(event);
 			if (event.isDefaultCancelled()) {
 				ci.cancel();
 			}

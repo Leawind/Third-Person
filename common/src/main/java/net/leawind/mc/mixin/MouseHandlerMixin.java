@@ -2,7 +2,7 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.PreMouseTurnPlayerEvent;
+import net.leawind.mc.api.client.events.MouseTurnPlayerStartEvent;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,13 +18,13 @@ public class MouseHandlerMixin {
 	/**
 	 * 在根据鼠标位移转动玩家前触发
 	 * <p>
-	 * 如果在事件处理函数中调用了{@link PreMouseTurnPlayerEvent#cancelDefault()}，则后续处理将会取消，好像鼠标没有移动一样。
+	 * 如果在事件处理函数中调用了{@link MouseTurnPlayerStartEvent#cancelDefault()}，则后续处理将会取消，好像鼠标没有移动一样。
 	 */
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	private void preMouseTurnPlayer (CallbackInfo ci) {
-		if (GameEvents.preMouseTurnPlayer != null) {
-			PreMouseTurnPlayerEvent event = new PreMouseTurnPlayerEvent(accumulatedDX, accumulatedDY);
-			GameEvents.preMouseTurnPlayer.accept(event);
+		if (GameEvents.mouseTurnPlayerStart != null) {
+			MouseTurnPlayerStartEvent event = new MouseTurnPlayerStartEvent(accumulatedDX, accumulatedDY);
+			GameEvents.mouseTurnPlayerStart.accept(event);
 			if (event.isDefaultCancelled()) {
 				// 重置累积变化量
 				accumulatedDX = 0;

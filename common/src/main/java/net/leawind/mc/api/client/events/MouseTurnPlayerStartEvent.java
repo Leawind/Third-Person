@@ -3,7 +3,7 @@ package net.leawind.mc.api.client.events;
 
 import net.leawind.mc.api.base.ModEvent;
 
-public class PreMouseTurnPlayerEvent implements ModEvent {
+public class MouseTurnPlayerStartEvent implements ModEvent {
 	/**
 	 * 累积变化量
 	 */
@@ -11,7 +11,7 @@ public class PreMouseTurnPlayerEvent implements ModEvent {
 	public final double  accumulatedDY;
 	private      boolean isDefaultCancelled = false;
 
-	public PreMouseTurnPlayerEvent (double accumulatedDX, double accumulatedDY) {
+	public MouseTurnPlayerStartEvent (double accumulatedDX, double accumulatedDY) {
 		this.accumulatedDX = accumulatedDX;
 		this.accumulatedDY = accumulatedDY;
 	}

@@ -18,8 +18,8 @@ public class MinecraftMixin {
 	 */
 	@Inject(method="handleKeybinds", at=@At(value="HEAD"))
 	private void preHandleKeybinds (CallbackInfo ci) {
-		if (GameEvents.preHandleKeybinds != null) {
-			GameEvents.preHandleKeybinds.run();
+		if (GameEvents.handleKeybindsStart != null) {
+			GameEvents.handleKeybindsStart.run();
 		}
 	}
 }

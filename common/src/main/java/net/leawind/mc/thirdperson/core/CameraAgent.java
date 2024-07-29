@@ -47,7 +47,7 @@ public class CameraAgent {
 	 */
 	private final @NotNull ExpSmoothDouble   smoothDistanceToEye;
 	/**
-	 * 在 {@link CameraAgent#onPreRender} 中更新
+	 * 在 {@link CameraAgent#onRenderTickStart} 中更新
 	 */
 	private @NotNull       HitResult         hitResult        = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
 
@@ -74,7 +74,7 @@ public class CameraAgent {
 	 * 渲染前
 	 */
 	@SuppressWarnings("unused")
-	public void onPreRender (double now, double period, float partialTick) {
+	public void onRenderTickStart (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
 			// 更新探测结果
 			hitResult = pick(getPickRange());
@@ -121,7 +121,7 @@ public class CameraAgent {
 	 * <p>
 	 * 通常频率固定为 20Hz
 	 */
-	public void onClientTickPre () {
+	public void onClientTickStart () {
 		ThirdPersonStatus.isTransitioningToFirstPerson = false;
 		boolean isTargetThirdPerson = ThirdPerson.getConfig().is_third_person_mode && !ThirdPersonStatus.isTemporaryFirstPerson;
 		if (isTargetThirdPerson) {

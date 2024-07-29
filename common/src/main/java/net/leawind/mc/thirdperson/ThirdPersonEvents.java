@@ -42,16 +42,16 @@ public final class ThirdPersonEvents {
 		{
 			GameEvents.thirdPersonCameraSetup = ThirdPersonEvents::onThirdPersonCameraSetup;
 			GameEvents.minecraftPick          = ThirdPersonEvents::onMinecraftPickEvent;
-			GameEvents.preRenderTick          = ThirdPersonEvents::onPreRender;
+			GameEvents.renderTickStart        = ThirdPersonEvents::onRenderTickStart;
 			GameEvents.calculateMoveImpulse   = ThirdPersonEvents::onCalculateMoveImpulse;
 			GameEvents.renderEntity           = ThirdPersonEvents::onRenderEntity;
-			GameEvents.preHandleKeybinds      = ThirdPersonEvents::onPreHandleKeybinds;
-			GameEvents.preMouseTurnPlayer     = ThirdPersonEvents::onPreMouseTurnPlayer;
-			GameEvents.preEntityTurn          = ThirdPersonEvents::onPreEntityTurn;
+			GameEvents.handleKeybindsStart    = ThirdPersonEvents::onHandleKeybindsStart;
+			GameEvents.mouseTurnPlayerStart   = ThirdPersonEvents::onMouseTurnPlayerStart;
+			GameEvents.entityTurnStart        = ThirdPersonEvents::onEntityTurnStart;
 		}
 	}
 
-	private static void onPreEntityTurn (PreEntityTurnEvent event) {
+	private static void onEntityTurnStart (EntityTurnStartEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			ThirdPerson.CAMERA_AGENT.turnCamera(event.dYRot, event.dXRot);
 			event.cancelDefault();
@@ -158,8 +158,8 @@ public final class ThirdPersonEvents {
 				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
 		}
-		ThirdPerson.ENTITY_AGENT.onClientTickPre();
-		ThirdPerson.CAMERA_AGENT.onClientTickPre();
+		ThirdPerson.ENTITY_AGENT.onClientTickStart();
+		ThirdPerson.CAMERA_AGENT.onClientTickStart();
 	}
 
 	private static void onClientStopping (Minecraft minecraft) {
@@ -226,7 +226,7 @@ public final class ThirdPersonEvents {
 	 * @see GameRenderer#render(float, long, boolean)
 	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
-	private static void onPreRender (PreRenderTickEvent event) {
+	private static void onRenderTickStart (RenderTickStartEvent event) {
 		if (!ThirdPerson.getConfig().is_mod_enable) {
 			return;
 		}
@@ -235,17 +235,17 @@ public final class ThirdPersonEvents {
 		double now    = System.currentTimeMillis() / 1000D;
 		double period = now - ThirdPersonStatus.lastRenderTickTimeStamp;
 		ThirdPersonStatus.lastRenderTickTimeStamp = now;
-		final boolean isRenderInThirdPerson = !ThirdPerson.mc.options.getCameraType().isFirstPerson();
-		if (isRenderInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
-			if (isRenderInThirdPerson) {
+		final boolean isRenderingInThirdPerson = ThirdPersonStatus.isRenderingInThirdPerson();
+		if (isRenderingInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
+			if (isRenderingInThirdPerson) {
 				onEnterThirdPerson();
 			} else {
 				onEnterFirstPerson();
 			}
 			ThirdPerson.mc.levelRenderer.needsUpdate();
-			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderInThirdPerson;
+			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderingInThirdPerson;
 		}
-		if (isRenderInThirdPerson) {
+		if (isRenderingInThirdPerson) {
 			boolean shouldCameraTurnWithEntity = ThirdPersonStatus.shouldCameraTurnWithEntity();
 			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasShouldCameraTurnWithEntity) {
 				onStartCameraTurnWithEntity();
@@ -254,8 +254,8 @@ public final class ThirdPersonEvents {
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				ThirdPerson.ENTITY_AGENT.onPreRender(now, period, event.partialTick);
-				ThirdPerson.CAMERA_AGENT.onPreRender(now, period, event.partialTick);
+				ThirdPerson.ENTITY_AGENT.onRenderTickStart(now, period, event.partialTick);
+				ThirdPerson.CAMERA_AGENT.onRenderTickStart(now, period, event.partialTick);
 			}
 		}
 		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
@@ -291,7 +291,7 @@ public final class ThirdPersonEvents {
 	 * @see MouseHandler#turnPlayer()
 	 * @see MouseHandlerMixin#preMouseTurnPlayer(CallbackInfo)
 	 */
-	private static void onPreMouseTurnPlayer (PreMouseTurnPlayerEvent event) {
+	private static void onMouseTurnPlayerStart (MouseTurnPlayerStartEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			if (event.accumulatedDX == 0 || event.accumulatedDY == 0) {
 				return;
@@ -322,7 +322,7 @@ public final class ThirdPersonEvents {
 	/**
 	 * @see MinecraftMixin#preHandleKeybinds(CallbackInfo)
 	 */
-	private static void onPreHandleKeybinds () {
+	private static void onHandleKeybindsStart () {
 		if (ThirdPerson.isAvailable()) {
 			Config config = ThirdPerson.getConfig();
 		/*

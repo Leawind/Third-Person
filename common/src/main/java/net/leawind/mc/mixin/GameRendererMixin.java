@@ -3,7 +3,7 @@ package net.leawind.mc.mixin;
 
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.events.MinecraftPickEvent;
-import net.leawind.mc.api.client.events.PreRenderTickEvent;
+import net.leawind.mc.api.client.events.RenderTickStartEvent;
 import net.leawind.mc.util.annotations.VersionSensitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -44,8 +44,8 @@ public class GameRendererMixin {
 	 */
 	@Inject(method="render", at=@At("HEAD"))
 	private void pre_render (float partialTick, long nanoTime, boolean doRenderLevel, CallbackInfo ci) {
-		if (GameEvents.preRenderTick != null) {
-			GameEvents.preRenderTick.accept(new PreRenderTickEvent(partialTick));
+		if (GameEvents.renderTickStart != null) {
+			GameEvents.renderTickStart.accept(new RenderTickStartEvent(partialTick));
 		}
 	}
 

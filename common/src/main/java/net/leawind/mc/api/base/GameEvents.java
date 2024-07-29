@@ -9,10 +9,10 @@ import java.util.function.Function;
 public class GameEvents {
 	public static Consumer<ThirdPersonCameraSetupEvent> thirdPersonCameraSetup = null;
 	public static Consumer<MinecraftPickEvent>          minecraftPick          = null;
-	public static Consumer<PreRenderTickEvent>          preRenderTick          = null;
+	public static Consumer<RenderTickStartEvent>        renderTickStart        = null;
 	public static Consumer<CalculateMoveImpulseEvent>   calculateMoveImpulse   = null;
 	public static Function<RenderEntityEvent, Boolean>  renderEntity           = null;
-	public static Runnable                              preHandleKeybinds      = null;
-	public static Consumer<PreMouseTurnPlayerEvent>     preMouseTurnPlayer     = null;
-	public static Consumer<PreEntityTurnEvent>          preEntityTurn          = null;
+	public static Runnable                              handleKeybindsStart    = null;
+	public static Consumer<MouseTurnPlayerStartEvent>   mouseTurnPlayerStart   = null;
+	public static Consumer<EntityTurnStartEvent>        entityTurnStart        = null;
 }

@@ -136,7 +136,7 @@ public class EntityAgent {
 	 */
 	@SuppressWarnings("unused")
 	@PerformanceSensitive
-	public void onPreRender (double now, double period, float partialTick) {
+	public void onRenderTickStart (double now, double period, float partialTick) {
 		if (!isControlled()) {
 			return;
 		}
@@ -152,8 +152,6 @@ public class EntityAgent {
 				}
 			}
 		}
-		Vector2d rot = getRawRotation(partialTick);
-		assert !Double.isNaN(rot.x() + rot.y());
 	}
 
 	/**
@@ -161,7 +159,7 @@ public class EntityAgent {
 	 * <p>
 	 * 通常频率固定为 20Hz
 	 */
-	public void onClientTickPre () {
+	public void onClientTickStart () {
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
 		wasAiming = isAiming();
