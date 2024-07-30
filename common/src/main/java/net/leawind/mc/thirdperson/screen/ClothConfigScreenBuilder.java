@@ -32,7 +32,6 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 		final ConfigCategory CATEGORY_COMMON = builder.getOrCreateCategory(ConfigManager.getText("option_category.common"));
 		{
 			CATEGORY_COMMON.addEntry(buildBooleanEntry("is_mod_enable", defaults.is_mod_enable, config.is_mod_enable, v -> config.is_mod_enable = v, entryBuilder));
-			CATEGORY_COMMON.addEntry(buildBooleanEntry("is_third_person_mode", defaults.is_third_person_mode, config.is_third_person_mode, v -> config.is_third_person_mode = v, entryBuilder));
 			CATEGORY_COMMON.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
 			CATEGORY_COMMON.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
 			// SubCategory: Player Rotation

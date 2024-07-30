@@ -15,7 +15,6 @@ import java.util.List;
 public abstract class AbstractConfig {
 	// ================================================================================常用 //
 	@Expose public          boolean      is_mod_enable                             = true;
-	@Expose public          boolean      is_third_person_mode                      = true;
 	@Expose public          boolean      center_offset_when_flying                 = true;
 	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	//------------------------------玩家旋转

@@ -31,8 +31,6 @@
 	"leawind_third_person.option_group.behavior_interacting.desc": "How the player rotates when pressing the interact key (attack|use|select).",
 	"leawind_third_person.option.is_mod_enable": "Is this mod enabled?",
 	"leawind_third_person.option.is_mod_enable.desc": "Disabling this will show the original third-person perspective, but you can still open the configuration screen with a key.",
-	"leawind_third_person.option.is_third_person_mode": "Is third-person mode enabled?",
-	"leawind_third_person.option.is_third_person_mode.desc": "Disabling this will switch to first-person mode.",
 	"leawind_third_person.option.config_screen_api": "Config Screen API",
 	"leawind_third_person.option.config_screen_api.desc": "",
 	"leawind_third_person.option.center_offset_when_flying": "Automatically center when flying",

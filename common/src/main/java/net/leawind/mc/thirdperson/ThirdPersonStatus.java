@@ -32,14 +32,6 @@ public final class ThirdPersonStatus {
 	 */
 	public static                boolean  wasRenderInThirdPersonLastRenderTick = false;
 	/**
-	 * 在第三人称视角下暂时使用第一人称视角
-	 */
-	public static                boolean  isTemporaryFirstPerson               = false;
-	/**
-	 * 是否正在从第三人称过渡到第一人称
-	 */
-	public static                boolean  isTransitioningToFirstPerson         = false;
-	/**
 	 * 在 ThirdPersonEvents#onPreRender 中更新
 	 *
 	 * @see ThirdPersonStatus#shouldCameraTurnWithEntity

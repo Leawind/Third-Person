@@ -2,6 +2,7 @@ package net.leawind.mc.thirdperson.core;
 
 
 import com.google.common.collect.Lists;
+import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
 import net.leawind.mc.mixin.CameraInvoker;
 import net.leawind.mc.mixin.ClientLevelInvoker;
@@ -70,33 +71,30 @@ public class CameraAgent {
 		}
 	}
 
+	public void checkGameStatus () {
+		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
+			GameStatus.isPerspectiveInverted = !(smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD);
+		}
+	}
+
 	/**
 	 * 渲染前
 	 */
 	@SuppressWarnings("unused")
 	public void onRenderTickStart (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
-			// 更新探测结果
-			hitResult = pick(getPickRange());
-			// 平滑更新距离
-			updateSmoothVirtualDistance(period);
-			// 平滑更新相机偏移量
-			updateSmoothOffsetRatio(period);
-			//
-			if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-				// 将相机朝向与相机实体朝向同步
-				Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
-				relativeRotation.set(-rot.x(), rot.y() - 180);
-			}
-			if (ThirdPersonStatus.isTransitioningToFirstPerson) {
-				// 正在从第三人称过渡到第一人称
-				if (smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD) {
-					// 距离足够近，结束过渡
-					ThirdPersonStatus.isTransitioningToFirstPerson = false;
-					ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-					ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
-					// 将玩家转到相机朝向
-					ThirdPerson.ENTITY_AGENT.setRawRotation(getRotation());
+			if (!minecraft.options.getCameraType().isFirstPerson()) {
+				// 更新探测结果
+				hitResult = pick(getPickRange());
+				// 平滑更新距离
+				updateSmoothVirtualDistance(period);
+				// 平滑更新相机偏移量
+				updateSmoothOffsetRatio(period);
+				//
+				if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+					// 将相机朝向与相机实体朝向同步
+					Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
+					relativeRotation.set(-rot.x(), rot.y() - 180);
 				}
 			}
 		}
@@ -122,16 +120,6 @@ public class CameraAgent {
 	 * 通常频率固定为 20Hz
 	 */
 	public void onClientTickStart () {
-		ThirdPersonStatus.isTransitioningToFirstPerson = false;
-		boolean isTargetThirdPerson = ThirdPerson.getConfig().is_third_person_mode && !ThirdPersonStatus.isTemporaryFirstPerson;
-		if (isTargetThirdPerson) {
-			// 目标是第三人称，那就直接以第三人称渲染
-			ThirdPerson.mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-			ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
-		} else if (!ThirdPerson.mc.options.getCameraType().isFirstPerson()) {
-			// 目标是第一人称，但是相机当前以第三人称渲染，那么开始过渡
-			ThirdPersonStatus.isTransitioningToFirstPerson = true;
-		}
 	}
 
 	/**
@@ -413,7 +401,7 @@ public class CameraAgent {
 		Config                   config      = ThirdPerson.getConfig();
 		boolean                  isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		AbstractCameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
-		if (ThirdPersonStatus.isTransitioningToFirstPerson) {
+		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
 			smoothDistanceToEye.setHalflife(config.t2f_transition_halflife);
 			smoothDistanceToEye.setTarget(0);
 		} else {

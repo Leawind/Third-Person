@@ -18,6 +18,7 @@ import net.leawind.mc.util.math.smoothvalue.ExpSmoothRotation;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector3d;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
@@ -137,10 +138,7 @@ public class EntityAgent {
 	@SuppressWarnings("unused")
 	@PerformanceSensitive
 	public void onRenderTickStart (double now, double period, float partialTick) {
-		if (!isControlled()) {
-			return;
-		}
-		if (!ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+		if (!minecraft.options.getCameraType().isFirstPerson() && isControlled() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			Vector2d targetRotation = getRotateTarget().getRotation();
 			smoothRotation.setTarget(targetRotation);
 			switch (smoothRotationType) {
@@ -171,7 +169,7 @@ public class EntityAgent {
 			Vector3d eyePosition = getRawEyePosition(1);
 			{
 				final Vector3d halflife;
-				if (ThirdPersonStatus.isTransitioningToFirstPerson) {
+				if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
 					halflife = Vector3d.of(0);
 				} else if (isFallFlying()) {
 					halflife = Vector3d.of(config.flying_smooth_halflife);

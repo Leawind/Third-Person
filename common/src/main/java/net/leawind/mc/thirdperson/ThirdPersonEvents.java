@@ -138,24 +138,16 @@ public final class ThirdPersonEvents {
 		if (!ThirdPerson.isAvailable()) {
 			return;
 		}
-		Config  config                  = ThirdPerson.getConfig();
-		boolean wasTemporaryFirstPerson = ThirdPersonStatus.isTemporaryFirstPerson;
-		ThirdPersonStatus.isTemporaryFirstPerson = false;
-		if (config.is_third_person_mode) {
+		Config config = ThirdPerson.getConfig();
+		if (ThirdPerson.mc.options.getCameraType() != CameraType.FIRST_PERSON) {
+			// 目标是第三人称
 			Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			if (!cameraEntity.isSpectator() && cameraEntity.isInWall()) {
-				// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
-				ThirdPersonStatus.isTemporaryFirstPerson = true;
-			}
+			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
+			GameStatus.isPerspectiveInverted = !cameraEntity.isSpectator() && cameraEntity.isInWall();
 			if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
 				if (ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns)) {
-					ThirdPersonStatus.isTemporaryFirstPerson = true;
+					GameStatus.isPerspectiveInverted = true;
 				}
-			}
-			if (ThirdPersonStatus.isTemporaryFirstPerson && !wasTemporaryFirstPerson) {
-				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
-				ThirdPerson.mc.options.setCameraType(CameraType.FIRST_PERSON);
-				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
 		}
 		ThirdPerson.ENTITY_AGENT.onClientTickStart();
@@ -230,6 +222,7 @@ public final class ThirdPersonEvents {
 		if (!ThirdPerson.getConfig().is_mod_enable) {
 			return;
 		}
+		ThirdPerson.CAMERA_AGENT.checkGameStatus();
 		ThirdPersonStatus.lastPartialTick = event.partialTick;
 		// in seconds
 		double now    = System.currentTimeMillis() / 1000D;
@@ -248,27 +241,18 @@ public final class ThirdPersonEvents {
 		if (isRenderingInThirdPerson) {
 			boolean shouldCameraTurnWithEntity = ThirdPersonStatus.shouldCameraTurnWithEntity();
 			if (shouldCameraTurnWithEntity && !ThirdPersonStatus.wasShouldCameraTurnWithEntity) {
-				onStartCameraTurnWithEntity();
+				// 将玩家朝向设为与相机一致
+				if (ThirdPersonStatus.isRenderingInThirdPerson()) {
+					ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+				}
 			}
 			ThirdPersonStatus.wasShouldCameraTurnWithEntity = shouldCameraTurnWithEntity;
 		}
 		if (ThirdPerson.isAvailable() && ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				ThirdPerson.ENTITY_AGENT.onRenderTickStart(now, period, event.partialTick);
-				ThirdPerson.CAMERA_AGENT.onRenderTickStart(now, period, event.partialTick);
-			}
+			ThirdPerson.ENTITY_AGENT.onRenderTickStart(now, period, event.partialTick);
+			ThirdPerson.CAMERA_AGENT.onRenderTickStart(now, period, event.partialTick);
 		}
 		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
-	}
-
-	/**
-	 * 进入“相机跟随玩家转动”状态
-	 */
-	private static void onStartCameraTurnWithEntity () {
-		// 将玩家朝向设为与相机一致
-		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-			ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
-		}
 	}
 
 	/**
@@ -325,12 +309,6 @@ public final class ThirdPersonEvents {
 	private static void onHandleKeybindsStart () {
 		if (ThirdPerson.isAvailable()) {
 			Config config = ThirdPerson.getConfig();
-		/*
-		  接管“切换视角”按键绑定
-		 */
-			while (ThirdPerson.mc.options.keyTogglePerspective.consumeClick()) {
-				config.is_third_person_mode = !config.is_third_person_mode;
-			}
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 				if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
 					// 立即更新玩家注视着的目标 Minecraft#hitResult
@@ -344,7 +322,8 @@ public final class ThirdPersonEvents {
 	 * 进入第一人称视角
 	 */
 	private static void onEnterFirstPerson () {
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.ENTITY_AGENT.getRawCameraEntity());
+		ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 	}
 
 	/**
