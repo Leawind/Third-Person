@@ -361,21 +361,21 @@ public class EntityAgent {
 		return wasAiming;
 	}
 
+	public AABB getBoundingBox (float partialTick) {
+		Entity entity = this.getRawCameraEntity();
+		return entity.getDimensions(entity.getPose()).makeBoundingBox(entity.getPosition(partialTick));
+	}
+
 	/**
-	 * 计算点到碰撞箱的距离
-	 * <p>
-	 * 如果点在碰撞箱内，则返回0
-	 *
-	 * @param p 点
-	 * @return 距离
+	 * 计算点到碰撞箱的距离。如果点在碰撞箱内，则返回0
 	 */
-	public double boxDistanceTo (@NotNull Vector3d p) {
-		AABB     box = this.getRawCameraEntity().getBoundingBox();
-		Vector3d c   = Vector3d.of();
-		c.x(LMath.clamp(p.x(), box.minX, box.maxX));
-		c.y(LMath.clamp(p.y(), box.minY, box.maxY));
-		c.z(LMath.clamp(p.z(), box.minZ, box.maxZ));
-		return c.distance(p);
+	public double boxDistanceTo (@NotNull Vector3d target, float partialTick) {
+		AABB     aabb = getBoundingBox(partialTick);
+		Vector3d c    = Vector3d.of();
+		c.x(LMath.clamp(target.x(), aabb.minX, aabb.maxX));
+		c.y(LMath.clamp(target.y(), aabb.minY, aabb.maxY));
+		c.z(LMath.clamp(target.z(), aabb.minZ, aabb.maxZ));
+		return c.distance(target);
 	}
 
 	/**
