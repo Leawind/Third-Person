@@ -16,7 +16,7 @@ import net.leawind.mc.mixin.MouseHandlerMixin;
 import net.leawind.mc.thirdperson.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.itempattern.ItemPattern;
+import net.leawind.mc.util.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;

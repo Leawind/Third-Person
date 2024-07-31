@@ -12,7 +12,7 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
-import net.leawind.mc.util.itempattern.ItemPattern;
+import net.leawind.mc.util.ItemPattern;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -10,7 +10,7 @@ import net.leawind.mc.thirdperson.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.core.rotation.RotateTarget;
 import net.leawind.mc.thirdperson.core.rotation.SmoothType;
 import net.leawind.mc.util.annotations.VersionSensitive;
-import net.leawind.mc.util.itempattern.ItemPattern;
+import net.leawind.mc.util.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;

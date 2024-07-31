@@ -1,4 +1,4 @@
-package net.leawind.mc.util.itempattern;
+package net.leawind.mc.util;
 
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
