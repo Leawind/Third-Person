@@ -338,7 +338,7 @@ public class CameraAgent {
 		// 垂直视野角度一半(弧度制）
 		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
 		// 成像平面宽高
-		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.NEAR_PLANE_DISTANCE;
+		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
 		//		// 水平视野角度一半(弧度制）
 		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
@@ -347,7 +347,7 @@ public class CameraAgent {
 		double   smoothVirtualDistanceValue = smoothDistanceToEye.get();
 		// 偏移量
 		double upOffset   = smoothOffsetRatioValue.y() * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
-		double leftOffset = smoothOffsetRatioValue.x() * smoothVirtualDistanceValue * widthHalf / ThirdPersonConstants.NEAR_PLANE_DISTANCE;
+		double leftOffset = smoothOffsetRatioValue.x() * smoothVirtualDistanceValue * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
 		Vector3d positionWithoutOffset = calculatePositionWithoutOffset();
 		// 应用到假相机

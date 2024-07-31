@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson.config;
 
 
-import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.resources.ItemPatternManager;

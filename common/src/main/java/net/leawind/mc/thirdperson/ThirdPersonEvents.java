@@ -231,9 +231,15 @@ public final class ThirdPersonEvents {
 		final boolean isRenderingInThirdPerson = ThirdPersonStatus.isRenderingInThirdPerson();
 		if (isRenderingInThirdPerson != ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick) {
 			if (isRenderingInThirdPerson) {
-				onEnterThirdPerson();
+				GameStatus.sprintImpulseThreshold = ThirdPerson.getConfig().sprint_impulse_threshold;
+				ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
+				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
+				ThirdPerson.CAMERA_AGENT.reset();
+				ThirdPerson.ENTITY_AGENT.reset();
 			} else {
-				onEnterFirstPerson();
+				GameStatus.sprintImpulseThreshold = -1;
+				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
+				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
 			ThirdPerson.mc.levelRenderer.needsUpdate();
 			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderingInThirdPerson;
@@ -316,25 +322,5 @@ public final class ThirdPersonEvents {
 				}
 			}
 		}
-	}
-
-	/**
-	 * 进入第一人称视角
-	 */
-	private static void onEnterFirstPerson () {
-		GameStatus.sprintImpulseThreshold = -1;
-		ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
-	}
-
-	/**
-	 * 进入第三人称视角
-	 */
-	public static void onEnterThirdPerson () {
-		GameStatus.sprintImpulseThreshold = ThirdPerson.getConfig().sprint_impulse_threshold;
-		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
-		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
-		ThirdPerson.CAMERA_AGENT.reset();
-		ThirdPerson.ENTITY_AGENT.reset();
 	}
 }

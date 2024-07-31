@@ -29,8 +29,8 @@ public enum RotateTarget {
 		Vector2d    playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
 		Vector2d    cameraRot  = ThirdPerson.CAMERA_AGENT.getRotation();
 		double      y          = cameraRot.y();
-		double      leftBound  = player.yBodyRot - ThirdPersonConstants.PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		double      rightBound = player.yBodyRot + ThirdPersonConstants.PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		double      leftBound  = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		double      rightBound = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
 		if (LMath.isWithinDegrees(y, leftBound, rightBound)) {
 			playerRot.y(y);
 			playerRot.x(cameraRot.x());
