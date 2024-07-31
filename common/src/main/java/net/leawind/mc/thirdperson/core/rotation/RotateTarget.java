@@ -11,6 +11,7 @@ import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -24,24 +25,28 @@ public enum RotateTarget {
 	 * 保持当前朝向，不旋转
 	 */
 	NONE(() -> ThirdPerson.ENTITY_AGENT.getRawRotation(1)),
-	CAMERA_ROTATION_WEAK(() -> {
-		LocalPlayer player     = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
-		Vector2d    playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
-		Vector2d    cameraRot  = ThirdPerson.CAMERA_AGENT.getRotation();
-		double      y          = cameraRot.y();
-		double      leftBound  = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		double      rightBound = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		if (LMath.isWithinDegrees(y, leftBound, rightBound)) {
-			playerRot.y(y);
-			playerRot.x(cameraRot.x());
+	INTEREST_POINT(() -> {
+		Optional<Vec3> point = ThirdPerson.ENTITY_AGENT.getInterestPoint();
+		if (point.isPresent()) {
+			LocalPlayer player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
+			Vector2d    playerRot         = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+			Vec3        toInterestedPoint = point.get().subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
+			Vector2d    rot               = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
+			double      leftBound         = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+			double      rightBound        = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+			if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
+				playerRot.y(rot.y());
+				playerRot.x(rot.x());
+			} else {
+				playerRot.y(LMath.subtractDegrees(rot.y(), leftBound) < LMath.subtractDegrees(rot.y(), rightBound) ? leftBound: rightBound);
+				playerRot.x(rot.x() * 0.5);
+			}
+			return playerRot;
 		} else {
-			y = LMath.subtractDegrees(y, leftBound) < LMath.subtractDegrees(y, rightBound) ? leftBound: rightBound;
-			playerRot.y(y);
-			playerRot.x(cameraRot.x() * 0.5);
+			return NONE.getRotation();
 		}
-		return playerRot;
 	}),
-	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_with_camera_slightly ? CAMERA_ROTATION_WEAK.getRotation(): NONE.getRotation()),
+	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_with_camera_slightly ? INTEREST_POINT.getRotation(): NONE.getRotation()),
 	/**
 	 * 与相机朝向相同
 	 */
