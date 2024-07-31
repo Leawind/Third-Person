@@ -20,6 +20,7 @@ import net.leawind.mc.util.itempattern.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.api.Vector2d;
 import net.leawind.mc.util.math.vector.api.Vector3d;
+import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -67,29 +68,24 @@ public final class ThirdPersonEvents {
 
 	private static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			// 相机坐标系下的impulse
-			double cameraLookImpulse = (event.input.up ? 1: 0) - (event.input.down ? 1: 0);
-			double cameraLeftImpulse = (event.input.left ? 1: 0) - (event.input.right ? 1: 0);
+			Camera camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
 			// 计算世界坐标系下的向前和向左 impulse
-			Vector3d lookImpulse        = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getLookVector()).normalize();    // 视线向量
-			Vector3d leftImpulse        = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getLeftVector()).normalize();
-			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize();    // 水平方向上的视线向量
-			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize();
-			lookImpulse.mul(cameraLookImpulse);    // 这才是 impulse
-			leftImpulse.mul(cameraLeftImpulse);
-			lookImpulseHorizon.mul(cameraLookImpulse);    // 水平 impulse
-			leftImpulseHorizon.mul(cameraLeftImpulse);
-			// 世界坐标系下的 impulse
-			lookImpulse.add(leftImpulse, ThirdPersonStatus.impulse);
+			Vector3d lookImpulse        = LMath.toVector3d(camera.getLookVector()).normalize();    // 视线向量
+			Vector3d leftImpulse        = LMath.toVector3d(camera.getLeftVector()).normalize();
+			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize().mul(event.forwardImpulse);    // 水平方向上的视线向量
+			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize().mul(event.leftImpulse);
 			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPersonStatus.impulseHorizon);
+			// 世界坐标系下的 impulse
+			lookImpulse.mul(event.forwardImpulse);    // 这才是 impulse
+			leftImpulse.mul(event.leftImpulse);
+			lookImpulse.add(leftImpulse, ThirdPersonStatus.impulse);
 			// impulse 不为0，
 			if (ThirdPersonStatus.impulseHorizon.length() > 1E-5) {
-				ThirdPersonStatus.impulseHorizon.normalize();
 				float    playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
 				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
 				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
-				event.forwardImpulse = event.impulseMultiplier * (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
-				event.leftImpulse    = event.impulseMultiplier * (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
+				event.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
+				event.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
 			}
 		}
 	}
