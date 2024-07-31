@@ -2,7 +2,7 @@ package net.leawind.mc.thirdperson.core;
 
 
 import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.vector.api.Vector3d;
+import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 

@@ -2,7 +2,7 @@ package net.leawind.mc.util.math.smoothvalue;
 
 
 import net.leawind.mc.util.math.LMath;
-import net.leawind.mc.util.math.vector.api.Vector2d;
+import net.leawind.mc.util.math.vector.Vector2d;
 import org.jetbrains.annotations.NotNull;
 
 /**

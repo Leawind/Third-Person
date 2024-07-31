@@ -1,8 +1,8 @@
 package net.leawind.mc.util.math;
 
 
-import net.leawind.mc.util.math.vector.api.Vector2d;
-import net.leawind.mc.util.math.vector.api.Vector3d;
+import net.leawind.mc.util.math.vector.Vector2d;
+import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
