@@ -4,6 +4,7 @@ package net.leawind.mc.thirdperson.screen;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.minecraft.client.gui.screens.Screen;
@@ -108,6 +109,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .option(option("camera_ray_trace_length", defaults.camera_ray_trace_length, 32D, 2048D, 1D, () -> config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v).build()) //
 														  .option(booleanOption("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, () -> config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v).build()) //
 														  .option(booleanOption("enable_target_entity_predict", defaults.enable_target_entity_predict, () -> config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v).build()) //
+														  .option(option("sprint_impulse_threshold", defaults.sprint_impulse_threshold, ThirdPersonConstants.VANILLA_SPRINT_IMPULSE_THRESHOLD, 1, 0.001, () -> config.sprint_impulse_threshold, v -> config.sprint_impulse_threshold = v).build()) //
 														  .group(group("crosshair") //
 																					.option(booleanOption("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, () -> config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v).build()) //
 																					.option(booleanOption("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, () -> config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v).build()) //

@@ -322,6 +322,7 @@ public final class ThirdPersonEvents {
 	 * 进入第一人称视角
 	 */
 	private static void onEnterFirstPerson () {
+		GameStatus.sprintImpulseThreshold = -1;
 		ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
 		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 	}
@@ -330,6 +331,7 @@ public final class ThirdPersonEvents {
 	 * 进入第三人称视角
 	 */
 	public static void onEnterThirdPerson () {
+		GameStatus.sprintImpulseThreshold = ThirdPerson.getConfig().sprint_impulse_threshold;
 		ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 		ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 		ThirdPerson.CAMERA_AGENT.reset();

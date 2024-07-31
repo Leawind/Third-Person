@@ -52,7 +52,7 @@ public final class ThirdPersonConstants {
 	 */
 	public static final float             PLAYER_HEAD_ROTATE_LIMIT_DEGREES      = 50;
 	/**
-	 * 参考 LocalPlayer#hasEnoughImpulseToStartSprinting
+	 * LocalPlayer#hasEnoughImpulseToStartSprinting
 	 */
-	public static final double            SPRINT_IMPULSE_THRESHOLD              = 0.98;
+	public static final double            VANILLA_SPRINT_IMPULSE_THRESHOLD      = 0.8;
 }

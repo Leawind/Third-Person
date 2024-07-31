@@ -72,6 +72,7 @@ public abstract class AbstractConfig {
 	@Expose public          double       camera_ray_trace_length                   = 512;
 	@Expose public          boolean      lock_camera_pitch_angle                   = false;
 	@Expose public          boolean      enable_target_entity_predict              = true;
+	@Expose public          double       sprint_impulse_threshold                  = 0.98;
 	//------------------------------准星
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;
 	@Expose public          boolean      render_crosshair_when_aiming              = true;
