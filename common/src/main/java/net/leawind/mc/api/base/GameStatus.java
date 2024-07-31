@@ -7,4 +7,5 @@ public class GameStatus {
 	 */
 	public static boolean allowThirdPersonCrosshair = false;
 	public static boolean isPerspectiveInverted     = false;
+	public static double  sprintImpulseThreshold    = -1;
 }

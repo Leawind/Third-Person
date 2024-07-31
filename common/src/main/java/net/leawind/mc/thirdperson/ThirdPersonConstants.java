@@ -51,4 +51,8 @@ public final class ThirdPersonConstants {
 	 * 玩家转头角度限制
 	 */
 	public static final float             PLAYER_HEAD_ROTATE_LIMIT_DEGREES      = 50;
+	/**
+	 * 参考 LocalPlayer#hasEnoughImpulseToStartSprinting
+	 */
+	public static final double            SPRINT_IMPULSE_THRESHOLD              = 0.98;
 }
