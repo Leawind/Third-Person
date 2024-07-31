@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value=CameraType.class, priority=2000)
 public class CameraTypeMixin {
-	@Final @Shadow public boolean firstPerson;
+	@Final @Shadow private boolean firstPerson;
 
 	@Inject(method="isFirstPerson", at=@At("RETURN"), cancellable=true)
 	private void isFirstPerson (@NotNull CallbackInfoReturnable<Boolean> ci) {
