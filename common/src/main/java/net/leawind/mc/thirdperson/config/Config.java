@@ -18,7 +18,7 @@ import java.util.Set;
  * 但要在模组中使用这些配置项，还需要进行进一步的处理。
  */
 public class Config extends AbstractConfig {
-	public static final @NotNull Config             DEFAULTS                     = new Config();
+	public static final @NotNull Config               DEFAULTS                     = new Config();
 	private final @NotNull       CameraOffsetScheme cameraOffsetScheme           = new CameraOffsetScheme(this);
 	private final @NotNull       Set<ItemPattern>   holdToAimItemPatterns        = new HashSet<>();
 	private final @NotNull       Set<ItemPattern>   useToAimItemPatterns         = new HashSet<>();
