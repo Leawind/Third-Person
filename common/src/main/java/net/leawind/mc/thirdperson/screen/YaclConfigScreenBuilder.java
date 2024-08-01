@@ -31,7 +31,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .option(booleanOption("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, () -> config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v).build()) //
 														  .group(group("player_rotation") //
 																						  .option(booleanOption("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, () -> config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v).build()) //
-																						  .option(booleanOption("player_rotate_with_camera_slightly", defaults.player_rotate_with_camera_slightly, () -> config.player_rotate_with_camera_slightly, v -> config.player_rotate_with_camera_slightly = v).build()) //
+																						  .option(booleanOption("player_rotate_to_intrest_point", defaults.player_rotate_to_intrest_point, () -> config.player_rotate_to_intrest_point, v -> config.player_rotate_to_intrest_point = v).build()) //
 																						  .option(booleanOption("rotate_to_moving_direction", defaults.rotate_to_moving_direction, () -> config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v).build()) //
 																						  .option(booleanOption("auto_rotate_interacting", defaults.auto_rotate_interacting, () -> config.auto_rotate_interacting, v -> config.auto_rotate_interacting = v).build()) //
 																						  .option(booleanOption("do_not_rotate_when_eating", defaults.do_not_rotate_when_eating, () -> config.do_not_rotate_when_eating, v -> config.do_not_rotate_when_eating = v).build()) //

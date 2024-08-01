@@ -46,7 +46,7 @@ public enum RotateTarget {
 			return NONE.getRotation();
 		}
 	}),
-	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_with_camera_slightly ? INTEREST_POINT.getRotation(): NONE.getRotation()),
+	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_to_intrest_point ? INTEREST_POINT.getRotation(): NONE.getRotation()),
 	/**
 	 * 与相机朝向相同
 	 */

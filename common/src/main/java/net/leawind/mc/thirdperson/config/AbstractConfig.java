@@ -19,7 +19,7 @@ public abstract class AbstractConfig {
 	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	//------------------------------玩家旋转
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;
-	@Expose public          boolean      player_rotate_with_camera_slightly        = true;
+	@Expose public          boolean      player_rotate_to_intrest_point            = true;
 	@Expose public          boolean      rotate_to_moving_direction                = true;
 	@Expose public          boolean      auto_rotate_interacting                   = true;
 	@Expose public          boolean      do_not_rotate_when_eating                 = true;
