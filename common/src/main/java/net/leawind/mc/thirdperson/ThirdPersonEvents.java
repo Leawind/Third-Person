@@ -273,7 +273,7 @@ public final class ThirdPersonEvents {
 	 */
 	private static void onMouseTurnPlayerStart (MouseTurnPlayerStartEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-			if (event.accumulatedDX == 0 || event.accumulatedDY == 0) {
+			if (event.accumulatedDX == 0 && event.accumulatedDY == 0) {
 				return;
 			}
 			Config                   config     = ThirdPerson.getConfig();
