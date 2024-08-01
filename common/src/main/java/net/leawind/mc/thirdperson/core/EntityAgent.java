@@ -436,9 +436,7 @@ public class EntityAgent {
 	 * 当相机在面前时，兴趣点是相机
 	 */
 	public Optional<Vec3> getInterestPoint () {
-		LocalPlayer player    = getRawPlayerEntity();
-		Vector2d    cameraRot = ThirdPerson.CAMERA_AGENT.getRotation();
-		if (LMath.subtractDegrees(player.yBodyRot, cameraRot.y()) < 90) {
+		if (LMath.subtractDegrees(getRawPlayerEntity().yBodyRot, ThirdPerson.CAMERA_AGENT.getRelativeRotation().y()) > 90) {
 			return Optional.of(ThirdPerson.CAMERA_AGENT.getHitResult().getLocation());
 		} else {
 			return Optional.of(LMath.toVec3(ThirdPerson.CAMERA_AGENT.getRawCameraPosition()));
