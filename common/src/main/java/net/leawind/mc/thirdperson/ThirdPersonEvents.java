@@ -10,9 +10,6 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.events.*;
-import net.leawind.mc.mixin.GameRendererMixin;
-import net.leawind.mc.mixin.MinecraftMixin;
-import net.leawind.mc.mixin.MouseHandlerMixin;
 import net.leawind.mc.thirdperson.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.config.Config;
@@ -30,7 +27,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @SuppressWarnings("unused")
 public final class ThirdPersonEvents {
@@ -213,10 +209,7 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * gameRenderer 渲染之前
-	 *
 	 * @see GameRenderer#render(float, long, boolean)
-	 * @see GameRendererMixin#pre_render(float, long, boolean, CallbackInfo)
 	 */
 	private static void onRenderTickStart (RenderTickStartEvent event) {
 		if (!ThirdPerson.getConfig().is_mod_enable) {
@@ -276,10 +269,7 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * 如果此时相机跟随玩家旋转，那么不做修改，让鼠标直接控制玩家旋转。
-	 *
 	 * @see MouseHandler#turnPlayer()
-	 * @see MouseHandlerMixin#preMouseTurnPlayer(CallbackInfo)
 	 */
 	private static void onMouseTurnPlayerStart (MouseTurnPlayerStartEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isAdjustingCameraOffset() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
@@ -309,9 +299,6 @@ public final class ThirdPersonEvents {
 		}
 	}
 
-	/**
-	 * @see MinecraftMixin#preHandleKeybinds(CallbackInfo)
-	 */
 	private static void onHandleKeybindsStart () {
 		if (ThirdPerson.isAvailable()) {
 			Config config = ThirdPerson.getConfig();

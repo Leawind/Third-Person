@@ -34,8 +34,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * {@link GameRenderer#pick}会先调用{@link Entity#pick}探测方块，再通过{@link ProjectileUtil#getEntityHitResult}探测实体，然后计算最终探测结果
  * <p>
  * 当探测结果为空时，它会通过 {@link BlockHitResult#miss(Vec3, Direction, BlockPos)} 创建一个表示结果为空的 BlockHitResult 对象，此时会根据玩家的朝向计算 Direction 参数。
- * <p>
- * {@link EntityMixin#pick}修改了探测方块的逻辑
  */
 @Mixin(value=GameRenderer.class, priority=2000)
 public class GameRendererMixin {

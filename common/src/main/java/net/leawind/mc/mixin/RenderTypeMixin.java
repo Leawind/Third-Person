@@ -40,8 +40,9 @@ public class RenderTypeMixin extends RenderStateShard {
 
 	/**
 	 * 对盔甲和鞘翅使用自定义的 RenderType 提供器，实现半透明效果
+	 * <p>
+	 * see ModelPartCubeMixin#compile(float)
 	 *
-	 * @see ModelPartCubeMixin#compile(float)
 	 * @see EntityAgent#getSmoothOpacity()
 	 */
 	@VersionSensitive
