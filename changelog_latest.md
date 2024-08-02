@@ -1,11 +1,11 @@
-### Add
+### Added
 
 - Add config: `hide_crosshair_when_flying`
 - Let player rotate to interest point, keep body not move
 	- Add config: `player_rotate_to_intrest_point`
 - Add config: `sprint_impulse_threshold`
 
-### Changes
+### Changed
 
 - Update translation of config option
 - Remove YACL dependency declaration in forge `mods.toml`. But still support YACL 3.2.2 or below
