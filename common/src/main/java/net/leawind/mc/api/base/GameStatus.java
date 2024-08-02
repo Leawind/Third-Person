@@ -1,7 +1,7 @@
 package net.leawind.mc.api.base;
 
 
-public class GameStatus {
+public final class GameStatus {
 	/**
 	 * 第三人称下是否显示准星
 	 */

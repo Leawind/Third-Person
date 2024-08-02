@@ -22,7 +22,7 @@ public class Config extends AbstractConfig {
 	private final @NotNull       CameraOffsetScheme cameraOffsetScheme           = new CameraOffsetScheme(this);
 	private final @NotNull       Set<ItemPattern>   holdToAimItemPatterns        = new HashSet<>();
 	private final @NotNull       Set<ItemPattern>   useToAimItemPatterns         = new HashSet<>();
-	public final @NotNull        Set<ItemPattern>   useToFirstPersonItemPatterns = new HashSet<>();
+	private final @NotNull       Set<ItemPattern>   useToFirstPersonItemPatterns = new HashSet<>();
 	private                      MonoList           distanceMonoList;
 
 	public Config () {

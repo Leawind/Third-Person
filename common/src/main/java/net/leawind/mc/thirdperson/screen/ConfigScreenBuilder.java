@@ -25,19 +25,9 @@ import java.util.Set;
 @VersionSensitive("YACL version check")
 public abstract class ConfigScreenBuilder {
 	/**
-	 * 构建配置屏幕
-	 *
-	 * @param config 配置实例
-	 * @param parent 父屏幕
-	 * @return 配置屏幕
-	 */
-	@NotNull
-	public abstract Screen build (@NotNull Config config, @Nullable Screen parent);
-
-	/**
 	 * 已经实现或将来可能实现的构建器们
 	 */
-	static Map<String, OptionalFunction<ConfigScreenBuilder>> builders = new HashMap<>();
+	private static Map<String, OptionalFunction<ConfigScreenBuilder>> builders = new HashMap<>();
 
 	static {
 		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), () -> Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config")));
@@ -76,4 +66,14 @@ public abstract class ConfigScreenBuilder {
 		});
 		return availableBuilders;
 	}
+
+	/**
+	 * 构建配置屏幕
+	 *
+	 * @param config 配置实例
+	 * @param parent 父屏幕
+	 * @return 配置屏幕
+	 */
+	@NotNull
+	public abstract Screen build (@NotNull Config config, @Nullable Screen parent);
 }

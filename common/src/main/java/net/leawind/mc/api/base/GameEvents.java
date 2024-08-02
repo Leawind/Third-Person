@@ -6,7 +6,7 @@ import net.leawind.mc.api.client.event.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class GameEvents {
+public final class GameEvents {
 	public static Consumer<ThirdPersonCameraSetupEvent> thirdPersonCameraSetup = null;
 	public static Consumer<MinecraftPickEvent>          minecraftPick          = null;
 	public static Consumer<RenderTickStartEvent>        renderTickStart        = null;
