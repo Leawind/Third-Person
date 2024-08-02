@@ -3,7 +3,7 @@ package net.leawind.mc.thirdperson.core;
 
 import com.google.common.collect.Lists;
 import net.leawind.mc.api.base.GameStatus;
-import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
+import net.leawind.mc.api.client.event.ThirdPersonCameraSetupEvent;
 import net.leawind.mc.mixin.CameraInvoker;
 import net.leawind.mc.mixin.ClientLevelInvoker;
 import net.leawind.mc.thirdperson.ThirdPerson;
@@ -11,7 +11,7 @@ import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.util.annotations.VersionSensitive;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothVector2d;

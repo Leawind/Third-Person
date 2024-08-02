@@ -1,7 +1,7 @@
 package net.leawind.mc.api.base;
 
 
-import net.leawind.mc.api.client.events.*;
+import net.leawind.mc.api.client.event.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

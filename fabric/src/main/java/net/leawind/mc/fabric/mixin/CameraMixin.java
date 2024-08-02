@@ -2,7 +2,7 @@ package net.leawind.mc.fabric.mixin;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
+import net.leawind.mc.api.client.event.ThirdPersonCameraSetupEvent;
 import net.leawind.mc.mixin.CameraInvoker;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;

@@ -9,7 +9,7 @@ import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
-import net.leawind.mc.api.client.events.*;
+import net.leawind.mc.api.client.event.*;
 import net.leawind.mc.thirdperson.cameraoffset.AbstractCameraOffsetMode;
 import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
 import net.leawind.mc.thirdperson.config.Config;

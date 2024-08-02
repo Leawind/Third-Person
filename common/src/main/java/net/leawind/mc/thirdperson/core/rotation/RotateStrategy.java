@@ -23,41 +23,41 @@ public interface RotateStrategy {
 	 * 默认策略：移动时转向前进方向，静止时不旋转
 	 */
 	Supplier<Double> DEFAULT                = () -> {
-		RotateTarget rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction    //
-									? RotateTarget.HORIZONTAL_IMPULSE_DIRECTION    //
-									: RotateTarget.DEFAULT;
-		SmoothType smoothType = ThirdPerson.mc.options.keySprint.isDown() || ThirdPerson.ENTITY_AGENT.isSprinting()    //
-								? SmoothType.HARD    //
-								: SmoothType.EXP_LINEAR;
+		RotateTargetEnum rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction    //
+										? RotateTargetEnum.HORIZONTAL_IMPULSE_DIRECTION    //
+										: RotateTargetEnum.DEFAULT;
+		SmoothTypeEnum smoothType = ThirdPerson.mc.options.keySprint.isDown() || ThirdPerson.ENTITY_AGENT.isSprinting()    //
+									? SmoothTypeEnum.HARD    //
+									: SmoothTypeEnum.EXP_LINEAR;
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(rotateTarget);
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(smoothType);
 		return 0.1D;
 	};
 	Supplier<Double> SWIMMING               = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.IMPULSE_DIRECTION);
-		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.IMPULSE_DIRECTION);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.LINEAR);
 		return 0.01D;
 	};
 	Supplier<Double> AIMING                 = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.PREDICTED_TARGET_ENTITY);
-		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.HARD);
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.PREDICTED_TARGET_ENTITY);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.HARD);
 		return 0D;
 	};
 	Supplier<Double> FALL_FLYING            = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.HARD);
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_ROTATION);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.HARD);
 		return 0D;
 	};
 	Supplier<Double> WITH_CAMERA_NOT_AIMING = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_ROTATION);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.LINEAR);
 		return 0D;
 	};
 	Supplier<Double> INTERECTING            = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(ThirdPerson.getConfig().rotate_interacting_type      //
-												 ? RotateTarget.CAMERA_HIT_RESULT    //
-												 : RotateTarget.CAMERA_ROTATION);
-		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothType.LINEAR);
+												 ? RotateTargetEnum.CAMERA_HIT_RESULT    //
+												 : RotateTargetEnum.CAMERA_ROTATION);
+		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.LINEAR);
 		return 0D;
 	};
 

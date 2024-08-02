@@ -2,7 +2,7 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.api.base.GameStatus;
-import net.leawind.mc.util.annotations.VersionSensitive;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

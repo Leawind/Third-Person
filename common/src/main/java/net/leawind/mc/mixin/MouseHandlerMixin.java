@@ -2,7 +2,7 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.MouseTurnPlayerStartEvent;
+import net.leawind.mc.api.client.event.MouseTurnPlayerStartEvent;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

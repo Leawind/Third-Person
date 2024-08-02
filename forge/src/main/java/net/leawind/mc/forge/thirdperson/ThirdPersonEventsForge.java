@@ -2,7 +2,7 @@ package net.leawind.mc.forge.thirdperson;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.ThirdPersonCameraSetupEvent;
+import net.leawind.mc.api.client.event.ThirdPersonCameraSetupEvent;
 import net.leawind.mc.mixin.CameraInvoker;
 import net.minecraft.client.Camera;
 import net.minecraftforge.client.event.ViewportEvent;

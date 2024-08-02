@@ -3,7 +3,7 @@ package net.leawind.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.RenderEntityEvent;
+import net.leawind.mc.api.client.event.RenderEntityEvent;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.minecraft.client.renderer.LevelRenderer;

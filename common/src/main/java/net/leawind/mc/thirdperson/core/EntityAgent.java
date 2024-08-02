@@ -7,10 +7,10 @@ import net.leawind.mc.thirdperson.ThirdPersonResources;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.rotation.RotateStrategy;
-import net.leawind.mc.thirdperson.core.rotation.RotateTarget;
-import net.leawind.mc.thirdperson.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
+import net.leawind.mc.thirdperson.core.rotation.SmoothTypeEnum;
 import net.leawind.mc.util.ItemPattern;
-import net.leawind.mc.util.annotations.VersionSensitive;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
@@ -51,8 +51,8 @@ public class EntityAgent {
 	 * @see RotateStrategy#build
 	 */
 	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
-	private @NotNull RotateTarget        rotateTarget       = RotateTarget.DEFAULT;
-	private @NotNull SmoothType          smoothRotationType = SmoothType.EXP_LINEAR;
+	private @NotNull RotateTargetEnum    rotateTarget       = RotateTargetEnum.DEFAULT;
+	private @NotNull SmoothTypeEnum      smoothRotationType = SmoothTypeEnum.EXP_LINEAR;
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
@@ -96,12 +96,12 @@ public class EntityAgent {
 	/**
 	 * 设置旋转目标
 	 */
-	public void setRotateTarget (@NotNull RotateTarget rotateTarget) {
+	public void setRotateTarget (@NotNull RotateTargetEnum rotateTarget) {
 		this.rotateTarget = rotateTarget;
 	}
 
 	@NotNull
-	public RotateTarget getRotateTarget () {
+	public RotateTargetEnum getRotateTarget () {
 		return rotateTarget;
 	}
 
@@ -110,11 +110,11 @@ public class EntityAgent {
 	 * <p>
 	 * 在 clientTick 和 renderTick 中要根据平滑类型采用不同的处理方式
 	 */
-	public void setRotationSmoothType (@NotNull SmoothType smoothType) {
+	public void setRotationSmoothType (@NotNull SmoothTypeEnum smoothType) {
 		smoothRotationType = smoothType;
 	}
 
-	public @NotNull SmoothType getRotationSmoothType () {
+	public @NotNull SmoothTypeEnum getRotationSmoothType () {
 		return smoothRotationType;
 	}
 

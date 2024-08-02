@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 /**
  * 旋转目标，即玩家应该转向何处
  */
-public enum RotateTarget {
+public enum RotateTargetEnum {
 	/**
 	 * 保持当前朝向，不旋转
 	 */
@@ -114,7 +114,7 @@ public enum RotateTarget {
 	});
 	private final Supplier<Vector2d> rotationGetter;
 
-	RotateTarget (@NotNull Supplier<Vector2d> rotationGetter) {
+	RotateTargetEnum (@NotNull Supplier<Vector2d> rotationGetter) {
 		this.rotationGetter = rotationGetter;
 	}
 

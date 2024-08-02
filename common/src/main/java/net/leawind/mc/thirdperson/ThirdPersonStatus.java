@@ -2,8 +2,8 @@ package net.leawind.mc.thirdperson;
 
 
 import net.leawind.mc.thirdperson.config.Config;
-import net.leawind.mc.thirdperson.core.rotation.RotateTarget;
-import net.leawind.mc.thirdperson.core.rotation.SmoothType;
+import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
+import net.leawind.mc.thirdperson.core.rotation.SmoothTypeEnum;
 import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.world.entity.player.Player;
@@ -112,9 +112,9 @@ public final class ThirdPersonStatus {
 	/**
 	 * 第三人称下，通常是直接用鼠标控制相机的朝向 CameraAgentImpl#relativeRotation，再根据一些因素决定玩家的朝向。
 	 * <p>
-	 * 当飞行时，实体的旋转目标是相机朝向，且平滑类型是 {@link SmoothType#HARD}，相当于鼠标直接控制玩家朝向，而相机跟随玩家旋转。这样就可以兼容 Do a Barrel Roll
+	 * 当飞行时，实体的旋转目标是相机朝向，且平滑类型是 {@link SmoothTypeEnum#HARD}，相当于鼠标直接控制玩家朝向，而相机跟随玩家旋转。这样就可以兼容 Do a Barrel Roll
 	 */
 	public static boolean shouldCameraTurnWithEntity () {
-		return ThirdPerson.ENTITY_AGENT.getRotateTarget() == RotateTarget.CAMERA_ROTATION && ThirdPerson.ENTITY_AGENT.getRotationSmoothType() == SmoothType.HARD;
+		return ThirdPerson.ENTITY_AGENT.getRotateTarget() == RotateTargetEnum.CAMERA_ROTATION && ThirdPerson.ENTITY_AGENT.getRotationSmoothType() == SmoothTypeEnum.HARD;
 	}
 }

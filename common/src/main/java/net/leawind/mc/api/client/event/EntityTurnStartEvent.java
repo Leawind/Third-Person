@@ -1,4 +1,4 @@
-package net.leawind.mc.api.client.events;
+package net.leawind.mc.api.client.event;
 
 
 import net.leawind.mc.api.base.ModEvent;

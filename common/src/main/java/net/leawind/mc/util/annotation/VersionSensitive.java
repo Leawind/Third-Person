@@ -1,4 +1,4 @@
-package net.leawind.mc.util.annotations;
+package net.leawind.mc.util.annotation;
 
 
 import java.lang.annotation.Retention;

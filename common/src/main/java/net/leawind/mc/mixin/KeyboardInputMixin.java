@@ -2,7 +2,7 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.CalculateMoveImpulseEvent;
+import net.leawind.mc.api.client.event.CalculateMoveImpulseEvent;
 import net.minecraft.client.player.KeyboardInput;
 import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.spongepowered.asm.mixin.Mixin;

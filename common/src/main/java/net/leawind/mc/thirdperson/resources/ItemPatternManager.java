@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.ItemPattern;
-import net.leawind.mc.util.annotations.VersionSensitive;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;

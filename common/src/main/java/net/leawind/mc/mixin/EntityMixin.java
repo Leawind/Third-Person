@@ -2,8 +2,8 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.EntityTurnStartEvent;
-import net.leawind.mc.api.client.events.MinecraftPickEvent;
+import net.leawind.mc.api.client.event.EntityTurnStartEvent;
+import net.leawind.mc.api.client.event.MinecraftPickEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;

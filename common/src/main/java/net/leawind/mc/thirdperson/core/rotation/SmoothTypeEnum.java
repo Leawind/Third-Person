@@ -10,7 +10,7 @@ package net.leawind.mc.thirdperson.core.rotation;
  * <p>
  * partialTick 是一个浮点数，表示自上一次 client tick 以来经过的时间占 client tick 间隔的比例，通常用于线性插值
  */
-public enum SmoothType {
+public enum SmoothTypeEnum {
 	/**
 	 * <h2>梆硬</h2>
 	 * 不用担心抽搐问题，但完全没有平滑效果
@@ -21,7 +21,7 @@ public enum SmoothType {
 	HARD,
 	/**
 	 * <h2>线性插值</h2>
-	 * 相当于半衰期为0的 {@link SmoothType#EXP_LINEAR}
+	 * 相当于半衰期为0的 {@link SmoothTypeEnum#EXP_LINEAR}
 	 * <h3>render tick</h3>
 	 * 根据 partialTick 获取新值与旧值的线性插值
 	 * <h3>client tick</h3>
@@ -40,7 +40,7 @@ public enum SmoothType {
 	EXP,
 	/**
 	 * <h2>指数衰减+线性插值</h2>
-	 * 解决了 {@link SmoothType#EXP} 的不平滑问题。但是响应速度可能略迟钝。
+	 * 解决了 {@link SmoothTypeEnum#EXP} 的不平滑问题。但是响应速度可能略迟钝。
 	 * <h3>render tick</h3>
 	 * 取值时不直接取平滑值，而是取线性插值
 	 * <h3>client tick</h3>

@@ -6,7 +6,7 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.leawind.mc.util.OptionalFunction;
-import net.leawind.mc.util.annotations.VersionSensitive;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

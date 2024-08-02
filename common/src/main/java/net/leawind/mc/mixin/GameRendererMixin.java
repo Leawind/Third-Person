@@ -2,9 +2,9 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.api.base.GameEvents;
-import net.leawind.mc.api.client.events.MinecraftPickEvent;
-import net.leawind.mc.api.client.events.RenderTickStartEvent;
-import net.leawind.mc.util.annotations.VersionSensitive;
+import net.leawind.mc.api.client.event.MinecraftPickEvent;
+import net.leawind.mc.api.client.event.RenderTickStartEvent;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
