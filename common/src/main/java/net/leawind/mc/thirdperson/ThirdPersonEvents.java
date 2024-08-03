@@ -212,6 +212,7 @@ public final class ThirdPersonEvents {
 	 * @see GameRenderer#render(float, long, boolean)
 	 */
 	private static void onRenderTickStart (RenderTickStartEvent event) {
+		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
 		if (!ThirdPerson.getConfig().is_mod_enable) {
 			return;
 		}
@@ -251,7 +252,6 @@ public final class ThirdPersonEvents {
 			ThirdPerson.ENTITY_AGENT.onRenderTickStart(now, period, event.partialTick);
 			ThirdPerson.CAMERA_AGENT.onRenderTickStart(now, period, event.partialTick);
 		}
-		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderCrosshair();
 	}
 
 	/**
