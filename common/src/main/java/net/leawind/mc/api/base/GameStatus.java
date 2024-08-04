@@ -9,7 +9,7 @@ public final class GameStatus {
 	 * <p>
 	 * true 表示显示准星
 	 */
-	public static boolean allowThirdPersonCrosshair = false;
+	public static boolean forceThirdPersonCrosshair = false;
 	public static boolean isPerspectiveInverted     = false;
 	public static double  sprintImpulseThreshold    = -1;
 }

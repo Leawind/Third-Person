@@ -212,7 +212,7 @@ public final class ThirdPersonEvents {
 	 * @see GameRenderer#render(float, long, boolean)
 	 */
 	private static void onRenderTickStart (RenderTickStartEvent event) {
-		GameStatus.allowThirdPersonCrosshair = ThirdPersonStatus.shouldRenderThirdPersonCrosshair();
+		GameStatus.forceThirdPersonCrosshair = ThirdPersonStatus.shouldRenderThirdPersonCrosshair();
 		if (!ThirdPerson.getConfig().is_mod_enable) {
 			return;
 		}

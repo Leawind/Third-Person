@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public class GuiMixin {
 	@ModifyExpressionValue(method="renderCrosshair", at=@At(value="INVOKE", target="Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
 	private boolean isFirstPerson (boolean isFirstPersonReally) {
-		return isFirstPersonReally || GameStatus.allowThirdPersonCrosshair;
+		return isFirstPersonReally || GameStatus.forceThirdPersonCrosshair;
 	}
 }

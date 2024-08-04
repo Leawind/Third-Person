@@ -5,6 +5,7 @@ import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
@@ -22,7 +23,7 @@ public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements C
 	/**
 	 * 计算一个目标实体的代价，值越低越优先
 	 */
-	public double getCost (Entity entity) {
+	public double getCost (@NotNull Entity entity) {
 		Vec3     entityPos      = entity.getPosition(1);
 		Vector3d vectorToTarget = LMath.toVector3d(entityPos.subtract(pos)).normalize();
 		double   dist           = pos.distanceTo(entityPos);
