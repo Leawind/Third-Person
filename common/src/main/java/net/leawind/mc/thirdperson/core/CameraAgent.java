@@ -83,7 +83,7 @@ public class CameraAgent {
 	@SuppressWarnings("unused")
 	public void onRenderTickStart (double now, double period, float partialTick) {
 		if (!minecraft.isPaused()) {
-			if (!minecraft.options.getCameraType().isFirstPerson()) {
+			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 				// 更新探测结果
 				hitResult = pick(getPickRange());
 				// 平滑更新距离

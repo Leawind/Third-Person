@@ -73,6 +73,7 @@ public abstract class AbstractConfig {
 	@Expose public          boolean      lock_camera_pitch_angle                   = false;
 	@Expose public          boolean      enable_target_entity_predict              = true;
 	@Expose public          double       sprint_impulse_threshold                  = 0.98;
+	@Expose public          boolean      skip_vanilla_second_person_camera         = true;
 	//------------------------------准星
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;
 	@Expose public          boolean      render_crosshair_when_aiming              = true;

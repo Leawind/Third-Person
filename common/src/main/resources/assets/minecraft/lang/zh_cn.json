@@ -97,6 +97,8 @@
 	"leawind_third_person.option.sprint_impulse_threshold.desc": "疾跑脉冲阈值。",
 	"leawind_third_person.option.enable_target_entity_predict": "瞄准时启用目标实体预测",
 	"leawind_third_person.option.enable_target_entity_predict.desc": "瞄准时，预测想要射击的目标实体，据此计算玩家朝向，以便更好地瞄准目标。",
+	"leawind_third_person.option.skip_vanilla_second_person_camera": "跳过原版第二人称",
+	"leawind_third_person.option.skip_vanilla_second_person_camera.desc": "仅保留第一人称和第三人称视角",
 	"leawind_third_person.option.auto_rotate_interacting": "交互时自动转身",
 	"leawind_third_person.option.auto_rotate_interacting.desc": "当按下交互键（攻击|使用|选取）时，玩家会自动转身。",
 	"leawind_third_person.option.do_not_rotate_when_eating": "吃东西时不转身",

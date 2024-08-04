@@ -139,7 +139,7 @@ public class EntityAgent {
 	@SuppressWarnings("unused")
 	@PerformanceSensitive
 	public void onRenderTickStart (double now, double period, float partialTick) {
-		if (!minecraft.options.getCameraType().isFirstPerson() && isControlled() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+		if (ThirdPersonStatus.isRenderingInThirdPerson() && isControlled() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 			Vector2d targetRotation = getRotateTarget().getRotation();
 			smoothRotation.setTarget(targetRotation);
 			switch (smoothRotationType) {

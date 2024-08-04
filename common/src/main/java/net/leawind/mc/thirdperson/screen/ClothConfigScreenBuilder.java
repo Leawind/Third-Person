@@ -120,9 +120,10 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			if (ConfigScreenBuilder.getAvailableBuidlers().size() > 1) {
 				CATEGORY_OTHER.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(ConfigScreenBuilder.getAvailableBuidlers().keySet()).build());
 			}
-			CATEGORY_OTHER.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
-			CATEGORY_OTHER.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(buildBooleanEntry("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildDoubleEntry("sprint_impulse_threshold", ThirdPersonConstants.VANILLA_SPRINT_IMPULSE_THRESHOLD, 1.0D, defaults.sprint_impulse_threshold, config.sprint_impulse_threshold, v -> config.sprint_impulse_threshold = v, entryBuilder));
 			// SubCategory: Crosshair
 			final SubCategoryBuilder Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);

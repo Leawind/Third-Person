@@ -3,6 +3,7 @@ package net.leawind.mc.mixin;
 
 import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.thirdperson.ThirdPerson;
+import net.leawind.mc.thirdperson.config.Config;
 import net.minecraft.client.CameraType;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
@@ -26,7 +27,8 @@ public class CameraTypeMixin {
 
 	@Inject(method="cycle", at=@At("RETURN"), cancellable=true)
 	private void cycle (CallbackInfoReturnable<CameraType> ci) {
-		if (ThirdPerson.getConfig().is_mod_enable) {
+		Config config = ThirdPerson.getConfig();
+		if (config.is_mod_enable && config.skip_vanilla_second_person_camera) {
 			CameraType that = (CameraType)(Object)this;
 			if (that != CameraType.FIRST_PERSON) {
 				ci.setReturnValue(CameraType.FIRST_PERSON);
