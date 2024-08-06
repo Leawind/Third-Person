@@ -1,5 +1,4 @@
 import me.modmuss50.mpp.ReleaseType
-import net.fabricmc.loom.task.RemapJarTask
 import java.nio.file.Files
 
 plugins {
@@ -204,11 +203,9 @@ publishMods {
 	}
 	def loaderOptions = { String loader ->
 		publishOptions {
-			file = project.provider {
-				project(":${loader}").tasks.remapJar as RemapJarTask
-			}.flatMap {
-				it.archiveFile
-			}
+			// import net.fabricmc.loom.task.RemapJarTask
+			file = project(":${loader}").remapJar.archiveFile
+			file = file.get().asFile.toPath().parent.resolve("${archiveFileNameOfLoader(loader)}.jar").toFile()
 			displayName = "${mod_version}-mc${minecraft_version}-${loader}"
 			modLoaders.add(loader)
 		}
