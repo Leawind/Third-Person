@@ -26,14 +26,21 @@ public enum RotateTargetEnum {
 	 */
 	NONE(() -> ThirdPerson.ENTITY_AGENT.getRawRotation(1)),
 	INTEREST_POINT(() -> {
-		Optional<Vec3> point = ThirdPerson.ENTITY_AGENT.getInterestPoint();
-		if (point.isPresent()) {
+		Optional<Vec3> optionalPoint = ThirdPerson.ENTITY_AGENT.getInterestPoint();
+		if (optionalPoint.isPresent()) {
+			Vec3 point = optionalPoint.get();
+			// TEST
+			assert !Double.isNaN(point.x()) && !Double.isNaN(point.y()) && !Double.isNaN(point.z());
 			LocalPlayer player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
 			Vector2d    playerRot         = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
-			Vec3        toInterestedPoint = point.get().subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
+			Vec3        toInterestedPoint = point.subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
 			Vector2d    rot               = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
 			double      leftBound         = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
 			double      rightBound        = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+			// TEST
+			assert !Double.isNaN(playerRot.x()) && !Double.isNaN(playerRot.y());
+			assert !Double.isNaN(rot.x()) && !Double.isNaN(rot.y());
+			assert !Double.isNaN(leftBound) && !Double.isNaN(rightBound);
 			if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
 				playerRot.y(rot.y());
 				playerRot.x(rot.x());
