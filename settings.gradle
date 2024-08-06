@@ -9,7 +9,11 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+
+// 根目录名称
+rootProject.name = mod_name
+
+// 子项目
 include("common")
 include("fabric")
 include("forge")
-rootProject.name = mod_name

@@ -1,7 +1,15 @@
+import me.modmuss50.mpp.ReleaseType
+import net.fabricmc.loom.task.RemapJarTask
+import java.nio.file.Files
+
 plugins {
+	// https://github.com/architectury/architectury-plugin
 	id "architectury-plugin" version "3.4-SNAPSHOT"
 	// https://maven.architectury.dev/dev/architectury/loom/dev.architectury.loom.gradle.plugin/
 	id "dev.architectury.loom" version "1.7.410" apply false
+	// 用于将模组发布至 Modrinth 和 CurseForge
+	// https://github.com/modmuss50/mod-publish-plugin
+	id "me.modmuss50.mod-publish-plugin" version "0.6.3"
 }
 architectury {
 	minecraft = minecraft_version
@@ -10,11 +18,6 @@ subprojects {
 	apply plugin: "dev.architectury.loom"
 	loom {
 		silentMojangMappingsLicense()
-	}
-	dependencies {
-		minecraft "com.mojang:minecraft:${minecraft_version}"
-		mappings loom.officialMojangMappings()
-		//		mappings "net.fabricmc:yarn:$yarn_mappings:v2"
 	}
 	processResources {
 		eachFile {
@@ -58,10 +61,6 @@ allprojects {
 		// Modrinth
 		gradlePluginPortal()
 	}
-	tasks.withType(JavaCompile).configureEach {
-		options.encoding = "UTF-8"
-		options.release = JavaLanguageVersion.of(java_version).asInt()
-	}
 	java {
 		withSourcesJar()
 	}
@@ -69,32 +68,184 @@ allprojects {
 		setDuplicatesStrategy DuplicatesStrategy.INCLUDE
 		from rootProject.file("LICENSE.txt")
 	}
+	javadoc.options.encoding = "UTF-8"
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding "UTF-8"
+		options.release = JavaLanguageVersion.of(java_version).asInt()
+	}
+	tasks.withType(GroovyCompile).configureEach {
+		options.encoding "UTF-8"
+	}
 }
 
 // 生成文件名格式
-String archiveFileNameOfPlatform(String platform) {
-	String[] platforms = enabled_platforms.split(",").each {
-		it.trim()
-	}
-	if (!platforms.contains(platform)) {
-		throw new IllegalArgumentException("Unknown platform: ${platform}")
-	}
-	return "${mod_id}-v${mod_version}-mc${minecraft_version}-${platform}"
+String archiveFileNameOfLoader(String loader) {
+	var loaders = enabled_loaders.split(/\s*,\s*/)
+	assert loaders.contains(loader)
+	return "${mod_id}-v${mod_version}-mc${minecraft_version}-${loader}"
 }
 
-// 读取更新日志
-String readChangeLog() {
-	File changelogFile = getProjectDir().toPath().resolve("CHANGELOG_PREVIEW.md").toFile()
-	return changelogFile.canRead() ? changelogFile.text : "No changelog"
-}
-
-tasks.register("testBuild") {
-	println "<<< Testing build scripts >>>"
-	println "Enabled platforms: ${enabled_platforms}"
-	println "Archive file name for each platform:"
-	enabled_platforms.split(",").each {
-		println "\t$it: ${archiveFileNameOfPlatform(it)}"
+// 检查更新日志的格式
+def checkChangelog = { String txt ->
+	txt.eachLine {
+		if (it.startsWith("###"))
+			assert it =~ /^### (Added|Changed|Removed|Fixed|Compatibility|Other)$/
+		// 首字母不能小写
+		assert !(it =~ (/\s*^\*\s+[a-z]/))
+		// 配置键应当用反引号包裹 ``
+		assert !(it =~ /[^a-z_`][a-z]+(_[a-z]+)+/)
+		assert !(it =~ /[a-z]+(_[a-z]+)+[^a-z_`]/)
+		// 句末不能有句号
+		assert !(it =~ /[。.]\s*(#\d+)?\u0024/)
 	}
-	println "\tModrinth API key exists: ${System.getenv("MODRINTH_TOKEN") != null}"
-	println "Changelog: ${readChangeLog().replaceAll("^|\n", "\n\t")}"
+	return txt
+}
+// 注册任务：检查更新日志
+tasks.register("checkChangelog") {
+	group("verification")
+	description "Check changelog format"
+	doLast {
+		checkChangelog(rootProject.file(changelog_file).text)
+	}
+}
+// 将检查更新日志设为 check 的依赖
+check {
+	dependsOn("checkChangelog")
+}
+tasks.register("linkRuns") {
+	group("loom")
+	description "Link running dirs"
+	def linkFileTo = { File src, File tar ->
+		if (tar.exists()) {
+			if (!src.isFile() || !Files.isSameFile(src.toPath(), tar.toPath())) {
+				delete src.toPath()
+				Files.createLink(src.toPath(), tar.toPath())
+			}
+		} else {
+			if (src.isFile()) {
+				Files.move(src.toPath(), tar.toPath())
+				Files.createLink(src.toPath(), tar.toPath())
+			}
+		}
+	}
+	def linkDirTo = { File src, File tar ->
+		if (src.exists()) {
+			if (tar.exists()) {
+				if (!Files.isSameFile(src.toPath(), tar.toPath())) {
+					src.listFiles().each {
+						var dFile = new File(tar, it.name)
+						if (dFile.exists()) {
+							delete it.toPath()
+						} else {
+							Files.move(it.toPath(), dFile.toPath())
+						}
+					}
+					delete src.toPath()
+				}
+			} else {
+				Files.move(src.toPath(), tar.toPath())
+			}
+		} else if (tar.exists()) {
+			Files.createSymbolicLink(src.toPath(), tar.toPath())
+		}
+	}
+	doLast {
+		String[] linkedFiles = ["options.txt"]
+		String[] linkedDirs = ["saves", "resourcepacks", "generated", "shaderpacks", "screenshots"]
+		def commonRunDir = project("common").file("run")
+		mkdir commonRunDir
+		linkedFiles.each {
+			File file = new File(commonRunDir, it)
+			assert file.exists() || file.isFile()
+		}
+		linkedDirs.each {
+			mkdir new File(commonRunDir, it).toPath()
+		}
+		enabled_loaders.split(/[^a-z]+/).each {
+			File loaderRunDir = project(it).file("run")
+			if (!loaderRunDir.isDirectory()) {
+				mkdir loaderRunDir
+				return
+			}
+			linkedFiles.each {
+				linkFileTo(new File(loaderRunDir, it), new File(commonRunDir, it))
+			}
+			linkedDirs.each {
+				linkDirTo(new File(loaderRunDir, it), new File(commonRunDir, it))
+			}
+		}
+	}
+}
+publishMods {
+	def toVersionType = { String type ->
+		switch (type) {
+			case "release":
+				return ReleaseType.STABLE
+			case "stable":
+				return ReleaseType.STABLE
+			case "beta":
+				return ReleaseType.BETA
+			case "alpha":
+				return ReleaseType.ALPHA
+			default:
+				throw new IllegalArgumentException("Unknown type: ${type}")
+		}
+	}
+	dryRun = providers.environmentVariable("DO_PUBLISH_MOD").getOrNull() != "true"
+	version = mod_version
+	type = toVersionType(mod_version_type)
+	changelog = checkChangelog(rootProject.file(changelog_file).text)
+	enabled_loaders.split(/[^a-z]+/).each {
+		modLoaders.add(it)
+	}
+	def loaderOptions = { String loader ->
+		publishOptions {
+			file = project.provider {
+				project(":${loader}").tasks.remapJar as RemapJarTask
+			}.flatMap {
+				it.archiveFile
+			}
+			displayName = "${mod_version}-mc${minecraft_version}-${loader}"
+			modLoaders.add(loader)
+		}
+	}
+	def modrinthOptions = modrinthOptions {
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		projectId = modrinth_project_id
+		minecraftVersions.add(minecraft_version)
+	}
+	def curseforgeOptions = curseforgeOptions {
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		projectId = curseforge_project_id
+		minecraftVersions.add(minecraft_version)
+		javaVersions.add(JavaVersion.toVersion(java_version))
+		clientRequired = true
+		serverRequired = false
+	}
+	modrinth("modrinthFabric") {
+		from modrinthOptions, loaderOptions("fabric")
+		requires "fabric-api"
+		requires "architectury-api"
+		optional "cloth-config"
+		optional "yacl"
+		optional "modmenu"
+	}
+	curseforge("curseforgeFabric") {
+		from curseforgeOptions, loaderOptions("fabric")
+		requires "fabric-api"
+		requires "architectury-api"
+		optional "cloth-config"
+		optional "yacl"
+		optional "modmenu"
+	}
+	modrinth("modrinthForge") {
+		from modrinthOptions, loaderOptions("forge")
+		requires "architectury-api"
+		optional "cloth-config"
+	}
+	curseforge("curseforgeForge") {
+		from curseforgeOptions, loaderOptions("forge")
+		requires "architectury-api"
+		optional "cloth-config"
+	}
 }

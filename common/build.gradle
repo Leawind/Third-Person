@@ -1,10 +1,14 @@
 architectury {
-	common(enabled_platforms.split(","))
+	common(enabled_loaders.split(","))
 }
 loom {
 	accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.officialMojangMappings()
+
+
 	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 	modApi "dev.architectury:architectury:${architectury_version}"
 	// Cloth config

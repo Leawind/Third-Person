@@ -1,6 +1,5 @@
 plugins {
 	id "com.github.johnrengelman.shadow" version "7.1.2"
-	id "com.modrinth.minotaur" version "2.+"
 }
 architectury {
 	platformSetupLoomIde()
@@ -23,6 +22,8 @@ configurations {
 	developmentForge.extendsFrom common
 }
 dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.officialMojangMappings()
 	forge "net.minecraftforge:forge:${forge_version}"
 	common(project(path: ":common", configuration: "namedElements")) {
 		transitive false
@@ -38,7 +39,7 @@ dependencies {
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-forge:${cloth_config_api_version}"
 	// YACL
-	// https://modrinth.com/mod/yacl/version/3.4.0+1.20.1-forge
+	// https://modrinth.com/mod/yacl/versions?g=1.20.1
 	// > you will from now on depend on the fabric version of YACL
 	implementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-fabric"
 }
@@ -60,7 +61,7 @@ sourcesJar {
 	}
 }
 base {
-	archivesName = rootProject.archiveFileNameOfPlatform("forge")
+	archivesName = rootProject.archiveFileNameOfLoader("forge")
 	version = ""
 }
 components.java {
@@ -71,21 +72,4 @@ components.java {
 publishing {
 	publications {}
 	repositories {}
-}
-
-// https://github.com/modrinth/minotaur/blob/a151c425fb128cd5384242f25b6fbb0a1d18e325/README.md
-modrinth {
-	debugMode = Boolean.parseBoolean(publish_debug_mode)
-	token = System.getenv("MODRINTH_TOKEN")
-	projectId = modrinth_project_id
-	versionNumber = mod_version
-	versionType = mod_version_type
-	versionName = "${mod_version}-mc${minecraft_version}-forge"
-	changelog = readChangeLog()
-	uploadFile = remapJar
-	autoAddDependsOn = false
-	dependencies {
-		required.project "architectury-api"
-		optional.project "cloth-config"
-	}
 }

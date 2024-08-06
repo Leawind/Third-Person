@@ -41,9 +41,10 @@
 	"custom": {
 		"modmenu": {
 			"links": {
-				"BuyMeACoffee": "https://www.buymeacoffee.com/leawind",
 				"Modrinth": "https://modrinth.com/mod/leawind-third-person",
 				"CurseForge": "https://www.curseforge.com/minecraft/mc-mods/leawind-third-person",
+				"BuyMeACoffee": "https://www.buymeacoffee.com/leawind",
+				"Donate": "https://leawind.github.io/donate",
 				"MCMOD": "https://www.mcmod.cn/class/12699.html",
 				"Afdian": "https://afdian.net/a/Leawind"
 			}
