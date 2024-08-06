@@ -198,6 +198,10 @@ publishMods {
 	enabled_loaders.split(/[^a-z]+/).each {
 		modLoaders.add(it)
 	}
+	if (!dryRun) {
+		assert providers.environmentVariable("MODRINTH_TOKEN").present
+		assert providers.environmentVariable("CURSEFORGE_TOKEN").present
+	}
 	def loaderOptions = { String loader ->
 		publishOptions {
 			file = project.provider {
