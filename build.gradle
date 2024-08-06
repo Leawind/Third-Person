@@ -194,20 +194,17 @@ publishMods {
 	version = mod_version
 	type = toVersionType(mod_version_type)
 	changelog = checkChangelog(rootProject.file(changelog_file).text)
-	enabled_loaders.split(/[^a-z]+/).each {
-		modLoaders.add(it)
-	}
 	if (!dryRun) {
 		assert providers.environmentVariable("MODRINTH_TOKEN").present
 		assert providers.environmentVariable("CURSEFORGE_TOKEN").present
 	}
 	def loaderOptions = { String loader ->
 		publishOptions {
+			modLoaders.add(loader)
 			// import net.fabricmc.loom.task.RemapJarTask
 			file = project(":${loader}").remapJar.archiveFile
 			file = file.get().asFile.toPath().parent.resolve("${archiveFileNameOfLoader(loader)}.jar").toFile()
 			displayName = "${mod_version}-mc${minecraft_version}-${loader}"
-			modLoaders.add(loader)
 		}
 	}
 	def modrinthOptions = modrinthOptions {
