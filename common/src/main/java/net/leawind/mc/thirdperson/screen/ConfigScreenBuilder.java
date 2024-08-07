@@ -5,7 +5,7 @@ import dev.architectury.platform.Platform;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
-import net.leawind.mc.util.OptionalFunction;
+import net.leawind.mc.util.PossibleSupplier;
 import net.leawind.mc.util.annotation.VersionSensitive;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
@@ -27,11 +27,11 @@ public abstract class ConfigScreenBuilder {
 	/**
 	 * 已经实现或将来可能实现的构建器们
 	 */
-	private static Map<String, OptionalFunction<ConfigScreenBuilder>> builders = new HashMap<>();
+	private static Map<String, PossibleSupplier<ConfigScreenBuilder>> builders = new HashMap<>();
 
 	static {
-		builders.put("Cloth Config", OptionalFunction.of(() -> new ClothConfigScreenBuilder(), () -> Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config")));
-		builders.put("YACL", OptionalFunction.of(() -> new YaclConfigScreenBuilder(), () -> Platform.isModLoaded("yet_another_config_lib_v3") && !(Platform.isForge() && !Platform.getMod("yet_another_config_lib_v3").getVersion().startsWith("3.2."))));
+		builders.put("Cloth Config", PossibleSupplier.of(() -> new ClothConfigScreenBuilder(), () -> Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config")));
+		builders.put("YACL", PossibleSupplier.of(() -> new YaclConfigScreenBuilder(), () -> Platform.isModLoaded("yet_another_config_lib_v3") && !(Platform.isForge() && !Platform.getMod("yet_another_config_lib_v3").getVersion().startsWith("3.2."))));
 		Set<String> availables = ConfigScreenBuilder.getAvailableBuidlers().keySet();
 		availables.forEach(name -> {
 			ThirdPerson.LOGGER.debug("Found available config screen builder: {}", name);
@@ -45,7 +45,7 @@ public abstract class ConfigScreenBuilder {
 	 * 根据配置获取屏幕构建器
 	 */
 	public static @NotNull Optional<ConfigScreenBuilder> getBuilder () {
-		final Map<String, OptionalFunction<ConfigScreenBuilder>> availables = getAvailableBuidlers();
+		final Map<String, PossibleSupplier<ConfigScreenBuilder>> availables = getAvailableBuidlers();
 		if (availables.isEmpty()) {
 			return Optional.empty();
 		}
@@ -55,8 +55,8 @@ public abstract class ConfigScreenBuilder {
 	/**
 	 * 获取全部可用的构建器
 	 */
-	public static @NotNull Map<String, OptionalFunction<ConfigScreenBuilder>> getAvailableBuidlers () {
-		final Map<String, OptionalFunction<ConfigScreenBuilder>> availableBuilders = new HashMap<>();
+	public static @NotNull Map<String, PossibleSupplier<ConfigScreenBuilder>> getAvailableBuidlers () {
+		final Map<String, PossibleSupplier<ConfigScreenBuilder>> availableBuilders = new HashMap<>();
 		builders.forEach((name, builder) -> {
 			if (builder.isAvailable()) {
 				availableBuilders.put(name, builder);
