@@ -148,6 +148,7 @@ public class CameraAgent {
 	 * @param dXRot 俯仰角变化量
 	 */
 	public void turnCamera (double dYRot, double dXRot) {
+		assert Double.isFinite(dYRot) && Double.isFinite(dXRot);
 		Config config = ThirdPerson.getConfig();
 		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
 			if (config.lock_camera_pitch_angle) {

@@ -30,19 +30,18 @@ public enum RotateTargetEnum {
 		if (optionalPoint.isEmpty()) {
 			return NONE.getRotation();
 		}
-		Vec3 point = optionalPoint.get();
-		// TEST
-		assert !Double.isNaN(point.x()) && !Double.isNaN(point.y()) && !Double.isNaN(point.z());
 		LocalPlayer player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
-		Vector2d    playerRot         = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+		Vec3        point             = optionalPoint.get();
 		Vec3        toInterestedPoint = point.subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
-		Vector2d    rot               = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
-		double      leftBound         = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		double      rightBound        = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		// TEST
-		assert !Double.isNaN(playerRot.x()) && !Double.isNaN(playerRot.y());
-		assert !Double.isNaN(rot.x()) && !Double.isNaN(rot.y());
-		assert !Double.isNaN(leftBound) && !Double.isNaN(rightBound);
+		if (toInterestedPoint.length() < 1e-5) {
+			return NONE.getRotation();
+		}
+		Vector2d playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+		Vector2d rot        = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
+		double   leftBound  = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		double   rightBound = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		assert playerRot.isFinite();
+		assert rot.isFinite();
 		if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
 			playerRot.y(rot.y());
 			playerRot.x(rot.x());
@@ -127,6 +126,9 @@ public enum RotateTargetEnum {
 	 * 获取玩家当前的目标朝向
 	 */
 	public @NotNull Vector2d getRotation () {
-		return rotationGetter.get();
+		// TEST
+		Vector2d rotation = rotationGetter.get();
+		assert rotation.isFinite();
+		return rotation;
 	}
 }

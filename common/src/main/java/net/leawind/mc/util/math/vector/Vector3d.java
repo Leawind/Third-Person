@@ -403,4 +403,8 @@ public class Vector3d {
 	public Vector3d copy () {
 		return Vector3d.of(x, y, z);
 	}
+
+	public boolean isFinite () {
+		return Double.isFinite(x) && Double.isFinite(y) && Double.isFinite(z);
+	}
 }

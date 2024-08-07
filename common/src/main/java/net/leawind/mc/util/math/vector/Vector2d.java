@@ -352,4 +352,8 @@ public class Vector2d {
 	public Vector2d copy () {
 		return Vector2d.of(x, y);
 	}
+
+	public boolean isFinite () {
+		return Double.isFinite(x) && Double.isFinite(y);
+	}
 }

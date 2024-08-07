@@ -22,16 +22,22 @@ public interface LMath {
 		return directionFromRotationDegree(rotationRadianFromDirection(vec).add(Vector2d.of(dx, dy))).mul(vec.length());
 	}
 
+	/**
+	 * 将方向转换成角度（弧度制）
+	 *
+	 * @param d 方向
+	 * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
+	 */
 	@Contract(pure=true)
 	static Vector3d directionFromRotationDegree (Vector2d r) {
 		return directionFromRotationDegree(r.x(), r.y());
 	}
 
 	/**
-	 * 弧度制
+	 * 将方向转换成角度（弧度制）
 	 *
 	 * @param d 方向
-	 * @return [x=俯仰角, y=偏航角]
+	 * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
 	 */
 	@Contract(pure=true)
 	static Vector2d rotationRadianFromDirection (Vector3d d) {
@@ -72,10 +78,10 @@ public interface LMath {
 	}
 
 	/**
-	 * 角度制
+	 * 将方向转换成角度（角度制）
 	 *
 	 * @param d 方向
-	 * @return [x=俯仰角, y=偏航角]
+	 * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
 	 */
 	@Contract(pure=true)
 	static Vector2d rotationDegreeFromDirection (Vector3d d) {
@@ -94,6 +100,12 @@ public interface LMath {
 		return directionFromRotationDegree(rotationDegreeFromDirection(vec).add(rotationAngle)).mul(vec.length());
 	}
 
+	/**
+	 * 将方向转换成角度（角度制）
+	 *
+	 * @param d 方向
+	 * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
+	 */
 	@Contract(pure=true)
 	static double rotationDegreeFromDirection (Vector2d d) {
 		return -Math.toDegrees(Math.atan2(d.x(), d.y()));

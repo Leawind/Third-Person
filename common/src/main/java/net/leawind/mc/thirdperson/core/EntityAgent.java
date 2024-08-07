@@ -198,6 +198,7 @@ public class EntityAgent {
 	 * 设置实体朝向
 	 */
 	public void setRawRotation (@NotNull Vector2d rot) {
+		assert rot.isFinite();
 		Entity entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());
 		entity.setXRot(entity.xRotO = (float)rot.x());
