@@ -58,7 +58,7 @@ public abstract class ConfigScreenBuilder {
 	public static @NotNull Map<String, PossibleSupplier<ConfigScreenBuilder>> getAvailableBuidlers () {
 		final Map<String, PossibleSupplier<ConfigScreenBuilder>> availableBuilders = new HashMap<>();
 		builders.forEach((name, builder) -> {
-			if (builder.isAvailable()) {
+			if (builder.available()) {
 				availableBuilders.put(name, builder);
 			}
 		});
