@@ -291,12 +291,11 @@ public class EntityAgent {
 	 */
 	@VersionSensitive
 	public boolean isInterecting () {
-		if (isControlled()) {
-			Options options = minecraft.options;
-			return options.keyUse.isDown() || options.keyAttack.isDown() || options.keyPickItem.isDown();
-		} else {
+		if (!isControlled()) {
 			return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isUsingItem();
 		}
+		Options options = minecraft.options;
+		return options.keyUse.isDown() || options.keyAttack.isDown() || options.keyPickItem.isDown();
 	}
 
 	/**

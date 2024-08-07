@@ -46,12 +46,10 @@ public abstract class ConfigScreenBuilder {
 	 */
 	public static @NotNull Optional<ConfigScreenBuilder> getBuilder () {
 		final Map<String, OptionalFunction<ConfigScreenBuilder>> availables = getAvailableBuidlers();
-		final String                                             expected   = ThirdPerson.getConfig().config_screen_api;
 		if (availables.isEmpty()) {
 			return Optional.empty();
-		} else {
-			return Optional.of(availables.getOrDefault(expected, availables.values().iterator().next()).get());
 		}
+		return Optional.of(availables.getOrDefault(ThirdPerson.getConfig().config_screen_api, availables.values().iterator().next()).get());
 	}
 
 	/**

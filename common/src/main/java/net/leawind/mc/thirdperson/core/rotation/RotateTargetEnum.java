@@ -27,31 +27,30 @@ public enum RotateTargetEnum {
 	NONE(() -> ThirdPerson.ENTITY_AGENT.getRawRotation(1)),
 	INTEREST_POINT(() -> {
 		Optional<Vec3> optionalPoint = ThirdPerson.ENTITY_AGENT.getInterestPoint();
-		if (optionalPoint.isPresent()) {
-			Vec3 point = optionalPoint.get();
-			// TEST
-			assert !Double.isNaN(point.x()) && !Double.isNaN(point.y()) && !Double.isNaN(point.z());
-			LocalPlayer player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
-			Vector2d    playerRot         = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
-			Vec3        toInterestedPoint = point.subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
-			Vector2d    rot               = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
-			double      leftBound         = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-			double      rightBound        = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-			// TEST
-			assert !Double.isNaN(playerRot.x()) && !Double.isNaN(playerRot.y());
-			assert !Double.isNaN(rot.x()) && !Double.isNaN(rot.y());
-			assert !Double.isNaN(leftBound) && !Double.isNaN(rightBound);
-			if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
-				playerRot.y(rot.y());
-				playerRot.x(rot.x());
-			} else {
-				playerRot.y(LMath.subtractDegrees(rot.y(), leftBound) < LMath.subtractDegrees(rot.y(), rightBound) ? leftBound: rightBound);
-				playerRot.x(rot.x() * 0.5);
-			}
-			return playerRot;
-		} else {
+		if (optionalPoint.isEmpty()) {
 			return NONE.getRotation();
 		}
+		Vec3 point = optionalPoint.get();
+		// TEST
+		assert !Double.isNaN(point.x()) && !Double.isNaN(point.y()) && !Double.isNaN(point.z());
+		LocalPlayer player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
+		Vector2d    playerRot         = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+		Vec3        toInterestedPoint = point.subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
+		Vector2d    rot               = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
+		double      leftBound         = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		double      rightBound        = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		// TEST
+		assert !Double.isNaN(playerRot.x()) && !Double.isNaN(playerRot.y());
+		assert !Double.isNaN(rot.x()) && !Double.isNaN(rot.y());
+		assert !Double.isNaN(leftBound) && !Double.isNaN(rightBound);
+		if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
+			playerRot.y(rot.y());
+			playerRot.x(rot.x());
+		} else {
+			playerRot.y(LMath.subtractDegrees(rot.y(), leftBound) < LMath.subtractDegrees(rot.y(), rightBound) ? leftBound: rightBound);
+			playerRot.x(rot.x() * 0.5);
+		}
+		return playerRot;
 	}),
 	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_to_intrest_point ? INTEREST_POINT.getRotation(): NONE.getRotation()),
 	/**
@@ -65,11 +64,10 @@ public enum RotateTargetEnum {
 		Optional<Vector3d> cameraHitPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
 		if (cameraHitPosition.isEmpty()) {
 			return CAMERA_ROTATION.getRotation();
-		} else {
-			Vector3d eyePosition = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
-			Vector3d viewVector  = cameraHitPosition.get().sub(eyePosition);
-			return LMath.rotationDegreeFromDirection(viewVector);
 		}
+		Vector3d eyePosition = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
+		Vector3d viewVector  = cameraHitPosition.get().sub(eyePosition);
+		return LMath.rotationDegreeFromDirection(viewVector);
 	}),
 	/**
 	 * 预测玩家想射击的目标实体
@@ -84,19 +82,20 @@ public enum RotateTargetEnum {
 	 */
 	PREDICTED_TARGET_ENTITY(() -> {
 		Vector2d rotation = CAMERA_HIT_RESULT.getRotation();
-		if (ThirdPerson.getConfig().enable_target_entity_predict && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			Optional<Entity> predicted = ThirdPerson.CAMERA_AGENT.predictTargetEntity();
-			if (predicted.isPresent()) {
-				Camera   camera       = ThirdPerson.CAMERA_AGENT.getRawCamera();
-				Entity   target       = predicted.get();
-				Vector3d playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
-				Vector3d cameraPos    = LMath.toVector3d(camera.getPosition());
-				Vector3d targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
-				Vector3d end          = LMath.toVector3d(camera.getLookVector()).normalize(cameraPos.distance(targetPos)).add(cameraPos);
-				return LMath.rotationDegreeFromDirection(end.copy().sub(playerEyePos));
-			}
+		if (!ThirdPerson.getConfig().enable_target_entity_predict || !ThirdPerson.ENTITY_AGENT.isControlled()) {
+			return rotation;
 		}
-		return rotation;
+		Optional<Entity> predicted = ThirdPerson.CAMERA_AGENT.predictTargetEntity();
+		if (predicted.isEmpty()) {
+			return rotation;
+		}
+		Camera   camera       = ThirdPerson.CAMERA_AGENT.getRawCamera();
+		Entity   target       = predicted.get();
+		Vector3d playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
+		Vector3d cameraPos    = LMath.toVector3d(camera.getPosition());
+		Vector3d targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
+		Vector3d end          = LMath.toVector3d(camera.getLookVector()).normalize(cameraPos.distance(targetPos)).add(cameraPos);
+		return LMath.rotationDegreeFromDirection(end.copy().sub(playerEyePos));
 	}),
 	/**
 	 * 使用键盘控制的移动方向
@@ -114,10 +113,9 @@ public enum RotateTargetEnum {
 	HORIZONTAL_IMPULSE_DIRECTION(() -> {
 		if (ThirdPersonStatus.impulseHorizon.length() < 1e-5) {
 			return DEFAULT.getRotation();
-		} else {
-			double absoluteYRotDegree = LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulseHorizon);
-			return Vector2d.of(0.1, absoluteYRotDegree);
 		}
+		double absoluteYRotDegree = LMath.rotationDegreeFromDirection(ThirdPersonStatus.impulseHorizon);
+		return Vector2d.of(0.1, absoluteYRotDegree);
 	});
 	private final Supplier<Vector2d> rotationGetter;
 

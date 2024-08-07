@@ -247,11 +247,11 @@ public class ItemPattern {
 	public boolean matchId (@Nullable ItemStack itemStack) {
 		if (descriptionId == null) {
 			return true;
-		} else if (itemStack == null) {
-			return false;
-		} else {
-			return descriptionId.equals(itemStack.getItem().getDescriptionId());
 		}
+		if (itemStack == null) {
+			return false;
+		}
+		return descriptionId.equals(itemStack.getItem().getDescriptionId());
 	}
 
 	/**

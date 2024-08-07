@@ -22,7 +22,7 @@ public class CameraMixin {
 	 * GameRender#render -> GameRender#renderLevel -> Camera#setup
 	 */
 	@Inject(method="setup", at=@At(value="INVOKE", target="Lnet/minecraft/client/Camera;move(DDD)V", shift=At.Shift.BEFORE), cancellable=true)
-	public void preMoveCamera (BlockGetter level, Entity attachedEntity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
+	private void preMoveCamera (BlockGetter level, Entity attachedEntity, boolean detached, boolean reversedView, float partialTick, CallbackInfo ci) {
 		if (GameEvents.thirdPersonCameraSetup != null) {
 			ThirdPersonCameraSetupEvent event = new ThirdPersonCameraSetupEvent(partialTick);
 			GameEvents.thirdPersonCameraSetup.accept(event);

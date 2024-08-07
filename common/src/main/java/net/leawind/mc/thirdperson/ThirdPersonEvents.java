@@ -113,10 +113,7 @@ public final class ThirdPersonEvents {
 	 */
 	private static void onThirdPersonCameraSetup (ThirdPersonCameraSetupEvent event) {
 		if (ThirdPerson.isAvailable()) {
-			if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-				return;
-			}
-			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
+			if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist() && ThirdPersonStatus.isRenderingInThirdPerson()) {
 				ThirdPerson.CAMERA_AGENT.onCameraSetup(event);
 			}
 		}
@@ -128,10 +125,7 @@ public final class ThirdPersonEvents {
 	 * @see ClientTickEvent#CLIENT_PRE
 	 */
 	private static void onClientTickPre (@NotNull Minecraft minecraft) {
-		if (minecraft.isPaused()) {
-			return;
-		}
-		if (!ThirdPerson.isAvailable()) {
+		if (minecraft.isPaused() || !ThirdPerson.isAvailable()) {
 			return;
 		}
 		Config config = ThirdPerson.getConfig();
@@ -186,15 +180,14 @@ public final class ThirdPersonEvents {
 	 * @see ClientRawInputEvent#MOUSE_SCROLLED
 	 */
 	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
-		Config config = ThirdPerson.getConfig();
-		if (ThirdPersonStatus.isAdjustingCameraDistance()) {
-			double dist = config.getCameraOffsetScheme().getMode().getMaxDistance();
-			dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amount));
-			config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
-			return EventResult.interruptFalse();
-		} else {
+		if (!ThirdPersonStatus.isAdjustingCameraDistance()) {
 			return EventResult.pass();
 		}
+		Config config = ThirdPerson.getConfig();
+		double dist   = config.getCameraOffsetScheme().getMode().getMaxDistance();
+		dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amount));
+		config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
+		return EventResult.interruptFalse();
 	}
 
 	/**

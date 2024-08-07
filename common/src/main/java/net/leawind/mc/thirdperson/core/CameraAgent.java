@@ -82,20 +82,18 @@ public class CameraAgent {
 	 */
 	@SuppressWarnings("unused")
 	public void onRenderTickStart (double now, double period, float partialTick) {
-		if (!minecraft.isPaused()) {
-			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				// 更新探测结果
-				hitResult = pick(getPickRange());
-				// 平滑更新距离
-				updateSmoothVirtualDistance(period);
-				// 平滑更新相机偏移量
-				updateSmoothOffsetRatio(period);
-				//
-				if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-					// 将相机朝向与相机实体朝向同步
-					Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
-					relativeRotation.set(-rot.x(), rot.y() - 180);
-				}
+		if (!minecraft.isPaused() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+			// 更新探测结果
+			hitResult = pick(getPickRange());
+			// 平滑更新距离
+			updateSmoothVirtualDistance(period);
+			// 平滑更新相机偏移量
+			updateSmoothOffsetRatio(period);
+			//
+			if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+				// 将相机朝向与相机实体朝向同步
+				Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
+				relativeRotation.set(-rot.x(), rot.y() - 180);
 			}
 		}
 	}
@@ -340,8 +338,8 @@ public class CameraAgent {
 		// 成像平面宽高
 		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
-		//		// 水平视野角度一半(弧度制）
-		//		double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
+		// // 水平视野角度一半(弧度制）
+		// double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
 		// 平滑值
 		Vector2d smoothOffsetRatioValue     = smoothOffsetRatio.get();
 		double   smoothVirtualDistanceValue = smoothDistanceToEye.get();
@@ -413,6 +411,7 @@ public class CameraAgent {
 		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
 		}
+		// TEST
 		assert !Double.isNaN(smoothDistanceToEye.get());
 	}
 
