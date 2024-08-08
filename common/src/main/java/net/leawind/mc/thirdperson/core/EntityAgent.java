@@ -382,6 +382,19 @@ public class EntityAgent {
 	public double getBodyRadius () {
 		return getRawCameraEntity().getBbWidth() * 0.8660254037844386; // 0.5 * sqrt(3)
 	}
+
+	public double columnDistanceTo (@NotNull Vector3d target, float partialTick) {
+		Entity   entity = getRawCameraEntity();
+		Vector3d c      = LMath.toVector3d(entity.getPosition(partialTick));
+		double   maxY   = c.y() + entity.getEyeHeight();
+		c.y(LMath.clamp(target.y(), c.y(), maxY));
+		double dist = c.distance(target);
+		if (maxY > target.y() && target.y() > c.y()) {
+			dist = Math.max(0, dist - getBodyRadius());
+		}
+		return dist;
+	}
+
 	/**
 	 * 更新旋转策略、平滑类型、平滑系数
 	 * <p>
