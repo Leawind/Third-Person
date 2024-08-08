@@ -25,10 +25,14 @@ public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements C
 	 */
 	public double getCost (@NotNull Entity entity) {
 		Vec3     entityPos      = entity.getPosition(1);
-		Vector3d vectorToTarget = LMath.toVector3d(entityPos.subtract(pos)).normalize();
-		double   dist           = pos.distanceTo(entityPos);
-		double   angleRadian    = Math.acos(viewVector.dot(vectorToTarget));
-		double   angleDegrees   = Math.toDegrees(angleRadian);
+		Vector3d vectorToTarget = LMath.toVector3d(entityPos.subtract(pos));
+		if (vectorToTarget.length() < 1e-5) {
+			return 0;
+		}
+		vectorToTarget.normalize();
+		double dist         = pos.distanceTo(entityPos);
+		double angleRadian  = Math.acos(viewVector.dot(vectorToTarget));
+		double angleDegrees = Math.toDegrees(angleRadian);
 		return Math.pow(dist, 2) * Math.pow(angleDegrees, 2.5);
 		//		return dist * 2 + angleDegrees * 5;
 	}

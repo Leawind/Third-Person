@@ -94,7 +94,11 @@ public enum RotateTargetEnum {
 		Vector3d cameraPos    = LMath.toVector3d(camera.getPosition());
 		Vector3d targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
 		Vector3d end          = LMath.toVector3d(camera.getLookVector()).normalize(cameraPos.distance(targetPos)).add(cameraPos);
-		return LMath.rotationDegreeFromDirection(end.copy().sub(playerEyePos));
+		Vector3d eyeToEnd     = end.sub(playerEyePos);
+		if (eyeToEnd.length() < 1e-5) {
+			return rotation;
+		}
+		return LMath.rotationDegreeFromDirection(eyeToEnd);
 	}),
 	/**
 	 * 使用键盘控制的移动方向

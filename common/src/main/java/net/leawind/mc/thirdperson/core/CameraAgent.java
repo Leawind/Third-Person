@@ -312,7 +312,7 @@ public class CameraAgent {
 					if (LMath.rotationDegreeFromDirection(vectorToBottom).x() < cameraRot.x()) {
 						continue;
 					}
-					Vector3d vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalize();
+					Vector3d vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalizeSafely();
 					double   angleRadian    = Math.acos(cameraViewVector.dot(vectorToTarget));
 					if (Math.toDegrees(angleRadian) < ThirdPersonConstants.TARGET_PREDICTION_DEGREES_LIMIT) {
 						candidateTargets.add(target);
