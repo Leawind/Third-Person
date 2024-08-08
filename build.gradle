@@ -85,8 +85,8 @@ String archiveFileNameOfLoader(String loader) {
 }
 
 // 检查更新日志的格式
-def checkChangelog = { String txt ->
-	txt.eachLine {
+static void validateChangelog(String cl) {
+	cl.eachLine {
 		if (it.startsWith("###"))
 			assert it =~ /^### (Added|Changed|Removed|Fixed|Compatibility|Other)$/
 		// 首字母不能小写
@@ -97,14 +97,34 @@ def checkChangelog = { String txt ->
 		// 句末不能有句号
 		assert !(it =~ /[。.]\s*(#\d+)?\u0024/)
 	}
-	return txt
 }
+
+/**
+ * 读取更新日志
+ *
+ * @param doCheck 是否检查合法性
+ */
+String readChangelog(boolean doCheck = false) {
+	String cl = rootProject.file(changelog_file).text
+	if (doCheck)
+		validateChangelog(cl)
+	return cl.replaceAll(/### [A-Za-z]+[\s\n]+(?=###|\u0024)/, '')
+			 .replaceAll(/\n\s+\n/, '\n\n')
+			 .replaceAll(/\n+$/, '\n')
+}
+
 // 注册任务：检查更新日志
 tasks.register("checkChangelog") {
 	group("verification")
 	description "Check changelog format"
 	doLast {
-		checkChangelog(rootProject.file(changelog_file).text)
+		var cl = readChangelog(true)
+		var width = 0
+		cl.eachLine (li) -> width = Math.max(width, li.length())
+		println "# Changelog:"
+		println "=".repeat(width)
+		println cl
+		println "=".repeat(width)
 	}
 }
 // 将检查更新日志设为 check 的依赖
@@ -193,7 +213,7 @@ publishMods {
 	dryRun = providers.environmentVariable("DO_PUBLISH_MOD").getOrNull() != "true"
 	version = mod_version
 	type = toVersionType(mod_version_type)
-	changelog = checkChangelog(rootProject.file(changelog_file).text)
+	changelog = readChangelog(true)
 	if (!dryRun) {
 		assert providers.environmentVariable("MODRINTH_TOKEN").present
 		assert providers.environmentVariable("CURSEFORGE_TOKEN").present
