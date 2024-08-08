@@ -409,10 +409,6 @@ public class CameraAgent {
 			smoothDistanceToEye.setTarget(mode.getMaxDistance());
 		}
 		smoothDistanceToEye.update(period);
-		// 如果是非瞄准模式下，且距离过远则强行放回去
-		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {
-			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
-		}
 		assert Double.isFinite(smoothDistanceToEye.get());
 	}
 
