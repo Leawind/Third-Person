@@ -41,7 +41,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .group(group("player_fade_out")//
 																						 .option(booleanOption("player_fade_out_enabled", defaults.player_fade_out_enabled, () -> config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v).build()) //
 																						 .option(option("gaze_opacity", defaults.gaze_opacity, 0D, 0.5D, 0.01, () -> config.gaze_opacity, v -> config.gaze_opacity = v).build()) //
-																						 .option(option("player_invisible_threshold", defaults.player_invisible_threshold, 0D, 1D, 0.05D, () -> config.player_invisible_threshold, v -> config.player_invisible_threshold = v).build()) //
+																						 .option(option("player_invisible_threshold", defaults.player_invisible_threshold, 0.4D, 1D, 0.01D, () -> config.player_invisible_threshold, v -> config.player_invisible_threshold = v).build()) //
 																						 .build()) //
 														  .group(group("camera_distance_adjustment") //
 																									 .option(option("available_distance_count", defaults.available_distance_count, 2, 64, 1, () -> config.available_distance_count, v -> config.available_distance_count = v).build()) //
@@ -75,14 +75,14 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .name(ConfigManager.getText("option_category.camera_offset")) //
 														  .tooltip(ConfigManager.getText("option_category.camera_offset.desc")) //
 														  .group(group("normal_mode") //
-																					  .option(option("max_distance", defaults.normal_max_distance, 0D, 32D, 0.25, () -> config.normal_max_distance, v -> config.normal_max_distance = v).build()) //
+																					  .option(option("max_distance", defaults.normal_max_distance, 0D, 16D, 0.25, () -> config.normal_max_distance, v -> config.normal_max_distance = v).build()) //
 																					  .option(option("offset_x", defaults.normal_offset_x, -1D, +1D, 0.01, () -> config.normal_offset_x, v -> config.normal_offset_x = v).build()) //
 																					  .option(option("offset_y", defaults.normal_offset_y, -1D, +1D, 0.01, () -> config.normal_offset_y, v -> config.normal_offset_y = v).build()) //
 																					  .option(booleanOption("is_centered", defaults.normal_is_centered, () -> config.normal_is_centered, v -> config.normal_is_centered = v).build()) //
 																					  .option(option("offset_center", defaults.normal_offset_center, -1D, +1D, 0.01, () -> config.normal_offset_center, v -> config.normal_offset_center = v).build()) //
 																					  .build()) //
 														  .group(group("aiming_mode") //
-																					  .option(option("max_distance", defaults.aiming_max_distance, 0D, 32D, 0.25, () -> config.aiming_max_distance, v -> config.aiming_max_distance = v).build()) //
+																					  .option(option("max_distance", defaults.aiming_max_distance, 0D, 16D, 0.25, () -> config.aiming_max_distance, v -> config.aiming_max_distance = v).build()) //
 																					  .option(option("offset_x", defaults.aiming_offset_x, -1D, +1D, 0.01, () -> config.aiming_offset_x, v -> config.aiming_offset_x = v).build()) //
 																					  .option(option("offset_y", defaults.aiming_offset_y, -1D, +1D, 0.01, () -> config.aiming_offset_y, v -> config.aiming_offset_y = v).build()) //
 																					  .option(booleanOption("is_centered", defaults.aiming_is_centered, () -> config.aiming_is_centered, v -> config.aiming_is_centered = v).build()) //
