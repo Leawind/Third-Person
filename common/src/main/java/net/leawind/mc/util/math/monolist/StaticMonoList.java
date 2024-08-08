@@ -10,7 +10,7 @@ import java.util.function.Function;
 /**
  * 静态单调列表
  * <p>
- * 列表中每一项的值会在列表对象被实例化时创建，不可更改
+ * 列表中每一项的值会在列表被实例化时创建，不可更改
  */
 @SuppressWarnings("unused")
 public class StaticMonoList implements MonoList {

@@ -31,7 +31,7 @@ public abstract class AbstractConfig {
 	@Expose public          double       player_invisible_threshold                = 0.5;
 	//------------------------------相机到玩家距离调节
 	@Expose public          int          available_distance_count                  = 16;
-	@Expose public          double       camera_distance_min                       = 0.5;
+	@Expose public          double       camera_distance_min                       = 0;
 	@Expose public          double       camera_distance_max                       = 8;
 	// ================================================================================平滑系数 //
 	@Expose public          double       flying_smooth_halflife                    = 0.20;

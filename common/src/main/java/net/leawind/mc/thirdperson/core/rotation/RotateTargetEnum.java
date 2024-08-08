@@ -130,7 +130,6 @@ public enum RotateTargetEnum {
 	 * 获取玩家当前的目标朝向
 	 */
 	public @NotNull Vector2d getRotation () {
-		// TEST
 		Vector2d rotation = rotationGetter.get();
 		assert rotation.isFinite();
 		return rotation;

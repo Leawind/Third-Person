@@ -412,8 +412,7 @@ public class CameraAgent {
 		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
 		}
-		// TEST
-		assert !Double.isNaN(smoothDistanceToEye.get());
+		assert !Double.isFinite(smoothDistanceToEye.get());
 	}
 
 	private void updateSmoothOffsetRatio (double period) {

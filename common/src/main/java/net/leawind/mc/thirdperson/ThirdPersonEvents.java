@@ -180,12 +180,13 @@ public final class ThirdPersonEvents {
 	 * @see ClientRawInputEvent#MOUSE_SCROLLED
 	 */
 	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
-		if (!ThirdPersonStatus.isAdjustingCameraDistance()) {
+		int offset = (int)-Math.signum(amount);
+		if (offset == 0 || !ThirdPersonStatus.isAdjustingCameraDistance()) {
 			return EventResult.pass();
 		}
 		Config config = ThirdPerson.getConfig();
 		double dist   = config.getCameraOffsetScheme().getMode().getMaxDistance();
-		dist = config.getDistanceMonoList().offset(dist, (int)-Math.signum(amount));
+		dist = config.getDistanceMonoList().offset(dist, offset);
 		config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
 		return EventResult.interruptFalse();
 	}
