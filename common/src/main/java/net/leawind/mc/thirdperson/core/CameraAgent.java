@@ -73,7 +73,7 @@ public class CameraAgent {
 
 	public void checkGameStatus () {
 		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
-			GameStatus.isPerspectiveInverted = !(smoothDistanceToEye.get() < ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD);
+			GameStatus.isPerspectiveInverted = smoothDistanceToEye.get() > ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD;
 		}
 	}
 
@@ -179,7 +179,7 @@ public class CameraAgent {
 	}
 
 	public double getPickRange () {
-		return smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length;
+		return ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistanceToEye.get() + ThirdPerson.getConfig().camera_ray_trace_length;
 	}
 
 	/**
@@ -344,14 +344,15 @@ public class CameraAgent {
 		// 平滑值
 		Vector2d smoothOffsetRatioValue     = smoothOffsetRatio.get();
 		double   smoothVirtualDistanceValue = smoothDistanceToEye.get();
-		// 偏移量
-		double upOffset   = smoothOffsetRatioValue.y() * smoothVirtualDistanceValue * Math.tan(verticalRadianHalf);
-		double leftOffset = smoothOffsetRatioValue.x() * smoothVirtualDistanceValue * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		// 没有偏移的情况下相机位置
 		Vector3d positionWithoutOffset = calculatePositionWithoutOffset();
 		// 应用到假相机
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
 		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(positionWithoutOffset));
+		// 添加偏移量
+		double minDist    = ThirdPerson.ENTITY_AGENT.getBodyRadius();
+		double upOffset   = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.y() * Math.tan(verticalRadianHalf);
+		double leftOffset = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.x() * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
@@ -389,11 +390,11 @@ public class CameraAgent {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickFrom));
 			}
 		}
-		smoothDistanceToEye.setValue(smoothDistanceToEye.get() * minDistance / initDistance);
+		smoothDistanceToEye.setValue(smoothDistanceToEye.get() - (initDistance - minDistance));
 	}
 
 	private @NotNull Vector3d calculatePositionWithoutOffset () {
-		return ThirdPerson.ENTITY_AGENT.getPossibleSmoothEyePosition(ThirdPersonStatus.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(smoothDistanceToEye.get()));
+		return ThirdPerson.ENTITY_AGENT.getPossibleSmoothEyePosition(ThirdPersonStatus.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistanceToEye.get()));
 	}
 
 	private void updateSmoothVirtualDistance (double period) {
@@ -412,7 +413,7 @@ public class CameraAgent {
 		if (!config.getCameraOffsetScheme().isAiming() && !isAdjusting) {
 			smoothDistanceToEye.set(Math.min(mode.getMaxDistance(), smoothDistanceToEye.get()));
 		}
-		assert !Double.isFinite(smoothDistanceToEye.get());
+		assert Double.isFinite(smoothDistanceToEye.get());
 	}
 
 	private void updateSmoothOffsetRatio (double period) {

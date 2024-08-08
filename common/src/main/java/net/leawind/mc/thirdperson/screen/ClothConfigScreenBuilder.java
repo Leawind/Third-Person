@@ -54,7 +54,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			// SubCategory: Camera Distance Adjustment
 			final SubCategoryBuilder Subcategory_Camera_Distance_Adjustment = buildSubCategory("camera_distance_adjustment", entryBuilder);
 			Subcategory_Camera_Distance_Adjustment.add(buildIntSliderEntry("available_distance_count", 2, 64, defaults.available_distance_count, config.available_distance_count, v -> config.available_distance_count = v, entryBuilder));
-			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_min", 0.5, 2.0, defaults.camera_distance_min, config.camera_distance_min, v -> config.camera_distance_min = v, entryBuilder));
+			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_min", 0, 2.0, defaults.camera_distance_min, config.camera_distance_min, v -> config.camera_distance_min = v, entryBuilder));
 			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_max", 2.0, 16D, defaults.camera_distance_max, config.camera_distance_max, v -> config.camera_distance_max = v, entryBuilder));
 			CATEGORY_COMMON.addEntry(Subcategory_Camera_Distance_Adjustment.build());
 		}
@@ -90,7 +90,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 		{
 			// SubCategory: Normal Mode
 			final SubCategoryBuilder SubCategory_Normal_Mode = buildSubCategory("normal_mode", entryBuilder);
-			SubCategory_Normal_Mode.add(buildDoubleEntry("max_distance", 0.5, 32, defaults.normal_max_distance, config.normal_max_distance, v -> config.normal_max_distance = v, entryBuilder));
+			SubCategory_Normal_Mode.add(buildDoubleEntry("max_distance", 0, 32, defaults.normal_max_distance, config.normal_max_distance, v -> config.normal_max_distance = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildDoubleEntry("offset_x", -1, +1, defaults.normal_offset_x, config.normal_offset_x, v -> config.normal_offset_x = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildDoubleEntry("offset_y", -1, +1, defaults.normal_offset_y, config.normal_offset_y, v -> config.normal_offset_y = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildBooleanEntry("is_centered", defaults.normal_is_centered, config.normal_is_centered, v -> config.normal_is_centered = v, entryBuilder));
@@ -98,7 +98,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			CATEGORY_CAMERA_OFFSET.addEntry(SubCategory_Normal_Mode.build());
 			// SubCategory: Aiming Mode
 			final SubCategoryBuilder Subcategory_Aiming_Mode = buildSubCategory("aiming_mode", entryBuilder);
-			Subcategory_Aiming_Mode.add(buildDoubleEntry("max_distance", 0.5, 32, defaults.aiming_max_distance, config.aiming_max_distance, v -> config.aiming_max_distance = v, entryBuilder));
+			Subcategory_Aiming_Mode.add(buildDoubleEntry("max_distance", 0, 32, defaults.aiming_max_distance, config.aiming_max_distance, v -> config.aiming_max_distance = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildDoubleEntry("offset_x", -1, +1, defaults.aiming_offset_x, config.aiming_offset_x, v -> config.aiming_offset_x = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildDoubleEntry("offset_y", -1, +1, defaults.aiming_offset_y, config.aiming_offset_y, v -> config.aiming_offset_y = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildBooleanEntry("is_centered", defaults.aiming_is_centered, config.aiming_is_centered, v -> config.aiming_is_centered = v, entryBuilder));

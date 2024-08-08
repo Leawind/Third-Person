@@ -379,6 +379,9 @@ public class EntityAgent {
 		return c.distance(target);
 	}
 
+	public double getBodyRadius () {
+		return getRawCameraEntity().getBbWidth() * 0.8660254037844386; // 0.5 * sqrt(3)
+	}
 	/**
 	 * 更新旋转策略、平滑类型、平滑系数
 	 * <p>
