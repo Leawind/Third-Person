@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public final class ThirdPersonStatus {
+	public static                int      clientTicks                          = 0;
 	/**
 	 * 移动脉冲
 	 */

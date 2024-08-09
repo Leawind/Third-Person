@@ -163,11 +163,13 @@ public class EntityAgent {
 	 * 通常频率固定为 20Hz
 	 */
 	public void onClientTickStart () {
+		if (ThirdPersonStatus.clientTicks % 2 == 0) {
+			vehicleTotalSizeCached = getVehicleTotalSize();
+		}
+		ThirdPersonStatus.clientTicks++;
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
 		wasAiming = isAiming();
-		// TODO Perf
-		vehicleTotalSizeCached = getVehicleTotalSize();
 		config.getCameraOffsetScheme().setAiming(wasAiming());
 		updateRotateStrategy();
 		updateSmoothOpacity(period, 1);
