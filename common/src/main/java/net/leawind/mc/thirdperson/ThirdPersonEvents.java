@@ -62,14 +62,21 @@ public final class ThirdPersonEvents {
 		return true;
 	}
 
+	/**
+	 * 当前的 impulse 代表玩家希望前进的方向（世界坐标）
+	 * <p>
+	 * 结合当前玩家实体的朝向重新计算 impulse
+	 */
 	private static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
 			Camera camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
 			// 计算世界坐标系下的向前和向左 impulse
-			Vector3d lookImpulse        = LMath.toVector3d(camera.getLookVector()).normalize();    // 视线向量
-			Vector3d leftImpulse        = LMath.toVector3d(camera.getLeftVector()).normalize();
-			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize().mul(event.forwardImpulse);    // 水平方向上的视线向量
-			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize().mul(event.leftImpulse);
+			// 视线向量
+			Vector3d lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
+			Vector3d leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
+			// 水平方向上的视线向量
+			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize(event.forwardImpulse);
+			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize(event.leftImpulse);
 			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPersonStatus.impulseHorizon);
 			// 世界坐标系下的 impulse
 			lookImpulse.mul(event.forwardImpulse);    // 这才是 impulse
