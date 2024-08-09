@@ -390,7 +390,7 @@ public class CameraAgent {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickFrom));
 			}
 		}
-		smoothDistanceMultiplier.setValue(smoothDistanceMultiplier.get() - (initDistance - minDistance));
+		smoothDistanceMultiplier.setValue(Math.max(0, smoothDistanceMultiplier.get() - (initDistance - minDistance)));
 	}
 
 	private @NotNull Vector3d calculatePositionWithoutOffset () {
