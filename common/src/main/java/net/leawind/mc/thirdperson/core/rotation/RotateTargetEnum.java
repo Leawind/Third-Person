@@ -11,6 +11,7 @@ import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,13 @@ public enum RotateTargetEnum {
 		}
 		return playerRot;
 	}),
-	DEFAULT(() -> ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_to_intrest_point ? INTEREST_POINT.getRotation(): NONE.getRotation()),
+	DEFAULT(() -> {
+		Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		if (!ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_to_intrest_point || entity.getControlledVehicle() instanceof LivingEntity) {
+			return NONE.getRotation();
+		}
+		return INTEREST_POINT.getRotation();
+	}),
 	/**
 	 * 与相机朝向相同
 	 */
