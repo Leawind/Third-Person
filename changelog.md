@@ -5,7 +5,7 @@
 * Update default values and adjustable ranges for config items
 * Update translations
 * Improve riding experience
-* Calculate camera-to-player distance based on the total size of the player and vehicles
+* Calculate camera-to-player distance based on the total size of the player and vehicles #142
 * Make "camera distance" starts from certain distance to eye
 
 ### Removed
