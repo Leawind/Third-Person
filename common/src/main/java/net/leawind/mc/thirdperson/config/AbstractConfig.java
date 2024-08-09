@@ -27,11 +27,11 @@ public abstract class AbstractConfig {
 	//------------------------------玩家实体虚化
 	@Expose public          boolean      player_fade_out_enabled                   = false;
 	@Expose public          double       gaze_opacity                              = 0.28;
-	@Expose public          double       player_invisible_threshold                = 0.5;
+	@Expose public          double       player_invisible_threshold                = 0.55;
 	//------------------------------相机到玩家距离调节
 	@Expose public          int          available_distance_count                  = 16;
 	@Expose public          double       camera_distance_min                       = 0;
-	@Expose public          double       camera_distance_max                       = 8;
+	@Expose public          double       camera_distance_max                       = 4;
 	// ================================================================================平滑系数 //
 	@Expose public          double       flying_smooth_halflife                    = 0.20;
 	@Expose public          double       t2f_transition_halflife                   = 0.1;
@@ -51,15 +51,15 @@ public abstract class AbstractConfig {
 	// ================================================================================相机偏移 //
 	//------------------------------正常模式
 	@Expose public          boolean      normal_is_centered                        = false;
-	@Expose public          double       normal_max_distance                       = 2.5;
-	@Expose public          double       normal_offset_x                           = -0.28;
-	@Expose public          double       normal_offset_y                           = 0.31;
-	@Expose public          double       normal_offset_center                      = 0.24D;
+	@Expose public          double       normal_max_distance                       = 1.5;
+	@Expose public          double       normal_offset_x                           = -0.16;
+	@Expose public          double       normal_offset_y                           = 0.26;
+	@Expose public          double       normal_offset_center                      = 0.24;
 	//------------------------------瞄准模式
 	@Expose public          boolean      aiming_is_centered                        = false;
-	@Expose public          double       aiming_max_distance                       = 0.89;
-	@Expose public          double       aiming_offset_x                           = -0.47;
-	@Expose public          double       aiming_offset_y                           = -0.09;
+	@Expose public          double       aiming_max_distance                       = 0.28;
+	@Expose public          double       aiming_offset_x                           = -0.36;
+	@Expose public          double       aiming_offset_y                           = 0.42;
 	@Expose public          double       aiming_offset_center                      = 0.48;
 	// ================================================================================瞄准模式判定 //
 	@Expose public          boolean      determine_aim_mode_by_animation           = true;
@@ -71,7 +71,7 @@ public abstract class AbstractConfig {
 	@Expose public          double       camera_ray_trace_length                   = 512;
 	@Expose public          boolean      lock_camera_pitch_angle                   = false;
 	@Expose public          boolean      enable_target_entity_predict              = true;
-	@Expose public          double       sprint_impulse_threshold                  = 0.98;
+	@Expose public          double       sprint_impulse_threshold                  = 0.99;
 	@Expose public          boolean      skip_vanilla_second_person_camera         = true;
 	//------------------------------准星
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;

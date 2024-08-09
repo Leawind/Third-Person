@@ -48,13 +48,13 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			final SubCategoryBuilder Subcategory_Player_Fade_Out = buildSubCategory("player_fade_out", entryBuilder);
 			Subcategory_Player_Fade_Out.add(buildBooleanEntry("player_fade_out_enabled", defaults.player_fade_out_enabled, config.player_fade_out_enabled, v -> config.player_fade_out_enabled = v, entryBuilder));
 			Subcategory_Player_Fade_Out.add(buildDoubleEntry("gaze_opacity", 0D, 0.5D, defaults.gaze_opacity, config.gaze_opacity, v -> config.gaze_opacity = v, entryBuilder));
-			Subcategory_Player_Fade_Out.add(buildDoubleEntry("player_invisible_threshold", 0.4D, 1D, defaults.player_invisible_threshold, config.player_invisible_threshold, v -> config.player_invisible_threshold = v, entryBuilder));
+			Subcategory_Player_Fade_Out.add(buildDoubleEntry("player_invisible_threshold", 0D, 1D, defaults.player_invisible_threshold, config.player_invisible_threshold, v -> config.player_invisible_threshold = v, entryBuilder));
 			CATEGORY_COMMON.addEntry(Subcategory_Player_Fade_Out.build());
 			// SubCategory: Camera Distance Adjustment
 			final SubCategoryBuilder Subcategory_Camera_Distance_Adjustment = buildSubCategory("camera_distance_adjustment", entryBuilder);
 			Subcategory_Camera_Distance_Adjustment.add(buildIntSliderEntry("available_distance_count", 2, 64, defaults.available_distance_count, config.available_distance_count, v -> config.available_distance_count = v, entryBuilder));
-			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_min", 0, 2.0, defaults.camera_distance_min, config.camera_distance_min, v -> config.camera_distance_min = v, entryBuilder));
-			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_max", 2.0, 16D, defaults.camera_distance_max, config.camera_distance_max, v -> config.camera_distance_max = v, entryBuilder));
+			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_min", 0, 6D, defaults.camera_distance_min, config.camera_distance_min, v -> config.camera_distance_min = Math.min(v, config.camera_distance_max), entryBuilder));
+			Subcategory_Camera_Distance_Adjustment.add(buildDoubleEntry("camera_distance_max", 0, 6D, defaults.camera_distance_max, config.camera_distance_max, v -> config.camera_distance_max = Math.max(v, config.camera_distance_min), entryBuilder));
 			CATEGORY_COMMON.addEntry(Subcategory_Camera_Distance_Adjustment.build());
 		}
 		//==================================================================================================================================================//
@@ -89,7 +89,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 		{
 			// SubCategory: Normal Mode
 			final SubCategoryBuilder SubCategory_Normal_Mode = buildSubCategory("normal_mode", entryBuilder);
-			SubCategory_Normal_Mode.add(buildDoubleEntry("max_distance", 0, 16D, defaults.normal_max_distance, config.normal_max_distance, v -> config.normal_max_distance = v, entryBuilder));
+			SubCategory_Normal_Mode.add(buildDoubleEntry("max_distance", 0D, 6D, defaults.normal_max_distance, config.normal_max_distance, v -> config.normal_max_distance = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildDoubleEntry("offset_x", -1, +1, defaults.normal_offset_x, config.normal_offset_x, v -> config.normal_offset_x = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildDoubleEntry("offset_y", -1, +1, defaults.normal_offset_y, config.normal_offset_y, v -> config.normal_offset_y = v, entryBuilder));
 			SubCategory_Normal_Mode.add(buildBooleanEntry("is_centered", defaults.normal_is_centered, config.normal_is_centered, v -> config.normal_is_centered = v, entryBuilder));
@@ -97,7 +97,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			CATEGORY_CAMERA_OFFSET.addEntry(SubCategory_Normal_Mode.build());
 			// SubCategory: Aiming Mode
 			final SubCategoryBuilder Subcategory_Aiming_Mode = buildSubCategory("aiming_mode", entryBuilder);
-			Subcategory_Aiming_Mode.add(buildDoubleEntry("max_distance", 0, 16D, defaults.aiming_max_distance, config.aiming_max_distance, v -> config.aiming_max_distance = v, entryBuilder));
+			Subcategory_Aiming_Mode.add(buildDoubleEntry("max_distance", 0D, 6D, defaults.aiming_max_distance, config.aiming_max_distance, v -> config.aiming_max_distance = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildDoubleEntry("offset_x", -1, +1, defaults.aiming_offset_x, config.aiming_offset_x, v -> config.aiming_offset_x = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildDoubleEntry("offset_y", -1, +1, defaults.aiming_offset_y, config.aiming_offset_y, v -> config.aiming_offset_y = v, entryBuilder));
 			Subcategory_Aiming_Mode.add(buildBooleanEntry("is_centered", defaults.aiming_is_centered, config.aiming_is_centered, v -> config.aiming_is_centered = v, entryBuilder));
