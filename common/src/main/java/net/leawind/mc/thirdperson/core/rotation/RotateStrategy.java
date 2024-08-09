@@ -57,9 +57,7 @@ public interface RotateStrategy {
 		return 0D;
 	};
 	Supplier<Double> INTERECTING            = () -> {
-		ThirdPerson.ENTITY_AGENT.setRotateTarget(ThirdPerson.getConfig().rotate_interacting_type      //
-												 ? RotateTargetEnum.CAMERA_HIT_RESULT    //
-												 : RotateTargetEnum.CAMERA_ROTATION);
+		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_HIT_RESULT);
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.LINEAR);
 		return 0D;
 	};
