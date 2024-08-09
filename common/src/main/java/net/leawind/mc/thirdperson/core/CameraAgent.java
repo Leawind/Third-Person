@@ -44,7 +44,7 @@ public class CameraAgent {
 	 */
 	private final @NotNull ExpSmoothVector2d smoothOffsetRatio;
 	/**
-	 * 虚相机到平滑眼睛外壳的距离
+	 * 虚相机到平滑眼睛外壳的距离系数
 	 * <p>
 	 * 外壳的半径是 {@link EntityAgent#getBodyRadius()}
 	 */
@@ -141,6 +141,13 @@ public class CameraAgent {
 	 */
 	public @NotNull Vector2d getRotation () {
 		return Vector2d.of(-relativeRotation.x(), relativeRotation.y() + 180);
+	}
+
+	/**
+	 * NOW delete
+	 */
+	public double getSmoothDistance () {
+		return smoothDistanceMultiplier.get() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached;
 	}
 
 	/**
@@ -408,7 +415,7 @@ public class CameraAgent {
 			smoothDistanceMultiplier.setTarget(0);
 		} else {
 			smoothDistanceMultiplier.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
-			smoothDistanceMultiplier.setTarget(mode.getMaxDistance());
+			smoothDistanceMultiplier.setTarget(mode.getMaxDistance() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
 		}
 		smoothDistanceMultiplier.update(period);
 		assert Double.isFinite(smoothDistanceMultiplier.get());

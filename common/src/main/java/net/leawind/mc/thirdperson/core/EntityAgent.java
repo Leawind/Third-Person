@@ -45,18 +45,22 @@ import java.util.Optional;
 public class EntityAgent {
 	private final    Minecraft           minecraft;
 	private final    ExpSmoothVector3d   smoothEyePosition;
-	private final    ExpSmoothRotation   smoothRotation     = ExpSmoothRotation.createWithHalflife(0.5);
+	private final    ExpSmoothRotation   smoothRotation         = ExpSmoothRotation.createWithHalflife(0.5);
 	private final    ExpSmoothDouble     smoothOpacity;
 	/**
 	 * @see RotateStrategy#build
 	 */
-	private final    DecisionMap<Double> rotateDecisionMap  = DecisionMap.of(RotateStrategy.class);
-	private @NotNull RotateTargetEnum    rotateTarget       = RotateTargetEnum.DEFAULT;
-	private @NotNull SmoothTypeEnum      smoothRotationType = SmoothTypeEnum.EXP_LINEAR;
+	private final    DecisionMap<Double> rotateDecisionMap      = DecisionMap.of(RotateStrategy.class);
+	private @NotNull RotateTargetEnum    rotateTarget           = RotateTargetEnum.DEFAULT;
+	private @NotNull SmoothTypeEnum      smoothRotationType     = SmoothTypeEnum.EXP_LINEAR;
+	/**
+	 * 在 clientTick 中更新
+	 */
+	public           double              vehicleTotalSizeCached = 1D;
 	/**
 	 * 在上一个 client tick 中的 isAiming() 的值
 	 */
-	private          boolean             wasAiming          = false;
+	private          boolean             wasAiming              = false;
 
 	public EntityAgent (@NotNull Minecraft minecraft) {
 		this.minecraft    = minecraft;
@@ -162,6 +166,8 @@ public class EntityAgent {
 		final double period = 0.05;
 		Config       config = ThirdPerson.getConfig();
 		wasAiming = isAiming();
+		// TODO Perf
+		vehicleTotalSizeCached = getVehicleTotalSize();
 		config.getCameraOffsetScheme().setAiming(wasAiming());
 		updateRotateStrategy();
 		updateSmoothOpacity(period, 1);
@@ -457,5 +463,11 @@ public class EntityAgent {
 		} else {
 			return Optional.of(LMath.toVec3(ThirdPerson.CAMERA_AGENT.getRawCameraPosition()));
 		}
+	}
+
+	public double getVehicleTotalSize () {
+		Entity root = getRawCameraEntity().getRootVehicle();
+		var    bb   = root.getPassengersAndSelf().map(Entity::getBoundingBox).reduce(AABB::minmax).orElse(root.getBoundingBox());
+		return Math.hypot(Math.hypot(bb.getXsize(), bb.getYsize()), bb.getZsize());
 	}
 }
