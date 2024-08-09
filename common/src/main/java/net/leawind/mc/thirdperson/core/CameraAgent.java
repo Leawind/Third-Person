@@ -144,13 +144,6 @@ public class CameraAgent {
 	}
 
 	/**
-	 * NOW delete
-	 */
-	public double getSmoothDistance () {
-		return smoothDistanceMultiplier.get() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached;
-	}
-
-	/**
 	 * 玩家控制的相机旋转
 	 *
 	 * @param dYRot 方向角变化量
@@ -340,6 +333,9 @@ public class CameraAgent {
 	 * 根据角度、距离、偏移量计算假相机实际朝向和位置
 	 */
 	private void updateFakeCameraRotationPosition () {
+		// 设置假相机的位置，不偏移
+		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
+		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(calculatePositionWithoutOffset()));
 		Minecraft mc = ThirdPerson.mc;
 		// 宽高比
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
@@ -350,18 +346,13 @@ public class CameraAgent {
 		double widthHalf  = aspectRatio * heightHalf;
 		// // 水平视野角度一半(弧度制）
 		// double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
+		// 添加偏移量
+		double minDist = ThirdPerson.ENTITY_AGENT.getBodyRadius();
 		// 平滑值
 		Vector2d smoothOffsetRatioValue     = smoothOffsetRatio.get();
 		double   smoothVirtualDistanceValue = smoothDistanceMultiplier.get();
-		// 没有偏移的情况下相机位置
-		Vector3d positionWithoutOffset = calculatePositionWithoutOffset();
-		// 应用到假相机
-		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
-		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(positionWithoutOffset));
-		// 添加偏移量
-		double minDist    = ThirdPerson.ENTITY_AGENT.getBodyRadius();
-		double upOffset   = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.y() * Math.tan(verticalRadianHalf);
-		double leftOffset = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.x() * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
+		double   upOffset                   = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.y() * Math.tan(verticalRadianHalf);
+		double   leftOffset                 = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.x() * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
