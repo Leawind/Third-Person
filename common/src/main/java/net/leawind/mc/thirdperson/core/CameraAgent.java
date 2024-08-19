@@ -404,7 +404,7 @@ public class CameraAgent {
 		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
 			// 当前的目标是第一人称
 			smoothDistanceMultiplier.setHalflife(config.t2f_transition_halflife);
-			smoothDistanceMultiplier.setTarget(0);
+			smoothDistanceMultiplier.setTarget(-ThirdPerson.ENTITY_AGENT.getBodyRadius() * 0.5);
 		} else {
 			// 当前的目标不是第一人称
 			smoothDistanceMultiplier.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
