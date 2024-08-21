@@ -4,6 +4,7 @@ package net.leawind.mc.mixin;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.client.event.EntityTurnStartEvent;
 import net.leawind.mc.api.client.event.MinecraftPickEvent;
+import net.minecraft.client.MouseHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
@@ -46,6 +47,11 @@ public class EntityMixin {
 		}
 	}
 
+	/**
+	 * 鼠标移动事件处理函数会调用此方法旋转玩家
+	 *
+	 * @see MouseHandler#turnPlayer()
+	 */
 	@Inject(method="turn", at=@At("HEAD"), cancellable=true)
 	private void turn (double yRot, double xRot, @NotNull CallbackInfo ci) {
 		if (GameEvents.entityTurnStart != null) {

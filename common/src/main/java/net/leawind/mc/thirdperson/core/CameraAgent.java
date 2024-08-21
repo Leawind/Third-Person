@@ -82,9 +82,9 @@ public class CameraAgent {
 	/**
 	 * 渲染前
 	 */
-	@SuppressWarnings("unused")
 	public void onRenderTickStart (double now, double period, float partialTick) {
 		if (!minecraft.isPaused() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+			// mc 没有暂停，且正在以第三人称渲染
 			// 更新探测结果
 			hitResult = pick(getPickRange());
 			// 平滑更新距离
@@ -402,9 +402,11 @@ public class CameraAgent {
 		boolean                  isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
 		AbstractCameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
 		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
+			// 当前的目标是第一人称
 			smoothDistanceMultiplier.setHalflife(config.t2f_transition_halflife);
 			smoothDistanceMultiplier.setTarget(0);
 		} else {
+			// 当前的目标不是第一人称
 			smoothDistanceMultiplier.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
 			smoothDistanceMultiplier.setTarget(mode.getMaxDistance() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
 		}

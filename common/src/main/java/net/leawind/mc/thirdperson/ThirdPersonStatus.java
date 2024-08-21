@@ -56,6 +56,9 @@ public final class ThirdPersonStatus {
 
 	/**
 	 * 当前是否以第三人称渲染
+	 *
+	 * <p>
+	 * 当前相机模式既不是第一人称，也不是镜像的
 	 */
 	public static boolean isRenderingInThirdPerson () {
 		CameraType cameraType = ThirdPerson.mc.options.getCameraType();
