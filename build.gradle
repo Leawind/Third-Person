@@ -115,7 +115,7 @@ String readChangelog(boolean doCheck = false) {
 
 // 注册任务：检查更新日志
 tasks.register("checkChangelog") {
-	group("verification")
+	group "verification"
 	description "Check changelog format"
 	doLast {
 		var cl = readChangelog(true)
@@ -129,10 +129,10 @@ tasks.register("checkChangelog") {
 }
 // 将检查更新日志设为 check 的依赖
 check {
-	dependsOn("checkChangelog")
+	dependsOn "checkChangelog"
 }
 tasks.register("linkRuns") {
-	group("loom")
+	group "loom"
 	description "Link running dirs"
 	def linkFileTo = { File src, File tar ->
 		if (tar.exists()) {

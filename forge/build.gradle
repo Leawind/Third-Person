@@ -34,8 +34,8 @@ dependencies {
 	// Architectury-api
 	modApi "dev.architectury:architectury-forge:${architectury_version}"
 	// MixinExtras
-	compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${forge_mixin_extras_version}"))
-	implementation(include("io.github.llamalad7:mixinextras-forge:${forge_mixin_extras_version}"))
+	compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:${forge_mixin_extras_version}")
+	include implementation("io.github.llamalad7:mixinextras-forge:${forge_mixin_extras_version}")
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-forge:${cloth_config_api_version}"
 	// YACL
