@@ -45,11 +45,10 @@ public enum RotateTargetEnum {
 		assert rot.isFinite();
 		if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
 			playerRot.y(rot.y());
-			playerRot.x(rot.x());
 		} else {
 			playerRot.y(LMath.subtractDegrees(rot.y(), leftBound) < LMath.subtractDegrees(rot.y(), rightBound) ? leftBound: rightBound);
-			playerRot.x(rot.x() * 0.5);
 		}
+		playerRot.x(rot.x());
 		return playerRot;
 	}),
 	DEFAULT(() -> {
