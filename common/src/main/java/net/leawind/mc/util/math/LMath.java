@@ -25,7 +25,7 @@ public interface LMath {
 	/**
 	 * 将方向转换成角度（弧度制）
 	 *
-	 * @param d 方向
+	 * @param r 方向
 	 * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
 	 */
 	@Contract(pure=true)

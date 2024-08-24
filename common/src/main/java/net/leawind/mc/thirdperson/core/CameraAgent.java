@@ -9,8 +9,6 @@ import net.leawind.mc.mixin.ClientLevelInvoker;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.cameraoffset.AbstractCameraOffsetMode;
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.annotation.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.smoothvalue.ExpSmoothDouble;
@@ -27,7 +25,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -284,8 +281,6 @@ public class CameraAgent {
 
 	/**
 	 * 预测玩家可能想要射击的目标实体
-	 * <p>
-	 * TODO 预测不够准确
 	 */
 	public @NotNull Optional<Entity> predictTargetEntity () {
 		var config = ThirdPerson.getConfig();
