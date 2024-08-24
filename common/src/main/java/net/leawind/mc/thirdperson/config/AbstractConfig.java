@@ -33,7 +33,7 @@ public abstract class AbstractConfig {
 	@Expose public          double       camera_distance_min                       = 0;
 	@Expose public          double       camera_distance_max                       = 4;
 	// ================================================================================平滑系数 //
-	@Expose public          double       flying_smooth_halflife                    = 0.20;
+	@Expose public          double       flying_smooth_halflife                    = 0.45;
 	@Expose public          double       t2f_transition_halflife                   = 0.1;
 	//------------------------------调节相机
 	@Expose public          double       adjusting_camera_offset_smooth_halflife   = 0.04;
