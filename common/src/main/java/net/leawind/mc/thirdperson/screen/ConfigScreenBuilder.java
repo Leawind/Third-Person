@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * 配置屏幕构建器
@@ -32,7 +31,7 @@ public abstract class ConfigScreenBuilder {
 	static {
 		builders.put("Cloth Config", PossibleSupplier.of(() -> new ClothConfigScreenBuilder(), () -> Platform.isModLoaded("cloth-config") || Platform.isModLoaded("cloth_config")));
 		builders.put("YACL", PossibleSupplier.of(() -> new YaclConfigScreenBuilder(), () -> Platform.isModLoaded("yet_another_config_lib_v3") && !(Platform.isForge() && !Platform.getMod("yet_another_config_lib_v3").getVersion().startsWith("3.2."))));
-		Set<String> availables = ConfigScreenBuilder.getAvailableBuidlers().keySet();
+		var availables = ConfigScreenBuilder.getAvailableBuidlers().keySet();
 		availables.forEach(name -> {
 			ThirdPerson.LOGGER.debug("Found available config screen builder: {}", name);
 		});

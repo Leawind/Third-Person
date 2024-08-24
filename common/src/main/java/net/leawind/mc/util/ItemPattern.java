@@ -106,7 +106,7 @@ public class ItemPattern {
 		if (itemStack.isEmpty()) {
 			return false;
 		}
-		for (Iterable<ItemPattern> patterns: itemPatternsList) {
+		for (var patterns: itemPatternsList) {
 			for (ItemPattern ip: patterns) {
 				if (ip.match(itemStack)) {
 					return true;
@@ -223,7 +223,7 @@ public class ItemPattern {
 	public static int addToSet (@NotNull String defaultNamespace, @NotNull Set<ItemPattern> itemPatterns, @Nullable Iterable<String> expressions) {
 		int count = 0;
 		if (expressions != null) {
-			for (String expression: expressions) {
+			for (var expression: expressions) {
 				try {
 					itemPatterns.add(of(defaultNamespace, expression));
 					count++;
@@ -262,7 +262,7 @@ public class ItemPattern {
 	 * @param itemStack 物品槽
 	 */
 	public boolean matchNbt (@Nullable ItemStack itemStack) {
-		CompoundTag itemTag = itemStack == null ? null: itemStack.getTag();
+		var itemTag = itemStack == null ? null: itemStack.getTag();
 		return NbtUtils.compareNbt(this.tag, itemTag, true);
 	}
 
@@ -280,7 +280,7 @@ public class ItemPattern {
 		} else if (getClass() != obj.getClass()) {
 			return false;
 		}
-		ItemPattern ip = (ItemPattern)obj;
+		var ip = (ItemPattern)obj;
 		return Objects.equals(descriptionId, ip.descriptionId) && Objects.equals(tagExp, ip.tagExp);
 	}
 

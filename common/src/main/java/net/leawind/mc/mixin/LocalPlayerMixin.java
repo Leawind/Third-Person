@@ -15,7 +15,7 @@ public class LocalPlayerMixin {
 	@Inject(method="hasEnoughImpulseToStartSprinting()Z", at=@At("HEAD"), cancellable=true)
 	private void lp (CallbackInfoReturnable<Boolean> ci) {
 		if (GameStatus.sprintImpulseThreshold >= 0) {
-			LocalPlayer that = (LocalPlayer)(Object)this;
+			var that = (LocalPlayer)(Object)this;
 			ci.setReturnValue(that.isUnderWater() ? that.input.hasForwardImpulse(): (double)that.input.forwardImpulse >= GameStatus.sprintImpulseThreshold);
 			ci.cancel();
 		}

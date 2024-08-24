@@ -22,10 +22,10 @@ public class ItemMixin {
 																		  "Lnet/minecraft/world/level/ClipContext$Fluid;Lnet/minecraft/world/entity/Entity;)V"), cancellable=true)
 	private static void a (Level level, Player player, ClipContext.Fluid fluid, CallbackInfoReturnable<BlockHitResult> ci) {
 		if (GameEvents.minecraftPick != null) {
-			MinecraftPickEvent event = new MinecraftPickEvent(1, 5.0);
+			var event = new MinecraftPickEvent(1, 5.0);
 			GameEvents.minecraftPick.accept(event);
 			if (event.set()) {
-				BlockHitResult result = level.clip(new ClipContext(event.pickFrom(), event.pickTo(), ClipContext.Block.OUTLINE, fluid, player));
+				var result = level.clip(new ClipContext(event.pickFrom(), event.pickTo(), ClipContext.Block.OUTLINE, fluid, player));
 				ci.setReturnValue(result);
 				ci.cancel();
 			}

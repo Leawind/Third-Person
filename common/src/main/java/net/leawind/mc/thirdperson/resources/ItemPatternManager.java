@@ -59,11 +59,11 @@ public class ItemPatternManager extends SimpleJsonResourceReloadListener {
 		useToAimItemPatterns.clear();
 		useToFirstPersonItemPatterns.clear();
 		map.forEach((resourceLocation, jsonElement) -> {
-			JsonArray aimingCheckObj = jsonElement.getAsJsonArray();
-			String[]  resourcePath   = resourceLocation.getPath().split("/");
-			String    namespace      = resourceLocation.getNamespace();
+			var aimingCheckObj = jsonElement.getAsJsonArray();
+			var resourcePath   = resourceLocation.getPath().split("/");
+			var namespace      = resourceLocation.getNamespace();
 			if (resourcePath.length >= 2) {
-				String resourceSetName = resourcePath[0];
+				var resourceSetName = resourcePath[0];
 				switch (resourceSetName) {
 					case SET_HOLD_TO_AIM -> {
 						int count = addToSet(namespace, holdToAimItemPatterns, aimingCheckObj);

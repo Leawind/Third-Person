@@ -5,7 +5,6 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.util.math.decisionmap.api.DecisionFactor;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
 import net.leawind.mc.util.math.decisionmap.api.anno.ADecisionFactor;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,13 +24,13 @@ public interface RotateStrategy {
 	 * 默认策略：移动时转向前进方向，静止时不旋转
 	 */
 	Supplier<Double> DEFAULT                = () -> {
-		Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		RotateTargetEnum rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction && (!entity.isPassenger() || entity.getVehicle() instanceof LivingEntity)   //
-										? RotateTargetEnum.HORIZONTAL_IMPULSE_DIRECTION    //
-										: RotateTargetEnum.DEFAULT;
-		SmoothTypeEnum smoothType = ThirdPerson.mc.options.keySprint.isDown() || ThirdPerson.ENTITY_AGENT.isSprinting()    //
-									? SmoothTypeEnum.HARD    //
-									: SmoothTypeEnum.EXP_LINEAR;
+		var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var rotateTarget = ThirdPerson.getConfig().rotate_to_moving_direction && (!entity.isPassenger() || entity.getVehicle() instanceof LivingEntity)   //
+						   ? RotateTargetEnum.HORIZONTAL_IMPULSE_DIRECTION    //
+						   : RotateTargetEnum.DEFAULT;
+		var smoothType = ThirdPerson.mc.options.keySprint.isDown() || ThirdPerson.ENTITY_AGENT.isSprinting()    //
+						 ? SmoothTypeEnum.HARD    //
+						 : SmoothTypeEnum.EXP_LINEAR;
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(rotateTarget);
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(smoothType);
 		return 0.1D;

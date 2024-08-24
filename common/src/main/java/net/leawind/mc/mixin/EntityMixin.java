@@ -31,11 +31,11 @@ public class EntityMixin {
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
 	private void pick (double playerReach, float partialTick, boolean includeFluid, CallbackInfoReturnable<HitResult> ci) {
 		if (GameEvents.minecraftPick != null) {
-			Entity             entity = (Entity)(Object)this;
-			MinecraftPickEvent event  = new MinecraftPickEvent(partialTick, playerReach);
+			var entity = (Entity)(Object)this;
+			var event  = new MinecraftPickEvent(partialTick, playerReach);
 			GameEvents.minecraftPick.accept(event);
 			if (event.set()) {
-				BlockHitResult result = entity.level().clip(new ClipContext(event.pickFrom(), event.pickTo(), ClipContext.Block.OUTLINE, includeFluid ? ClipContext.Fluid.ANY: ClipContext.Fluid.NONE, entity));
+				var result = entity.level().clip(new ClipContext(event.pickFrom(), event.pickTo(), ClipContext.Block.OUTLINE, includeFluid ? ClipContext.Fluid.ANY: ClipContext.Fluid.NONE, entity));
 				if (result.getType() != HitResult.Type.MISS) {
 					if (result.getLocation().distanceTo(entity.getEyePosition(partialTick)) > playerReach) {
 						result = BlockHitResult.miss(result.getLocation(), result.getDirection(), result.getBlockPos());
@@ -55,8 +55,8 @@ public class EntityMixin {
 	@Inject(method="turn", at=@At("HEAD"), cancellable=true)
 	private void turn (double yRot, double xRot, @NotNull CallbackInfo ci) {
 		if (GameEvents.entityTurnStart != null) {
-			Entity               entity = (Entity)(Object)this;
-			EntityTurnStartEvent event  = new EntityTurnStartEvent(entity, yRot * 0.15, xRot * 0.15);
+			var entity = (Entity)(Object)this;
+			var event  = new EntityTurnStartEvent(entity, yRot * 0.15, xRot * 0.15);
 			GameEvents.entityTurnStart.accept(event);
 			if (event.isDefaultCancelled()) {
 				ci.cancel();

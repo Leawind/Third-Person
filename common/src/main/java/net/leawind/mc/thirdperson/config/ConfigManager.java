@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -119,7 +118,7 @@ public class ConfigManager {
 	 * 获取配置屏幕
 	 */
 	public @Nullable Screen getConfigScreen (@Nullable Screen parent) {
-		Optional<ConfigScreenBuilder> builder = ConfigScreenBuilder.getBuilder();
+		var builder = ConfigScreenBuilder.getBuilder();
 		if (builder.isEmpty()) {
 			ThirdPerson.LOGGER.warn("No config screen builder available.");
 			return null;

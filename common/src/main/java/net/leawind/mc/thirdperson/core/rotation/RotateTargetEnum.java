@@ -7,15 +7,9 @@ import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.core.CameraAgent;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector2d;
-import net.leawind.mc.util.math.vector.Vector3d;
-import net.minecraft.client.Camera;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -27,20 +21,20 @@ public enum RotateTargetEnum {
 	 */
 	NONE(() -> ThirdPerson.ENTITY_AGENT.getRawRotation(1)),
 	INTEREST_POINT(() -> {
-		Optional<Vec3> optionalPoint = ThirdPerson.ENTITY_AGENT.getInterestPoint();
+		var optionalPoint = ThirdPerson.ENTITY_AGENT.getInterestPoint();
 		if (optionalPoint.isEmpty()) {
 			return NONE.getRotation();
 		}
-		LocalPlayer player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
-		Vec3        point             = optionalPoint.get();
-		Vec3        toInterestedPoint = point.subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
+		var player            = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
+		var point             = optionalPoint.get();
+		var toInterestedPoint = point.subtract(player.getEyePosition(ThirdPersonStatus.lastPartialTick));
 		if (toInterestedPoint.length() < 1e-5) {
 			return NONE.getRotation();
 		}
-		Vector2d playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
-		Vector2d rot        = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
-		double   leftBound  = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		double   rightBound = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		var    playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+		var    rot        = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
+		double leftBound  = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
+		double rightBound = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
 		assert playerRot.isFinite();
 		assert rot.isFinite();
 		if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
@@ -52,7 +46,7 @@ public enum RotateTargetEnum {
 		return playerRot;
 	}),
 	DEFAULT(() -> {
-		Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		if (!ThirdPerson.CONFIG_MANAGER.getConfig().player_rotate_to_intrest_point || entity.getControlledVehicle() instanceof LivingEntity) {
 			return NONE.getRotation();
 		}
@@ -66,12 +60,12 @@ public enum RotateTargetEnum {
 	 * 转向相机的视线落点，即准星所指的位置
 	 */
 	CAMERA_HIT_RESULT(() -> {
-		Optional<Vector3d> cameraHitPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
+		var cameraHitPosition = ThirdPerson.CAMERA_AGENT.getPickPosition();
 		if (cameraHitPosition.isEmpty()) {
 			return CAMERA_ROTATION.getRotation();
 		}
-		Vector3d eyePosition = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
-		Vector3d viewVector  = cameraHitPosition.get().sub(eyePosition);
+		var eyePosition = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
+		var viewVector  = cameraHitPosition.get().sub(eyePosition);
 		return LMath.rotationDegreeFromDirection(viewVector);
 	}),
 	/**
@@ -86,21 +80,21 @@ public enum RotateTargetEnum {
 	 * @see CameraAgent#predictTargetEntity()
 	 */
 	PREDICTED_TARGET_ENTITY(() -> {
-		Vector2d rotation = CAMERA_HIT_RESULT.getRotation();
+		var rotation = CAMERA_HIT_RESULT.getRotation();
 		if (!ThirdPerson.getConfig().enable_target_entity_predict || !ThirdPerson.ENTITY_AGENT.isControlled()) {
 			return rotation;
 		}
-		Optional<Entity> predicted = ThirdPerson.CAMERA_AGENT.predictTargetEntity();
+		var predicted = ThirdPerson.CAMERA_AGENT.predictTargetEntity();
 		if (predicted.isEmpty()) {
 			return rotation;
 		}
-		Camera   camera       = ThirdPerson.CAMERA_AGENT.getRawCamera();
-		Entity   target       = predicted.get();
-		Vector3d playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
-		Vector3d cameraPos    = LMath.toVector3d(camera.getPosition());
-		Vector3d targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
-		Vector3d end          = LMath.toVector3d(camera.getLookVector()).normalize(cameraPos.distance(targetPos)).add(cameraPos);
-		Vector3d eyeToEnd     = end.sub(playerEyePos);
+		var camera       = ThirdPerson.CAMERA_AGENT.getRawCamera();
+		var target       = predicted.get();
+		var playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick);
+		var cameraPos    = LMath.toVector3d(camera.getPosition());
+		var targetPos    = LMath.toVector3d(target.getPosition(ThirdPersonStatus.lastPartialTick));
+		var end          = LMath.toVector3d(camera.getLookVector()).normalize(cameraPos.distance(targetPos)).add(cameraPos);
+		var eyeToEnd     = end.sub(playerEyePos);
 		if (eyeToEnd.length() < 1e-5) {
 			return rotation;
 		}
@@ -136,7 +130,7 @@ public enum RotateTargetEnum {
 	 * 获取玩家当前的目标朝向
 	 */
 	public @NotNull Vector2d getRotation () {
-		Vector2d rotation = rotationGetter.get();
+		var rotation = rotationGetter.get();
 		assert rotation.isFinite();
 		return rotation;
 	}

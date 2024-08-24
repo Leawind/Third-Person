@@ -68,7 +68,7 @@ public class CameraAgent {
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceMultiplier.set(0D);
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			relativeRotation.set(-entity.getViewXRot(ThirdPersonStatus.lastPartialTick), entity.getViewYRot(ThirdPersonStatus.lastPartialTick) - 180);
 		}
 	}
@@ -94,7 +94,7 @@ public class CameraAgent {
 			//
 			if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 				// 将相机朝向与相机实体朝向同步
-				Vector2d rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
+				var rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
 				relativeRotation.set(-rot.x(), rot.y() - 180);
 			}
 		}
@@ -151,7 +151,7 @@ public class CameraAgent {
 	 */
 	public void turnCamera (double dYRot, double dXRot) {
 		assert Double.isFinite(dYRot) && Double.isFinite(dXRot);
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
 			if (config.lock_camera_pitch_angle) {
 				dXRot = 0;
@@ -199,7 +199,7 @@ public class CameraAgent {
 	 * @param pickRange 最大探测距离
 	 */
 	public @NotNull Optional<Vector3d> getPickPosition (double pickRange) {
-		HitResult hitResult = pick(pickRange);
+		var hitResult = pick(pickRange);
 		return Optional.ofNullable(hitResult.getType() == HitResult.Type.MISS ? null: LMath.toVector3d(hitResult.getLocation()));
 	}
 
@@ -212,8 +212,8 @@ public class CameraAgent {
 	 */
 	@VersionSensitive
 	public @NotNull HitResult pick (double pickRange) {
-		Camera              camera                 = getRawCamera();
-		Vec3                cameraPos              = camera.getPosition();
+		var                 camera                 = getRawCamera();
+		var                 cameraPos              = camera.getPosition();
 		Optional<HitResult> entityHitResult        = pickEntity(pickRange).map(hr -> hr);
 		HitResult           blockHitResult         = pickBlock(pickRange);
 		double              blockHitResultDistance = blockHitResult.getLocation().distanceTo(cameraPos);
@@ -232,12 +232,12 @@ public class CameraAgent {
 		if (!ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			return Optional.empty();
 		}
-		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		Camera camera       = getRawCamera();
-		Vec3   viewVector   = new Vec3(camera.getLookVector());
-		Vec3   pickFrom     = camera.getPosition();
-		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
-		AABB   aabb         = new AABB(pickFrom, pickTo);
+		var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var camera       = getRawCamera();
+		var viewVector   = new Vec3(camera.getLookVector());
+		var pickFrom     = camera.getPosition();
+		var pickTo       = viewVector.scale(pickRange).add(pickFrom);
+		var aabb         = new AABB(pickFrom, pickTo);
 		return Optional.ofNullable(ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, target -> !target.isSpectator() && target.isPickable(), pickRange));
 	}
 
@@ -249,11 +249,11 @@ public class CameraAgent {
 	 * @param fluidShape 液体形状获取器
 	 */
 	public @NotNull BlockHitResult pickBlock (double pickRange, @NotNull ClipContext.Block blockShape, @NotNull ClipContext.Fluid fluidShape) {
-		Camera camera       = getRawCamera();
-		Vec3   pickFrom     = camera.getPosition();
-		Vec3   viewVector   = new Vec3(camera.getLookVector());
-		Vec3   pickTo       = viewVector.scale(pickRange).add(pickFrom);
-		Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var camera       = getRawCamera();
+		var pickFrom     = camera.getPosition();
+		var viewVector   = new Vec3(camera.getLookVector());
+		var pickTo       = viewVector.scale(pickRange).add(pickFrom);
+		var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		return cameraEntity.level().clip(new ClipContext(pickFrom, pickTo, blockShape, fluidShape, cameraEntity));
 	}
 
@@ -276,9 +276,9 @@ public class CameraAgent {
 	 */
 	@VersionSensitive
 	public boolean isLookingAt (@NotNull Entity entity) {
-		Vec3 from = getRawCamera().getPosition();
-		Vec3 to   = from.add(new Vec3(getRawCamera().getLookVector()).scale(getPickRange()));
-		AABB aabb = entity.getBoundingBox();
+		var from = getRawCamera().getPosition();
+		var to   = from.add(new Vec3(getRawCamera().getLookVector()).scale(getPickRange()));
+		var aabb = entity.getBoundingBox();
 		return aabb.contains(from) || aabb.clip(from, to).isPresent();
 	}
 
@@ -288,17 +288,17 @@ public class CameraAgent {
 	 * TODO 预测不够准确
 	 */
 	public @NotNull Optional<Entity> predictTargetEntity () {
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		// 候选目标实体
 		List<Entity> candidateTargets = Lists.newArrayList();
-		Vec3         cameraPos        = getRawCamera().getPosition();
-		Vector2d     cameraRot        = getRotation();
-		Vector3d     cameraViewVector = LMath.directionFromRotationDegree(cameraRot).normalize();
+		var          cameraPos        = getRawCamera().getPosition();
+		var          cameraRot        = getRotation();
+		var          cameraViewVector = LMath.directionFromRotationDegree(cameraRot).normalize();
 		if (ThirdPerson.ENTITY_AGENT.isControlled()) {
-			Entity                    playerEntity = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
-			ClientLevel               clientLevel  = (ClientLevel)playerEntity.level();
-			LevelEntityGetter<Entity> entityGetter = ((ClientLevelInvoker)clientLevel).invokeGetEntityGetter();
-			for (Entity target: entityGetter.getAll()) {
+			var playerEntity = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity();
+			var clientLevel  = (ClientLevel)playerEntity.level();
+			var entityGetter = ((ClientLevelInvoker)clientLevel).invokeGetEntityGetter();
+			for (var target: entityGetter.getAll()) {
 				if (!(target instanceof LivingEntity)) {
 					continue;
 				}
@@ -308,14 +308,14 @@ public class CameraAgent {
 					continue;
 				}
 				if (!target.is(playerEntity)) {
-					Vec3     targetPos      = target.getPosition(ThirdPersonStatus.lastPartialTick);
-					Vector3d bottomY        = LMath.toVector3d(targetPos.with(Direction.Axis.Y, target.getBoundingBox().minY));
-					Vector3d vectorToBottom = bottomY.copy().sub(ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick));
+					var targetPos      = target.getPosition(ThirdPersonStatus.lastPartialTick);
+					var bottomY        = LMath.toVector3d(targetPos.with(Direction.Axis.Y, target.getBoundingBox().minY));
+					var vectorToBottom = bottomY.copy().sub(ThirdPerson.ENTITY_AGENT.getRawEyePosition(ThirdPersonStatus.lastPartialTick));
 					if (LMath.rotationDegreeFromDirection(vectorToBottom).x() < cameraRot.x()) {
 						continue;
 					}
-					Vector3d vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalizeSafely();
-					double   angleRadian    = Math.acos(cameraViewVector.dot(vectorToTarget));
+					var    vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalizeSafely();
+					double angleRadian    = Math.acos(cameraViewVector.dot(vectorToTarget));
 					if (Math.toDegrees(angleRadian) < ThirdPersonConstants.TARGET_PREDICTION_DEGREES_LIMIT) {
 						candidateTargets.add(target);
 					}
@@ -336,7 +336,7 @@ public class CameraAgent {
 		// 设置假相机的位置，不偏移
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
 		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(calculatePositionWithoutOffset()));
-		Minecraft mc = ThirdPerson.mc;
+		var mc = ThirdPerson.mc;
 		// 宽高比
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
@@ -349,10 +349,10 @@ public class CameraAgent {
 		// 添加偏移量
 		double minDist = ThirdPerson.ENTITY_AGENT.getBodyRadius();
 		// 平滑值
-		Vector2d smoothOffsetRatioValue     = smoothOffsetRatio.get();
-		double   smoothVirtualDistanceValue = smoothDistanceMultiplier.get();
-		double   upOffset                   = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.y() * Math.tan(verticalRadianHalf);
-		double   leftOffset                 = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.x() * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
+		var    smoothOffsetRatioValue     = smoothOffsetRatio.get();
+		double smoothVirtualDistanceValue = smoothDistanceMultiplier.get();
+		double upOffset                   = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.y() * Math.tan(verticalRadianHalf);
+		double leftOffset                 = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.x() * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
 	}
 
@@ -364,13 +364,13 @@ public class CameraAgent {
 	 * 参考 Camera#getMaxZoom(double)
 	 */
 	private void preventThroughWall () {
-		Entity entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		if (entity.isSpectator() && ThirdPerson.ENTITY_AGENT.isEyeInWall(ClipContext.Block.VISUAL)) {
 			return;
 		}
-		Vec3   cameraPosition    = fakeCamera.getPosition();
-		Vec3   smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPersonStatus.lastPartialTick));
-		Vec3   smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
+		var    cameraPosition    = fakeCamera.getPosition();
+		var    smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPersonStatus.lastPartialTick));
+		var    smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		if (initDistance < 1e-5) {
 			return;
@@ -383,9 +383,9 @@ public class CameraAgent {
 			offsetX *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			offsetY *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
 			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
-			Vec3      pickFrom  = smoothEyePosition.add(offsetX, offsetY, offsetZ);
-			Vec3      pickTo    = pickFrom.add(smoothEyeToCamera);
-			HitResult hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+			var pickFrom  = smoothEyePosition.add(offsetX, offsetY, offsetZ);
+			var pickTo    = pickFrom.add(smoothEyeToCamera);
+			var hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
 				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickFrom));
 			}
@@ -398,9 +398,9 @@ public class CameraAgent {
 	}
 
 	private void updateSmoothVirtualDistance (double period) {
-		Config                   config      = ThirdPerson.getConfig();
-		boolean                  isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
-		AbstractCameraOffsetMode mode        = config.getCameraOffsetScheme().getMode();
+		var     config      = ThirdPerson.getConfig();
+		boolean isAdjusting = ThirdPersonStatus.isAdjustingCameraDistance();
+		var     mode        = config.getCameraOffsetScheme().getMode();
 		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
 			// 当前的目标是第一人称
 			smoothDistanceMultiplier.setHalflife(config.t2f_transition_halflife);
@@ -415,8 +415,8 @@ public class CameraAgent {
 	}
 
 	private void updateSmoothOffsetRatio (double period) {
-		Config                   config = ThirdPerson.getConfig();
-		AbstractCameraOffsetMode mode   = config.getCameraOffsetScheme().getMode();
+		var config = ThirdPerson.getConfig();
+		var mode   = config.getCameraOffsetScheme().getMode();
 		if (ThirdPersonStatus.isAdjustingCameraOffset()) {
 			smoothOffsetRatio.setHalflife(config.adjusting_camera_offset_smooth_halflife);
 		} else {

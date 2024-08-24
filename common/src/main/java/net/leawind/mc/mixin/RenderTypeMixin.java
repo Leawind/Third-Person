@@ -33,8 +33,15 @@ public class RenderTypeMixin extends RenderStateShard {
 	 * 将 NO_TRANSPARENCY 改成了 TRANSLUCENT_TRANSPARENCY
 	 */
 	@Unique private static final Function<ResourceLocation, RenderType> ARMOR_CUTOUT_NO_CULL_TRANSLUCENT = Util.memoize((resourceLocation) -> {
-		RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ARMOR_CUTOUT_NO_CULL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false)).setTransparencyState(
-			TRANSLUCENT_TRANSPARENCY).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setOverlayState(OVERLAY).setLayeringState(VIEW_OFFSET_Z_LAYERING).createCompositeState(true);
+		var compositeState = RenderType.CompositeState.builder()
+													  .setShaderState(RENDERTYPE_ARMOR_CUTOUT_NO_CULL_SHADER)
+													  .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
+													  .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+													  .setCullState(NO_CULL)
+													  .setLightmapState(LIGHTMAP)
+													  .setOverlayState(OVERLAY)
+													  .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+													  .createCompositeState(true);
 		return RenderType.create("armor_cutout_no_cull", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, false, compositeState);
 	});
 

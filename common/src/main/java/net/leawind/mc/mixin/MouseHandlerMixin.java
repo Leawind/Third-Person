@@ -23,7 +23,7 @@ public class MouseHandlerMixin {
 	@Inject(method="turnPlayer()V", at=@At(value="HEAD"), cancellable=true)
 	private void preMouseTurnPlayer (CallbackInfo ci) {
 		if (GameEvents.mouseTurnPlayerStart != null) {
-			MouseTurnPlayerStartEvent event = new MouseTurnPlayerStartEvent(accumulatedDX, accumulatedDY);
+			var event = new MouseTurnPlayerStartEvent(accumulatedDX, accumulatedDY);
 			GameEvents.mouseTurnPlayerStart.accept(event);
 			if (event.isDefaultCancelled()) {
 				// 重置累积变化量

@@ -55,7 +55,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		// Register Factors
 		List<Field> adfListIndexed   = new LinkedList<>();
 		List<Field> adfListAutoIndex = new LinkedList<>();
-		for (Field field: clazz.getDeclaredFields()) {
+		for (var field: clazz.getDeclaredFields()) {
 			if (field.isAnnotationPresent(ADecisionFactor.class)) {
 				if (field.getType() != DecisionFactor.class) {
 					throw new RuntimeException(String.format("Type %s required, got %s", DecisionFactor.class, field));
@@ -64,7 +64,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 				} else if (!field.canAccess(null)) {
 					throw new RuntimeException(String.format("Cannot access field: %s", field));
 				}
-				ADecisionFactor adf = field.getAnnotation(ADecisionFactor.class);
+				var adf = field.getAnnotation(ADecisionFactor.class);
 				if (adf.value() == -1 && adf.mask() == -1) {
 					adfListAutoIndex.add(field);
 				} else {
@@ -85,20 +85,20 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 			factors.add(null);
 		}
 		try {
-			for (Field field: adfListIndexed) {
-				ADecisionFactor adf   = field.getAnnotation(ADecisionFactor.class);
-				int             index = adf.value() != -1 ? adf.value(): Integer.numberOfTrailingZeros(adf.mask());
+			for (var field: adfListIndexed) {
+				var adf   = field.getAnnotation(ADecisionFactor.class);
+				int index = adf.value() != -1 ? adf.value(): Integer.numberOfTrailingZeros(adf.mask());
 				if (factors.get(index) != null) {
 					throw new RuntimeException(String.format("Field %s: Index %d has been used already.", field, index));
 				}
-				DecisionFactor df = (DecisionFactor)field.get(null);
+				var df = (DecisionFactor)field.get(null);
 				df.setName(field.getName());
 				factors.set(index, df);
 			}
-			for (Field field: adfListAutoIndex) {
+			for (var field: adfListAutoIndex) {
 				for (int index = 0; index < factors.size(); index++) {
 					if (factors.get(index) == null) {
-						DecisionFactor df = (DecisionFactor)field.get(null);
+						var df = (DecisionFactor)field.get(null);
 						df.setName(field.getName());
 						factors.set(index, df);
 						df.setIndex(index);
@@ -112,7 +112,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		}
 		// Build
 		try {
-			Method building = getBuildMethod(clazz);
+			var building = getBuildMethod(clazz);
 			building.invoke(null, this);
 		} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
 			ThirdPerson.LOGGER.error("This should never happen!");
@@ -128,7 +128,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 	}
 
 	private static @NotNull Method getBuildMethod (@NotNull Class<?> clazz) throws NoSuchMethodException {
-		Method method = clazz.getMethod("build", DecisionMap.class);
+		var method = clazz.getMethod("build", DecisionMap.class);
 		if (!Modifier.isStatic(method.getModifiers())) {
 			throw new RuntimeException(String.format("Expected static method %s", method));
 		} else if (!method.canAccess(null)) {
@@ -150,7 +150,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 
 	@Override
 	public String toString () {
-		StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
 		sb.append(String.format("%s from %s (factorCount=%d, mapSize=%d)\n", DecisionMap.class.getSimpleName(), initializer.getSimpleName(), getFactorCount(), getMapSize()));
 		sb.append("Factors:\n");
 		for (int i = 0; i < factors.size(); i++) {
@@ -158,7 +158,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		}
 		sb.append("Strategy Map:\n");
 		for (int flagBits = 0; flagBits < getMapSize(); flagBits++) {
-			Supplier<?> func = getStrategy(flagBits).orElse(null);
+			var func = getStrategy(flagBits).orElse(null);
 			sb.append(String.format("\t%s %s\n", padStart(Integer.toBinaryString(flagBits), factors.size(), '0'), nameMap.getOrDefault(func, "unnamed")));
 		}
 		return sb.toString();

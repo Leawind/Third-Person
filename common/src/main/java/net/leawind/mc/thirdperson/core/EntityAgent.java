@@ -5,7 +5,6 @@ import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.ThirdPersonResources;
 import net.leawind.mc.thirdperson.ThirdPersonStatus;
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
 import net.leawind.mc.thirdperson.core.rotation.SmoothTypeEnum;
@@ -20,7 +19,6 @@ import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -144,7 +141,7 @@ public class EntityAgent {
 	@PerformanceSensitive
 	public void onRenderTickStart (double now, double period, float partialTick) {
 		if (ThirdPersonStatus.isRenderingInThirdPerson() && isControlled() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-			Vector2d targetRotation = getRotateTarget().getRotation();
+			var targetRotation = getRotateTarget().getRotation();
 			smoothRotation.setTarget(targetRotation);
 			switch (smoothRotationType) {
 				case HARD -> setRawRotation(targetRotation);
@@ -168,14 +165,14 @@ public class EntityAgent {
 		}
 		ThirdPersonStatus.clientTicks++;
 		final double period = 0.05;
-		Config       config = ThirdPerson.getConfig();
+		var          config = ThirdPerson.getConfig();
 		wasAiming = isAiming();
 		config.getCameraOffsetScheme().setAiming(wasAiming());
 		updateRotateStrategy();
 		updateSmoothOpacity(period, 1);
 		smoothRotation.update(period);
 		{
-			Vector3d eyePosition = getRawEyePosition(1);
+			var eyePosition = getRawEyePosition(1);
 			{
 				final Vector3d halflife;
 				if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
@@ -207,7 +204,7 @@ public class EntityAgent {
 	 */
 	public void setRawRotation (@NotNull Vector2d rot) {
 		assert rot.isFinite();
-		Entity entity = getRawPlayerEntity();
+		var entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());
 		entity.setXRot(entity.xRotO = (float)rot.x());
 	}
@@ -247,7 +244,7 @@ public class EntityAgent {
 	 */
 	@VersionSensitive
 	public @NotNull Vector2d getRawRotation (float partialTick) {
-		Entity entity = getRawCameraEntity();
+		var entity = getRawCameraEntity();
 		return Vector2d.of(entity.getViewXRot(partialTick), entity.getViewYRot(partialTick));
 	}
 
@@ -264,11 +261,11 @@ public class EntityAgent {
 	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
 	 */
 	public @NotNull Vector3d getPossibleSmoothEyePosition (float partialTick) {
-		Vector3d smoothEyePositionValue = smoothEyePosition.get(partialTick);
-		Vector3d rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
-		Vector3d smoothFactor           = smoothEyePosition.smoothFactor.copy();
-		boolean  isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
-		boolean  isVerticalZero         = smoothFactor.y() == 0;
+		var     smoothEyePositionValue = smoothEyePosition.get(partialTick);
+		var     rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
+		var     smoothFactor           = smoothEyePosition.smoothFactor.copy();
+		boolean isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
+		boolean isVerticalZero         = smoothFactor.y() == 0;
 		if (isHorizontalZero || isVerticalZero) {
 			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? rawEyePosition.x(): smoothEyePositionValue.x(),//
 												 isVerticalZero ? rawEyePosition.y(): smoothEyePositionValue.y(),//
@@ -283,11 +280,11 @@ public class EntityAgent {
 	 * 与{@link Entity#isInWall()}不同的是，旁观者模式下此方法仍然可以返回true
 	 */
 	public boolean isEyeInWall (@NotNull ClipContext.ShapeGetter shapeGetter) {
-		final Entity   cameraEntity = getRawCameraEntity();
-		Vec3           eyePos       = cameraEntity.getEyePosition();
-		final BlockPos blockPos     = BlockPos.containing(eyePos.x(), eyePos.y(), eyePos.z());
-		final AABB     eyeAabb      = AABB.ofSize(eyePos, 0.8, 1e-6, 0.8);
-		BlockState     blockState   = cameraEntity.level().getBlockState(blockPos);
+		final var cameraEntity = getRawCameraEntity();
+		var       eyePos       = cameraEntity.getEyePosition();
+		final var blockPos     = BlockPos.containing(eyePos.x(), eyePos.y(), eyePos.z());
+		final var eyeAabb      = AABB.ofSize(eyePos, 0.8, 1e-6, 0.8);
+		var       blockState   = cameraEntity.level().getBlockState(blockPos);
 		return shapeGetter.get(blockState, cameraEntity.level(), blockPos, CollisionContext.empty()).toAabbs().stream().anyMatch(a -> a.move(blockPos).intersects(eyeAabb));
 	}
 
@@ -303,7 +300,7 @@ public class EntityAgent {
 		if (!isControlled()) {
 			return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isUsingItem();
 		}
-		Options options = minecraft.options;
+		var options = minecraft.options;
 		return options.keyUse.isDown() || options.keyAttack.isDown() || options.keyPickItem.isDown();
 	}
 
@@ -342,13 +339,13 @@ public class EntityAgent {
 	 * <li>使用物品时正在播放的动画</li>
 	 */
 	public boolean isAiming () {
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.doesPlayerWantToAim()) {
 			return true;
 		}
 		if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
 			if (config.determine_aim_mode_by_animation && livingEntity.isUsingItem()) {
-				UseAnim anim = livingEntity.getUseItem().getUseAnimation();
+				var anim = livingEntity.getUseItem().getUseAnimation();
 				if (anim == UseAnim.BOW || anim == UseAnim.SPEAR) {
 					return true;
 				}
@@ -371,7 +368,7 @@ public class EntityAgent {
 	}
 
 	public AABB getBoundingBox (float partialTick) {
-		Entity entity = this.getRawCameraEntity();
+		var entity = this.getRawCameraEntity();
 		return entity.getDimensions(entity.getPose()).makeBoundingBox(entity.getPosition(partialTick));
 	}
 
@@ -379,8 +376,8 @@ public class EntityAgent {
 	 * 计算点到碰撞箱的距离。如果点在碰撞箱内，则返回0
 	 */
 	public double boxDistanceTo (@NotNull Vector3d target, float partialTick) {
-		AABB     aabb = getBoundingBox(partialTick);
-		Vector3d c    = Vector3d.of();
+		var aabb = getBoundingBox(partialTick);
+		var c    = Vector3d.of();
 		c.x(LMath.clamp(target.x(), aabb.minX, aabb.maxX));
 		c.y(LMath.clamp(target.y(), aabb.minY, aabb.maxY));
 		c.z(LMath.clamp(target.z(), aabb.minZ, aabb.maxZ));
@@ -392,9 +389,9 @@ public class EntityAgent {
 	}
 
 	public double columnDistanceTo (@NotNull Vector3d target, float partialTick) {
-		Entity   entity = getRawCameraEntity();
-		Vector3d c      = LMath.toVector3d(entity.getPosition(partialTick));
-		double   maxY   = c.y() + entity.getEyeHeight();
+		var    entity = getRawCameraEntity();
+		var    c      = LMath.toVector3d(entity.getPosition(partialTick));
+		double maxY   = c.y() + entity.getEyeHeight();
 		c.y(LMath.clamp(target.y(), c.y(), maxY));
 		double dist = c.distance(target);
 		if (maxY > target.y() && target.y() > c.y()) {
@@ -420,9 +417,9 @@ public class EntityAgent {
 	 */
 	private void updateBodyRotation () {
 		// net.minecraft.client.renderer.entity.LivingEntityRenderer.render
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		if (config.auto_turn_body_drawing_a_bow && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			LocalPlayer player = getRawPlayerEntity();
+			var player = getRawPlayerEntity();
 			if (player.isUsingItem() && player.getUseItem().is(Items.BOW)) {
 				double k = player.getUsedItemHand() == InteractionHand.MAIN_HAND ? 1: -1;
 				if (minecraft.options.mainHand().get() == HumanoidArm.LEFT) {
@@ -438,10 +435,10 @@ public class EntityAgent {
 	 */
 	private void updateSmoothOpacity (double period, float partialTick) {
 		double targetOpacity = 1.0;
-		Config config        = ThirdPerson.getConfig();
+		var    config        = ThirdPerson.getConfig();
 		if (config.player_fade_out_enabled) {
 			final double C              = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
-			Vector3d     cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
+			var          cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
 			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
 			targetOpacity = (distance - C) / (1 - C);
 			assert !Double.isNaN(targetOpacity);
@@ -468,8 +465,8 @@ public class EntityAgent {
 	}
 
 	public double getVehicleTotalSize () {
-		Entity root = getRawCameraEntity().getRootVehicle();
-		var    bb   = root.getPassengersAndSelf().map(Entity::getBoundingBox).reduce(AABB::minmax).orElse(root.getBoundingBox());
+		var root = getRawCameraEntity().getRootVehicle();
+		var bb   = root.getPassengersAndSelf().map(Entity::getBoundingBox).reduce(AABB::minmax).orElse(root.getBoundingBox());
 		return Math.hypot(Math.hypot(bb.getXsize(), bb.getYsize()), bb.getZsize());
 	}
 }

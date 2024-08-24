@@ -24,8 +24,8 @@ public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements C
 	 * 计算一个目标实体的代价，值越低越优先
 	 */
 	public double getCost (@NotNull Entity entity) {
-		Vec3     entityPos      = entity.getPosition(1);
-		Vector3d vectorToTarget = LMath.toVector3d(entityPos.subtract(pos));
+		var entityPos      = entity.getPosition(1);
+		var vectorToTarget = LMath.toVector3d(entityPos.subtract(pos));
 		if (vectorToTarget.length() < 1e-5) {
 			return 0;
 		}

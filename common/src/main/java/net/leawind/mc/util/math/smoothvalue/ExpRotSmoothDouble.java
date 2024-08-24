@@ -17,7 +17,7 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	public static @NotNull ExpRotSmoothDouble createWithHalflife (double cycle, double halflife) {
-		ExpRotSmoothDouble v = new ExpRotSmoothDouble(cycle);
+		var v = new ExpRotSmoothDouble(cycle);
 		v.setHalflife(halflife);
 		return v;
 	}

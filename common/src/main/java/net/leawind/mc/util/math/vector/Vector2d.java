@@ -52,7 +52,7 @@ public class Vector2d {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Vector2d other = (Vector2d)obj;
+		var other = (Vector2d)obj;
 		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x())) {
 			return false;
 		}

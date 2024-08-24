@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 	@Override
 	public @NotNull Screen build (@NotNull Config config, @Nullable Screen parent) {
-		Config defaults = Config.DEFAULTS;
+		var defaults = Config.DEFAULTS;
 		return YetAnotherConfigLib.createBuilder() //
 								  .title(ConfigManager.getText("text.title")) //
 								  .save(ThirdPerson.CONFIG_MANAGER::trySave) //

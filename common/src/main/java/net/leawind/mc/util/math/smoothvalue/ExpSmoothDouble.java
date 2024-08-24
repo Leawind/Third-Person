@@ -11,7 +11,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 	}
 
 	public static @NotNull ExpSmoothDouble createWithHalflife (double halflife) {
-		ExpSmoothDouble v = new ExpSmoothDouble();
+		var v = new ExpSmoothDouble();
 		v.setHalflife(halflife);
 		return v;
 	}

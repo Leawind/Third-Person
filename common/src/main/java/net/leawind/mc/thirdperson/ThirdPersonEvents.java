@@ -1,7 +1,6 @@
 package net.leawind.mc.thirdperson;
 
 
-import com.mojang.blaze3d.platform.Window;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
@@ -10,22 +9,15 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.event.*;
-import net.leawind.mc.thirdperson.cameraoffset.AbstractCameraOffsetMode;
-import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.util.ItemPattern;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector2d;
-import net.leawind.mc.util.math.vector.Vector3d;
-import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -69,14 +61,14 @@ public final class ThirdPersonEvents {
 	 */
 	private static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			Camera camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
+			var camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
 			// 计算世界坐标系下的向前和向左 impulse
 			// 视线向量
-			Vector3d lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
-			Vector3d leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
+			var lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
+			var leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
 			// 水平方向上的视线向量
-			Vector2d lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize(event.forwardImpulse);
-			Vector2d leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize(event.leftImpulse);
+			var lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize(event.forwardImpulse);
+			var leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize(event.leftImpulse);
 			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPersonStatus.impulseHorizon);
 			// 世界坐标系下的 impulse
 			lookImpulse.mul(event.forwardImpulse);    // 这才是 impulse
@@ -88,9 +80,9 @@ public final class ThirdPersonEvents {
 				if (length > 1.0D) {
 					ThirdPersonStatus.impulseHorizon.div(length, length);
 				}
-				float    playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
-				Vector2d playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
-				Vector2d playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
+				float playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
+				var   playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
+				var   playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
 				event.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
 				event.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
 			}
@@ -99,10 +91,10 @@ public final class ThirdPersonEvents {
 
 	private static void onMinecraftPickEvent (MinecraftPickEvent event) {
 		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-			Entity cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			Vec3   cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
-			Vec3   eyePosition       = cameraEntity.getEyePosition(event.partialTick);
-			Vec3   cameraHitPosition = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
+			var cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			var cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
+			var eyePosition       = cameraEntity.getEyePosition(event.partialTick);
+			var cameraHitPosition = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
 			event.pickTo(cameraHitPosition);
 			double pickRange;
 			if (ThirdPersonStatus.shouldPickFromCamera()) {
@@ -135,10 +127,10 @@ public final class ThirdPersonEvents {
 		if (minecraft.isPaused() || !ThirdPerson.isAvailable()) {
 			return;
 		}
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		if (ThirdPerson.mc.options.getCameraType() != CameraType.FIRST_PERSON) {
 			// 目标是第三人称
-			Entity cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
 			GameStatus.isPerspectiveInverted = !cameraEntity.isSpectator() && cameraEntity.isInWall();
 			if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
@@ -191,7 +183,7 @@ public final class ThirdPersonEvents {
 		if (offset == 0 || !ThirdPersonStatus.isAdjustingCameraDistance()) {
 			return EventResult.pass();
 		}
-		Config config = ThirdPerson.getConfig();
+		var    config = ThirdPerson.getConfig();
 		double dist   = config.getCameraOffsetScheme().getMode().getMaxDistance();
 		dist = config.getDistanceMonoList().offset(dist, offset);
 		config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
@@ -279,11 +271,11 @@ public final class ThirdPersonEvents {
 			if (event.accumulatedDX == 0 && event.accumulatedDY == 0) {
 				return;
 			}
-			Config                   config     = ThirdPerson.getConfig();
-			Window                   window     = ThirdPerson.mc.getWindow();
-			Vector2d                 screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
-			CameraOffsetScheme       scheme     = config.getCameraOffsetScheme();
-			AbstractCameraOffsetMode mode       = scheme.getMode();
+			var config     = ThirdPerson.getConfig();
+			var window     = ThirdPerson.mc.getWindow();
+			var screenSize = Vector2d.of(window.getScreenWidth(), window.getScreenHeight());
+			var scheme     = config.getCameraOffsetScheme();
+			var mode       = scheme.getMode();
 			if (mode.isCentered()) {
 				// 相机在头顶，只能上下调整
 				double topOffset = mode.getCenterOffsetRatio();
@@ -304,7 +296,7 @@ public final class ThirdPersonEvents {
 
 	private static void onHandleKeybindsStart () {
 		if (ThirdPerson.isAvailable()) {
-			Config config = ThirdPerson.getConfig();
+			var config = ThirdPerson.getConfig();
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 				if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
 					// 立即更新玩家注视着的目标 Minecraft#hitResult

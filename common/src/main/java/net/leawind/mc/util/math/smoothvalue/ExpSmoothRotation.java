@@ -26,7 +26,7 @@ public class ExpSmoothRotation {
 	}
 
 	public static @NotNull ExpSmoothRotation createWithHalflife (double halflife) {
-		ExpSmoothRotation v = new ExpSmoothRotation();
+		var v = new ExpSmoothRotation();
 		v.setHalflife(halflife);
 		return v;
 	}

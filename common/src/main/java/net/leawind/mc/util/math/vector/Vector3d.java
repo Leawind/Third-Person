@@ -56,7 +56,7 @@ public class Vector3d {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Vector3d other = (Vector3d)obj;
+		var other = (Vector3d)obj;
 		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x())) {
 			return false;
 		}

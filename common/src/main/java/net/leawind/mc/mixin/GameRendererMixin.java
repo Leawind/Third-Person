@@ -15,7 +15,6 @@ import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -54,13 +53,13 @@ public class GameRendererMixin {
 	@Inject(method="pick", at=@At("HEAD"), cancellable=true)
 	private void pick_storeViewVector (float partialTick, CallbackInfo ci) {
 		if (GameEvents.minecraftPick != null) {
-			MinecraftPickEvent event = new MinecraftPickEvent(partialTick, 4.5);
+			var event = new MinecraftPickEvent(partialTick, 4.5);
 			GameEvents.minecraftPick.accept(event);
 			if (event.set()) {
-				GameRenderer that      = (GameRenderer)(Object)this;
-				Minecraft    minecraft = that.getMinecraft();
+				var that      = (GameRenderer)(Object)this;
+				var minecraft = that.getMinecraft();
 				assert minecraft.gameMode != null;
-				Entity cameraEntity = minecraft.getCameraEntity();
+				var cameraEntity = minecraft.getCameraEntity();
 				assert cameraEntity != null;
 				minecraft.getProfiler().push("pick");
 				minecraft.crosshairPickEntity = null;
@@ -68,7 +67,7 @@ public class GameRendererMixin {
 				double playerReach = minecraft.gameMode.getPickRange();
 				// 选取方块
 				minecraft.hitResult = cameraEntity.pick(playerReach, partialTick, false);
-				Vec3 pickFrom = event.pickFrom();
+				var pickFrom = event.pickFrom();
 				assert pickFrom != null;
 				// 选取实体
 				boolean notCreativeMode = false;
@@ -86,16 +85,16 @@ public class GameRendererMixin {
 					// 如果pick到了方块，则更新 dist 为玩家眼睛到目标的距离平方
 					dist = minecraft.hitResult.getLocation().distanceToSqr(pickFrom);
 				}
-				Vec3 viewVector = event.getPickVector();
-				Vec3 pickTo     = event.pickTo();
+				var viewVector = event.getPickVector();
+				var pickTo     = event.pickTo();
 				assert pickTo != null;
 				// 计算可能和目标实体发生碰撞的碰撞盒
-				AABB aabb = new AABB(pickFrom, pickTo);
+				var aabb = new AABB(pickFrom, pickTo);
 				// 探测实体
-				EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, entity -> !entity.isSpectator() && entity.isPickable(), dist);
+				var entityHitResult = ProjectileUtil.getEntityHitResult(cameraEntity, pickFrom, pickTo, aabb, entity -> !entity.isSpectator() && entity.isPickable(), dist);
 				if (entityHitResult != null) {
-					Entity targetEntity   = entityHitResult.getEntity();
-					Vec3   targetLocation = entityHitResult.getLocation();
+					var    targetEntity   = entityHitResult.getEntity();
+					var    targetLocation = entityHitResult.getLocation();
 					double entityDistSqr  = pickFrom.distanceToSqr(targetLocation);
 					if (notCreativeMode && entityDistSqr > 9.0D) {
 						// 如果不是创造模式且目标实体距离超过3

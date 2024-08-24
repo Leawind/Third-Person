@@ -3,8 +3,6 @@ package net.leawind.mc.thirdperson;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.leawind.mc.api.base.GameStatus;
-import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
 import net.leawind.mc.util.modkeymapping.ModKeyMapping;
 import net.minecraft.client.Minecraft;
@@ -17,7 +15,7 @@ public final class ThirdPersonKeys {
 																	   .onUp(ThirdPersonEvents::onStopAdjustingCameraOffset);
 	public static final ModKeyMapping FORCE_AIMING      = ModKeyMapping.of(getId("force_aiming"), ThirdPersonConstants.KEY_CATEGORY);
 	public static final ModKeyMapping TOOGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (config.is_mod_enable) {
 				ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_ROTATION);
@@ -32,15 +30,15 @@ public final class ThirdPersonKeys {
 		}
 	});
 	public static final ModKeyMapping OPEN_CONFIG_MENU  = ModKeyMapping.of(getId("open_config_menu"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
-		Minecraft mc = Minecraft.getInstance();
+		var mc = Minecraft.getInstance();
 		if (mc.screen == null) {
 			mc.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
 		}
 	});
 	public static final ModKeyMapping TOGGLE_SIDE       = ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ThirdPersonConstants.KEY_CATEGORY) //
 																	   .onDown(() -> {
-																		   CameraOffsetScheme scheme      = ThirdPerson.getConfig().getCameraOffsetScheme();
-																		   boolean            wasCentered = scheme.isCentered();
+																		   var     scheme      = ThirdPerson.getConfig().getCameraOffsetScheme();
+																		   boolean wasCentered = scheme.isCentered();
 																		   if (wasCentered) {
 																			   scheme.toNextSide();
 																		   }
@@ -54,7 +52,7 @@ public final class ThirdPersonKeys {
 		}
 	});
 	public static final ModKeyMapping TOGGLE_PITCH_LOCK = ModKeyMapping.of(getId("toggle_pitch_lock"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		config.lock_camera_pitch_angle = !config.lock_camera_pitch_angle;
 	});
 

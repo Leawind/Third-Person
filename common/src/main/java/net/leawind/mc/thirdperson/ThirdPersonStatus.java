@@ -1,12 +1,10 @@
 package net.leawind.mc.thirdperson;
 
 
-import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
 import net.leawind.mc.thirdperson.core.rotation.SmoothTypeEnum;
 import net.leawind.mc.util.math.vector.Vector2d;
 import net.leawind.mc.util.math.vector.Vector3d;
-import net.minecraft.client.CameraType;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +59,7 @@ public final class ThirdPersonStatus {
 	 * 当前相机模式既不是第一人称，也不是镜像的
 	 */
 	public static boolean isRenderingInThirdPerson () {
-		CameraType cameraType = ThirdPerson.mc.options.getCameraType();
+		var cameraType = ThirdPerson.mc.options.getCameraType();
 		return !(cameraType.isFirstPerson() || cameraType.isMirrored());
 	}
 
@@ -69,7 +67,7 @@ public final class ThirdPersonStatus {
 	 * 当前是否显示准星
 	 */
 	public static boolean shouldRenderThirdPersonCrosshair () {
-		Config config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		return ThirdPerson.isAvailable() && isRenderingInThirdPerson() &&
 			   (ThirdPerson.ENTITY_AGENT.wasAiming() ? config.render_crosshair_when_aiming: config.render_crosshair_when_not_aiming && (!(ThirdPerson.ENTITY_AGENT.isFallFlying() && config.hide_crosshair_when_flying)));
 	}
