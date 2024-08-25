@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import me.modmuss50.mpp.ReleaseType
 import java.nio.file.Files
 
@@ -19,6 +21,23 @@ subprojects {
 		silentMojangMappingsLicense()
 	}
 	processResources {
+		filesMatching("pack.mcmeta") { fcd ->
+			File f = fcd.file
+			if (!f.exists()) {
+				println "File not exist: " + f
+				return
+			}
+			Map meta
+			try {
+				meta = new JsonSlurper().parse(f) as Map
+			} catch (Exception e) {
+				throw new RuntimeException("Invalid json file: ${f}\n$e.message}")
+			}
+			meta.pack.pack_format = Integer.parseInt(resource_pack_format)
+			def writer = new FileWriter(f)
+			writer.write(JsonOutput.prettyPrint(JsonOutput.toJson(meta)))
+			writer.close()
+		}
 		eachFile {
 			expand rootProject.properties
 		}

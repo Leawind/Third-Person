@@ -52,7 +52,7 @@ remapJar {
 	dependsOn shadowJar
 }
 sourcesJar {
-	def commonSources = project(":common").sourcesJar
+	Task commonSources = project(":common").sourcesJar
 	dependsOn commonSources
 	from commonSources.archiveFile.map {
 		zipTree(it)
