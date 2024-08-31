@@ -30,8 +30,8 @@
 	],
 	"depends": {
 		"fabric": "*",
-		"minecraft": ">=${minecraft_version}",
-		"architectury": "<=${architectury_version}"
+		"minecraft": ">=${minecraft_version_min} <=${minecraft_version_max}",
+		"architectury": "<=${architectury_version_max}"
 	},
 	"recommends": {
 		"cloth-config2": "*",
