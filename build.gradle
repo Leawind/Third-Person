@@ -97,10 +97,18 @@ allprojects {
 }
 
 // 生成文件名格式
+// leawind_third_person_v2.1.0-mc1.20.1-fabric
+// leawind_third_person_v2.1.0-mc1.20-1.20.1-fabric
+// leawind_third_person_v2.1.0-mc1.19-1.19.4-fabric
 String archiveFileNameOfLoader(String loader) {
 	var loaders = enabled_loaders.split(/\s*,\s*/)
 	assert loaders.contains(loader)
-	return "${mod_id}-v${mod_version}-mc${minecraft_version}-${loader}"
+	def minecraft_version_text = minecraft_version
+	if (minecraft_version_min)
+		minecraft_version_text = "${minecraft_version_min}"
+	if (minecraft_version_max)
+		minecraft_version_text += "-${minecraft_version_max}"
+	return "${mod_id}-v${mod_version}-mc${minecraft_version_text}-${loader}"
 }
 
 // 检查更新日志的格式
