@@ -221,15 +221,14 @@ public final class ThirdPersonEvents {
 				// 进入第三人称
 				GameStatus.sprintImpulseThreshold = ThirdPerson.getConfig().sprint_impulse_threshold;
 				ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
-				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 				ThirdPerson.CAMERA_AGENT.reset();
 				ThirdPerson.ENTITY_AGENT.reset();
 			} else {
 				// 退出第三人称
 				GameStatus.sprintImpulseThreshold = -1;
 				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
-				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			}
+			ThirdPerson.mc.gameRenderer.checkEntityPostEffect(ThirdPerson.mc.getCameraEntity());
 			ThirdPerson.mc.levelRenderer.needsUpdate();
 			ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderingInThirdPerson;
 		}
