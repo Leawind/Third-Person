@@ -17,4 +17,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 public @interface VersionSensitive {
 	String value () default "";
+
+	String since () default "";
+
+	String until () default "";
 }
