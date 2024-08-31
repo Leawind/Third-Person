@@ -10,6 +10,7 @@ import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.event.*;
 import net.leawind.mc.util.ItemPattern;
+import net.leawind.mc.util.annotation.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector2d;
 import net.minecraft.client.CameraType;
@@ -171,15 +172,19 @@ public final class ThirdPersonEvents {
 		}
 	}
 
+	@VersionSensitive(value="At latest architectury-api 9", until="1.20.2")
+	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
+		return onMouseScrolled(minecraft, 0, amount);
+	}
+
 	/**
 	 * 使用滚轮调整距离
 	 *
-	 * @param minecraft mc
-	 * @param amount    向前滚是+1，向后滚是-1
-	 * @see ClientRawInputEvent#MOUSE_SCROLLED
+	 * @see ClientRawInputEvent.MouseScrolled
 	 */
-	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amount) {
-		int offset = (int)-Math.signum(amount);
+	@VersionSensitive(value="Since architectury-api 10", since="1.20.2")
+	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amountX, double amountY) {
+		int offset = (int)-Math.signum(amountY);
 		if (offset == 0 || !ThirdPersonStatus.isAdjustingCameraDistance()) {
 			return EventResult.pass();
 		}
