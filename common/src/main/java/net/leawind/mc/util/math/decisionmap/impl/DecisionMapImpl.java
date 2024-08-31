@@ -211,7 +211,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		while (strategyMap.size() < getMapSize()) {
 			strategyMap.add(null);
 		}
-		for (Runnable ruleBuilder: ruleBuilders) {
+		for (var ruleBuilder: ruleBuilders) {
 			ruleBuilder.run();
 		}
 		isBuilt = true;

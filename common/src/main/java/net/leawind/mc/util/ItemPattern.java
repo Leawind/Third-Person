@@ -107,7 +107,7 @@ public class ItemPattern {
 			return false;
 		}
 		for (var patterns: itemPatternsList) {
-			for (ItemPattern ip: patterns) {
+			for (var ip: patterns) {
 				if (ip.match(itemStack)) {
 					return true;
 				}

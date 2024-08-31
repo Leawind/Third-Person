@@ -284,7 +284,7 @@ public final class ThirdPersonEvents {
 				mode.setCenterOffsetRatio(topOffset);
 			} else {
 				// 相机没固定在头顶，可以上下左右调整
-				Vector2d offset = mode.getSideOffsetRatio(Vector2d.of());
+				var offset = mode.getSideOffsetRatio(Vector2d.of());
 				offset.sub(Vector2d.of(event.accumulatedDX, event.accumulatedDY).div(screenSize));
 				offset.clamp(-1, 1);
 				scheme.setSide(Math.signum(offset.x()));
