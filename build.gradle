@@ -1,6 +1,7 @@
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import me.modmuss50.mpp.ReleaseType
+
 import java.nio.file.Files
 
 plugins {
@@ -23,14 +24,14 @@ subprojects {
 	processResources {
 		filesMatching("pack.mcmeta") { fcd ->
 			File f = fcd.file
-			if (!f.exists()) {
+			if(!f.exists()){
 				println "File not exist: " + f
 				return
 			}
 			Map meta
-			try {
+			try{
 				meta = new JsonSlurper().parse(f) as Map
-			} catch (Exception e) {
+			}catch(Exception e){
 				throw new RuntimeException("Invalid json file: ${f}\n$e.message}")
 			}
 			meta.pack.pack_format = Integer.parseInt(resource_pack_format)
@@ -96,26 +97,31 @@ allprojects {
 	}
 }
 
-// 生成文件名格式
-// leawind_third_person_v2.1.0-mc1.20.1-fabric
-// leawind_third_person_v2.1.0-mc1.20-1.20.1-fabric
-// leawind_third_person_v2.1.0-mc1.19-1.19.4-fabric
-String archiveFileNameOfLoader(String loader) {
+// 版本名
+//     2.1.0-mc1.20.1-fabric
+//     2.1.0-mc1.20-1.20.1-forge
+String archiveVersionNameOfLoader(String loader){
+	final MC_VERSION_PATTERN = '^\\d+(\\.\\d+){1,2}$'
 	var loaders = enabled_loaders.split(/\s*,\s*/)
 	assert loaders.contains(loader)
 	def minecraft_version_text = minecraft_version
-	if (minecraft_version_min)
-		minecraft_version_text = "${minecraft_version_min}"
-	if (minecraft_version_max)
-		minecraft_version_text += "-${minecraft_version_max}"
-	return "${mod_id}-v${mod_version}-mc${minecraft_version_text}-${loader}"
+	if(minecraft_version_min =~ MC_VERSION_PATTERN) minecraft_version_text = "${minecraft_version_min}"
+	if(minecraft_version_max =~ MC_VERSION_PATTERN) minecraft_version_text += "-${minecraft_version_max}"
+	return "${mod_version}-mc${minecraft_version_text}-${loader}"
+}
+
+// 文件名
+//     leawind_third_person_v2.1.0-mc1.20.1-fabric
+//     leawind_third_person_v2.1.0-mc1.20-1.20.1-fabric
+//     leawind_third_person_v2.1.0-mc1.19-1.19.4-fabric
+String archiveFileNameOfLoader(String loader){
+	return "${mod_id}-v${archiveVersionNameOfLoader(loader)}"
 }
 
 // 检查更新日志的格式
-static void validateChangelog(String cl) {
+static void validateChangelog(String cl){
 	cl.eachLine {
-		if (it.startsWith("###"))
-			assert it =~ /^### (Added|Changed|Removed|Fixed|Compatibility|Other)$/
+		if(it.startsWith("###")) assert it =~ /^### (Added|Changed|Removed|Fixed|Compatibility|Other)$/
 		// 首字母不能小写
 		assert !(it =~ (/\s*^\*\s+[a-z]/))
 		// 配置键应当用反引号包裹 ``
@@ -131,13 +137,12 @@ static void validateChangelog(String cl) {
  *
  * @param doCheck 是否检查合法性
  */
-String readChangelog(boolean doCheck = false) {
+String readChangelog(boolean doCheck = false){
 	String cl = rootProject.file(changelog_file).text
-	if (doCheck)
-		validateChangelog(cl)
+	if(doCheck) validateChangelog(cl)
 	return cl.replaceAll(/### [A-Za-z]+[\s\n]+(?=###|\u0024)/, '')
-			 .replaceAll(/\n\s+\n/, '\n\n')
-			 .replaceAll(/\n+$/, '\n')
+			.replaceAll(/\n\s+\n/, '\n\n')
+			.replaceAll(/\n+$/, '\n')
 }
 
 // 注册任务：检查更新日志
@@ -162,36 +167,36 @@ tasks.register("linkRuns") {
 	group "loom"
 	description "Link running dirs"
 	def linkFileTo = { File src, File tar ->
-		if (tar.exists()) {
-			if (!src.isFile() || !Files.isSameFile(src.toPath(), tar.toPath())) {
+		if(tar.exists()){
+			if(!src.isFile() || !Files.isSameFile(src.toPath(), tar.toPath())){
 				delete src.toPath()
 				Files.createLink(src.toPath(), tar.toPath())
 			}
-		} else {
-			if (src.isFile()) {
+		}else{
+			if(src.isFile()){
 				Files.move(src.toPath(), tar.toPath())
 				Files.createLink(src.toPath(), tar.toPath())
 			}
 		}
 	}
 	def linkDirTo = { File src, File tar ->
-		if (src.exists()) {
-			if (tar.exists()) {
-				if (!Files.isSameFile(src.toPath(), tar.toPath())) {
+		if(src.exists()){
+			if(tar.exists()){
+				if(!Files.isSameFile(src.toPath(), tar.toPath())){
 					src.listFiles().each {
 						var dFile = new File(tar, it.name)
-						if (dFile.exists()) {
+						if(dFile.exists()){
 							delete it.toPath()
-						} else {
+						}else{
 							Files.move(it.toPath(), dFile.toPath())
 						}
 					}
 					delete src.toPath()
 				}
-			} else {
+			}else{
 				Files.move(src.toPath(), tar.toPath())
 			}
-		} else if (tar.exists()) {
+		}else if(tar.exists()){
 			Files.createSymbolicLink(src.toPath(), tar.toPath())
 		}
 	}
@@ -209,7 +214,7 @@ tasks.register("linkRuns") {
 		}
 		enabled_loaders.split(/[^a-z]+/).each {
 			File loaderRunDir = project(it).file("run")
-			if (!loaderRunDir.isDirectory()) {
+			if(!loaderRunDir.isDirectory()){
 				mkdir loaderRunDir
 				return
 			}
@@ -224,7 +229,7 @@ tasks.register("linkRuns") {
 }
 publishMods {
 	def toVersionType = { String type ->
-		switch (type) {
+		switch(type) {
 			case "release":
 				return ReleaseType.STABLE
 			case "stable":
@@ -234,14 +239,15 @@ publishMods {
 			case "alpha":
 				return ReleaseType.ALPHA
 			default:
-				throw new IllegalArgumentException("Unknown type: ${type}")
+				throw new IllegalArgumentException("Unknown version type: ${type}")
 		}
 	}
 	dryRun = providers.environmentVariable("DO_PUBLISH_MOD").getOrNull() != "true"
 	version = mod_version
+	// me.modmuss50.mpp.ReleaseType
 	type = toVersionType(mod_version_type)
 	changelog = readChangelog(true)
-	if (!dryRun) {
+	if(!dryRun){
 		assert providers.environmentVariable("MODRINTH_TOKEN").present
 		assert providers.environmentVariable("CURSEFORGE_TOKEN").present
 	}
@@ -251,18 +257,22 @@ publishMods {
 			// import net.fabricmc.loom.task.RemapJarTask
 			file = project(":${loader}").remapJar.archiveFile
 			file = file.get().asFile.toPath().parent.resolve("${archiveFileNameOfLoader(loader)}.jar").toFile()
-			displayName = "${mod_version}-mc${minecraft_version}-${loader}"
+			displayName = archiveVersionNameOfLoader(loader)
 		}
 	}
 	def modrinthOptions = modrinthOptions {
 		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
 		projectId = modrinth_project_id
-		minecraftVersions.add(minecraft_version)
+		minecraft_version_list.split('[^\\d.]+').each {
+			minecraftVersions.add(it)
+		}
 	}
 	def curseforgeOptions = curseforgeOptions {
 		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
 		projectId = curseforge_project_id
-		minecraftVersions.add(minecraft_version)
+		minecraft_version_list.split('[^\\d.]+').each {
+			minecraftVersions.add(it)
+		}
 		javaVersions.add(JavaVersion.toVersion(java_version))
 		clientRequired = true
 		serverRequired = false
