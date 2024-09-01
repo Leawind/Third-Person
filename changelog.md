@@ -1,14 +1,18 @@
 ### Added
 
+* Make it always use post effect of attached entity in spectator mode
+* Disable double-tap sprinting in third person
+	* config: `allow_double_tap_sprint`
+
 ### Changed
 
-* Update link https://afdian.com/a/Leawind
+* Support both 1.20 and 1.20.1
 
 ### Removed
 
-### Fixed
+* Remove config `sprint_impulse_threshold`
 
-* Transition from third person to first person not smooth
+### Fixed
 
 ### Compatibility
 
