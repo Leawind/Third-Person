@@ -11,5 +11,4 @@ public final class GameStatus {
 	 */
 	public static boolean forceThirdPersonCrosshair = false;
 	public static boolean isPerspectiveInverted     = false;
-	public static double  sprintImpulseThreshold    = -1;
 }

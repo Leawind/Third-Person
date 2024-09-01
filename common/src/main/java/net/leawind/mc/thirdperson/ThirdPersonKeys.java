@@ -2,7 +2,6 @@ package net.leawind.mc.thirdperson;
 
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
 import net.leawind.mc.util.modkeymapping.ModKeyMapping;
 import net.minecraft.client.Minecraft;
@@ -20,7 +19,6 @@ public final class ThirdPersonKeys {
 			if (config.is_mod_enable) {
 				ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_ROTATION);
 			} else {
-				GameStatus.sprintImpulseThreshold = ThirdPerson.getConfig().sprint_impulse_threshold;
 				ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
 				ThirdPerson.CAMERA_AGENT.reset();

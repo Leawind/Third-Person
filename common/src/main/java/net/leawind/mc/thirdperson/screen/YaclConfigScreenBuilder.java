@@ -109,7 +109,6 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .option(booleanOption("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, () -> config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v).build()) //
 														  .option(booleanOption("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, () -> config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v).build()) //
 														  .option(option("camera_ray_trace_length", defaults.camera_ray_trace_length, 32D, 2048D, 1D, () -> config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v).build()) //
-														  .option(option("sprint_impulse_threshold", defaults.sprint_impulse_threshold, ThirdPersonConstants.VANILLA_SPRINT_IMPULSE_THRESHOLD, 1, 0.001, () -> config.sprint_impulse_threshold, v -> config.sprint_impulse_threshold = v).build()) //
 														  .group(group("crosshair") //
 																					.option(booleanOption("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, () -> config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v).build()) //
 																					.option(booleanOption("render_crosshair_when_aiming", defaults.render_crosshair_when_aiming, () -> config.render_crosshair_when_aiming, v -> config.render_crosshair_when_aiming = v).build()) //

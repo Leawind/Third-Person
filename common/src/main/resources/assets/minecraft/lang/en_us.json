@@ -93,8 +93,6 @@
 	"leawind_third_person.option.offset_center.desc": "Long-pressing specific keys can center the view. When centered, the X offset is fixed at 0, and the player is in the middle of the screen. This option adjusts the Y offset at this time.",
 	"leawind_third_person.option.camera_ray_trace_length": "Camera ray trace distance",
 	"leawind_third_person.option.camera_ray_trace_length.desc": "When the targeted object exceeds this distance while aiming, the player's line of sight will be parallel to the camera's line of sight.",
-	"leawind_third_person.option.sprint_impulse_threshold": "Sprint impulse threshold",
-	"leawind_third_person.option.sprint_impulse_threshold.desc": "Sprint impulse threshold.",
 	"leawind_third_person.option.enable_target_entity_predict": "Enable target entity prediction when aiming",
 	"leawind_third_person.option.enable_target_entity_predict.desc": "When aiming, predict the target entity you want to shoot, calculate the player's rotation based on this, for better aiming at the target.",
 	"leawind_third_person.option.skip_vanilla_second_person_camera": "Skip vanilla second person",

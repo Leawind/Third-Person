@@ -93,8 +93,6 @@
 	"leawind_third_person.option.offset_center.desc": "长按特定按键可以居中，居中状态下X偏移固定为0，玩家处于屏幕中间。本选项可以调整此时的Y偏移。",
 	"leawind_third_person.option.camera_ray_trace_length": "相机视线探测距离",
 	"leawind_third_person.option.camera_ray_trace_length.desc": "当瞄准的物体超过这个距离时，玩家视线会和相机视线平行。",
-	"leawind_third_person.option.sprint_impulse_threshold": "疾跑脉冲阈值",
-	"leawind_third_person.option.sprint_impulse_threshold.desc": "疾跑脉冲阈值。",
 	"leawind_third_person.option.enable_target_entity_predict": "瞄准时启用目标实体预测",
 	"leawind_third_person.option.enable_target_entity_predict.desc": "瞄准时，自动预测想要射击的目标实体，据此计算玩家朝向，以便更好地瞄准目标。",
 	"leawind_third_person.option.skip_vanilla_second_person_camera": "跳过原版第二人称",

@@ -122,7 +122,6 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
-			CATEGORY_OTHER.addEntry(buildDoubleEntry("sprint_impulse_threshold", ThirdPersonConstants.VANILLA_SPRINT_IMPULSE_THRESHOLD, 1.0D, defaults.sprint_impulse_threshold, config.sprint_impulse_threshold, v -> config.sprint_impulse_threshold = v, entryBuilder));
 			// SubCategory: Crosshair
 			final var Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);
 			Subcategory_Crosshair.add(buildBooleanEntry("render_crosshair_when_not_aiming", defaults.render_crosshair_when_not_aiming, config.render_crosshair_when_not_aiming, v -> config.render_crosshair_when_not_aiming = v, entryBuilder));
