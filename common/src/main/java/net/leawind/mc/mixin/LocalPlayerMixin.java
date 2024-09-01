@@ -2,7 +2,6 @@ package net.leawind.mc.mixin;
 
 
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,7 +15,8 @@ public class LocalPlayerMixin {
 
 	@Inject(method="aiStep()V", at=@At("HEAD"))
 	private void preAiStep (CallbackInfo ci) {
-		if (!Minecraft.getInstance().options.getCameraType().isFirstPerson() && !ThirdPerson.getConfig().allow_double_tap_sprint) {
+		var config = ThirdPerson.getConfig();
+		if (config.is_mod_enable && !ThirdPerson.mc.options.getCameraType().isFirstPerson() && !config.allow_double_tap_sprint) {
 			sprintTriggerTime = 0;
 		}
 	}
