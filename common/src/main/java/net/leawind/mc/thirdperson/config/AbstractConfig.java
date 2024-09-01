@@ -19,7 +19,7 @@ public abstract class AbstractConfig {
 	@Expose public          boolean      use_camera_pick_in_creative               = true;
 	//------------------------------玩家旋转
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;
-	@Expose public          boolean      player_rotate_to_intrest_point            = true;
+	@Expose public          boolean      player_rotate_to_interest_point           = true;
 	@Expose public          boolean      rotate_to_moving_direction                = true;
 	@Expose public          boolean      auto_rotate_interacting                   = true;
 	@Expose public          boolean      do_not_rotate_when_eating                 = true;
@@ -50,16 +50,16 @@ public abstract class AbstractConfig {
 	@Expose public          double       aiming_distance_smooth_halflife           = 0.04;
 	// ================================================================================相机偏移 //
 	//------------------------------正常模式
-	@Expose public          boolean      normal_is_centered                        = false;
 	@Expose public          double       normal_max_distance                       = 1.5;
 	@Expose public          double       normal_offset_x                           = -0.16;
 	@Expose public          double       normal_offset_y                           = 0.26;
+	@Expose public          boolean      normal_is_centered                        = false;
 	@Expose public          double       normal_offset_center                      = 0.24;
 	//------------------------------瞄准模式
-	@Expose public          boolean      aiming_is_centered                        = false;
 	@Expose public          double       aiming_max_distance                       = 0.28;
 	@Expose public          double       aiming_offset_x                           = -0.36;
 	@Expose public          double       aiming_offset_y                           = 0.42;
+	@Expose public          boolean      aiming_is_centered                        = false;
 	@Expose public          double       aiming_offset_center                      = 0.48;
 	// ================================================================================瞄准模式判定 //
 	@Expose public          boolean      determine_aim_mode_by_animation           = true;
@@ -68,11 +68,11 @@ public abstract class AbstractConfig {
 	@Expose @NotNull public List<String> use_to_first_person_pattern_expressions   = new ArrayList<>();
 	// ================================================================================其他 //
 	@Expose public          String       config_screen_api                         = "YACL";
-	@Expose public          double       camera_ray_trace_length                   = 512;
-	@Expose public          boolean      lock_camera_pitch_angle                   = false;
-	@Expose public boolean allow_double_tap_sprint = false;
 	@Expose public          boolean      enable_target_entity_predict              = true;
 	@Expose public          boolean      skip_vanilla_second_person_camera         = true;
+	@Expose public          boolean      allow_double_tap_sprint                   = false;
+	@Expose public          boolean      lock_camera_pitch_angle                   = false;
+	@Expose public          double       camera_ray_trace_length                   = 512;
 	//------------------------------准星
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;
 	@Expose public          boolean      render_crosshair_when_aiming              = true;

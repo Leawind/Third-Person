@@ -36,7 +36,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			// SubCategory: Player Rotation
 			final var SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));
-			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_to_intrest_point", defaults.player_rotate_to_intrest_point, config.player_rotate_to_intrest_point, v -> config.player_rotate_to_intrest_point = v, entryBuilder));
+			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_to_intrest_point", defaults.player_rotate_to_interest_point, config.player_rotate_to_interest_point, v -> config.player_rotate_to_interest_point = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("rotate_to_moving_direction", defaults.rotate_to_moving_direction, config.rotate_to_moving_direction, v -> config.rotate_to_moving_direction = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("auto_rotate_interacting", defaults.auto_rotate_interacting, config.auto_rotate_interacting, v -> config.auto_rotate_interacting = v, entryBuilder));
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("do_not_rotate_when_eating", defaults.do_not_rotate_when_eating, config.do_not_rotate_when_eating, v -> config.do_not_rotate_when_eating = v, entryBuilder));
