@@ -4,7 +4,6 @@ package net.leawind.mc.thirdperson.screen;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.leawind.mc.thirdperson.ThirdPerson;
-import net.leawind.mc.thirdperson.ThirdPersonConstants;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
 import net.minecraft.client.gui.screens.Screen;
@@ -107,6 +106,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 																																															 .build()) //
 														  .option(booleanOption("enable_target_entity_predict", defaults.enable_target_entity_predict, () -> config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v).build()) //
 														  .option(booleanOption("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, () -> config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v).build()) //
+														  .option(booleanOption("disable_double_tap_sprint", defaults.allow_double_tap_sprint, () -> config.allow_double_tap_sprint, v -> config.allow_double_tap_sprint = v).build()) // <- This is the new line
 														  .option(booleanOption("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, () -> config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v).build()) //
 														  .option(option("camera_ray_trace_length", defaults.camera_ray_trace_length, 32D, 2048D, 1D, () -> config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v).build()) //
 														  .group(group("crosshair") //

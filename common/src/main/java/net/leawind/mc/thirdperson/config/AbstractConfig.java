@@ -70,6 +70,7 @@ public abstract class AbstractConfig {
 	@Expose public          String       config_screen_api                         = "YACL";
 	@Expose public          double       camera_ray_trace_length                   = 512;
 	@Expose public          boolean      lock_camera_pitch_angle                   = false;
+	@Expose public boolean allow_double_tap_sprint = false;
 	@Expose public          boolean      enable_target_entity_predict              = true;
 	@Expose public          boolean      skip_vanilla_second_person_camera         = true;
 	//------------------------------准星
