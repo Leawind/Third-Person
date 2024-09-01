@@ -38,7 +38,7 @@ public final class ThirdPerson {
 	public static boolean isAvailable () {
 		return mc.player != null    //
 			   && mc.cameraEntity != null    //
-			   && getConfig().is_mod_enable //
+			   && getConfig().is_mod_enabled //
 			   && mc.gameRenderer.getMainCamera().isInitialized()    //
 			;
 	}

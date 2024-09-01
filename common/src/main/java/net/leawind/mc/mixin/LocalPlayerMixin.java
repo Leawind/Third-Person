@@ -16,7 +16,7 @@ public class LocalPlayerMixin {
 	@Inject(method="aiStep()V", at=@At("HEAD"))
 	private void preAiStep (CallbackInfo ci) {
 		var config = ThirdPerson.getConfig();
-		if (config.is_mod_enable && !ThirdPerson.mc.options.getCameraType().isFirstPerson() && !config.allow_double_tap_sprint) {
+		if (config.is_mod_enabled && !ThirdPerson.mc.options.getCameraType().isFirstPerson() && !config.allow_double_tap_sprint) {
 			sprintTriggerTime = 0;
 		}
 	}

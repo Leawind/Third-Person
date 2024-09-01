@@ -25,7 +25,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 								  .category(ConfigCategory.createBuilder() //
 														  .name(ConfigManager.getText("option_category.common")) //
 														  .tooltip(ConfigManager.getText("option_category.common.desc")) //
-														  .option(booleanOption("is_mod_enable", defaults.is_mod_enable, () -> config.is_mod_enable, v -> config.is_mod_enable = v).build()) //
+														  .option(booleanOption("is_mod_enabled", defaults.is_mod_enabled, () -> config.is_mod_enabled, v -> config.is_mod_enabled = v).build()) //
 														  .option(booleanOption("center_offset_when_flying", defaults.center_offset_when_flying, () -> config.center_offset_when_flying, v -> config.center_offset_when_flying = v).build()) //
 														  .option(booleanOption("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, () -> config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v).build()) //
 														  .group(group("player_rotation") //

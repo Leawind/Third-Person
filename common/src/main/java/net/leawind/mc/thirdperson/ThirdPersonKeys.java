@@ -16,7 +16,7 @@ public final class ThirdPersonKeys {
 	public static final ModKeyMapping TOOGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
 		var config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-			if (config.is_mod_enable) {
+			if (config.is_mod_enabled) {
 				ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_ROTATION);
 			} else {
 				ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
@@ -24,7 +24,7 @@ public final class ThirdPersonKeys {
 				ThirdPerson.CAMERA_AGENT.reset();
 				ThirdPerson.ENTITY_AGENT.reset();
 			}
-			config.is_mod_enable = !config.is_mod_enable;
+			config.is_mod_enabled = !config.is_mod_enabled;
 		}
 	});
 	public static final ModKeyMapping OPEN_CONFIG_MENU  = ModKeyMapping.of(getId("open_config_menu"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {

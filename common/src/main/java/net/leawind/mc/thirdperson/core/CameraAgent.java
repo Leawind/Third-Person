@@ -149,7 +149,7 @@ public class CameraAgent {
 	public void turnCamera (double dYRot, double dXRot) {
 		assert Double.isFinite(dYRot) && Double.isFinite(dXRot);
 		var config = ThirdPerson.getConfig();
-		if (config.is_mod_enable && !ThirdPersonStatus.isAdjustingCameraOffset()) {
+		if (config.is_mod_enabled && !ThirdPersonStatus.isAdjustingCameraOffset()) {
 			if (config.lock_camera_pitch_angle) {
 				dXRot = 0;
 			}

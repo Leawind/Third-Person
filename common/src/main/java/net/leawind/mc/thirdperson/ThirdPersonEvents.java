@@ -154,7 +154,7 @@ public final class ThirdPersonEvents {
 	 * @see ClientPlayerEvent#CLIENT_PLAYER_RESPAWN
 	 */
 	private static void onClientPlayerRespawn (@NotNull LocalPlayer oldPlayer, @NotNull LocalPlayer newPlayer) {
-		if (ThirdPerson.getConfig().is_mod_enable) {
+		if (ThirdPerson.getConfig().is_mod_enabled) {
 			onPlayerReset();
 			ThirdPerson.LOGGER.info("on Client player respawn");
 		}
@@ -166,7 +166,7 @@ public final class ThirdPersonEvents {
 	 * @see ClientPlayerEvent#CLIENT_PLAYER_JOIN
 	 */
 	private static void onClientPlayerJoin (@NotNull LocalPlayer player) {
-		if (ThirdPerson.getConfig().is_mod_enable) {
+		if (ThirdPerson.getConfig().is_mod_enabled) {
 			onPlayerReset();
 			ThirdPerson.LOGGER.info("on Client player join");
 		}
@@ -211,7 +211,7 @@ public final class ThirdPersonEvents {
 	 */
 	private static void onRenderTickStart (RenderTickStartEvent event) {
 		GameStatus.forceThirdPersonCrosshair = ThirdPersonStatus.shouldRenderThirdPersonCrosshair();
-		if (!ThirdPerson.getConfig().is_mod_enable) {
+		if (!ThirdPerson.getConfig().is_mod_enabled) {
 			return;
 		}
 		ThirdPerson.CAMERA_AGENT.checkGameStatus();
