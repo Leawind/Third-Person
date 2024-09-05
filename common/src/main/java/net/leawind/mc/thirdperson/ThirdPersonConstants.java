@@ -55,4 +55,10 @@ public final class ThirdPersonConstants {
 	 * LocalPlayer#hasEnoughImpulseToStartSprinting
 	 */
 	public static final double            VANILLA_SPRINT_IMPULSE_THRESHOLD         = 0.8;
+	/**
+	 * getPlayerPOVHitResult 方法中的探测距离
+	 * <p>
+	 * Item#getPlayerPOVHitResult(Level, Player, ClipContext.Fluid)
+	 */
+	public static final double            VANILLA_POV_REACH                        = 5.0;
 }
