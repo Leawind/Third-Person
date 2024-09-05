@@ -15,7 +15,7 @@ hero:
           text: 💬Q&A
           link: ./Q&A/
         - theme: alt
-          text: 💡提交问题
+          text: 💡报告问题
           link: https://github.com/LEAWIND/Third-Person/issues/new/choose
 features:
     - title: 👁详细特性
