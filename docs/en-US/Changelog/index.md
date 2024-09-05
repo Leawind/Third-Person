@@ -9,7 +9,7 @@ hero:
     image:
     actions:
         - theme: alt
-          text: All
+          text: See all
           link: ./All
 ---
 

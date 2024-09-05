@@ -1,5 +1,52 @@
 # All Changelog
 
+## v2.1.0-mc1.20.1
+
+### Changed
+
+-   Update link https://afdian.com/a/Leawind
+
+### Fixed
+
+-   Transition from third person to first person not smooth
+
+## v2.1.0-beta.3-mc1.20.1
+
+### Changed
+
+-   Update default values and adjustable ranges for config items
+-   Update translations
+-   Improve riding experience
+-   Calculate camera-to-player distance based on the total size of the player and vehicles #142
+-   Make "camera distance" starts from certain distance to eye
+
+### Removed
+
+-   Unnecessary config item
+-   Unnecessary camera distance limitation in normal mode
+
+### Fixed
+
+-   Sometimes player's head disappear #138
+
+## v2.1.0-beta.2-mc1.20.1
+
+### Fixed
+
+-   Sometimes player's head disappeared #138
+
+## v2.1.0-beta.1-mc1.20.1
+
+### Added
+
+-   Skip vanilla second person camera
+    -   Add config: `skip_vanilla_second_person_camera`
+
+### Fixed
+
+-   No enough information output when player rotation become NaN
+-   Crosshair is still rendered when mod is disabled
+
 ## v2.0.9-mc1.20.1
 
 ### Added
