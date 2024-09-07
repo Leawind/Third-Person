@@ -16,7 +16,7 @@ public abstract class AbstractConfig {
 	// ================================================================================常用 //
 	@Expose public          boolean      is_mod_enabled                            = true;
 	@Expose public          boolean      center_offset_when_flying                 = true;
-	@Expose public          boolean      use_camera_pick_in_creative               = true;
+	@Expose public boolean use_camera_pick_in_creative = false;
 	//------------------------------玩家旋转
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;
 	@Expose public          boolean      player_rotate_to_interest_point           = true;
