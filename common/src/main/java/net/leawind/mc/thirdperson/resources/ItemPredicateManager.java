@@ -102,21 +102,34 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
 		holdToAimItemPredicates.clear();
 		useToAimItemPredicates.clear();
 		useToFirstPersonItemPredicates.clear();
-		parseToSet(holdToAimItemPredicates, holdToAimItemPatterns);
-		parseToSet(useToAimItemPredicates, useToAimItemPatterns);
-		parseToSet(useToFirstPersonItemPredicates, useToFirstPersonItemPatterns);
+		int count;
+		count = parseToSet(holdToAimItemPredicates, holdToAimItemPatterns);
+		if (count > 0) {
+			ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from resource pack", count);
+		}
+		count = parseToSet(useToAimItemPredicates, useToAimItemPatterns);
+		if (count > 0) {
+			ThirdPerson.LOGGER.info("Loaded {} use_to_aim item patterns from resource pack", count);
+		}
+		count = parseToSet(useToFirstPersonItemPredicates, useToFirstPersonItemPatterns);
+		if (count > 0) {
+			ThirdPerson.LOGGER.info("Loaded {} use_to_first_person item patterns from resource pack", count);
+		}
 	}
 
-	private void parseToSet (Set<ItemPredicate> predicates, Map<String, Set<String>> patternMap) {
+	private int parseToSet (Set<ItemPredicate> predicates, Map<String, Set<String>> patternMap) {
+		int count = 0;
 		for (var defaultNs: patternMap.keySet()) {
 			var patterns = patternMap.get(defaultNs);
 			for (var pattern: patterns) {
 				try {
 					predicates.add(ItemPredicateUtil.parse(pattern));
+					count++;
 				} catch (IllegalArgumentException e) {
 					ThirdPerson.LOGGER.warn("Skip invalid item pattern: {} Because {}", pattern, e.getMessage());
 				}
 			}
 		}
+		return count;
 	}
 }
