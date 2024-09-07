@@ -40,7 +40,7 @@ fix: too many downloads #999
 
 ### Define config item and set default value
 
-Edit `net.leawind.mc.thirdperson.config.AbstractConfig`
+Edit `com.github.leawind.thirdperson.config.AbstractConfig`
 
 ```
 @Expose public double my_option = 0.5;
@@ -56,15 +56,15 @@ Use the config item somewhere.
 
 ### Edit config screen builder
 
-Find all subclass of abstract class `net.leawind.mc.thirdperson.screen.ConfigScreenBuilder`
+Find all subclass of abstract class `com.github.leawind.thirdperson.screen.ConfigScreenBuilder`
 
 For example
 
-* `net.leawind.mc.thirdperson.screen.YaclConfigScreenBuilder`
+* `com.github.leawind.thirdperson.screen.YaclConfigScreenBuilder`
   ```
 		.option(option("my_option", defaults.my_option, 0D, 1D, 0.05D, () -> config.my_option, v -> config.my_option = v).build()) //
   ```
-* `net.leawind.mc.thirdperson.screen.ClothConfigScreenBuilder`
+* `com.github.leawind.thirdperson.screen.ClothConfigScreenBuilder`
   ```
 		CATEGORY_OTHER.addEntry(buildDoubleEntry("my_option", 0D, 1D, defaults.my_option, config.my_option, v -> config.my_option = v, entryBuilder));
   ```

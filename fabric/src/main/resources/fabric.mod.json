@@ -18,10 +18,10 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"net.leawind.mc.fabric.thirdperson.ThirdPersonFabric"
+			"com.github.leawind.thirdperson.fabric.ThirdPersonFabric"
 		],
 		"modmenu": [
-			"net.leawind.mc.fabric.thirdperson.ModMenuEntry"
+			"com.github.leawind.thirdperson.fabric.ModMenuEntry"
 		]
 	},
 	"mixins": [
