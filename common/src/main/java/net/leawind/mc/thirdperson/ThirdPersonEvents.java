@@ -9,7 +9,7 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import net.leawind.mc.api.base.GameEvents;
 import net.leawind.mc.api.base.GameStatus;
 import net.leawind.mc.api.client.event.*;
-import net.leawind.mc.util.ItemPattern;
+import net.leawind.mc.util.ItemPredicateUtil;
 import net.leawind.mc.util.annotation.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.vector.Vector2d;
@@ -41,84 +41,6 @@ public final class ThirdPersonEvents {
 		}
 	}
 
-	private static void onEntityTurnStart (EntityTurnStartEvent event) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
-			ThirdPerson.CAMERA_AGENT.turnCamera(event.dYRot, event.dXRot);
-			event.cancelDefault();
-		}
-	}
-
-	private static boolean onRenderEntity (RenderEntityEvent event) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && event.entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
-			return ThirdPersonStatus.shouldRenderCameraEntity();
-		}
-		return true;
-	}
-
-	/**
-	 * 当前的 impulse 代表玩家希望前进的方向（世界坐标）
-	 * <p>
-	 * 结合当前玩家实体的朝向重新计算 impulse
-	 */
-	private static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
-			var camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
-			// 计算世界坐标系下的向前和向左 impulse
-			// 视线向量
-			var lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
-			var leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
-			// 水平方向上的视线向量
-			var lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize(event.forwardImpulse);
-			var leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize(event.leftImpulse);
-			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPersonStatus.impulseHorizon);
-			// 世界坐标系下的 impulse
-			lookImpulse.mul(event.forwardImpulse);    // 这才是 impulse
-			leftImpulse.mul(event.leftImpulse);
-			lookImpulse.add(leftImpulse, ThirdPersonStatus.impulse);
-			// impulse 不为0，
-			final double length = ThirdPersonStatus.impulseHorizon.length();
-			if (length > 1E-5) {
-				if (length > 1.0D) {
-					ThirdPersonStatus.impulseHorizon.div(length, length);
-				}
-				float playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
-				var   playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
-				var   playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
-				event.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
-				event.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
-			}
-		}
-	}
-
-	private static void onMinecraftPickEvent (MinecraftPickEvent event) {
-		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-			var cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-			var cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
-			var eyePosition       = cameraEntity.getEyePosition(event.partialTick);
-			var cameraHitPosition = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
-			event.pickTo(cameraHitPosition);
-			double pickRange;
-			if (ThirdPersonStatus.shouldPickFromCamera()) {
-				event.pickFrom(cameraPosition);
-				event.setPickRange(cameraHitPosition.distanceTo(cameraPosition) + 1e-5);
-			} else {
-				event.pickFrom(eyePosition);
-				event.setPickRange(event.playerReach);
-			}
-		}
-	}
-
-	/**
-	 * 设置相机位置和朝向
-	 */
-	private static void onThirdPersonCameraSetup (ThirdPersonCameraSetupEvent event) {
-		if (ThirdPerson.isAvailable()) {
-			if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist() && ThirdPersonStatus.isRenderingInThirdPerson()) {
-				ThirdPerson.CAMERA_AGENT.onCameraSetup(event);
-			}
-		}
-	}
-
 	/**
 	 * Client tick 前
 	 *
@@ -135,7 +57,7 @@ public final class ThirdPersonEvents {
 			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
 			GameStatus.isPerspectiveInverted = !cameraEntity.isSpectator() && cameraEntity.isInWall();
 			if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
-				if (ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToFirstPersonItemPatterns(), ThirdPersonResources.itemPatternManager.useToFirstPersonItemPatterns)) {
+				if (ItemPredicateUtil.anyMatches(livingEntity.getUseItem(), config.getUseToFirstPersonItemPredicates(), ThirdPersonResources.itemPredicateManager.useToFirstPersonItemPredicates)) {
 					GameStatus.isPerspectiveInverted = true;
 				}
 			}
@@ -178,32 +100,32 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * 使用滚轮调整距离
-	 *
-	 * @see ClientRawInputEvent.MouseScrolled
+	 * 设置相机位置和朝向
 	 */
-	@VersionSensitive(value="Since architectury-api 10", since="1.20.2")
-	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amountX, double amountY) {
-		int offset = (int)-Math.signum(amountY);
-		if (offset == 0 || !ThirdPersonStatus.isAdjustingCameraDistance()) {
-			return EventResult.pass();
+	private static void onThirdPersonCameraSetup (ThirdPersonCameraSetupEvent event) {
+		if (ThirdPerson.isAvailable()) {
+			if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+				ThirdPerson.CAMERA_AGENT.onCameraSetup(event);
+			}
 		}
-		var    config = ThirdPerson.getConfig();
-		double dist   = config.getCameraOffsetScheme().getMode().getMaxDistance();
-		dist = config.getDistanceMonoList().offset(dist, offset);
-		config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
-		return EventResult.interruptFalse();
 	}
 
-	/**
-	 * 重置玩家
-	 *
-	 * @see ThirdPersonEvents#onClientPlayerRespawn(LocalPlayer, LocalPlayer)
-	 * @see ThirdPersonEvents#onClientPlayerJoin(LocalPlayer)
-	 */
-	private static void onPlayerReset () {
-		ThirdPerson.ENTITY_AGENT.reset();
-		ThirdPerson.CAMERA_AGENT.reset();
+	private static void onMinecraftPickEvent (MinecraftPickEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
+			var cameraEntity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			var cameraPosition    = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
+			var eyePosition       = cameraEntity.getEyePosition(event.partialTick);
+			var cameraHitPosition = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
+			event.pickTo(cameraHitPosition);
+			double pickRange;
+			if (ThirdPersonStatus.shouldPickFromCamera()) {
+				event.pickFrom(cameraPosition);
+				event.setPickRange(cameraHitPosition.distanceTo(cameraPosition) + 1e-5);
+			} else {
+				event.pickFrom(eyePosition);
+				event.setPickRange(event.playerReach);
+			}
+		}
 	}
 
 	/**
@@ -252,17 +174,57 @@ public final class ThirdPersonEvents {
 	}
 
 	/**
-	 * @see ThirdPersonKeys#ADJUST_POSITION
+	 * 当前的 impulse 代表玩家希望前进的方向（世界坐标）
+	 * <p>
+	 * 结合当前玩家实体的朝向重新计算 impulse
 	 */
-	@SuppressWarnings("EmptyMethod")
-	public static void onStartAdjustingCameraOffset () {
+	private static void onCalculateMoveImpulse (CalculateMoveImpulseEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && ThirdPerson.ENTITY_AGENT.isControlled()) {
+			var camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
+			// 计算世界坐标系下的向前和向左 impulse
+			// 视线向量
+			var lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
+			var leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
+			// 水平方向上的视线向量
+			var lookImpulseHorizon = Vector2d.of(lookImpulse.x(), lookImpulse.z()).normalize(event.forwardImpulse);
+			var leftImpulseHorizon = Vector2d.of(leftImpulse.x(), leftImpulse.z()).normalize(event.leftImpulse);
+			lookImpulseHorizon.add(leftImpulseHorizon, ThirdPersonStatus.impulseHorizon);
+			// 世界坐标系下的 impulse
+			lookImpulse.mul(event.forwardImpulse);    // 这才是 impulse
+			leftImpulse.mul(event.leftImpulse);
+			lookImpulse.add(leftImpulse, ThirdPersonStatus.impulse);
+			// impulse 不为0，
+			final double length = ThirdPersonStatus.impulseHorizon.length();
+			if (length > 1E-5) {
+				if (length > 1.0D) {
+					ThirdPersonStatus.impulseHorizon.div(length, length);
+				}
+				float playerYRot        = ThirdPerson.ENTITY_AGENT.getRawPlayerEntity().getViewYRot(ThirdPersonStatus.lastPartialTick);
+				var   playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
+				var   playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
+				event.forwardImpulse = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
+				event.leftImpulse    = (float)(ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
+			}
+		}
 	}
 
-	/**
-	 * @see ThirdPersonKeys#ADJUST_POSITION
-	 */
-	public static void onStopAdjustingCameraOffset () {
-		ThirdPerson.CONFIG_MANAGER.lazySave();
+	private static boolean onRenderEntity (RenderEntityEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && event.entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
+			return ThirdPersonStatus.shouldRenderCameraEntity();
+		}
+		return true;
+	}
+
+	private static void onHandleKeybindsStart () {
+		if (ThirdPerson.isAvailable()) {
+			var config = ThirdPerson.getConfig();
+			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
+				if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
+					// 立即更新玩家注视着的目标 Minecraft#hitResult
+					ThirdPerson.mc.gameRenderer.pick(1f);
+				}
+			}
+		}
 	}
 
 	/**
@@ -296,15 +258,53 @@ public final class ThirdPersonEvents {
 		}
 	}
 
-	private static void onHandleKeybindsStart () {
-		if (ThirdPerson.isAvailable()) {
-			var config = ThirdPerson.getConfig();
-			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
-					// 立即更新玩家注视着的目标 Minecraft#hitResult
-					ThirdPerson.mc.gameRenderer.pick(1f);
-				}
-			}
+	private static void onEntityTurnStart (EntityTurnStartEvent event) {
+		if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson() && !ThirdPersonStatus.shouldCameraTurnWithEntity()) {
+			ThirdPerson.CAMERA_AGENT.turnCamera(event.dYRot, event.dXRot);
+			event.cancelDefault();
 		}
+	}
+
+	/**
+	 * 重置玩家
+	 *
+	 * @see ThirdPersonEvents#onClientPlayerRespawn(LocalPlayer, LocalPlayer)
+	 * @see ThirdPersonEvents#onClientPlayerJoin(LocalPlayer)
+	 */
+	private static void onPlayerReset () {
+		ThirdPerson.ENTITY_AGENT.reset();
+		ThirdPerson.CAMERA_AGENT.reset();
+	}
+
+	/**
+	 * 使用滚轮调整距离
+	 *
+	 * @see ClientRawInputEvent.MouseScrolled
+	 */
+	@VersionSensitive(value="Since architectury-api 10", since="1.20.2")
+	private static @NotNull EventResult onMouseScrolled (@NotNull Minecraft minecraft, double amountX, double amountY) {
+		int offset = (int)-Math.signum(amountY);
+		if (offset == 0 || !ThirdPersonStatus.isAdjustingCameraDistance()) {
+			return EventResult.pass();
+		}
+		var    config = ThirdPerson.getConfig();
+		double dist   = config.getCameraOffsetScheme().getMode().getMaxDistance();
+		dist = config.getDistanceMonoList().offset(dist, offset);
+		config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
+		return EventResult.interruptFalse();
+	}
+
+	/**
+	 * @see ThirdPersonKeys#ADJUST_POSITION
+	 */
+	@SuppressWarnings("EmptyMethod")
+	public static void onStartAdjustingCameraOffset () {
+	}
+
+	/**
+	 * @see ThirdPersonKeys#ADJUST_POSITION
+	 */
+	public static void onStopAdjustingCameraOffset () {
+		ThirdPerson.CONFIG_MANAGER.lazySave();
 	}
 }

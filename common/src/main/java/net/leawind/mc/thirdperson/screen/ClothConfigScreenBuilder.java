@@ -11,7 +11,7 @@ import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.config.Config;
 import net.leawind.mc.thirdperson.config.ConfigManager;
-import net.leawind.mc.util.ItemPattern;
+import net.leawind.mc.util.ItemPredicateUtil;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -107,9 +107,9 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 		final var CATEGORY_AIMING_CHECK = builder.getOrCreateCategory(ConfigManager.getText("option_category.aiming_check"));
 		{
 			CATEGORY_AIMING_CHECK.addEntry(buildBooleanEntry("determine_aim_mode_by_animation", defaults.determine_aim_mode_by_animation, config.determine_aim_mode_by_animation, v -> config.determine_aim_mode_by_animation = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_pattern_expressions, config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_pattern_expressions, config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v, entryBuilder));
-			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_first_person_pattern_expressions", defaults.use_to_first_person_pattern_expressions, config.use_to_first_person_pattern_expressions, v -> config.use_to_first_person_pattern_expressions = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_patterns, config.hold_to_aim_item_patterns, v -> config.hold_to_aim_item_patterns = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_patterns, config.use_to_aim_item_patterns, v -> config.use_to_aim_item_patterns = v, entryBuilder));
+			CATEGORY_AIMING_CHECK.addEntry(buildStringListEntry("use_to_first_person_pattern_expressions", defaults.use_to_first_person_patterns, config.use_to_first_person_patterns, v -> config.use_to_first_person_patterns = v, entryBuilder));
 		}
 		//==================================================================================================================================================//
 		final var CATEGORY_OTHER = builder.getOrCreateCategory(ConfigManager.getText("option_category.other"));
@@ -153,6 +153,6 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 	}
 
 	private StringListListEntry buildStringListEntry (String name, List<String> defaultValue, List<String> currentValue, Consumer<List<String>> setter, ConfigEntryBuilder entryBuilder) {
-		return entryBuilder.startStrList(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setSaveConsumer(setter).setDefaultValue(defaultValue).setDeleteButtonEnabled(true).setCellErrorSupplier(ItemPattern::supplyError).setExpanded(true).build();
+		return entryBuilder.startStrList(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setSaveConsumer(setter).setDefaultValue(defaultValue).setDeleteButtonEnabled(true).setCellErrorSupplier(ItemPredicateUtil::supplyError).setExpanded(true).build();
 	}
 }

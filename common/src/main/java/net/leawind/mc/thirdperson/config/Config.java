@@ -3,10 +3,11 @@ package net.leawind.mc.thirdperson.config;
 
 import net.leawind.mc.thirdperson.ThirdPerson;
 import net.leawind.mc.thirdperson.cameraoffset.CameraOffsetScheme;
-import net.leawind.mc.thirdperson.resources.ItemPatternManager;
-import net.leawind.mc.util.ItemPattern;
+import net.leawind.mc.thirdperson.resources.ItemPredicateManager;
+import net.leawind.mc.util.ItemPredicateUtil;
 import net.leawind.mc.util.math.monolist.MonoList;
 import net.leawind.mc.util.math.monolist.StaticMonoList;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -18,11 +19,11 @@ import java.util.Set;
  * 但要在模组中使用这些配置项，还需要进行进一步的处理。
  */
 public class Config extends AbstractConfig {
-	public static final @NotNull Config             DEFAULTS                     = new Config();
-	private final @NotNull       CameraOffsetScheme cameraOffsetScheme           = new CameraOffsetScheme(this);
-	private final @NotNull       Set<ItemPattern>   holdToAimItemPatterns        = new HashSet<>();
-	private final @NotNull       Set<ItemPattern>   useToAimItemPatterns         = new HashSet<>();
-	private final @NotNull       Set<ItemPattern>   useToFirstPersonItemPatterns = new HashSet<>();
+	public static final @NotNull Config             DEFAULTS                       = new Config();
+	private final @NotNull       CameraOffsetScheme cameraOffsetScheme             = new CameraOffsetScheme(this);
+	private final @NotNull       Set<ItemPredicate> holdToAimItemPredicates        = new HashSet<>();
+	private final @NotNull       Set<ItemPredicate> useToAimItemPredicates         = new HashSet<>();
+	private final @NotNull       Set<ItemPredicate> useToFirstPersonItemPredicates = new HashSet<>();
 	private                      MonoList           distanceMonoList;
 
 	public Config () {
@@ -34,7 +35,7 @@ public class Config extends AbstractConfig {
 	 */
 	public void update () {
 		updateDistancesMonoList();
-		updateItemPatterns();
+		updateItemPredicates();
 	}
 
 	/**
@@ -46,37 +47,37 @@ public class Config extends AbstractConfig {
 	}
 
 	/**
-	 * 更新配置的自动瞄准物品集合
-	 * <p>
-	 * aiming_items 是字符串数组，其中的元素是nbt标签表达式
-	 * <p>
-	 * aiming_item_tags 是解析好的nbt标签集合，用于匹配玩家手持物品
-	 *
-	 * @see ItemPatternManager#apply
+	 * @see ItemPredicateManager#apply
 	 */
-	public void updateItemPatterns () {
+	public void updateItemPredicates () {
 		int count;
-		holdToAimItemPatterns.clear();
-		count = ItemPattern.addToSet("minecraft", holdToAimItemPatterns, hold_to_aim_item_pattern_expressions);
-		ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", count);
-		useToAimItemPatterns.clear();
-		count = ItemPattern.addToSet("minecraft", useToAimItemPatterns, use_to_aim_item_pattern_expressions);
-		ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", count);
-		useToFirstPersonItemPatterns.clear();
-		count = ItemPattern.addToSet("minecraft", useToFirstPersonItemPatterns, use_to_first_person_pattern_expressions);
-		ThirdPerson.LOGGER.info("Loaded {} use_to_first_person item patterns from configuration", count);
+		holdToAimItemPredicates.clear();
+		count = ItemPredicateUtil.addToSet("minecraft", holdToAimItemPredicates, hold_to_aim_item_patterns);
+		if (count > 0) {
+			ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", count);
+		}
+		useToAimItemPredicates.clear();
+		count = ItemPredicateUtil.addToSet("minecraft", useToAimItemPredicates, use_to_aim_item_patterns);
+		if (count > 0) {
+			ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", count);
+		}
+		useToFirstPersonItemPredicates.clear();
+		count = ItemPredicateUtil.addToSet("minecraft", useToFirstPersonItemPredicates, use_to_first_person_patterns);
+		if (count > 0) {
+			ThirdPerson.LOGGER.info("Loaded {} use_to_first_person item patterns from configuration", count);
+		}
 	}
 
-	public @NotNull Set<ItemPattern> getHoldToAimItemPatterns () {
-		return holdToAimItemPatterns;
+	public @NotNull Set<ItemPredicate> getHoldToAimItemPredicates () {
+		return holdToAimItemPredicates;
 	}
 
-	public @NotNull Set<ItemPattern> getUseToAimItemPatterns () {
-		return useToAimItemPatterns;
+	public @NotNull Set<ItemPredicate> getUseToAimItemPredicates () {
+		return useToAimItemPredicates;
 	}
 
-	public @NotNull Set<ItemPattern> getUseToFirstPersonItemPatterns () {
-		return useToFirstPersonItemPatterns;
+	public @NotNull Set<ItemPredicate> getUseToFirstPersonItemPredicates () {
+		return useToFirstPersonItemPredicates;
 	}
 
 	public @NotNull CameraOffsetScheme getCameraOffsetScheme () {

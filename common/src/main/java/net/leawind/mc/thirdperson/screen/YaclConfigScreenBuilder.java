@@ -91,9 +91,9 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 														  .name(ConfigManager.getText("option_category.aiming_check")) //
 														  .tooltip(ConfigManager.getText("option_category.aiming_check.desc")) //
 														  .option(booleanOption("determine_aim_mode_by_animation", defaults.determine_aim_mode_by_animation, () -> config.determine_aim_mode_by_animation, v -> config.determine_aim_mode_by_animation = v).build()) //
-														  .option(itemPatternsOption("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_pattern_expressions, () -> config.hold_to_aim_item_pattern_expressions, v -> config.hold_to_aim_item_pattern_expressions = v).build()) //
-														  .option(itemPatternsOption("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_pattern_expressions, () -> config.use_to_aim_item_pattern_expressions, v -> config.use_to_aim_item_pattern_expressions = v).build()) //
-														  .option(itemPatternsOption("use_to_first_person_pattern_expressions", defaults.use_to_first_person_pattern_expressions, () -> config.use_to_first_person_pattern_expressions, v -> config.use_to_first_person_pattern_expressions = v).build()) //
+														  .option(itemPredicatesOption("hold_to_aim_item_pattern_expressions", defaults.hold_to_aim_item_patterns, () -> config.hold_to_aim_item_patterns, v -> config.hold_to_aim_item_patterns = v).build()) //
+														  .option(itemPredicatesOption("use_to_aim_item_pattern_expressions", defaults.use_to_aim_item_patterns, () -> config.use_to_aim_item_patterns, v -> config.use_to_aim_item_patterns = v).build()) //
+														  .option(itemPredicatesOption("use_to_first_person_pattern_expressions", defaults.use_to_first_person_patterns, () -> config.use_to_first_person_patterns, v -> config.use_to_first_person_patterns = v).build()) //
 														  .build()) //
 								  .category(ConfigCategory.createBuilder() //
 														  .name(ConfigManager.getText("option_category.other")) //
@@ -147,7 +147,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 		return option(name, defaultValue, getter, setter).controller(opt -> DoubleSliderControllerBuilder.create(opt).range(0D, 2D).step(0.01));
 	}
 
-	private ListOption.Builder<String> itemPatternsOption (String name, List<String> defaultValue, Supplier<List<String>> getter, Consumer<List<String>> setter) {
+	private ListOption.Builder<String> itemPredicatesOption (String name, List<String> defaultValue, Supplier<List<String>> getter, Consumer<List<String>> setter) {
 		return ListOption.<String>createBuilder() //
 						 .name(ConfigManager.getText("option." + name)) //
 						 .description(OptionDescription.of(ConfigManager.getText("option." + name + ".desc"))) //

@@ -8,7 +8,7 @@ import net.leawind.mc.thirdperson.ThirdPersonStatus;
 import net.leawind.mc.thirdperson.core.rotation.RotateStrategy;
 import net.leawind.mc.thirdperson.core.rotation.RotateTargetEnum;
 import net.leawind.mc.thirdperson.core.rotation.SmoothTypeEnum;
-import net.leawind.mc.util.ItemPattern;
+import net.leawind.mc.util.ItemPredicateUtil;
 import net.leawind.mc.util.annotation.VersionSensitive;
 import net.leawind.mc.util.math.LMath;
 import net.leawind.mc.util.math.decisionmap.api.DecisionMap;
@@ -350,10 +350,10 @@ public class EntityAgent {
 					return true;
 				}
 			}
-			boolean shouldBeAiming = ItemPattern.anyMatch(livingEntity.getMainHandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns) || //
-									 ItemPattern.anyMatch(livingEntity.getOffhandItem(), config.getHoldToAimItemPatterns(), ThirdPersonResources.itemPatternManager.holdToAimItemPatterns);
+			boolean shouldBeAiming = ItemPredicateUtil.anyMatches(livingEntity.getMainHandItem(), config.getHoldToAimItemPredicates(), ThirdPersonResources.itemPredicateManager.holdToAimItemPredicates) || //
+									 ItemPredicateUtil.anyMatches(livingEntity.getOffhandItem(), config.getHoldToAimItemPredicates(), ThirdPersonResources.itemPredicateManager.holdToAimItemPredicates);
 			if (livingEntity.isUsingItem()) {
-				shouldBeAiming |= ItemPattern.anyMatch(livingEntity.getUseItem(), config.getUseToAimItemPatterns(), ThirdPersonResources.itemPatternManager.useToAimItemPatterns);
+				shouldBeAiming |= ItemPredicateUtil.anyMatches(livingEntity.getUseItem(), config.getUseToAimItemPredicates(), ThirdPersonResources.itemPredicateManager.useToAimItemPredicates);
 			}
 			return shouldBeAiming;
 		}
