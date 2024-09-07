@@ -16,7 +16,6 @@ public abstract class AbstractConfig {
 	// ================================================================================常用 //
 	@Expose public          boolean      is_mod_enabled                            = true;
 	@Expose public          boolean      center_offset_when_flying                 = true;
-	@Expose public boolean use_camera_pick_in_creative = false;
 	//------------------------------玩家旋转
 	@Expose public          boolean      player_rotate_with_camera_when_not_aiming = false;
 	@Expose public          boolean      player_rotate_to_interest_point           = true;
@@ -72,6 +71,7 @@ public abstract class AbstractConfig {
 	@Expose public          boolean      skip_vanilla_second_person_camera         = true;
 	@Expose public          boolean      allow_double_tap_sprint                   = false;
 	@Expose public          boolean      lock_camera_pitch_angle                   = false;
+	@Expose public          boolean      use_camera_pick_in_creative               = false;
 	@Expose public          double       camera_ray_trace_length                   = 512;
 	//------------------------------准星
 	@Expose public          boolean      render_crosshair_when_not_aiming          = true;

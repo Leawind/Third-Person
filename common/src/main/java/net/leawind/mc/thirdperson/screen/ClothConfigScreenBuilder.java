@@ -32,7 +32,6 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 		{
 			CATEGORY_COMMON.addEntry(buildBooleanEntry("is_mod_enabled", defaults.is_mod_enabled, config.is_mod_enabled, v -> config.is_mod_enabled = v, entryBuilder));
 			CATEGORY_COMMON.addEntry(buildBooleanEntry("center_offset_when_flying", defaults.center_offset_when_flying, config.center_offset_when_flying, v -> config.center_offset_when_flying = v, entryBuilder));
-			CATEGORY_COMMON.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
 			// SubCategory: Player Rotation
 			final var SUBCATEGORY_PLAYER_ROTATION = buildSubCategory("player_rotation", entryBuilder);
 			SUBCATEGORY_PLAYER_ROTATION.add(buildBooleanEntry("player_rotate_with_camera_when_not_aiming", defaults.player_rotate_with_camera_when_not_aiming, config.player_rotate_with_camera_when_not_aiming, v -> config.player_rotate_with_camera_when_not_aiming = v, entryBuilder));
@@ -121,6 +120,7 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("allow_double_tap_sprint", defaults.allow_double_tap_sprint, config.allow_double_tap_sprint, v -> config.allow_double_tap_sprint = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("lock_camera_pitch_angle", defaults.lock_camera_pitch_angle, config.lock_camera_pitch_angle, v -> config.lock_camera_pitch_angle = v, entryBuilder));
+			CATEGORY_OTHER.addEntry(buildBooleanEntry("use_camera_pick_in_creative", defaults.use_camera_pick_in_creative, config.use_camera_pick_in_creative, v -> config.use_camera_pick_in_creative = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildDoubleEntry("camera_ray_trace_length", 32D, 2048D, defaults.camera_ray_trace_length, config.camera_ray_trace_length, v -> config.camera_ray_trace_length = v, entryBuilder));
 			// SubCategory: Crosshair
 			final var Subcategory_Crosshair = buildSubCategory("crosshair", entryBuilder);
