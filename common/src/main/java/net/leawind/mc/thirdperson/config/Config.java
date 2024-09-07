@@ -50,18 +50,18 @@ public class Config extends AbstractConfig {
 	 * @see ItemPredicateManager#apply
 	 */
 	public void updateItemPredicates () {
-		int count;
 		holdToAimItemPredicates.clear();
+		useToAimItemPredicates.clear();
+		useToFirstPersonItemPredicates.clear();
+		int count;
 		count = ItemPredicateUtil.addToSet("minecraft", holdToAimItemPredicates, hold_to_aim_item_patterns);
 		if (count > 0) {
 			ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", count);
 		}
-		useToAimItemPredicates.clear();
 		count = ItemPredicateUtil.addToSet("minecraft", useToAimItemPredicates, use_to_aim_item_patterns);
 		if (count > 0) {
 			ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", count);
 		}
-		useToFirstPersonItemPredicates.clear();
 		count = ItemPredicateUtil.addToSet("minecraft", useToFirstPersonItemPredicates, use_to_first_person_patterns);
 		if (count > 0) {
 			ThirdPerson.LOGGER.info("Loaded {} use_to_first_person item patterns from configuration", count);

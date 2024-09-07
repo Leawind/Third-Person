@@ -88,10 +88,13 @@ public final class ThirdPersonEvents {
 	 * @see ClientPlayerEvent#CLIENT_PLAYER_JOIN
 	 */
 	private static void onClientPlayerJoin (@NotNull LocalPlayer player) {
-		if (ThirdPerson.getConfig().is_mod_enabled) {
+		var config = ThirdPerson.getConfig();
+		if (config.is_mod_enabled) {
 			onPlayerReset();
 			ThirdPerson.LOGGER.info("on Client player join");
 		}
+		config.updateItemPredicates();
+		ThirdPersonResources.itemPredicateManager.reparse();
 	}
 
 	@VersionSensitive(value="At latest architectury-api 9", until="1.20.2")

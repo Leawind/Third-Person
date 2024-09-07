@@ -22,7 +22,6 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -191,45 +190,5 @@ public final class ItemPredicateUtil {
 		} catch (ResourceLocationException e) {
 			throw new IllegalArgumentException(e);
 		}
-	}
-
-	public static void test (String[] args) {
-		{
-			final var examples = new LinkedList<String>();
-			examples.add("minecraft:bow");
-			examples.add("minecraft:crossbow{Charged:1b}");
-			examples.add("#minecraft:boats");
-			examples.add("#minecraft:banners{x:-32}");
-			examples.add("bow");
-			examples.add("crossbow{Charged:1b}");
-			examples.add("#boats");
-			examples.add("#banners{x:-32}");
-			for (var exp: examples) {
-				System.out.printf("Parsing: %s -> %s\n", exp, ItemPredicateUtil.parse(exp));
-			}
-		}
-		{
-			final var examples = new LinkedList<String>();
-			examples.add("");
-			examples.add(" ");
-			examples.add("  ");
-			examples.add("	");
-			examples.add("	           ");
-			examples.add("minecraft: crossbow{Charged:1b}");
-			examples.add("#:banners{x:-32}");
-			examples.add(":bow");
-			examples.add("minecraft:");
-			examples.add("crossbow{3Charged:1b}");
-			examples.add("#b oats");
-			examples.add("b:an:ners{x:-32}");
-			for (var exp: examples) {
-				try {
-					ItemPredicateUtil.parse(exp);
-					System.out.printf("Expected error, but passed: %s\n", exp);
-				} catch (Throwable ignored) {
-				}
-			}
-		}
-		assert ItemPredicateUtil.parse("#boat").matches(new ItemStack(Items.OAK_BOAT));
 	}
 }
