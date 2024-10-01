@@ -3,11 +3,11 @@ package com.github.leawind.thirdperson.core;
 
 import com.github.leawind.api.base.GameStatus;
 import com.github.leawind.api.client.event.ThirdPersonCameraSetupEvent;
-import com.github.leawind.thirdperson.mixin.CameraInvoker;
-import com.github.leawind.thirdperson.mixin.ClientLevelInvoker;
 import com.github.leawind.thirdperson.ThirdPerson;
 import com.github.leawind.thirdperson.ThirdPersonConstants;
 import com.github.leawind.thirdperson.ThirdPersonStatus;
+import com.github.leawind.thirdperson.mixin.CameraInvoker;
+import com.github.leawind.thirdperson.mixin.ClientLevelInvoker;
 import com.github.leawind.util.annotation.VersionSensitive;
 import com.github.leawind.util.math.LMath;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothDouble;
@@ -25,7 +25,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -352,6 +356,8 @@ public class CameraAgent {
 	}
 
 	/**
+	 * NOW
+	 * <p>
 	 * 为防止穿墙，重新计算 {@link CameraAgent#smoothDistanceMultiplier} 的值
 	 * <p>
 	 * 当相机实体的眼睛在墙里时，直接把相机放在眼睛上。

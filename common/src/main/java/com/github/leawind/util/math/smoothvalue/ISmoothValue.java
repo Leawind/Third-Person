@@ -32,8 +32,7 @@ public interface ISmoothValue<T> {
 	 * <p>
 	 * 应当使用 {@link ISmoothValue#get(double)}
 	 */
-	@NotNull
-	T get ();
+	@NotNull T get ();
 
 	/**
 	 * 旧值与当前平滑值的线性插值
@@ -44,12 +43,10 @@ public interface ISmoothValue<T> {
 	 *
 	 * @param t 自上次更新以来经过的时间占更新间隔的比例，用于线性插值。
 	 */
-	@NotNull
-	T get (double t);
+	@NotNull T get (double t);
 
 	/**
 	 * 获取上次更新前的平滑值（旧值）
 	 */
-	@NotNull
-	T getLast ();
+	@NotNull T getLast ();
 }
