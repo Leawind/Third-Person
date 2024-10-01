@@ -49,7 +49,7 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 	}
 
 	@Override
-	protected void udpateWithOutSavingLastValue (double period) {
+	protected void updateWithOutSavingLastValue (double period) {
 		value  = LMath.floorMod(value, cycle);
 		target = LMath.floorMod(target, cycle);
 		double delta = LMath.floorMod(target - value, cycle);

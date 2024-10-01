@@ -25,7 +25,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
 	}
 
 	@Override
-	protected void udpateWithOutSavingLastValue (double period) {
+	protected void updateWithOutSavingLastValue (double period) {
 		var t = smoothFactor.copy().pow(smoothFactorWeight.copy().mul(period)).negate().add(1);
 		value = value.copy().lerp(target, t);
 	}

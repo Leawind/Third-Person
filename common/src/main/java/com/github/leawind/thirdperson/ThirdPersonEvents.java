@@ -228,7 +228,7 @@ public final class ThirdPersonEvents {
 		if (ThirdPerson.isAvailable()) {
 			var config = ThirdPerson.getConfig();
 			if (ThirdPersonStatus.isRenderingInThirdPerson()) {
-				if (ThirdPerson.ENTITY_AGENT.isInterecting()) {
+				if (ThirdPerson.ENTITY_AGENT.isInteracting()) {
 					// 立即更新玩家注视着的目标 Minecraft#hitResult
 					ThirdPerson.mc.gameRenderer.pick(1f);
 				}

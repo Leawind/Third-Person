@@ -18,7 +18,7 @@ public interface RotateStrategy {
 	@ADecisionFactor DecisionFactor is_aiming                                 = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isAiming());
 	@ADecisionFactor DecisionFactor is_fall_flying                            = DecisionFactor.of(() -> ThirdPerson.ENTITY_AGENT.isFallFlying());
 	@ADecisionFactor DecisionFactor should_rotate_with_camera_when_not_aiming = DecisionFactor.of(() -> ThirdPerson.getConfig().player_rotate_with_camera_when_not_aiming);
-	@ADecisionFactor DecisionFactor rotate_interacting                        = DecisionFactor.of(() -> ThirdPerson.getConfig().auto_rotate_interacting && ThirdPerson.ENTITY_AGENT.isInterecting() &&
+	@ADecisionFactor DecisionFactor rotate_interacting                        = DecisionFactor.of(() -> ThirdPerson.getConfig().auto_rotate_interacting && ThirdPerson.ENTITY_AGENT.isInteracting() &&
 																										!(ThirdPerson.getConfig().do_not_rotate_when_eating && ThirdPerson.ENTITY_AGENT.isEating()));
 	/**
 	 * 默认策略：移动时转向前进方向，静止时不旋转
@@ -55,7 +55,7 @@ public interface RotateStrategy {
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.LINEAR);
 		return 0D;
 	};
-	Supplier<Double> INTERECTING            = () -> {
+	Supplier<Double> INTERACTING            = () -> {
 		ThirdPerson.ENTITY_AGENT.setRotateTarget(RotateTargetEnum.CAMERA_HIT_RESULT);
 		ThirdPerson.ENTITY_AGENT.setRotationSmoothType(SmoothTypeEnum.LINEAR);
 		return 0D;
@@ -70,7 +70,7 @@ public interface RotateStrategy {
 	static void build (@NotNull DecisionMap<Double> map) {
 		ThirdPerson.LOGGER.debug("Building Rotate Strategy");
 		map.addRule(0, 0, DEFAULT)    //
-		   .addRule(~0, rotate_interacting.mask(), INTERECTING)    //
+		   .addRule(~0, rotate_interacting.mask(), INTERACTING)    //
 		   .addRule(~0, should_rotate_with_camera_when_not_aiming.mask(), WITH_CAMERA_NOT_AIMING)    //
 		   .addRule(~0, is_fall_flying.mask(), FALL_FLYING)    //
 		   .addRule(~0, is_swimming.mask(), SWIMMING)    //

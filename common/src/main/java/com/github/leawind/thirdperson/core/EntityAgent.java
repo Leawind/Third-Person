@@ -252,7 +252,7 @@ public class EntityAgent {
 	 * 当附身其他实体时，另做判断
 	 */
 	@VersionSensitive
-	public boolean isInterecting () {
+	public boolean isInteracting () {
 		if (!isControlled()) {
 			return getRawCameraEntity() instanceof LivingEntity livingEntity && livingEntity.isUsingItem();
 		}

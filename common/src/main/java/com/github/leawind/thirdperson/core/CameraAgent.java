@@ -373,7 +373,7 @@ public class CameraAgent {
 		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		double widthHalf  = aspectRatio * heightHalf;
 		// // 水平视野角度一半(弧度制）
-		// double horizonalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
+		// double horizontalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
 		// 添加偏移量
 		double minDist = ThirdPerson.ENTITY_AGENT.getBodyRadius();
 		// 平滑值

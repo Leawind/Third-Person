@@ -50,29 +50,29 @@ public class DeferedMonoList implements MonoList {
 
 	@Override
 	public int iadsorption (double value) {
-		int ileft   = 0;
-		int iright  = length() - 1;
-		int icenter = length() / 2;
+		int iLeft   = 0;
+		int iRight  = length() - 1;
+		int iCenter = length() / 2;
 		while (true) {
-			double vi = get(icenter);
+			double vi = get(iCenter);
 			if (vi < value) {
-				ileft = icenter;
+				iLeft = iCenter;
 			} else if (vi > value) {
-				iright = icenter;
+				iRight = iCenter;
 			} else {
-				return icenter;
+				return iCenter;
 			}
-			if (iright - ileft == 1) {
+			if (iRight - iLeft == 1) {
 				break;
 			}
-			icenter = (ileft + iright) / 2;
+			iCenter = (iLeft + iRight) / 2;
 		}
-		double emin = value - get(ileft);
-		double emax = get(iright) - value;
-		if (emin <= emax) {
-			return ileft;
+		double min = value - get(iLeft);
+		double max = get(iRight) - value;
+		if (min <= max) {
+			return iLeft;
 		} else {
-			return iright;
+			return iRight;
 		}
 	}
 

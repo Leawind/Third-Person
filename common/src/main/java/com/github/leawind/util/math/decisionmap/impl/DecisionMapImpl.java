@@ -84,7 +84,7 @@ public class DecisionMapImpl<T> implements DecisionMap<T> {
 		}
 		int factorCount = adfListIndexed.size() + adfListAutoIndex.size();
 		if (factorCount > MAX_FACTOR_COUNT) {
-			throw new RuntimeException(String.format("Too many (%d) DecisioinFactors in class %s", factorCount, clazz));
+			throw new RuntimeException(String.format("Too many (%d) DecisionFactors in class %s", factorCount, clazz));
 		}
 		while (factors.size() < factorCount) {
 			factors.add(null);

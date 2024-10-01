@@ -36,7 +36,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 
 	final public void update (double period) {
 		saveLastValue();
-		udpateWithOutSavingLastValue(period);
+		updateWithOutSavingLastValue(period);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		lastValue = value;
 	}
 
-	abstract protected void udpateWithOutSavingLastValue (double period);
+	abstract protected void updateWithOutSavingLastValue (double period);
 
 	abstract public void setValue (@NotNull T value);
 

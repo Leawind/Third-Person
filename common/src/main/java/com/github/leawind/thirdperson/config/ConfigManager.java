@@ -30,10 +30,10 @@ public class ConfigManager {
 	}
 
 	/**
-	 * 在可翻译文本的键前加上modid前缀
+	 * 在可翻译文本的键前加上mod_id前缀
 	 *
 	 * @param name 键名
-	 * @return ${MODID}.${id}
+	 * @return ${mod_id}.${id}
 	 */
 	@Contract(value="_ -> new", pure=true)
 	public static @NotNull Component getText (@NotNull String name) {

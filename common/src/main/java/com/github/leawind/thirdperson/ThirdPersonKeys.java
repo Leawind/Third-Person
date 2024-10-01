@@ -13,7 +13,7 @@ public final class ThirdPersonKeys {
 																	   .onDown(ThirdPersonEvents::onStartAdjustingCameraOffset)    //
 																	   .onUp(ThirdPersonEvents::onStopAdjustingCameraOffset);
 	public static final ModKeyMapping FORCE_AIMING      = ModKeyMapping.of(getId("force_aiming"), ThirdPersonConstants.KEY_CATEGORY);
-	public static final ModKeyMapping TOOGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
+	public static final ModKeyMapping TOGGLE_MOD_ENABLE = ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY).onDown(() -> {
 		var config = ThirdPerson.getConfig();
 		if (ThirdPersonStatus.isRenderingInThirdPerson()) {
 			if (config.is_mod_enabled) {
