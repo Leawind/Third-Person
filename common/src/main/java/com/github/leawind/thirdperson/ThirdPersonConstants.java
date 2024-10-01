@@ -61,4 +61,8 @@ public final class ThirdPersonConstants {
 	 * Item#getPlayerPOVHitResult(Level, Player, ClipContext.Fluid)
 	 */
 	public static final double            VANILLA_POV_REACH                        = 5.0;
+	/**
+	 * Client tick 时间
+	 */
+	public static final double            VANILLA_CLIENT_TICK_TIME                 = 0.05;
 }

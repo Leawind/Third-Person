@@ -128,11 +128,6 @@ public class CameraAgent {
 		return smoothRotateCenter.get(partialTick);
 	}
 
-	/**
-	 * client tick 前
-	 * <p>
-	 * 通常频率固定为 20Hz
-	 */
 	public void onClientTickStart () {
 		var config = ThirdPerson.getConfig();
 		{
@@ -149,7 +144,7 @@ public class CameraAgent {
 			smoothRotateCenter.setHalflife(halflife);
 		}
 		smoothRotateCenter.setTarget(ThirdPerson.ENTITY_AGENT.getRotateCenter(1));
-		smoothRotateCenter.update(0.05);
+		smoothRotateCenter.update(ThirdPersonConstants.VANILLA_CLIENT_TICK_TIME);
 	}
 
 	/**

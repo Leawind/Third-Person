@@ -147,29 +147,23 @@ public class EntityAgent {
 		}
 	}
 
-	/**
-	 * 在 client tick 之前
-	 * <p>
-	 * 通常频率固定为 20Hz
-	 */
 	public void onClientTickStart () {
 		if (ThirdPersonStatus.clientTicks % 2 == 0) {
 			vehicleTotalSizeCached = getVehicleTotalSize();
 		}
 		ThirdPersonStatus.clientTicks++;
-		final double period = 0.05;
-		var          config = ThirdPerson.getConfig();
+		var config = ThirdPerson.getConfig();
 		wasAiming = isAiming();
 		config.getCameraOffsetScheme().setAiming(wasAiming());
 		updateRotateStrategy();
-		updateSmoothOpacity(period, 1);
-		smoothRotation.update(period);
+		updateSmoothOpacity(ThirdPersonConstants.VANILLA_CLIENT_TICK_TIME, 1);
+		smoothRotation.update(ThirdPersonConstants.VANILLA_CLIENT_TICK_TIME);
 		switch (smoothRotationType) {
 			case HARD, EXP -> {
 			}
 			case LINEAR, EXP_LINEAR -> {
 				smoothRotation.setTarget(getRotateTarget().getRotation());
-				smoothRotation.update(period);
+				smoothRotation.update(ThirdPersonConstants.VANILLA_CLIENT_TICK_TIME);
 			}
 		}
 	}
