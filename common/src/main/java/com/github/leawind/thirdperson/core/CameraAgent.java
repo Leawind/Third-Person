@@ -12,6 +12,7 @@ import com.github.leawind.util.annotation.VersionSensitive;
 import com.github.leawind.util.math.LMath;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothDouble;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothVector2d;
+import com.github.leawind.util.math.smoothvalue.ExpSmoothVector3d;
 import com.github.leawind.util.math.vector.Vector2d;
 import com.github.leawind.util.math.vector.Vector3d;
 import com.google.common.collect.Lists;
@@ -38,6 +39,7 @@ import java.util.Optional;
 
 public class CameraAgent {
 	private final @NotNull Minecraft         minecraft;
+	private final          ExpSmoothVector3d smoothRotateCenter;
 	private final @NotNull Camera            fakeCamera       = new Camera();
 	private final @NotNull Vector2d          relativeRotation = Vector2d.of(0);
 	/**
@@ -57,6 +59,7 @@ public class CameraAgent {
 
 	public CameraAgent (@NotNull Minecraft minecraft) {
 		this.minecraft           = minecraft;
+		smoothRotateCenter       = new ExpSmoothVector3d();
 		smoothOffsetRatio        = new ExpSmoothVector2d();
 		smoothDistanceMultiplier = new ExpSmoothDouble();
 	}
@@ -68,6 +71,9 @@ public class CameraAgent {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistanceMultiplier.set(0D);
+		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
+			smoothRotateCenter.set(ThirdPerson.ENTITY_AGENT.getRotateCenter(ThirdPersonStatus.lastPartialTick));
+		}
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			relativeRotation.set(-entity.getViewXRot(ThirdPersonStatus.lastPartialTick), entity.getViewYRot(ThirdPersonStatus.lastPartialTick) - 180);
@@ -116,11 +122,34 @@ public class CameraAgent {
 	}
 
 	/**
+	 * 获取平滑的相机旋转中心
+	 */
+	public @NotNull Vector3d getSmoothRotateCenter (float partialTick) {
+		return smoothRotateCenter.get(partialTick);
+	}
+
+	/**
 	 * client tick 前
 	 * <p>
 	 * 通常频率固定为 20Hz
 	 */
 	public void onClientTickStart () {
+		var config = ThirdPerson.getConfig();
+		{
+			final Vector3d halflife;
+			if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
+				halflife = Vector3d.of(0);
+			} else if (ThirdPerson.ENTITY_AGENT.isFallFlying()) {
+				halflife = Vector3d.of(config.flying_smooth_halflife);
+			} else {
+				halflife = config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife();
+			}
+			final double dist = getSmoothRotateCenter(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
+			halflife.mul(Math.pow(dist, 0.5) * ThirdPersonConstants.EYE_HALFLIFE_MULTIPLIER);
+			smoothRotateCenter.setHalflife(halflife);
+		}
+		smoothRotateCenter.setTarget(ThirdPerson.ENTITY_AGENT.getRotateCenter(1));
+		smoothRotateCenter.update(0.05);
 	}
 
 	/**
@@ -370,7 +399,7 @@ public class CameraAgent {
 			return;
 		}
 		var    cameraPosition    = fakeCamera.getPosition();
-		var    smoothEyePosition = LMath.toVec3(ThirdPerson.ENTITY_AGENT.getSmoothEyePosition(ThirdPersonStatus.lastPartialTick));
+		var    smoothEyePosition = LMath.toVec3(getSmoothRotateCenter(ThirdPersonStatus.lastPartialTick));
 		var    smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
 		double initDistance      = smoothEyeToCamera.length();
 		if (initDistance < 1e-5) {
@@ -395,7 +424,17 @@ public class CameraAgent {
 	}
 
 	private @NotNull Vector3d calculatePositionWithoutOffset () {
-		return ThirdPerson.ENTITY_AGENT.getPossibleSmoothEyePosition(ThirdPersonStatus.lastPartialTick).add(LMath.directionFromRotationDegree(relativeRotation).mul(ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistanceMultiplier.get()));
+		var     smoothFactor     = smoothRotateCenter.smoothFactor.copy();
+		boolean isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
+		boolean isVerticalZero   = smoothFactor.y() == 0;
+		var     rotateCenter     = smoothRotateCenter.get(ThirdPersonStatus.lastPartialTick);
+		if (isHorizontalZero || isVerticalZero) {
+			var rawRotateCenter = ThirdPerson.ENTITY_AGENT.getRotateCenter(ThirdPersonStatus.lastPartialTick);
+			rotateCenter = Vector3d.of(isHorizontalZero ? rawRotateCenter.x(): rotateCenter.x(),//
+									   isVerticalZero ? rawRotateCenter.y(): rotateCenter.y(),//
+									   isHorizontalZero ? rawRotateCenter.z(): rotateCenter.z());
+		}
+		return rotateCenter.add(LMath.directionFromRotationDegree(relativeRotation).mul(ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistanceMultiplier.get()));
 	}
 
 	private void updateSmoothVirtualDistance (double period) {

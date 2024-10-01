@@ -14,10 +14,8 @@ import com.github.leawind.util.math.LMath;
 import com.github.leawind.util.math.decisionmap.api.DecisionMap;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothDouble;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothRotation;
-import com.github.leawind.util.math.smoothvalue.ExpSmoothVector3d;
 import com.github.leawind.util.math.vector.Vector2d;
 import com.github.leawind.util.math.vector.Vector3d;
-import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -41,7 +39,6 @@ import java.util.Optional;
 
 public class EntityAgent {
 	private final    Minecraft           minecraft;
-	private final    ExpSmoothVector3d   smoothEyePosition;
 	private final    ExpSmoothRotation   smoothRotation         = ExpSmoothRotation.createWithHalflife(0.5);
 	private final    ExpSmoothDouble     smoothOpacity;
 	/**
@@ -60,9 +57,8 @@ public class EntityAgent {
 	private          boolean             wasAiming              = false;
 
 	public EntityAgent (@NotNull Minecraft minecraft) {
-		this.minecraft    = minecraft;
-		smoothEyePosition = new ExpSmoothVector3d();
-		smoothOpacity     = new ExpSmoothDouble();
+		this.minecraft = minecraft;
+		smoothOpacity  = new ExpSmoothDouble();
 		smoothOpacity.set(1d);
 		ThirdPerson.LOGGER.debug(rotateDecisionMap.toString());
 	}
@@ -87,9 +83,6 @@ public class EntityAgent {
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset EntityAgent");
 		ThirdPersonStatus.lastPartialTick = minecraft.getFrameTime();
-		if (isCameraEntityExist()) {
-			smoothEyePosition.set(getRawEyePosition(ThirdPersonStatus.lastPartialTick));
-		}
 		smoothOpacity.set(0d);
 		wasAiming = false;
 	}
@@ -171,24 +164,6 @@ public class EntityAgent {
 		updateRotateStrategy();
 		updateSmoothOpacity(period, 1);
 		smoothRotation.update(period);
-		{
-			var eyePosition = getRawEyePosition(1);
-			{
-				final Vector3d halflife;
-				if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
-					halflife = Vector3d.of(0);
-				} else if (isFallFlying()) {
-					halflife = Vector3d.of(config.flying_smooth_halflife);
-				} else {
-					halflife = config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife();
-				}
-				final double dist = getSmoothEyePosition(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
-				halflife.mul(Math.pow(dist, 0.5) * ThirdPersonConstants.EYE_HALFLIFE_MULTIPLIER);
-				smoothEyePosition.setHalflife(halflife);
-			}
-			smoothEyePosition.setTarget(eyePosition);
-			smoothEyePosition.update(period);
-		}
 		switch (smoothRotationType) {
 			case HARD, EXP -> {
 			}
@@ -249,29 +224,10 @@ public class EntityAgent {
 	}
 
 	/**
-	 * 获取平滑的眼睛坐标
+	 * 获取相机的旋转中心
 	 */
-	public @NotNull Vector3d getSmoothEyePosition (float partialTick) {
-		return smoothEyePosition.get(partialTick);
-	}
-
-	/**
-	 * 如果平滑系数为0，则返回完全不平滑的值
-	 * <p>
-	 * 如果平滑系数不为0，则采用 EXP_LINEAR 平滑
-	 */
-	public @NotNull Vector3d getPossibleSmoothEyePosition (float partialTick) {
-		var     smoothEyePositionValue = smoothEyePosition.get(partialTick);
-		var     rawEyePosition         = LMath.toVector3d(getRawCameraEntity().getEyePosition(partialTick));
-		var     smoothFactor           = smoothEyePosition.smoothFactor.copy();
-		boolean isHorizontalZero       = smoothFactor.x() * smoothFactor.z() == 0;
-		boolean isVerticalZero         = smoothFactor.y() == 0;
-		if (isHorizontalZero || isVerticalZero) {
-			smoothEyePositionValue = Vector3d.of(isHorizontalZero ? rawEyePosition.x(): smoothEyePositionValue.x(),//
-												 isVerticalZero ? rawEyePosition.y(): smoothEyePositionValue.y(),//
-												 isHorizontalZero ? rawEyePosition.z(): smoothEyePositionValue.z());
-		}
-		return smoothEyePositionValue;
+	public Vector3d getRotateCenter (float partialTick) {
+		return getRawEyePosition(partialTick);
 	}
 
 	/**
