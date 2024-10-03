@@ -17,6 +17,14 @@ public final class ThirdPersonConstants {
 	public static final long              CONFIG_LAZY_SAVE_DELAY                   = 60000L;
 	public static final double            CAMERA_PITCH_DEGREE_LIMIT                = 89.800;
 	public static final double            CAMERA_THROUGH_WALL_DETECTION            = 0.180;
+	/**
+	 * TODO configurable
+	 * <p>
+	 * true: 相机距离为从相机平面到旋转中心的距离
+	 * <p>
+	 * false: 相机距离为从相机位置到旋转中心的距离
+	 */
+	public static final boolean           USE_CAMERA_PLAIN_DISTANCE                = true;
 	public static final double            OPACITY_HALFLIFE                         = 0.0625;
 	/**
 	 * 渲染相机实体的不透明度下限阈值，当不透明度低于这个值时，将不渲染实体。

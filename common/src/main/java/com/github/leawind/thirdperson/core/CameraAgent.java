@@ -51,17 +51,17 @@ public class CameraAgent {
 	 * <p>
 	 * 外壳的半径是 {@link EntityAgent#getBodyRadius()}
 	 */
-	private final @NotNull ExpSmoothDouble   smoothDistanceMultiplier;
+	private final @NotNull ExpSmoothDouble   smoothDistance;
 	/**
 	 * 在 {@link CameraAgent#onRenderTickStart} 中更新
 	 */
 	private @NotNull       HitResult         hitResult        = BlockHitResult.miss(Vec3.ZERO, Direction.EAST, BlockPos.ZERO);
 
 	public CameraAgent (@NotNull Minecraft minecraft) {
-		this.minecraft           = minecraft;
-		smoothRotateCenter       = new ExpSmoothVector3d();
-		smoothOffsetRatio        = new ExpSmoothVector2d();
-		smoothDistanceMultiplier = new ExpSmoothDouble();
+		this.minecraft     = minecraft;
+		smoothRotateCenter = new ExpSmoothVector3d();
+		smoothOffsetRatio  = new ExpSmoothVector2d();
+		smoothDistance     = new ExpSmoothDouble();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class CameraAgent {
 	public void reset () {
 		ThirdPerson.LOGGER.debug("Reset CameraAgent");
 		smoothOffsetRatio.setValue(0, 0);
-		smoothDistanceMultiplier.set(0D);
+		smoothDistance.set(0D);
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			smoothRotateCenter.set(ThirdPerson.ENTITY_AGENT.getRotateCenter(ThirdPersonStatus.lastPartialTick));
 		}
@@ -82,7 +82,7 @@ public class CameraAgent {
 
 	public void checkGameStatus () {
 		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
-			GameStatus.isPerspectiveInverted = smoothDistanceMultiplier.get() > ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD;
+			GameStatus.isPerspectiveInverted = smoothDistance.get() > ThirdPersonConstants.FIRST_PERSON_TRANSITION_END_THRESHOLD;
 		}
 	}
 
@@ -113,7 +113,6 @@ public class CameraAgent {
 	public void onCameraSetup (@NotNull ThirdPersonCameraSetupEvent event) {
 		updateFakeCameraRotationPosition();
 		preventThroughWall();
-		updateFakeCameraRotationPosition();
 		event.setPosition(fakeCamera.getPosition());
 		float yRot = fakeCamera.getYRot();
 		float xRot = fakeCamera.getXRot();
@@ -124,8 +123,19 @@ public class CameraAgent {
 	/**
 	 * 获取平滑的相机旋转中心
 	 */
-	public @NotNull Vector3d getSmoothRotateCenter (float partialTick) {
-		return smoothRotateCenter.get(partialTick);
+	public @NotNull Vector3d getZeroStrictSmoothRotateCenter (float partialTick) {
+		var     smoothValue      = smoothRotateCenter.get(partialTick);
+		var     smoothFactor     = smoothRotateCenter.smoothFactor;
+		boolean isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
+		boolean isVerticalZero   = smoothFactor.y() == 0;
+		var     rawRotateCenter  = ThirdPerson.ENTITY_AGENT.getRotateCenter(partialTick);
+		if (isHorizontalZero || isVerticalZero) {
+			return Vector3d.of(isHorizontalZero ? rawRotateCenter.x(): smoothValue.x(),//
+							   isVerticalZero ? rawRotateCenter.y(): smoothValue.y(),//
+							   isHorizontalZero ? rawRotateCenter.z(): smoothValue.z());
+		} else {
+			return smoothValue;
+		}
 	}
 
 	public void onClientTickStart () {
@@ -139,7 +149,7 @@ public class CameraAgent {
 			} else {
 				halflife = config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife();
 			}
-			final double dist = getSmoothRotateCenter(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
+			final double dist = getZeroStrictSmoothRotateCenter(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
 			halflife.mul(Math.pow(dist, 0.5) * ThirdPersonConstants.EYE_HALFLIFE_MULTIPLIER);
 			smoothRotateCenter.setHalflife(halflife);
 		}
@@ -206,7 +216,7 @@ public class CameraAgent {
 	}
 
 	public double getPickRange () {
-		return ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistanceMultiplier.get() + ThirdPerson.getConfig().camera_ray_trace_length;
+		return ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistance.get() + ThirdPerson.getConfig().camera_ray_trace_length;
 	}
 
 	/**
@@ -353,83 +363,77 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 根据角度、距离、偏移量计算假相机实际朝向和位置
+	 * 根据角度、距离、偏移量计算假相机实际朝向和位置，不考虑穿墙问题
 	 */
 	private void updateFakeCameraRotationPosition () {
-		// 设置假相机的位置，不偏移
 		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
-		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(calculatePositionWithoutOffset()));
-		var mc = ThirdPerson.mc;
-		// 宽高比
+		var    mc          = ThirdPerson.mc;
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
 		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
-		// 成像平面宽高
-		double heightHalf = Math.tan(verticalRadianHalf) * ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
-		double widthHalf  = aspectRatio * heightHalf;
-		// // 水平视野角度一半(弧度制）
-		// double horizontalRadianHalf = Math.atan(widthHalf / NEAR_PLANE_DISTANCE);
-		// 添加偏移量
-		double minDist = ThirdPerson.ENTITY_AGENT.getBodyRadius();
-		// 平滑值
-		var    smoothOffsetRatioValue     = smoothOffsetRatio.get();
-		double smoothVirtualDistanceValue = smoothDistanceMultiplier.get();
-		double upOffset                   = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.y() * Math.tan(verticalRadianHalf);
-		double leftOffset                 = (smoothVirtualDistanceValue + minDist) * smoothOffsetRatioValue.x() * widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
-		((CameraInvoker)fakeCamera).invokeMove(0, upOffset, leftOffset);
+		double heightHalf         = Math.tan(verticalRadianHalf) * ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
+		double widthHalf          = aspectRatio * heightHalf;
+		// Direction
+		Vector3d direction;
+		{
+			var    forward           = LMath.toVector3d(fakeCamera.getLookVector());
+			var    left              = LMath.toVector3d(fakeCamera.getLeftVector());
+			var    up                = LMath.toVector3d(fakeCamera.getUpVector());
+			double verticalFovHalf   = Math.toRadians(mc.options.fov().get());
+			double horizontalFovHalf = 2 * Math.atan(widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE);
+			var    offsetRatio       = smoothOffsetRatio.get();
+			double offsetX           = offsetRatio.x();
+			double offsetY           = offsetRatio.y();
+			direction = forward.sub(up.mul(offsetY * Math.tan(verticalFovHalf / 2)).add(left.mul(offsetX * Math.tan(horizontalFovHalf / 2))));
+			if (!ThirdPersonConstants.USE_CAMERA_PLAIN_DISTANCE) {
+				direction.normalizeSafely();
+			}
+		}
+		var    rotateCenter   = getZeroStrictSmoothRotateCenter(ThirdPersonStatus.lastPartialTick);
+		double bodyRadius     = ThirdPerson.ENTITY_AGENT.getBodyRadius();
+		var    cameraPosition = rotateCenter.sub(direction.mul(bodyRadius + smoothDistance.get()));
+		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(cameraPosition));
 	}
 
 	/**
-	 * NOW
+	 * 为防止穿墙，重新计算 {@link CameraAgent#smoothDistance} 的值，并重新放置相机
 	 * <p>
-	 * 为防止穿墙，重新计算 {@link CameraAgent#smoothDistanceMultiplier} 的值
-	 * <p>
-	 * 当相机实体的眼睛在墙里时，直接把相机放在眼睛上。
-	 * <p>
-	 * 参考 Camera#getMaxZoom(double)
+	 * 参考 net.minecraft.client.Camera#getMaxZoom(double)
 	 */
 	private void preventThroughWall () {
-		var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var bodyRadius = ThirdPerson.ENTITY_AGENT.getBodyRadius();
+		var entity     = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		if (entity.isSpectator() && ThirdPerson.ENTITY_AGENT.isEyeInWall(ClipContext.Block.VISUAL)) {
 			return;
 		}
-		var    cameraPosition    = fakeCamera.getPosition();
-		var    smoothEyePosition = LMath.toVec3(getSmoothRotateCenter(ThirdPersonStatus.lastPartialTick));
-		var    smoothEyeToCamera = smoothEyePosition.vectorTo(cameraPosition);
-		double initDistance      = smoothEyeToCamera.length();
+		var    rotateCenter         = LMath.toVec3(getZeroStrictSmoothRotateCenter(ThirdPersonStatus.lastPartialTick));
+		var    cameraPosition       = fakeCamera.getPosition();
+		var    rotateCenterToCamera = rotateCenter.vectorTo(cameraPosition);
+		double initDistance         = rotateCenterToCamera.length();
 		if (initDistance < 1e-5) {
 			return;
 		}
-		double minDistance = initDistance;
+		double limit = initDistance;
 		for (int i = 0; i < 8; ++i) {
-			double offsetX = (i & 1) * 2 - 1;
-			double offsetY = (i >> 1 & 1) * 2 - 1;
-			double offsetZ = (i >> 2 & 1) * 2 - 1;
-			offsetX *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
-			offsetY *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
-			offsetZ *= ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION;
-			var pickFrom  = smoothEyePosition.add(offsetX, offsetY, offsetZ);
-			var pickTo    = pickFrom.add(smoothEyeToCamera);
-			var hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+			double offsetX   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i & 1) * 2 - 1);
+			double offsetY   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i >> 1 & 1) * 2 - 1);
+			double offsetZ   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i >> 2 & 1) * 2 - 1);
+			var    pickFrom  = rotateCenter.add(offsetX, offsetY, offsetZ);
+			var    pickTo    = pickFrom.add(rotateCenterToCamera);
+			var    hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
 			if (hitResult.getType() != HitResult.Type.MISS) {
-				minDistance = Math.min(minDistance, hitResult.getLocation().distanceTo(pickFrom));
+				limit = Math.min(limit, hitResult.getLocation().distanceTo(pickFrom));
 			}
 		}
-		smoothDistanceMultiplier.setValue(Math.max(0, smoothDistanceMultiplier.get() - (initDistance - minDistance)));
-	}
-
-	private @NotNull Vector3d calculatePositionWithoutOffset () {
-		var     smoothFactor     = smoothRotateCenter.smoothFactor.copy();
-		boolean isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
-		boolean isVerticalZero   = smoothFactor.y() == 0;
-		var     rotateCenter     = smoothRotateCenter.get(ThirdPersonStatus.lastPartialTick);
-		if (isHorizontalZero || isVerticalZero) {
-			var rawRotateCenter = ThirdPerson.ENTITY_AGENT.getRotateCenter(ThirdPersonStatus.lastPartialTick);
-			rotateCenter = Vector3d.of(isHorizontalZero ? rawRotateCenter.x(): rotateCenter.x(),//
-									   isVerticalZero ? rawRotateCenter.y(): rotateCenter.y(),//
-									   isHorizontalZero ? rawRotateCenter.z(): rotateCenter.z());
+		if (limit < initDistance) {
+			if (ThirdPersonConstants.USE_CAMERA_PLAIN_DISTANCE) {
+				smoothDistance.setValue(Math.max(0, smoothDistance.get() + limit - initDistance));
+			} else {
+				smoothDistance.setValue(Math.max(0, limit - bodyRadius));
+			}
+			var limitedPosition = rotateCenter.add(rotateCenterToCamera.scale(limit / initDistance));
+			((CameraInvoker)fakeCamera).invokeSetPosition(limitedPosition);
 		}
-		return rotateCenter.add(LMath.directionFromRotationDegree(relativeRotation).mul(ThirdPerson.ENTITY_AGENT.getBodyRadius() + smoothDistanceMultiplier.get()));
 	}
 
 	private void updateSmoothVirtualDistance (double period) {
@@ -438,15 +442,15 @@ public class CameraAgent {
 		var     mode        = config.getCameraOffsetScheme().getMode();
 		if (minecraft.options.getCameraType() == CameraType.FIRST_PERSON) {
 			// 当前的目标是第一人称
-			smoothDistanceMultiplier.setHalflife(config.t2f_transition_halflife);
-			smoothDistanceMultiplier.setTarget(-ThirdPerson.ENTITY_AGENT.getBodyRadius() * 0.5);
+			smoothDistance.setHalflife(config.t2f_transition_halflife);
+			smoothDistance.setTarget(-ThirdPerson.ENTITY_AGENT.getBodyRadius() * 0.5);
 		} else {
 			// 当前的目标不是第一人称
-			smoothDistanceMultiplier.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
-			smoothDistanceMultiplier.setTarget(mode.getMaxDistance() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
+			smoothDistance.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
+			smoothDistance.setTarget(mode.getMaxDistance() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
 		}
-		smoothDistanceMultiplier.update(period);
-		assert Double.isFinite(smoothDistanceMultiplier.get());
+		smoothDistance.update(period);
+		assert Double.isFinite(smoothDistance.get());
 	}
 
 	private void updateSmoothOffsetRatio (double period) {
