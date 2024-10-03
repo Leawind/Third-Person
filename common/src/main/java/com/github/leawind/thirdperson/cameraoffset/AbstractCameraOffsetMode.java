@@ -59,14 +59,14 @@ public abstract class AbstractCameraOffsetMode {
 	public abstract Vector2d getOffsetSmoothHalflife ();
 
 	/**
-	 * 相机到玩家的最大距离
+	 * 相机到玩家的距离限制
 	 */
-	public abstract double getMaxDistance ();
+	public abstract double getDistanceLimit ();
 
 	/**
-	 * 设置相机到玩家的最大距离
+	 * 设置相机到玩家的距离限制
 	 */
-	public abstract void setMaxDistance (double distance);
+	public abstract void setDistanceLimit (double distance);
 
 	/**
 	 * 当前是否居中

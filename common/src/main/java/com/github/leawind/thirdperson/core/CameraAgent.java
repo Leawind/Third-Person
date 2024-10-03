@@ -40,7 +40,7 @@ import java.util.Optional;
 public class CameraAgent {
 	private final @NotNull Minecraft         minecraft;
 	private final          ExpSmoothVector3d smoothRotateCenter;
-	private final @NotNull Camera            fakeCamera       = new Camera();
+	private final @NotNull Camera            tempCamera       = new Camera();
 	private final @NotNull Vector2d          relativeRotation = Vector2d.of(0);
 	/**
 	 * 相机偏移量
@@ -111,11 +111,11 @@ public class CameraAgent {
 	 * 渲染过程中放置相机
 	 */
 	public void onCameraSetup (@NotNull ThirdPersonCameraSetupEvent event) {
-		updateFakeCameraRotationPosition();
+		updateTempCameraRotationPosition();
 		preventThroughWall();
-		event.setPosition(fakeCamera.getPosition());
-		float yRot = fakeCamera.getYRot();
-		float xRot = fakeCamera.getXRot();
+		event.setPosition(tempCamera.getPosition());
+		float yRot = tempCamera.getYRot();
+		float xRot = tempCamera.getXRot();
 		assert !Float.isNaN(xRot + yRot);
 		event.setRotation(xRot, yRot);
 	}
@@ -348,8 +348,8 @@ public class CameraAgent {
 						continue;
 					}
 					var    vectorToTarget = LMath.toVector3d(targetPos.subtract(cameraPos)).normalizeSafely();
-					double angleRadian    = Math.acos(cameraViewVector.dot(vectorToTarget));
-					if (Math.toDegrees(angleRadian) < ThirdPersonConstants.TARGET_PREDICTION_DEGREES_LIMIT) {
+					double angrad         = Math.acos(cameraViewVector.dot(vectorToTarget));
+					if (Math.toDegrees(angrad) < ThirdPersonConstants.TARGET_PREDICTION_DEGREES_LIMIT) {
 						candidateTargets.add(target);
 					}
 				}
@@ -363,10 +363,10 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 根据角度、距离、偏移量计算假相机实际朝向和位置，不考虑穿墙问题
+	 * 根据角度、距离、偏移量计算临时相机实际朝向和位置，不考虑穿墙问题
 	 */
-	private void updateFakeCameraRotationPosition () {
-		((CameraInvoker)fakeCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
+	private void updateTempCameraRotationPosition () {
+		((CameraInvoker)tempCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
 		var    mc          = ThirdPerson.mc;
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
@@ -376,9 +376,9 @@ public class CameraAgent {
 		// Direction
 		Vector3d direction;
 		{
-			var    forward           = LMath.toVector3d(fakeCamera.getLookVector());
-			var    left              = LMath.toVector3d(fakeCamera.getLeftVector());
-			var    up                = LMath.toVector3d(fakeCamera.getUpVector());
+			var    forward           = LMath.toVector3d(tempCamera.getLookVector());
+			var    left              = LMath.toVector3d(tempCamera.getLeftVector());
+			var    up                = LMath.toVector3d(tempCamera.getUpVector());
 			double verticalFovHalf   = Math.toRadians(mc.options.fov().get());
 			double horizontalFovHalf = 2 * Math.atan(widthHalf / ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE);
 			var    offsetRatio       = smoothOffsetRatio.get();
@@ -392,7 +392,7 @@ public class CameraAgent {
 		var    rotateCenter   = getZeroStrictSmoothRotateCenter(ThirdPersonStatus.lastPartialTick);
 		double bodyRadius     = ThirdPerson.ENTITY_AGENT.getBodyRadius();
 		var    cameraPosition = rotateCenter.sub(direction.mul(bodyRadius + smoothDistance.get()));
-		((CameraInvoker)fakeCamera).invokeSetPosition(LMath.toVec3(cameraPosition));
+		((CameraInvoker)tempCamera).invokeSetPosition(LMath.toVec3(cameraPosition));
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class CameraAgent {
 			return;
 		}
 		var    rotateCenter         = LMath.toVec3(getZeroStrictSmoothRotateCenter(ThirdPersonStatus.lastPartialTick));
-		var    cameraPosition       = fakeCamera.getPosition();
+		var    cameraPosition       = tempCamera.getPosition();
 		var    rotateCenterToCamera = rotateCenter.vectorTo(cameraPosition);
 		double initDistance         = rotateCenterToCamera.length();
 		if (initDistance < 1e-5) {
@@ -432,7 +432,7 @@ public class CameraAgent {
 				smoothDistance.setValue(Math.max(0, limit - bodyRadius));
 			}
 			var limitedPosition = rotateCenter.add(rotateCenterToCamera.scale(limit / initDistance));
-			((CameraInvoker)fakeCamera).invokeSetPosition(limitedPosition);
+			((CameraInvoker)tempCamera).invokeSetPosition(limitedPosition);
 		}
 	}
 
@@ -447,7 +447,7 @@ public class CameraAgent {
 		} else {
 			// 当前的目标不是第一人称
 			smoothDistance.setHalflife(isAdjusting ? config.adjusting_distance_smooth_halflife: mode.getDistanceSmoothHalflife());
-			smoothDistance.setTarget(mode.getMaxDistance() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
+			smoothDistance.setTarget(mode.getDistanceLimit() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
 		}
 		smoothDistance.update(period);
 		assert Double.isFinite(smoothDistance.get());

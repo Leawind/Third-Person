@@ -297,9 +297,9 @@ public final class ThirdPersonEvents {
 			return EventResult.pass();
 		}
 		var    config = ThirdPerson.getConfig();
-		double dist   = config.getCameraOffsetScheme().getMode().getMaxDistance();
+		double dist   = config.getCameraOffsetScheme().getMode().getDistanceLimit();
 		dist = config.getDistanceMonoList().offset(dist, offset);
-		config.getCameraOffsetScheme().getMode().setMaxDistance(dist);
+		config.getCameraOffsetScheme().getMode().setDistanceLimit(dist);
 		return EventResult.interruptFalse();
 	}
 

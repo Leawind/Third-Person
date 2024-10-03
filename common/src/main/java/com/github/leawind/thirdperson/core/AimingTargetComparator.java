@@ -30,10 +30,10 @@ public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements C
 			return 0;
 		}
 		vectorToTarget.normalize();
-		double dist         = pos.distanceTo(entityPos);
-		double angleRadian  = Math.acos(viewVector.dot(vectorToTarget));
-		double angleDegrees = Math.toDegrees(angleRadian);
-		return Math.pow(dist, 2) * Math.pow(angleDegrees, 2.5);
-		//		return dist * 2 + angleDegrees * 5;
+		double dist   = pos.distanceTo(entityPos);
+		double angrad = Math.acos(viewVector.dot(vectorToTarget));
+		double angdeg = Math.toDegrees(angrad);
+		return Math.pow(dist, 2) * Math.pow(angdeg, 2.5);
+		//		return dist * 2 + angdeg * 5;
 	}
 }

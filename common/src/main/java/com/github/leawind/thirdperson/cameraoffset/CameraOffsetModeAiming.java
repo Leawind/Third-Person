@@ -29,12 +29,12 @@ public class CameraOffsetModeAiming extends AbstractCameraOffsetMode {
 	}
 
 	@Override
-	public double getMaxDistance () {
+	public double getDistanceLimit () {
 		return config.aiming_max_distance;
 	}
 
 	@Override
-	public void setMaxDistance (double distance) {
+	public void setDistanceLimit (double distance) {
 		config.aiming_max_distance = distance;
 	}
 

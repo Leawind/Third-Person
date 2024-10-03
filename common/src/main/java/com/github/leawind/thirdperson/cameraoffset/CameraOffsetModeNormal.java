@@ -27,12 +27,12 @@ public class CameraOffsetModeNormal extends AbstractCameraOffsetMode {
 	}
 
 	@Override
-	public double getMaxDistance () {
+	public double getDistanceLimit () {
 		return config.normal_max_distance;
 	}
 
 	@Override
-	public void setMaxDistance (double distance) {
+	public void setDistanceLimit (double distance) {
 		config.normal_max_distance = distance;
 	}
 
