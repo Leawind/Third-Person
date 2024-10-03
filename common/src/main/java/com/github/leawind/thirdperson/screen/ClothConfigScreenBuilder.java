@@ -2,6 +2,7 @@ package com.github.leawind.thirdperson.screen;
 
 
 import com.github.leawind.thirdperson.ThirdPerson;
+import com.github.leawind.thirdperson.config.AbstractConfig;
 import com.github.leawind.thirdperson.config.Config;
 import com.github.leawind.thirdperson.config.ConfigManager;
 import com.github.leawind.util.ItemPredicateUtil;
@@ -11,6 +12,7 @@ import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.DoubleListEntry;
 import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
+import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
@@ -116,6 +118,8 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			if (getAvailableBuidlers().size() > 1) {
 				CATEGORY_OTHER.addEntry(entryBuilder.startDropdownMenu(ConfigManager.getText("option.config_screen_api"), config.config_screen_api, v -> config.config_screen_api = v).setSelections(getAvailableBuidlers().keySet()).build());
 			}
+			CATEGORY_OTHER.addEntry(booleanEntry("camera_distance_mode", defaults.camera_distance_mode.bool(), config.camera_distance_mode.bool(), v -> config.camera_distance_mode = v ? AbstractConfig.CameraDistanceMode.PLANE: AbstractConfig.CameraDistanceMode.STRAIGHT, entryBuilder) //
+																																																																							 .setYesNoTextSupplier(AbstractConfig.CameraDistanceMode::formatter).build());
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("enable_target_entity_predict", defaults.enable_target_entity_predict, config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v, entryBuilder));
 			CATEGORY_OTHER.addEntry(buildBooleanEntry("allow_double_tap_sprint", defaults.allow_double_tap_sprint, config.allow_double_tap_sprint, v -> config.allow_double_tap_sprint = v, entryBuilder));
@@ -130,6 +134,10 @@ public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
 			CATEGORY_OTHER.addEntry(Subcategory_Crosshair.build());
 		}
 		return builder.build();
+	}
+
+	private BooleanToggleBuilder booleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {
+		return entryBuilder.startBooleanToggle(ConfigManager.getText("option." + name), currentValue).setTooltip(ConfigManager.getText("option." + name + ".desc")).setDefaultValue(defaultValue).setSaveConsumer(setter);
 	}
 
 	private BooleanListEntry buildBooleanEntry (String name, boolean defaultValue, boolean currentValue, Consumer<Boolean> setter, ConfigEntryBuilder entryBuilder) {

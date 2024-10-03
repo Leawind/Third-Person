@@ -6,6 +6,7 @@ import com.github.leawind.api.client.event.ThirdPersonCameraSetupEvent;
 import com.github.leawind.thirdperson.ThirdPerson;
 import com.github.leawind.thirdperson.ThirdPersonConstants;
 import com.github.leawind.thirdperson.ThirdPersonStatus;
+import com.github.leawind.thirdperson.config.AbstractConfig;
 import com.github.leawind.thirdperson.mixin.CameraInvoker;
 import com.github.leawind.thirdperson.mixin.ClientLevelInvoker;
 import com.github.leawind.util.annotation.VersionSensitive;
@@ -385,7 +386,8 @@ public class CameraAgent {
 			double offsetX           = offsetRatio.x();
 			double offsetY           = offsetRatio.y();
 			direction = forward.sub(up.mul(offsetY * Math.tan(verticalFovHalf / 2)).add(left.mul(offsetX * Math.tan(horizontalFovHalf / 2))));
-			if (!ThirdPersonConstants.USE_CAMERA_PLAIN_DISTANCE) {
+			var config = ThirdPerson.getConfig();
+			if (config.camera_distance_mode == AbstractConfig.CameraDistanceMode.STRAIGHT) {
 				direction.normalizeSafely();
 			}
 		}
@@ -426,7 +428,8 @@ public class CameraAgent {
 			}
 		}
 		if (limit < initDistance) {
-			if (ThirdPersonConstants.USE_CAMERA_PLAIN_DISTANCE) {
+			var config = ThirdPerson.getConfig();
+			if (config.camera_distance_mode == AbstractConfig.CameraDistanceMode.PLANE) {
 				smoothDistance.setValue(Math.max(0, smoothDistance.get() + limit - initDistance));
 			} else {
 				smoothDistance.setValue(Math.max(0, limit - bodyRadius));
