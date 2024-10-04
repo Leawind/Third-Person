@@ -119,7 +119,6 @@ public class CameraAgent {
 	 */
 	public void onCameraSetup (@NotNull ThirdPersonCameraSetupEvent event) {
 		updateTempCameraRotationPosition();
-		preventThroughWall();
 		event.setPosition(tempCamera.getPosition());
 		float yRot = tempCamera.getYRot();
 		float xRot = tempCamera.getXRot();
@@ -426,17 +425,20 @@ public class CameraAgent {
 	}
 
 	/**
-	 * 根据角度、距离、偏移量计算临时相机实际朝向和位置，不考虑穿墙问题
+	 * 根据角度、距离、偏移量计算临时相机实际朝向和位置
+	 * <p>
+	 * 关于防止穿墙，参考 net.minecraft.client.Camera#getMaxZoom(double)
 	 */
 	private void updateTempCameraRotationPosition () {
 		((CameraInvoker)tempCamera).invokeSetRotation((float)(relativeRotation.y() + 180), (float)-relativeRotation.x());
 		var    mc          = ThirdPerson.mc;
+		var    config      = ThirdPerson.getConfig();
 		double aspectRatio = (double)mc.getWindow().getWidth() / mc.getWindow().getHeight();
 		// 垂直视野角度一半(弧度制）
 		double verticalRadianHalf = Math.toRadians(mc.options.fov().get()) / 2;
 		double heightHalf         = Math.tan(verticalRadianHalf) * ThirdPersonConstants.VANILLA_NEAR_PLANE_DISTANCE;
 		double widthHalf          = aspectRatio * heightHalf;
-		// Direction
+		// 从旋转中心到相机的方向
 		Vector3d direction;
 		{
 			var    forward           = LMath.toVector3d(tempCamera.getLookVector());
@@ -448,56 +450,46 @@ public class CameraAgent {
 			double offsetX           = offsetRatio.x();
 			double offsetY           = offsetRatio.y();
 			direction = forward.sub(up.mul(offsetY * Math.tan(verticalFovHalf / 2)).add(left.mul(offsetX * Math.tan(horizontalFovHalf / 2))));
-			var config = ThirdPerson.getConfig();
 			if (config.camera_distance_mode == AbstractConfig.CameraDistanceMode.STRAIGHT) {
 				direction.normalizeSafely();
 			}
 		}
-		var    rotateCenter   = getRotateCenterFinally(ThirdPersonStatus.lastPartialTick);
-		double bodyRadius     = ThirdPerson.ENTITY_AGENT.getBodyRadius();
-		var    cameraPosition = rotateCenter.sub(direction.mul(bodyRadius + smoothDistance.get()));
-		((CameraInvoker)tempCamera).invokeSetPosition(LMath.toVec3(cameraPosition));
-	}
-
-	/**
-	 * 为防止穿墙，重新计算 {@link CameraAgent#smoothDistance} 的值，并重新放置相机
-	 * <p>
-	 * 参考 net.minecraft.client.Camera#getMaxZoom(double)
-	 */
-	private void preventThroughWall () {
-		var bodyRadius = ThirdPerson.ENTITY_AGENT.getBodyRadius();
-		var entity     = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
-		if (entity.isSpectator() && ThirdPerson.ENTITY_AGENT.isEyeInWall(ClipContext.Block.VISUAL)) {
-			return;
-		}
-		var    rotateCenter         = LMath.toVec3(getRotateCenterFinally(ThirdPersonStatus.lastPartialTick));
-		var    cameraPosition       = tempCamera.getPosition();
-		var    rotateCenterToCamera = rotateCenter.vectorTo(cameraPosition);
-		double initDistance         = rotateCenterToCamera.length();
-		if (initDistance < 1e-5) {
-			return;
-		}
-		double limit = initDistance;
-		for (int i = 0; i < 8; ++i) {
-			double offsetX   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i & 1) * 2 - 1);
-			double offsetY   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i >> 1 & 1) * 2 - 1);
-			double offsetZ   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i >> 2 & 1) * 2 - 1);
-			var    pickFrom  = rotateCenter.add(offsetX, offsetY, offsetZ);
-			var    pickTo    = pickFrom.add(rotateCenterToCamera);
-			var    hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
-			if (hitResult.getType() != HitResult.Type.MISS) {
-				limit = Math.min(limit, hitResult.getLocation().distanceTo(pickFrom));
+		var    rotateCenterVector3d = getRotateCenterFinally(ThirdPersonStatus.lastPartialTick);
+		double bodyRadius           = ThirdPerson.ENTITY_AGENT.getBodyRadius();
+		var    cameraPosition       = LMath.toVec3(rotateCenterVector3d.sub(direction.mul(bodyRadius + smoothDistance.get())));
+		((CameraInvoker)tempCamera).invokeSetPosition(cameraPosition);
+		// 防止穿墙
+		{
+			var rotateCenter = LMath.toVec3(getRotateCenterFinally(ThirdPersonStatus.lastPartialTick));
+			var entity       = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+			if (entity.isSpectator() && ThirdPerson.ENTITY_AGENT.isEyeInWall(ClipContext.Block.VISUAL)) {
+				return;
 			}
-		}
-		if (limit < initDistance) {
-			var config = ThirdPerson.getConfig();
-			if (config.camera_distance_mode == AbstractConfig.CameraDistanceMode.PLANE) {
-				smoothDistance.setValue(Math.max(0, smoothDistance.get() + limit - initDistance));
-			} else {
-				smoothDistance.setValue(Math.max(0, limit - bodyRadius));
+			var    rotateCenterToCamera = rotateCenter.vectorTo(cameraPosition);
+			double initDistance         = rotateCenterToCamera.length();
+			if (initDistance < 1e-5) {
+				return;
 			}
-			var limitedPosition = rotateCenter.add(rotateCenterToCamera.scale(limit / initDistance));
-			((CameraInvoker)tempCamera).invokeSetPosition(limitedPosition);
+			double limit = initDistance;
+			for (int i = 0; i < 8; ++i) {
+				double offsetX   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i & 1) * 2 - 1);
+				double offsetY   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i >> 1 & 1) * 2 - 1);
+				double offsetZ   = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * ((i >> 2 & 1) * 2 - 1);
+				var    pickFrom  = rotateCenter.add(offsetX, offsetY, offsetZ);
+				var    pickTo    = pickFrom.add(rotateCenterToCamera);
+				var    hitResult = entity.level().clip(new ClipContext(pickFrom, pickTo, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, ThirdPerson.ENTITY_AGENT.getRawCameraEntity()));
+				if (hitResult.getType() != HitResult.Type.MISS) {
+					limit = Math.min(limit, hitResult.getLocation().distanceTo(pickFrom));
+				}
+			}
+			if (limit < initDistance) {
+				switch (config.camera_distance_mode) {
+					case PLANE -> smoothDistance.setValue(Math.max(0, smoothDistance.get() + limit - initDistance));
+					case STRAIGHT -> smoothDistance.setValue(Math.max(0, limit - bodyRadius));
+				}
+				var limitedPosition = rotateCenter.add(rotateCenterToCamera.scale(limit / initDistance));
+				((CameraInvoker)tempCamera).invokeSetPosition(limitedPosition);
+			}
 		}
 	}
 
