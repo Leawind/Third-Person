@@ -97,6 +97,8 @@
 	"leawind_third_person.option.camera_distance_mode.desc": "你将在调整相机偏移量时发现区别。",
 	"leawind_third_person.option.camera_distance_mode.plane": "平面距离",
 	"leawind_third_person.option.camera_distance_mode.straight": "直线距离",
+	"leawind_third_person.option.rotate_center_height_offset": "旋转中心高度偏移量",
+	"leawind_third_person.option.rotate_center_height_offset.desc": "将相机的旋转中心上下偏移一段距离",
 	"leawind_third_person.option.enable_target_entity_predict": "瞄准时启用目标实体预测",
 	"leawind_third_person.option.enable_target_entity_predict.desc": "瞄准时，自动预测想要射击的目标实体，据此计算玩家朝向，以便更好地瞄准目标。",
 	"leawind_third_person.option.skip_vanilla_second_person_camera": "跳过原版第二人称",

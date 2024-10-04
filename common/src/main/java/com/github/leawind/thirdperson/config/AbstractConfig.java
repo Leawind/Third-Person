@@ -69,6 +69,7 @@ public abstract class AbstractConfig {
 	// ================================================================================其他 //
 	@Expose public          String             config_screen_api                         = "YACL";
 	@Expose public          CameraDistanceMode camera_distance_mode                      = CameraDistanceMode.STRAIGHT;
+	@Expose public          double             rotate_center_height_offset               = 0.3;
 	@Expose public          boolean            enable_target_entity_predict              = true;
 	@Expose public          boolean            skip_vanilla_second_person_camera         = true;
 	@Expose public          boolean            allow_double_tap_sprint                   = false;

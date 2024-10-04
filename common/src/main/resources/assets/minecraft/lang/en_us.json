@@ -97,6 +97,8 @@
 	"leawind_third_person.option.camera_distance_mode.desc": "You will find the difference when adjusting the camera offset.",
 	"leawind_third_person.option.camera_distance_mode.plane": "Plane distance",
 	"leawind_third_person.option.camera_distance_mode.straight": "Straight distance",
+	"leawind_third_person.option.rotate_center_height_offset": "Rotate center height offset",
+	"leawind_third_person.option.rotate_center_height_offset.desc": "Offset the rotation center height.",
 	"leawind_third_person.option.enable_target_entity_predict": "Enable target entity prediction when aiming",
 	"leawind_third_person.option.enable_target_entity_predict.desc": "When aiming, predict the target entity you want to shoot, calculate the player's rotation based on this, for better aiming at the target.",
 	"leawind_third_person.option.skip_vanilla_second_person_camera": "Skip vanilla second person",

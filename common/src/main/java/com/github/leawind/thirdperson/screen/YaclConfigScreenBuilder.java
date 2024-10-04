@@ -119,6 +119,7 @@ public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
 																																																												 .enumClass(AbstractConfig.CameraDistanceMode.class) //
 																																																												 .formatValue(v -> AbstractConfig.CameraDistanceMode.formatter(v.bool()))) //
 																																																		 .build()) //
+														  .option(option("rotate_center_height_offset", defaults.rotate_center_height_offset, -0.5, 0.5, 0.02, () -> config.rotate_center_height_offset, v -> config.rotate_center_height_offset = v).build()) //
 														  .option(booleanOption("enable_target_entity_predict", defaults.enable_target_entity_predict, () -> config.enable_target_entity_predict, v -> config.enable_target_entity_predict = v).build()) //
 														  .option(booleanOption("skip_vanilla_second_person_camera", defaults.skip_vanilla_second_person_camera, () -> config.skip_vanilla_second_person_camera, v -> config.skip_vanilla_second_person_camera = v).build()) //
 														  .option(booleanOption("allow_double_tap_sprint", defaults.allow_double_tap_sprint, () -> config.allow_double_tap_sprint, v -> config.allow_double_tap_sprint = v).build()) // <- This is the new line

@@ -131,11 +131,10 @@ public class CameraAgent {
 	 * 不平滑的旋转中心
 	 */
 	public Vector3d getRotateCenterTarget (float partialTick) {
-		final double _rotate_center_height_offset = 0.4;
-		//
+		var config      = ThirdPerson.getConfig();
 		var entity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 		var eyePosition = entity.getEyePosition(partialTick);
-		var result      = LMath.toVector3d(eyePosition.with(Direction.Axis.Y, eyePosition.y + _rotate_center_height_offset));
+		var result      = LMath.toVector3d(eyePosition.with(Direction.Axis.Y, eyePosition.y + config.rotate_center_height_offset));
 		return result;
 	}
 
