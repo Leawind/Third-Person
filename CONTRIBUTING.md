@@ -18,6 +18,7 @@ These are some requirements of commit message:
 <type>: <title> [#issueId]
 
 [description]
+
 ```
 
 Example:
@@ -38,35 +39,8 @@ fix: too many downloads #999
 
 ## How to add a new config item
 
-### Define config item and set default value
-
-Edit `com.github.leawind.thirdperson.config.AbstractConfig`
-
-```
-@Expose public double my_option = 0.5;
-```
-
-### Add translations
-
-Edit `resources/assets/minecraft/lang/*.json`
-
-### Use
-
-Use the config item somewhere.
-
-### Edit config screen builder
-
-Find all subclass of abstract class `com.github.leawind.thirdperson.screen.ConfigScreenBuilder`
-
-For example
-
-* `com.github.leawind.thirdperson.screen.YaclConfigScreenBuilder`
-  ```
-		.option(option("my_option", defaults.my_option, 0D, 1D, 0.05D, () -> config.my_option, v -> config.my_option = v).build()) //
-  ```
-* `com.github.leawind.thirdperson.screen.ClothConfigScreenBuilder`
-  ```
-		CATEGORY_OTHER.addEntry(buildDoubleEntry("my_option", 0D, 1D, defaults.my_option, config.my_option, v -> config.my_option = v, entryBuilder));
-  ```
-
-Don't forget to debug and determine the default value and adjustable range for the new config item.
+1. Define config item in `AbstractConfig`
+   `@Expose public double my_option = 0.5;`
+2. Use the config item somewhere.
+3. Find all screen builders in `ConfigScreenBuilder#builders`, and add the config item to the builder.
+4. Add translation to `resource/assets/minecraft/lang/*.json`
