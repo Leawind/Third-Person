@@ -31,12 +31,12 @@ public enum RotateTargetEnum {
 		if (toInterestedPoint.length() < 1e-5) {
 			return NONE.getRotation();
 		}
-		var    playerRot  = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
-		var    rot        = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
+		var playerRot = ThirdPerson.ENTITY_AGENT.getRawRotation(1);
+		ThirdPerson.FINITE_CHECKER.checkOnce(playerRot.x(), playerRot.y());
+		var rot = LMath.rotationDegreeFromDirection(LMath.toVector3d(toInterestedPoint));
+		ThirdPerson.FINITE_CHECKER.checkOnce(rot.x(), rot.y());
 		double leftBound  = player.yBodyRot - ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
 		double rightBound = player.yBodyRot + ThirdPersonConstants.VANILLA_PLAYER_HEAD_ROTATE_LIMIT_DEGREES;
-		assert playerRot.isFinite();
-		assert rot.isFinite();
 		if (LMath.isWithinDegrees(rot.y(), leftBound, rightBound)) {
 			playerRot.y(rot.y());
 		} else {
@@ -131,7 +131,7 @@ public enum RotateTargetEnum {
 	 */
 	public @NotNull Vector2d getRotation () {
 		var rotation = rotationGetter.get();
-		assert rotation.isFinite();
+		ThirdPerson.FINITE_CHECKER.checkOnce(rotation.x(), rotation.y());
 		return rotation;
 	}
 }

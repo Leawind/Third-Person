@@ -83,7 +83,7 @@ public final class ThirdPersonEvents {
 	 */
 	private static void onClientPlayerRespawn (@NotNull LocalPlayer oldPlayer, @NotNull LocalPlayer newPlayer) {
 		if (ThirdPerson.getConfig().is_mod_enabled) {
-			onPlayerReset();
+			resetPlayer();
 			ThirdPerson.LOGGER.info("on Client player respawn");
 		}
 	}
@@ -96,7 +96,7 @@ public final class ThirdPersonEvents {
 	private static void onClientPlayerJoin (@NotNull LocalPlayer player) {
 		var config = ThirdPerson.getConfig();
 		if (config.is_mod_enabled) {
-			onPlayerReset();
+			resetPlayer();
 			ThirdPerson.LOGGER.info("on Client player join");
 		}
 		config.updateItemPredicates();
@@ -156,8 +156,7 @@ public final class ThirdPersonEvents {
 			if (isRenderingInThirdPerson) {
 				// 进入第三人称
 				ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
-				ThirdPerson.CAMERA_AGENT.reset();
-				ThirdPerson.ENTITY_AGENT.reset();
+				resetPlayer();
 			} else {
 				// 退出第三人称
 				ThirdPerson.ENTITY_AGENT.setRawRotation(ThirdPerson.CAMERA_AGENT.getRotation());
@@ -280,7 +279,8 @@ public final class ThirdPersonEvents {
 	 * @see ThirdPersonEvents#onClientPlayerRespawn(LocalPlayer, LocalPlayer)
 	 * @see ThirdPersonEvents#onClientPlayerJoin(LocalPlayer)
 	 */
-	private static void onPlayerReset () {
+	public static void resetPlayer () {
+		ThirdPerson.resetFiniteCheckers();
 		ThirdPerson.ENTITY_AGENT.reset();
 		ThirdPerson.CAMERA_AGENT.reset();
 	}

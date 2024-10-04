@@ -9,6 +9,7 @@ import com.github.leawind.thirdperson.ThirdPersonStatus;
 import com.github.leawind.thirdperson.config.AbstractConfig;
 import com.github.leawind.thirdperson.mixin.CameraInvoker;
 import com.github.leawind.thirdperson.mixin.ClientLevelInvoker;
+import com.github.leawind.util.FiniteChecker;
 import com.github.leawind.util.annotation.VersionSensitive;
 import com.github.leawind.util.math.LMath;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothDouble;
@@ -39,6 +40,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class CameraAgent {
+	public final           FiniteChecker     FINITE_CHECKER   = new FiniteChecker(err -> {
+		ThirdPerson.LOGGER.error(err.toString());
+	});
 	private final @NotNull Minecraft         minecraft;
 	private final          ExpSmoothVector3d smoothRotateCenter;
 	private final @NotNull Camera            tempCamera       = new Camera();
@@ -103,6 +107,7 @@ public class CameraAgent {
 			if (ThirdPersonStatus.shouldCameraTurnWithEntity()) {
 				// 将相机朝向与相机实体朝向同步
 				var rot = ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
+				FINITE_CHECKER.checkOnce(rot.x(), rot.y());
 				relativeRotation.set(-rot.x(), rot.y() - 180);
 			}
 		}
@@ -117,7 +122,7 @@ public class CameraAgent {
 		event.setPosition(tempCamera.getPosition());
 		float yRot = tempCamera.getYRot();
 		float xRot = tempCamera.getXRot();
-		assert !Float.isNaN(xRot + yRot);
+		FINITE_CHECKER.checkOnce(xRot, yRot);
 		event.setRotation(xRot, yRot);
 	}
 
@@ -186,7 +191,7 @@ public class CameraAgent {
 	 * @param dXRot 俯仰角变化量
 	 */
 	public void turnCamera (double dYRot, double dXRot) {
-		assert Double.isFinite(dYRot) && Double.isFinite(dXRot);
+		FINITE_CHECKER.checkOnce(dYRot, dXRot);
 		var config = ThirdPerson.getConfig();
 		if (config.is_mod_enabled && !ThirdPersonStatus.isAdjustingCameraOffset()) {
 			if (config.lock_camera_pitch_angle) {
@@ -453,7 +458,7 @@ public class CameraAgent {
 			smoothDistance.setTarget(mode.getDistanceLimit() * ThirdPerson.ENTITY_AGENT.vehicleTotalSizeCached);
 		}
 		smoothDistance.update(period);
-		assert Double.isFinite(smoothDistance.get());
+		FINITE_CHECKER.checkOnce(smoothDistance.get());
 	}
 
 	private void updateSmoothOffsetRatio (double period) {

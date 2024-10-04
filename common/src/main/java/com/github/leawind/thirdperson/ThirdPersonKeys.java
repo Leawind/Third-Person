@@ -21,8 +21,7 @@ public final class ThirdPersonKeys {
 			} else {
 				ThirdPersonStatus.lastPartialTick = Minecraft.getInstance().getFrameTime();
 				ThirdPerson.mc.gameRenderer.checkEntityPostEffect(null);
-				ThirdPerson.CAMERA_AGENT.reset();
-				ThirdPerson.ENTITY_AGENT.reset();
+				ThirdPersonEvents.resetPlayer();
 			}
 			config.is_mod_enabled = !config.is_mod_enabled;
 		}

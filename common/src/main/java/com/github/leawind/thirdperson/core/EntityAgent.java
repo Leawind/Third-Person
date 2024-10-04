@@ -8,6 +8,7 @@ import com.github.leawind.thirdperson.ThirdPersonStatus;
 import com.github.leawind.thirdperson.core.rotation.RotateStrategy;
 import com.github.leawind.thirdperson.core.rotation.RotateTargetEnum;
 import com.github.leawind.thirdperson.core.rotation.SmoothTypeEnum;
+import com.github.leawind.util.FiniteChecker;
 import com.github.leawind.util.ItemPredicateUtil;
 import com.github.leawind.util.annotation.VersionSensitive;
 import com.github.leawind.util.math.LMath;
@@ -38,6 +39,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class EntityAgent {
+	public final     FiniteChecker       FINITE_CHECKER         = new FiniteChecker(err -> {
+		ThirdPerson.LOGGER.error(err.toString());
+	});
 	private final    Minecraft           minecraft;
 	private final    ExpSmoothRotation   smoothRotation         = ExpSmoothRotation.createWithHalflife(0.5);
 	private final    ExpSmoothDouble     smoothOpacity;
@@ -172,7 +176,7 @@ public class EntityAgent {
 	 * 设置实体朝向
 	 */
 	public void setRawRotation (@NotNull Vector2d rot) {
-		assert rot.isFinite();
+		FINITE_CHECKER.checkOnce(rot.x(), rot.y());
 		var entity = getRawPlayerEntity();
 		entity.setYRot(entity.yRotO = (float)rot.y());
 		entity.setXRot(entity.xRotO = (float)rot.x());
@@ -391,7 +395,7 @@ public class EntityAgent {
 			var          cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
 			final double distance       = getRawEyePosition(partialTick).distance(cameraPosition);
 			targetOpacity = (distance - C) / (1 - C);
-			assert !Double.isNaN(targetOpacity);
+			FINITE_CHECKER.checkOnce(targetOpacity);
 			if (targetOpacity > config.gaze_opacity && !isFallFlying() && ThirdPerson.CAMERA_AGENT.isLookingAt(getRawCameraEntity())) {
 				targetOpacity = config.gaze_opacity;
 			}

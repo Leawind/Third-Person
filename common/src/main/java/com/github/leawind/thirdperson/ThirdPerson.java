@@ -5,6 +5,7 @@ import com.github.leawind.thirdperson.config.Config;
 import com.github.leawind.thirdperson.config.ConfigManager;
 import com.github.leawind.thirdperson.core.CameraAgent;
 import com.github.leawind.thirdperson.core.EntityAgent;
+import com.github.leawind.util.FiniteChecker;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import dev.architectury.platform.Platform;
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,7 @@ public final class ThirdPerson {
 	public static final Minecraft     mc             = Minecraft.getInstance();
 	public static final Logger        LOGGER         = LoggerFactory.getLogger(ThirdPersonConstants.MOD_NAME);
 	public static final ConfigManager CONFIG_MANAGER = new ConfigManager();
+	public static final FiniteChecker FINITE_CHECKER = new FiniteChecker(err -> ThirdPerson.LOGGER.error(err.toString()));
 	public static       EntityAgent   ENTITY_AGENT;
 	public static       CameraAgent   CAMERA_AGENT;
 
@@ -50,5 +52,11 @@ public final class ThirdPerson {
 	 */
 	public static @NotNull Config getConfig () {
 		return CONFIG_MANAGER.getConfig();
+	}
+
+	public static void resetFiniteCheckers () {
+		ThirdPerson.FINITE_CHECKER.reset();
+		ENTITY_AGENT.FINITE_CHECKER.reset();
+		CAMERA_AGENT.FINITE_CHECKER.reset();
 	}
 }
