@@ -77,7 +77,7 @@ public class CameraAgent {
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistance.set(0D);
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			smoothRotateCenter.set(ThirdPerson.ENTITY_AGENT.getRotateCenter(ThirdPersonStatus.lastPartialTick));
+			smoothRotateCenter.set(getRotateCenter(ThirdPersonStatus.lastPartialTick));
 		}
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
@@ -127,6 +127,13 @@ public class CameraAgent {
 	}
 
 	/**
+	 * 不平滑的旋转中心
+	 */
+	public Vector3d getRotateCenter (float partialTick) {
+		return ThirdPerson.ENTITY_AGENT.getRawEyePosition(partialTick);
+	}
+
+	/**
 	 * 获取平滑的相机旋转中心
 	 */
 	public @NotNull Vector3d getZeroStrictSmoothRotateCenter (float partialTick) {
@@ -134,7 +141,7 @@ public class CameraAgent {
 		var     smoothFactor     = smoothRotateCenter.smoothFactor;
 		boolean isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
 		boolean isVerticalZero   = smoothFactor.y() == 0;
-		var     rawRotateCenter  = ThirdPerson.ENTITY_AGENT.getRotateCenter(partialTick);
+		var     rawRotateCenter  = getRotateCenter(partialTick);
 		if (isHorizontalZero || isVerticalZero) {
 			return Vector3d.of(isHorizontalZero ? rawRotateCenter.x(): smoothValue.x(),//
 							   isVerticalZero ? rawRotateCenter.y(): smoothValue.y(),//
@@ -159,7 +166,7 @@ public class CameraAgent {
 			halflife.mul(Math.pow(dist, 0.5) * ThirdPersonConstants.EYE_HALFLIFE_MULTIPLIER);
 			smoothRotateCenter.setHalflife(halflife);
 		}
-		smoothRotateCenter.setTarget(ThirdPerson.ENTITY_AGENT.getRotateCenter(1));
+		smoothRotateCenter.setTarget(getRotateCenter(1));
 		smoothRotateCenter.update(ThirdPersonConstants.VANILLA_CLIENT_TICK_TIME);
 	}
 

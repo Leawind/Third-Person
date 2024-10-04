@@ -222,13 +222,6 @@ public class EntityAgent {
 	}
 
 	/**
-	 * 获取相机的旋转中心
-	 */
-	public Vector3d getRotateCenter (float partialTick) {
-		return getRawEyePosition(partialTick);
-	}
-
-	/**
 	 * 实体的眼睛是否在墙里
 	 * <p>
 	 * 与{@link Entity#isInWall()}不同的是，旁观者模式下此方法仍然可以返回true
