@@ -10,7 +10,7 @@ plugins {
 	id "dev.architectury.loom" version "1.7.410" apply false
 	// 用于将模组发布至 Modrinth 和 CurseForge
 	// https://github.com/modmuss50/mod-publish-plugin
-	id "me.modmuss50.mod-publish-plugin" version "0.6.3"
+	id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 }
 architectury {
 	minecraft = minecraft_version
