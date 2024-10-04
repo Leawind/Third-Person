@@ -51,8 +51,8 @@ subprojects {
 					var dstFile = project.rootProject.file("build/libs/${fileName}")
 					if (dstFile.exists())
 						delete dstFile.toPath()
-					println "Moving from \n\t${srcFile} to \n\t${dstFile}"
-					Files.move(srcFile.toPath(), dstFile.toPath())
+					println "Copying from \n\t${srcFile} to \n\t${dstFile}"
+					Files.copy(srcFile.toPath(), dstFile.toPath())
 				} else {
 					println "Jar file not found: ${srcFile}"
 				}
