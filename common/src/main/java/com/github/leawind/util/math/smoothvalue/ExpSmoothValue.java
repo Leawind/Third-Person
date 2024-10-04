@@ -34,6 +34,18 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 		this.target             = target;
 	}
 
+	public T getRawValue () {
+		return value;
+	}
+
+	public T getRawTarget () {
+		return target;
+	}
+
+	public T getRawLastValue () {
+		return lastValue;
+	}
+
 	final public void update (double period) {
 		saveLastValue();
 		updateWithOutSavingLastValue(period);
