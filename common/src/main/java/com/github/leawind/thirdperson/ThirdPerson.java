@@ -47,8 +47,6 @@ public final class ThirdPerson {
 
 	/**
 	 * 获取当前配置实例
-	 *
-	 * @return 配置实例
 	 */
 	public static @NotNull Config getConfig () {
 		return CONFIG_MANAGER.getConfig();

@@ -16,6 +16,7 @@ import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -24,11 +25,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 物品模式管理器
+ * 物品谓词资源管理器
+ * <ul>
+ *   <li>物品谓词（ItemPredicate）是指 {@link ItemPredicate}对象，它代表一种规则，可以判断一个物品栈（{@link ItemStack}）是否符合其规则</li>
+ *   <li>物品模式（ItemPattern）是字符串，可以用{@link ItemPredicateUtil#parse(String)}将其解析为物品谓词</li>
+ * </ul>
+ * 资源包中的物品谓词集合采用json格式存储
  * <p>
- * 物品模式采用json格式存储。
- * <p>
- * 重载资源包时，mc会调用{@link ItemPredicateManager#apply}方法处理读取到的json数据。
+ * 重载资源包时，mc会调用{@link ItemPredicateManager#apply}方法处理读取到的json数据
  *
  * @see ItemPredicateUtil
  * @see SplashManager
@@ -43,8 +47,17 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
 	public final         Map<String, Set<String>> holdToAimItemPatterns          = new HashMap<>();
 	public final         Map<String, Set<String>> useToAimItemPatterns           = new HashMap<>();
 	public final         Map<String, Set<String>> useToFirstPersonItemPatterns   = new HashMap<>();
+	/**
+	 * 玩家手持（主手或副手）这些物品时，进入瞄准模式
+	 */
 	public final         Set<ItemPredicate>       holdToAimItemPredicates        = new HashSet<>();
+	/**
+	 * 玩家使用这些物品时，进入瞄准模式
+	 */
 	public final         Set<ItemPredicate>       useToAimItemPredicates         = new HashSet<>();
+	/**
+	 * 玩家使用这些物品时，会暂时进入第一人称
+	 */
 	public final         Set<ItemPredicate>       useToFirstPersonItemPredicates = new HashSet<>();
 
 	public ItemPredicateManager () {

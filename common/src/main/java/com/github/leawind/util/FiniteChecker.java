@@ -15,6 +15,11 @@ public final class FiniteChecker {
 		failedOnce = false;
 	}
 
+	/**
+	 * 检查数值是否为有限值，若不是则调用 printer 打印异常信息，并返回 true
+	 * <p>
+	 * 此后若再调用此方法将不再调用 printer，除非通过{@link FiniteChecker#reset()}重置标志
+	 */
 	public boolean checkOnce (Object... objects) {
 		for (int i = 0; i < objects.length; i++) {
 			var obj = objects[i];
