@@ -10,6 +10,7 @@ import com.github.leawind.thirdperson.config.AbstractConfig;
 import com.github.leawind.thirdperson.mixin.CameraInvoker;
 import com.github.leawind.thirdperson.mixin.ClientLevelInvoker;
 import com.github.leawind.util.FiniteChecker;
+import com.github.leawind.util.Zone;
 import com.github.leawind.util.annotation.VersionSensitive;
 import com.github.leawind.util.math.LMath;
 import com.github.leawind.util.math.smoothvalue.ExpSmoothDouble;
@@ -77,7 +78,7 @@ public class CameraAgent {
 		smoothOffsetRatio.setValue(0, 0);
 		smoothDistance.set(0D);
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
-			smoothRotateCenter.set(getRotateCenter(ThirdPersonStatus.lastPartialTick));
+			smoothRotateCenter.set(getRotateCenterTarget(ThirdPersonStatus.lastPartialTick));
 		}
 		if (ThirdPerson.ENTITY_AGENT.isCameraEntityExist()) {
 			var entity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
@@ -129,26 +130,76 @@ public class CameraAgent {
 	/**
 	 * 不平滑的旋转中心
 	 */
-	public Vector3d getRotateCenter (float partialTick) {
-		return ThirdPerson.ENTITY_AGENT.getRawEyePosition(partialTick);
+	public Vector3d getRotateCenterTarget (float partialTick) {
+		final double _rotate_center_height_offset = 0.4;
+		//
+		var entity      = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var eyePosition = entity.getEyePosition(partialTick);
+		var result      = LMath.toVector3d(eyePosition.with(Direction.Axis.Y, eyePosition.y + _rotate_center_height_offset));
+		return result;
+	}
+
+	/**
+	 * 防止旋转中心穿墙
+	 */
+	public boolean limitRotateCenter (Vector3d rotateCenter, float partialTick) {
+		var entity            = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+		var smoothEyePosition = LMath.toVec3(smoothRotateCenter.get(partialTick));
+		var eyePosition       = new Vec3(smoothEyePosition.x, entity.getEyePosition(partialTick).y, smoothEyePosition.z);
+		var limit             = Zone.ofAuto(eyePosition.y, rotateCenter.y()).expendRadius(ThirdPersonConstants.ROTATE_CENTER_RADIUS);
+		{
+			BlockHitResult hitResult;
+			Vec3           pickEnd;
+			pickEnd   = new Vec3(eyePosition.x, limit.max, eyePosition.z);
+			hitResult = entity.level().clip(new ClipContext(eyePosition, pickEnd, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, entity));
+			if (hitResult.getType() == HitResult.Type.BLOCK) {
+				limit = limit.withMax(hitResult.getLocation().y);
+			}
+			pickEnd   = new Vec3(eyePosition.x, limit.min, eyePosition.z);
+			hitResult = entity.level().clip(new ClipContext(eyePosition, pickEnd, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, entity));
+			if (hitResult.getType() == HitResult.Type.BLOCK) {
+				limit = limit.withMin(hitResult.getLocation().y);
+			}
+			for (int i = 0; i < 4; i++) {
+				final double offsetX = 0.3 * ((i & 1) * 2 - 1);
+				final double offsetZ = 0.3 * ((i >> 1 & 1) * 2 - 1);
+				pickEnd   = new Vec3(eyePosition.x + offsetX, limit.max, eyePosition.z + offsetZ);
+				hitResult = entity.level().clip(new ClipContext(eyePosition, pickEnd, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, entity));
+				if (hitResult.getType() == HitResult.Type.BLOCK) {
+					limit = limit.withMax(hitResult.getLocation().y);
+				}
+				pickEnd   = new Vec3(eyePosition.x + offsetX, limit.min, eyePosition.z + offsetZ);
+				hitResult = entity.level().clip(new ClipContext(eyePosition, pickEnd, ThirdPersonConstants.CAMERA_OBSTACLE_BLOCK_SHAPE_GETTER, ClipContext.Fluid.NONE, entity));
+				if (hitResult.getType() == HitResult.Type.BLOCK) {
+					limit = limit.withMin(hitResult.getLocation().y);
+				}
+			}
+		}
+		limit = limit.squeezeSafely(ThirdPersonConstants.ROTATE_CENTER_RADIUS);
+		double  newY   = limit.nearest(rotateCenter.y());
+		boolean result = newY != rotateCenter.y();
+		rotateCenter.y(newY);
+		return result;
 	}
 
 	/**
 	 * 获取平滑的相机旋转中心
 	 */
-	public @NotNull Vector3d getZeroStrictSmoothRotateCenter (float partialTick) {
-		var     smoothValue      = smoothRotateCenter.get(partialTick);
+	public @NotNull Vector3d getRotateCenterFinally (float partialTick) {
+		var     rotateCenter     = smoothRotateCenter.get(partialTick);
 		var     smoothFactor     = smoothRotateCenter.smoothFactor;
 		boolean isHorizontalZero = smoothFactor.x() * smoothFactor.z() == 0;
 		boolean isVerticalZero   = smoothFactor.y() == 0;
-		var     rawRotateCenter  = getRotateCenter(partialTick);
 		if (isHorizontalZero || isVerticalZero) {
-			return Vector3d.of(isHorizontalZero ? rawRotateCenter.x(): smoothValue.x(),//
-							   isVerticalZero ? rawRotateCenter.y(): smoothValue.y(),//
-							   isHorizontalZero ? rawRotateCenter.z(): smoothValue.z());
-		} else {
-			return smoothValue;
+			var rotateCenterTarget = getRotateCenterTarget(partialTick);
+			rotateCenter = Vector3d.of(isHorizontalZero ? rotateCenterTarget.x(): rotateCenter.x(),//
+									   isVerticalZero ? rotateCenterTarget.y(): rotateCenter.y(),//
+									   isHorizontalZero ? rotateCenterTarget.z(): rotateCenter.z());
 		}
+		if (limitRotateCenter(rotateCenter, partialTick)) {
+			smoothRotateCenter.getRawTarget().y(rotateCenter.y());
+		}
+		return rotateCenter;
 	}
 
 	public void onClientTickStart () {
@@ -162,11 +213,11 @@ public class CameraAgent {
 			} else {
 				halflife = config.getCameraOffsetScheme().getMode().getEyeSmoothHalflife();
 			}
-			final double dist = getZeroStrictSmoothRotateCenter(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
+			final double dist = getRotateCenterFinally(1).distance(ThirdPerson.CAMERA_AGENT.getRawCameraPosition());
 			halflife.mul(Math.pow(dist, 0.5) * ThirdPersonConstants.EYE_HALFLIFE_MULTIPLIER);
 			smoothRotateCenter.setHalflife(halflife);
 		}
-		smoothRotateCenter.setTarget(getRotateCenter(1));
+		smoothRotateCenter.setTarget(getRotateCenterTarget(1));
 		smoothRotateCenter.update(ThirdPersonConstants.VANILLA_CLIENT_TICK_TIME);
 	}
 
@@ -403,7 +454,7 @@ public class CameraAgent {
 				direction.normalizeSafely();
 			}
 		}
-		var    rotateCenter   = getZeroStrictSmoothRotateCenter(ThirdPersonStatus.lastPartialTick);
+		var    rotateCenter   = getRotateCenterFinally(ThirdPersonStatus.lastPartialTick);
 		double bodyRadius     = ThirdPerson.ENTITY_AGENT.getBodyRadius();
 		var    cameraPosition = rotateCenter.sub(direction.mul(bodyRadius + smoothDistance.get()));
 		((CameraInvoker)tempCamera).invokeSetPosition(LMath.toVec3(cameraPosition));
@@ -420,7 +471,7 @@ public class CameraAgent {
 		if (entity.isSpectator() && ThirdPerson.ENTITY_AGENT.isEyeInWall(ClipContext.Block.VISUAL)) {
 			return;
 		}
-		var    rotateCenter         = LMath.toVec3(getZeroStrictSmoothRotateCenter(ThirdPersonStatus.lastPartialTick));
+		var    rotateCenter         = LMath.toVec3(getRotateCenterFinally(ThirdPersonStatus.lastPartialTick));
 		var    cameraPosition       = tempCamera.getPosition();
 		var    rotateCenterToCamera = rotateCenter.vectorTo(cameraPosition);
 		double initDistance         = rotateCenterToCamera.length();
