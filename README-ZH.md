@@ -9,14 +9,14 @@
 [![](https://img.shields.io/github/last-commit/LEAWIND/Third-Person?logo=github&label=上次提交)](https://github.com/LEAWIND/Third-Person)
 [![](https://img.shields.io/github/deployments/LEAWIND/Third-Person/github-pages?style=flat&logo=github&label=文档&cacheSeconds=900)](https://leawind.github.io/Third-Person/en-US/?autolang)
 
-</div>
-
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?label=开源协议)](https://github.com/LEAWIND/Third-Person?tab=MIT-1-ov-file)
 [![Stars](https://img.shields.io/github/stars/LEAWIND/Third-Person?style=flat&logo=github&color=daaa3f&label=星标)](https://github.com/LEAWIND/Third-Person)
 
 # Leawind 的第三人称
 
 一个实用、丝滑、功能丰富的第三人称模组。
+
+</div>
 
 - **自由转动视角** 视角可以自由转动，同时保持玩家身体不动。
 - **自由调整相机位置**
@@ -28,3 +28,25 @@
 - **平滑切换视角** 在第一/第三人称视角间平滑过渡
 - **随时禁用** 如果此模组引发了故障，你随时可以在游戏中通过配置界面或快捷键来禁用此模组，恢复成原版第三人称视角
 - **纯客户端** 不需要在服务端安装此模组，因此可以在服务器中使用
+
+<div align=center>
+<details>
+<summary>捐赠</summary>
+
+<img src=https://github.com/Leawind/Third-Person/raw/gh-pages/docs/public/donate/IHY-216.jpg width=648/>
+
+> <details>
+> <summary>通过微信捐赠</summary>
+> <img src=https://github.com/Leawind/Third-Person/raw/gh-pages/docs/public/donate/wechat.jpg width=320 />
+> </details>
+
+> <details>
+> <summary>其他方式</summary>
+>
+> [Buy Me a Coffee](https://www.buymeacoffee.com/leawind)  
+> [爱发电](https://afdian.com/a/Leawind)
+>
+> </details>
+
+</details>
+</div>
