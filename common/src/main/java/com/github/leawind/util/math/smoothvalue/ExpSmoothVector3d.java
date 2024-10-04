@@ -36,12 +36,13 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
 
 	@Override
 	public void setValue (@NotNull Vector3d v) {
-		value = v;
+		value.set(v);
 	}
 
 	@Override
 	public void set (@NotNull Vector3d v) {
-		value = target = v;
+		value.set(v);
+		target.set(v);
 	}
 
 	@Override
