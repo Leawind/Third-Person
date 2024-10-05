@@ -14,6 +14,7 @@ import com.github.leawind.util.ItemPredicateUtil;
 import com.github.leawind.util.annotation.VersionSensitive;
 import com.github.leawind.util.math.LMath;
 import com.github.leawind.util.math.vector.Vector2d;
+import com.github.leawind.util.surroundings.Surroundings;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
@@ -24,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,14 +59,34 @@ public final class ThirdPersonEvents {
 			return;
 		}
 		var config = ThirdPerson.getConfig();
-		if (ThirdPerson.mc.options.getCameraType() != CameraType.FIRST_PERSON) {
+		if (minecraft.options.getCameraType() != CameraType.FIRST_PERSON) {
 			// 目标是第三人称
 			var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
 			// 如果非旁观者模式的玩家在墙里边，就暂时切换到第一人称
 			GameStatus.isPerspectiveInverted = !cameraEntity.isSpectator() && cameraEntity.isInWall();
+			// 如果正在使用的物品符合相关配置，就暂时切换到第一人称
 			if (cameraEntity instanceof LivingEntity livingEntity && livingEntity.isUsingItem()) {
 				if (ItemPredicateUtil.anyMatches(livingEntity.getUseItem(), config.getUseToFirstPersonItemPredicates(), ThirdPersonResources.itemPredicateManager.useToFirstPersonItemPredicates)) {
 					GameStatus.isPerspectiveInverted = true;
+				}
+			}
+			//TODO 如果位于狭窄通道内，暂时进入第一人称
+			{
+				final int leave_narrow_delay_ticks = 16;
+				boolean   isInNarrowSpace          = true;
+				var       center                   = BlockPos.containing(cameraEntity.getEyePosition(1));
+				var       surroundings             = new Surroundings(minecraft.level, center, ThirdPersonConstants.SURROUNDING_PATTERN);
+				surroundings.apply(s -> s.isViewBlocking(minecraft.level, center));
+				int countT = surroundings.get("T").count();
+				int countM = surroundings.get("M").count();
+				isInNarrowSpace &= countT >= 3;
+				isInNarrowSpace &= countM >= 1;
+				if (isInNarrowSpace) {
+					ThirdPersonStatus.ticksSinceLeaveNarrowSpace = 0;
+					GameStatus.isPerspectiveInverted             = true;
+				} else if (ThirdPersonStatus.ticksSinceLeaveNarrowSpace < leave_narrow_delay_ticks) {
+					GameStatus.isPerspectiveInverted = true;
+					ThirdPersonStatus.ticksSinceLeaveNarrowSpace++;
 				}
 			}
 		}

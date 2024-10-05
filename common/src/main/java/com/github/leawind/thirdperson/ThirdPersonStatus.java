@@ -37,6 +37,10 @@ public final class ThirdPersonStatus {
 	 * @see ThirdPersonStatus#shouldCameraTurnWithEntity
 	 */
 	public static                boolean  wasShouldCameraTurnWithEntity        = false;
+	/**
+	 * 自上次离开狭窄空间以来经过的 tick 数
+	 */
+	public static                int      ticksSinceLeaveNarrowSpace           = 0;
 
 	/**
 	 * 是否正在调整摄像机偏移量
