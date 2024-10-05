@@ -71,7 +71,7 @@ public final class ThirdPersonEvents {
 				}
 			}
 			// 如果位于狭窄通道内，暂时进入第一人称
-			{
+			if (config.temp_first_person_in_narrow_space) {
 				final int leave_narrow_delay_ticks = 16;
 				boolean   isInNarrowSpace          = true;
 				var       center                   = BlockPos.containing(cameraEntity.getEyePosition(1));
