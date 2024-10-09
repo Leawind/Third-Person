@@ -1,6 +1,6 @@
 # Compatibility
 
-[Github Issues - `compatibility`](https://github.com/Leawind/Third-Person/labels/compatibility)
+[Github Issues：#compatibility](https://github.com/Leawind/Third-Person/labels/compatibility)
 
 -   👫 The main functions are perfectly compatible.
 -   ⚔️ Conflict, cause game crash or freeze.
@@ -27,4 +27,5 @@
 | [Celestisynth](https://github.com/AquexTheSeal/Celestisynth)           | ❓            |                                                                   |
 | [IMBlocker](https://github.com/reserveword/IMBlocker)                  | ❓            |                                                                   |
 | [Replay](https://github.com/ReplayMod/ReplayMod)                       | ❓            |                                                                   |
+| [InvMove](https://github.com/PieKing1215/InvMove)                      | ❓            |                                                                   |
 |                                                                        | ❓            |                                                                   |

@@ -10,23 +10,21 @@ export default {
 	description: "一个Minecraft模组 Leawind的第三人称 的文档",
 	themeConfig: {
 		nav: [
-			{ text: '🕗更新日志', link: `/${lang}/Changelog/` },
-			{ text: '👁详细特性', link: `/${lang}/Features/` },
-			{ text: '💬Q&A', link: `/${lang}/Q&A/` },
-			{ text: '杂项', link: `/${lang}/Misc/` },
+			{ text: '🔬详细', link: `/${lang}/Details/` },
+			{ text: '⚔️兼容性', link: `/${lang}/compatibility` },
+			{ text: '🕗更新日志', link: `/${lang}/changelog` },
+			{ text: '徽章', link: `/${lang}/badges` },
+			{ text: '💬疑问', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
 			{ text: '💰捐赠', link: 'https://leawind.github.io/donate' },
 		],
 		sidebar: {
-			'/zh-CN/Changelog': buildSidebar(`${lang}/Changelog`),
-			'/zh-CN/Features': buildSidebar(`/${lang}/Features`),
-			'/zh-CN/Q&A': buildSidebar(`/${lang}/Q&A`),
-			'/zh-CN/Misc': buildSidebar(`/${lang}/Misc`),
+			'/zh-CN/Details': buildSidebar(`/${lang}/Details`),
 		},
 		footer: {
 			copyright: 'Copyright © 2024 Leawind',
 		},
 		editLink: {
-			pattern: 'https://github.com/LEAWIND/Third-Person/edit/gh-pages/docs/:path',
+			pattern: 'https://github.com/Leawind/Third-Person/edit/gh-pages/docs/:path',
 			text: '在 Github 上编辑此页',
 		},
 		lastUpdated: { text: "上次更新", },

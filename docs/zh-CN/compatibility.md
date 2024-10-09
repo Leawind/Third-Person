@@ -1,6 +1,6 @@
 # 兼容性
 
-[Github Issues - `compatibility`](https://github.com/Leawind/Third-Person/labels/compatibility)
+[Github Issues：#compatibility](https://github.com/Leawind/Third-Person/labels/compatibility)
 
 -   👫 主要功能完美兼容。
 -   ⚔️ 冲突，造成游戏崩溃或卡死。
@@ -27,4 +27,5 @@
 | [Celestisynth](https://github.com/AquexTheSeal/Celestisynth)           | ❓     |                |                                      |
 | [IMBlocker](https://github.com/reserveword/IMBlocker)                  | ❓     | 输入法冲突修复 |                                      |
 | [Replay](https://github.com/ReplayMod/ReplayMod)                       | ❓     |                |                                      |
+| [InvMove](https://github.com/PieKing1215/InvMove)                      | ❓     |                |                                      |
 |                                                                        | ❓     |                |                                      |
