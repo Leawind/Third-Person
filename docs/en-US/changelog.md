@@ -2,9 +2,35 @@
 
 :::info Next version may contains following contents.
 
-## v2.2.0-beta.1-mc1.20-1.21 (Preview)
+<!--
+## v (Preview)
+### Added
+### Changed
+### Removed
+### Fixed
+### Compatibility
+### Other
+-->
 
-### Add
+## v2.2.0-beta.2-mc1.20-1.20.1 (Preview)
+
+### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+
+### Compatibility
+
+### Other
+
+:::
+
+## v2.2.0-beta.1-mc1.20-1.20.1
+
+### Added
 
 -   Add config: `camera_distance_mode`
 -   Allow item tag in item pattern
@@ -12,18 +38,18 @@
 -   Disable double-tap sprinting in third person by default #153 #155
     -   config: `allow_double_tap_sprint`
 
-### Change
+### Changed
 
 -   Support both 1.20 and 1.20.1
 -   Config `use_camera_pick_in_creative`:
     -   Disabled by default
     -   Moved to category _Other_
 
-### Remove
+### Removed
 
 -   Remove config `sprint_impulse_threshold`
 
-### Fix
+### Fixd
 
 -   Camera slightly shakes when hitting wall
 
@@ -33,8 +59,6 @@
 
 -   Change package name to `com.github.leawind.thirdperson`
 -   Record stack trace when infinite value detected. Once player's rotation become NaN or infinity, it will log some information for debugging
-
-:::
 
 ## v2.1.0-mc1.20.1
 
