@@ -15,7 +15,7 @@ export default {
 			{ text: '🕗更新日志', link: `/${lang}/changelog` },
 			{ text: '徽章', link: `/${lang}/badges` },
 			{ text: '💬疑问', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
-			{ text: '💰捐赠', link: 'https://leawind.github.io/donate' },
+			{ text: '💰捐赠', link: `/${lang}/donate` },
 		],
 		sidebar: {
 			'/zh-CN/Details': buildSidebar(`/${lang}/Details`),
