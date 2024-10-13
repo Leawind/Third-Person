@@ -10,11 +10,10 @@ export default {
 	description: "Documentation of minecraft mod Leawind's Thrid Person",
 	themeConfig: {
 		nav: [
+			{ text: '💬Q&A', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
 			{ text: '🔬Details', link: `/${lang}/Details/` },
 			{ text: '⚔️Compatibility', link: `/${lang}/compatibility` },
 			{ text: '🕗Changelog', link: `/${lang}/changelog` },
-			{ text: 'badges', link: `/${lang}/badges` },
-			{ text: '💬Q&A', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
 			{ text: '💰Donate', link: `/${lang}/donate` },
 		],
 		sidebar: {

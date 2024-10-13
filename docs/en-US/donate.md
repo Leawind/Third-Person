@@ -46,7 +46,7 @@ features:
 <h1 style="text-align:center">你来助我！</h1>
 <br>
 
-<img src=/Third-Person/donate/IHY-86.jpg style="width: 80%;margin:auto;">
+<img src=/donate/IHY-86.jpg style="width: 80%;margin:auto;">
 
 <script>
 (async () => {

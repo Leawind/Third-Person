@@ -10,11 +10,10 @@ export default {
 	description: "一个Minecraft模组 Leawind的第三人称 的文档",
 	themeConfig: {
 		nav: [
+			{ text: '💬疑问', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
 			{ text: '🔬详细', link: `/${lang}/Details/` },
 			{ text: '⚔️兼容性', link: `/${lang}/compatibility` },
 			{ text: '🕗更新日志', link: `/${lang}/changelog` },
-			{ text: '徽章', link: `/${lang}/badges` },
-			{ text: '💬疑问', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
 			{ text: '💰捐赠', link: `/${lang}/donate` },
 		],
 		sidebar: {
