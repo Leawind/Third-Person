@@ -1,6 +1,6 @@
 # 兼容性
 
-[Github Issues：#compatibility](https://github.com/Leawind/Third-Person/labels/compatibility)
+[Github 上和兼容性相关的议题](https://github.com/Leawind/Third-Person/labels/compat)
 
 -   👫 主要功能完美兼容。
 -   ⚔️ 冲突，造成游戏崩溃或卡死。

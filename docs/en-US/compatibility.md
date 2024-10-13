@@ -1,6 +1,6 @@
 # Compatibility
 
-[Github Issues：#compatibility](https://github.com/Leawind/Third-Person/labels/compatibility)
+[Issues related to compatibility on GitHub](https://github.com/Leawind/Third-Person/labels/compat)
 
 -   👫 The main functions are perfectly compatible.
 -   ⚔️ Conflict, cause game crash or freeze.
