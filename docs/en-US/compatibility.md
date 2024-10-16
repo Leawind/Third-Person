@@ -1,4 +1,4 @@
-# Compatibility
+# ⚔️Compatibility
 
 [Issues related to compatibility on GitHub](https://github.com/Leawind/Third-Person/labels/compat)
 

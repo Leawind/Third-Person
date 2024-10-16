@@ -1,4 +1,4 @@
-# All Changelog
+# 🕗Changelog
 
 :::info Next version may contains following contents.
 

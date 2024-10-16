@@ -1,10 +1,10 @@
 ---
-title: Donate
+title: 💰Donate
 
 layout: home
 hero:
-    name: Donate
-    text: 
+    name: 💰Donate
+    text:
     tagline: Buy a cup of milk tea for the developer
     image:
     actions:

@@ -41,6 +41,9 @@ jobs:
       - name: Install NPM dependencies
         run: pnpm install
 
+      - name: prebuild
+        run: pnpm docs:prebuild
+
       - name: Build
         run:
           pnpm docs:build

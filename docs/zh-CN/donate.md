@@ -1,45 +1,45 @@
 ---
-title: 捐赠
+title: 💰捐赠
 
 layout: home
 hero:
-  name: 捐赠
-  text:
-  tagline: 给开发者买杯奶茶吧
-  image:
-  actions:
-    - theme: brand
-      text: 回到首页
-      link: /zh-CN/
+    name: 💰捐赠
+    text:
+    tagline: 给开发者买杯奶茶吧
+    image:
+    actions:
+        - theme: brand
+          text: 回到首页
+          link: /zh-CN/
 
 features:
-  - title: 微信
-    icon: { src: /icons/wechat.svg }
-    details: <img alt="微信赞赏码" src=/Third-Person/donate/wechat.jpg style="width:100%;image-rendering:pixelated" />
-    link:
+    - title: 微信
+      icon: { src: /icons/wechat.svg }
+      details: <img alt="微信赞赏码" src=/Third-Person/donate/wechat.jpg style="width:100%;image-rendering:pixelated" />
+      link:
 
-  - title: 支付宝
-    icon: { src: /icons/alipay.svg }
-    details: <img alt="支付宝" name=alipay src="/Third-Person/donate/alipay.jpg" style="width:100%;image-rendering:pixelated" />
-    link: https://qr.alipay.com/fkx13526acsazyxpidsxj0e
+    - title: 支付宝
+      icon: { src: /icons/alipay.svg }
+      details: <img alt="支付宝" name=alipay src="/Third-Person/donate/alipay.jpg" style="width:100%;image-rendering:pixelated" />
+      link: https://qr.alipay.com/fkx13526acsazyxpidsxj0e
 
-  - title: 爱发电
-    icon:
-        src: /icons/afdian.png
-    details: <img alt="爱发电" name=afdian src="/Third-Person/donate/afdian.jpg" style="width:100%;image-rendering:pixelated"></img>
-    link: https://afdian.com/a/Leawind
+    - title: 爱发电
+      icon:
+          src: /icons/afdian.png
+      details: <img alt="爱发电" name=afdian src="/Third-Person/donate/afdian.jpg" style="width:100%;image-rendering:pixelated"></img>
+      link: https://afdian.com/a/Leawind
 
-  - title: Buy me a coffee
-    icon: { src: /icons/bmc.svg }
-    details: <img alt="Buy leawind a coffee" name=bmc src="/Third-Person/donate/bmc.png" style="width:100%;image-rendering:pixelated"></img>
-    link: https://www.buymeacoffee.com/leawind
+    - title: Buy me a coffee
+      icon: { src: /icons/bmc.svg }
+      details: <img alt="Buy leawind a coffee" name=bmc src="/Third-Person/donate/bmc.png" style="width:100%;image-rendering:pixelated"></img>
+      link: https://www.buymeacoffee.com/leawind
 
-  # - title: Patreon
-  #   icon:
-  #       dark: /icons/patreon-dark.svg
-  #       light: /icons/patreon-light.svg
-  #   details: 暂无
-  #   link:
+    # - title: Patreon
+    #   icon:
+    #       dark: /icons/patreon-dark.svg
+    #       light: /icons/patreon-light.svg
+    #   details: 暂无
+    #   link:
 ---
 
 <br>

@@ -1,5 +1,5 @@
 ---
-title: 🏠 Home Page
+title: 🏠Home Page
 layout: home
 hero:
     name: Leawind's <br> Third Person

@@ -4,12 +4,15 @@
 	"description": "A documentation for minecraft mod Leawind's Third Person",
 	"license": "MIT",
 	"scripts": {
-		"docs:dev": "vitepress dev docs",
-		"docs:build": "vitepress build docs",
+		"gen-mc-vers-table": "node scripts/gen-mc-vers-table.mjs",
 		"docs:clean": "rimraf docs/.vitepress/dist",
-		"docs:rebuild": "run-s docs:clean docs:build",
-		"docs:pretty": "prettier -w \"./docs/**/*.md\"",
-		"docs:preview": "vitepress preview docs"
+		"docs:build": "vitepress build docs",
+		"docs:preview": "vitepress preview docs",
+		"docs:dev": "vitepress dev docs",
+		"pretty": "prettier -w \"./docs/**/*.md\"",
+		"build-all": "run-s docs:prebuild docs:rebuild",
+		"docs:prebuild": "run-s gen-mc-vers-table",
+		"docs:rebuild": "run-s docs:clean docs:build"
 	},
 	"private": true,
 	"dependencies": {
