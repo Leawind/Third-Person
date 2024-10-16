@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 import { defineConfig } from 'vitepress';
 import locales from './locales.mts';
 
@@ -30,6 +33,8 @@ export default defineConfig({
 		externalLinkIcon: true,
 		socialLinks: [
 			{ link: 'https://github.com/LEAWIND/Third-Person', icon: 'github' },
+			{ link: 'https://www.curseforge.com/minecraft/mc-mods/leawind-third-person', icon: { svg: file('/icons/curseforge.svg') } },
+			{ link: 'https://modrinth.com/mod/leawind-third-person', icon: { svg: file('/icons/modrinth.svg') } },
 		],
 		search: {
 			provider: 'local',
@@ -53,3 +58,8 @@ export default defineConfig({
 	locales: await locales(),
 });
 
+
+function file(rpath: string) {
+	const filePath = path.join('docs/public', rpath);
+	return fs.readFileSync(filePath, 'utf8');
+}

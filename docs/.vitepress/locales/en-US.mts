@@ -10,11 +10,19 @@ export default {
 	description: "Documentation of minecraft mod Leawind's Thrid Person",
 	themeConfig: {
 		nav: [
-			{ text: '💬Q&A', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
 			{ text: '🔬Details', link: `/${lang}/Details/` },
 			{ text: '⚔️Compatibility', link: `/${lang}/compatibility` },
 			{ text: '🕗Changelog', link: `/${lang}/changelog` },
 			{ text: '💰Donate', link: `/${lang}/donate` },
+			{ text: '💬Q&A', link: `https://github.com/Leawind/Third-Person/discussions/categories/q-a` },
+			{
+				text: "Download",
+				items: [
+					{ text: 'CurseForge', link: `https://www.curseforge.com/minecraft/mc-mods/leawind-third-person` },
+					{ text: 'Modrinth', link: `https://modrinth.com/mod/leawind-third-person` },
+					{ text: 'Github Release', link: `https://github.com/LEAWIND/Third-Person/releases` },
+				],
+			},
 		],
 		sidebar: {
 			'/en-US/Details': buildSidebar(`/${lang}/Details`),
