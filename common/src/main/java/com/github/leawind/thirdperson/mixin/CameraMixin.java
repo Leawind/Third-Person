@@ -1,8 +1,7 @@
-package com.github.leawind.thirdperson.fabric.mixin;
+package com.github.leawind.thirdperson.mixin;
 
 import com.github.leawind.thirdperson.api.base.GameEvents;
 import com.github.leawind.thirdperson.api.client.event.ThirdPersonCameraSetupEvent;
-import com.github.leawind.thirdperson.mixin.CameraInvoker;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -25,7 +24,7 @@ public class CameraMixin {
       at =
           @At(
               value = "INVOKE",
-              target = "Lnet/minecraft/client/Camera;move(DDD)V",
+              target = "Lnet/minecraft/client/Camera;move(FFF)V",
               shift = At.Shift.BEFORE),
       cancellable = true)
   private void preMoveCamera(

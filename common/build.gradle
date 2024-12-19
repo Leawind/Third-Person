@@ -1,17 +1,19 @@
 architectury {
-	common(enabled_loaders.split(","))
+	common(enabled_platforms.split(/\s*,\s*/))
 }
-loom {
-	accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
-}
+
 dependencies {
-	minecraft "com.mojang:minecraft:${minecraft_version}"
-	mappings loom.officialMojangMappings()
 	testImplementation "org.junit.jupiter:junit-jupiter-api:${junit_jupiter_version}"
 	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit_jupiter_version}"
-	modImplementation "org.joml:joml:${joml_version}"
+	
 	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-	modApi "dev.architectury:architectury:${architectury_version}"
+	
+	// My Inventory from jitpack.io
+	implementation "com.github.Leawind:inventory-java:${leawinds_inventory_version}"
+	
+	// Architectury-api
+	modImplementation "dev.architectury:architectury:${architectury_api_version}"
+	
 	// Cloth config
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_api_version}") {
 		exclude group: "net.fabricmc.fabric-api"
@@ -20,10 +22,7 @@ dependencies {
 	// YACL
 	modImplementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-fabric"
 }
-publishing {
-	publications {}
-	repositories {}
-}
+
 test {
 	useJUnitPlatform()
 }

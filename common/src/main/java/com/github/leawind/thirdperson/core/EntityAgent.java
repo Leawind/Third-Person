@@ -18,11 +18,11 @@ import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.ClipContext;
@@ -254,14 +254,10 @@ public class EntityAgent {
     return getRawCameraEntity().isSprinting();
   }
 
-  /**
-   * 正在吃食物
-   *
-   * <p>使用 {@link ItemStack#isEdible()} 判断是否是食物
-   */
+  /** 正在吃食物 */
   public boolean isEating() {
     if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
-      return livingEntity.getUseItem().isEdible();
+      return livingEntity.getUseItem().get(DataComponents.FOOD) != null;
     }
     return false;
   }

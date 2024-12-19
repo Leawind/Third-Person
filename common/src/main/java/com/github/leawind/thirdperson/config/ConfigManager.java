@@ -57,11 +57,7 @@ public class ConfigManager {
     config.update();
   }
 
-  /**
-   * 惰性保存
-   *
-   * <p>两次保存时间间隔至少为 {@link ThirdPersonConstants#CONFIG_LAZY_SAVE_DELAY}
-   */
+  /** 两次保存时间间隔至少为 {@link ThirdPersonConstants#CONFIG_LAZY_SAVE_DELAY} */
   public void lazySave() {
     if (!isLazySaveScheduled) {
       isLazySaveScheduled = true;

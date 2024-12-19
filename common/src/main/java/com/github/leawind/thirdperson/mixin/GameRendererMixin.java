@@ -10,6 +10,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.function.Predicate;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * <p>2. 在{@link GameRenderer#renderLevel}的开头，更新完相机实体后调用
  *
- * <p>{@link GameRenderer#pick}会先调用{@link Entity#pick}探测方块，再通过{@link
+ * <p>GameRenderer#pick会先调用{@link Entity#pick}探测方块，再通过{@link
  * ProjectileUtil#getEntityHitResult}探测实体，然后计算最终探测结果
  *
  * <p>当探测结果为空时，它会通过 {@link BlockHitResult#miss(Vec3, Direction, BlockPos)} 创建一个表示结果为空的
@@ -59,7 +60,7 @@ public abstract class GameRendererMixin {
    * @param pickRangeSqr 探测距离上限的平方
    */
   @WrapOperation(
-      method = "pick",
+      method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;",
       at =
           @At(
               value = "INVOKE",
@@ -108,9 +109,10 @@ public abstract class GameRendererMixin {
 
   /** 渲染tick前 */
   @Inject(method = "render", at = @At("HEAD"))
-  private void preRender(float partialTick, long nanoTime, boolean doRenderLevel, CallbackInfo ci) {
+  private void preRender(DeltaTracker deltaTracker, boolean doRenderLevel, CallbackInfo ci) {
     if (GameEvents.renderTickStart != null) {
-      GameEvents.renderTickStart.accept(new RenderTickStartEvent(partialTick));
+      GameEvents.renderTickStart.accept(
+          new RenderTickStartEvent(deltaTracker.getGameTimeDeltaTicks()));
     }
   }
 

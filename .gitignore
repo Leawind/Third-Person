@@ -7,26 +7,28 @@ eclipse
 .project
 
 # idea
+.idea/
 out
 *.ipr
 *.iws
 *.iml
-.idea
 
 # vscode
-.vscode
+.vscode/
 
-# vs
+# visual studio
 .vs/
 
 # gradle
-build
-.gradle
+build/
+.gradle/
 
 # other
-bin
-run
-.architectury-transformer
+bin/
+run/
+.architectury-transformer/
 
-# Files from Forge MDK
+# Forge MDK
 forge*changelog.txt
+
+*.log

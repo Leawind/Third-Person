@@ -1,29 +1,27 @@
 modLoader = "javafml"
 loaderVersion = "*"
-license = "${mod_license}"
-showAsResourcePack = false
 issueTrackerURL = "${mod_url_issue}"
+license = "${mod_license}"
 
 [[mods]]
 modId = "leawind_third_person"
-version = "${mod_version}"
+version = "${version}"
 displayName = "${mod_name}"
 description = "${mod_description}"
-authors = "${mod_authors}"
+authors = "Leawind"
 logoFile = "TODO"
 displayURL = "${mod_url_home}"
 
 [[dependencies.leawind_third_person]]
-modId = "forge"
-mandatory = true
-versionRange = "*"
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
 ordering = "NONE"
 side = "CLIENT"
-referraUrl = "https://files.minecraftforge.net/"
 
 [[dependencies.leawind_third_person]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[${minecraft_version_min},${minecraft_version_max}]"
 ordering = "NONE"
 side = "CLIENT"
@@ -31,16 +29,22 @@ referraUrl = "https://www.minecraft.net/"
 
 [[dependencies.leawind_third_person]]
 modId = "architectury"
-mandatory = true
-versionRange = "(,${architectury_version_max}]"
+type = "required"
+versionRange = "*"
 ordering = "AFTER"
 side = "CLIENT"
 referraUrl = "https://modrinth.com/mod/architectury-api"
 
 [[dependencies.leawind_third_person]]
 modId = "cloth_config"
-mandatory = false
+type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
 referraUrl = "https://modrinth.com/mod/cloth-config"
+
+[[mixins]]
+config = "leawind_third_person.mixins.json"
+
+[[mixins]]
+config = "leawind_third_person-common.mixins.json"

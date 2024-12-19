@@ -1,6 +1,6 @@
 # Contributing
 
-* Use google-java-format
+- Use google-java-format
 
 ## How to add a new config item
 
@@ -8,7 +8,8 @@ Define config item in class `AbstractConfig`
 
 ```java
 public abstract class AbstractConfig {
-  @Expose public double my_option = 0.5;
+	@Expose
+	public double my_option = 0.5;
 }
 
 ```

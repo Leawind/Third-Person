@@ -34,6 +34,7 @@ public abstract class ConfigScreenBuilder {
   private static Map<String, PossibleSupplier<ConfigScreenBuilder>> builders = new HashMap<>();
 
   static {
+    // TODO
     builders.put(
         "Cloth Config",
         PossibleSupplier.of(
@@ -43,12 +44,7 @@ public abstract class ConfigScreenBuilder {
         "YACL",
         PossibleSupplier.of(
             () -> new YaclConfigScreenBuilder(),
-            () ->
-                Platform.isModLoaded("yet_another_config_lib_v3")
-                    && !(Platform.isForge()
-                        && !Platform.getMod("yet_another_config_lib_v3")
-                            .getVersion()
-                            .startsWith("3.2."))));
+            () -> Platform.isModLoaded("yet_another_config_lib_v3")));
 
     var availables = ConfigScreenBuilder.getAvailableBuidlers().keySet();
     availables.forEach(

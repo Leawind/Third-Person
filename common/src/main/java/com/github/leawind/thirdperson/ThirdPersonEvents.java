@@ -15,6 +15,7 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import net.minecraft.Util;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -113,7 +114,7 @@ public final class ThirdPersonEvents {
       resetPlayer();
       ThirdPerson.LOGGER.info("on Client player join");
     }
-    config.updateItemPredicates();
+    config.reparseItemPredicates();
     ThirdPersonResources.itemPredicateManager.reparse();
   }
 
@@ -226,7 +227,8 @@ public final class ThirdPersonEvents {
         float playerYRot =
             ThirdPerson.ENTITY_AGENT
                 .getRawPlayerEntity()
-                .getViewYRot(Minecraft.getInstance().getFrameTime());
+                .getViewYRot(
+                    (float) (Minecraft.getInstance().getFrameTimeNs() / Util.NANOS_PER_MILLI));
 
         var playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
         var playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();

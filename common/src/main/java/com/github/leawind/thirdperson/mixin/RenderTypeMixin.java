@@ -11,6 +11,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderType.CompositeState;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -40,12 +41,14 @@ public class RenderTypeMixin extends RenderStateShard {
                     .setLightmapState(LIGHTMAP)
                     .setOverlayState(OVERLAY)
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+                    .setDepthTestState(LEQUAL_DEPTH_TEST)
                     .createCompositeState(true);
-            return RenderType.create(
+
+            return RenderType.CompositeRenderType.create(
                 "armor_cutout_no_cull",
                 DefaultVertexFormat.NEW_ENTITY,
                 VertexFormat.Mode.QUADS,
-                256,
+                1536,
                 true,
                 false,
                 compositeState);
@@ -77,7 +80,8 @@ public class RenderTypeMixin extends RenderStateShard {
       ResourceLocation resourceLocation, @NotNull CallbackInfoReturnable<RenderType> ci) {
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()
-        && ThirdPersonStatus.useCameraEntityOpacity(Minecraft.getInstance().getFrameTime())) {
+        && ThirdPersonStatus.useCameraEntityOpacity(
+            (float) (Minecraft.getInstance().getFrameTimeNs() / Util.NANOS_PER_MILLI))) {
       ci.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(resourceLocation));
       ci.cancel();
     }
