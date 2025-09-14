@@ -133,7 +133,7 @@ public final class ThirdPersonEvents {
   }
 
   /**
-   * @see GameRenderer#render(float, long, boolean)
+   * 参考 `GameRenderer#render(float, long, boolean)`
    */
   private static void onRenderTickStart(RenderTickStartEvent event) {
     ThirdPersonStatus.forceThirdPersonCrosshair =
@@ -261,7 +261,7 @@ public final class ThirdPersonEvents {
   }
 
   /**
-   * @see MouseHandler#turnPlayer()
+   * 参考 `MouseHandler#turnPlayer()`
    */
   private static void onMouseTurnPlayerStart(MouseTurnPlayerStartEvent event) {
     if (ThirdPerson.isAvailable()
