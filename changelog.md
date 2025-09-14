@@ -1,7 +1,3 @@
-### Changed
-
-### Fixed
-
-### Compatibility
-
-### Other
+- Support NeoForge
+- Forge is no longer supported
+- Port to 1.21(.1)
