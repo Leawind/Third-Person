@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.github.leawind.thirdperson.forge.mixin",
+  "package": "com.github.leawind.thirdperson.neoforge.mixin",
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "client": [],
