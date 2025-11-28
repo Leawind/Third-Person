@@ -5,7 +5,7 @@ import com.github.leawind.thirdperson.ThirdPersonStatus;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -19,7 +19,7 @@ public class ModelPartCubeMixin {
       index = 5,
       argsOnly = true)
   private int compile(int argb) {
-    float opacity = FastColor.ARGB32.alpha(argb) / 255f;
+    float opacity = ARGB.alpha(argb) / 255f;
 
     float partialTick = (float) (Minecraft.getInstance().getFrameTimeNs() / Util.NANOS_PER_MILLI);
     if (ThirdPerson.isAvailable()
@@ -28,6 +28,6 @@ public class ModelPartCubeMixin {
       opacity = Math.min(opacity, ThirdPerson.ENTITY_AGENT.getSmoothOpacity(partialTick));
     }
 
-    return FastColor.ARGB32.color(FastColor.as8BitChannel(opacity), argb);
+    return ARGB.color(ARGB.as8BitChannel(opacity), argb);
   }
 }

@@ -24,7 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -277,7 +277,7 @@ public class EntityAgent {
     if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
       if (config.determine_aim_mode_by_animation && livingEntity.isUsingItem()) {
         var anim = livingEntity.getUseItem().getUseAnimation();
-        if (anim == UseAnim.BOW || anim == UseAnim.SPEAR) {
+        if (anim == ItemUseAnimation.BOW || anim == ItemUseAnimation.SPEAR) {
           return true;
         }
       }

@@ -11,8 +11,8 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderType.CompositeState;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.TriState;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,7 +35,7 @@ public class RenderTypeMixin extends RenderStateShard {
                 RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_ARMOR_CUTOUT_NO_CULL_SHADER)
                     .setTextureState(
-                        new RenderStateShard.TextureStateShard(resourceLocation, false, false))
+                        new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setCullState(NO_CULL)
                     .setLightmapState(LIGHTMAP)

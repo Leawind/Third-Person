@@ -6,7 +6,7 @@ import java.nio.file.Files
 plugins {
 	id "architectury-plugin" version "3.4-SNAPSHOT"
 	// ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
-	id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
+	id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
 	id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 	
 	// 用于发布至 Modrinth 和 CurseForge
@@ -147,6 +147,7 @@ subprojects {
 	tasks.named("build") {
 		if(platforms.contains(project.name)){
 			doLast {
+                Files.createDirectories(project.rootProject.file("build/libs").toPath())
 				var fileName = getArchiveFileName(project.name)
 				println "File name: '$fileName'"
 				

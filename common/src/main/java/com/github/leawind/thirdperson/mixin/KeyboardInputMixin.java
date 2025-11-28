@@ -14,10 +14,10 @@ public class KeyboardInputMixin {
   /** 注入到tick的末尾，重新计算 leftImpulse 和 forwardImpulse 的值 */
   @Inject(method = "tick", at = @At(value = "TAIL"))
   @PerformanceSensitive
-  private void postTick(boolean multiplyImpulse, float impulseMultiplier, CallbackInfo ci) {
+  private void postTick(CallbackInfo ci) {
     var that = ((KeyboardInput) (Object) this);
     if (GameEvents.calculateMoveImpulse != null) {
-      var event = new CalculateMoveImpulseEvent(that, multiplyImpulse ? impulseMultiplier : 1);
+      var event = new CalculateMoveImpulseEvent(that);
 
       event.forwardImpulse = that.forwardImpulse;
       event.leftImpulse = that.leftImpulse;

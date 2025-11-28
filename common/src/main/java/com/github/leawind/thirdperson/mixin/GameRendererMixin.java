@@ -98,11 +98,11 @@ public abstract class GameRendererMixin {
   }
 
   @ModifyReturnValue(method = "getFov", at = @At(value = "RETURN", ordinal = 1))
-  private double modifyFov(double fov) {
+  private float modifyFov(float fov) {
     if (!((GameRenderer) (Object) this).isPanoramicMode()
         && ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()) {
-      fov /= ThirdPerson.CAMERA_AGENT.getSmoothFovDivisor();
+      fov /= (float) ThirdPerson.CAMERA_AGENT.getSmoothFovDivisor();
     }
     return fov;
   }
