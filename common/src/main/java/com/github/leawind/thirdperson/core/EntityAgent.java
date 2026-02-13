@@ -66,9 +66,9 @@ public class EntityAgent {
     ThirdPerson.LOGGER.debug(rotateDecisionMap.toDescription());
   }
 
-  /** 相机实体 {@link Minecraft#cameraEntity} 是否已经存在 */
+  /** 相机实体 {@link Minecraft#getCameraEntity()} 是否已经存在 */
   public boolean isCameraEntityExist() {
-    return minecraft.cameraEntity != null;
+    return minecraft.getCameraEntity() != null;
   }
 
   /**
@@ -179,7 +179,7 @@ public class EntityAgent {
 
   /** 玩家当前是否在操控这个实体 */
   public boolean isControlled() {
-    return getRawPlayerEntity() == minecraft.cameraEntity;
+    return getRawPlayerEntity() == minecraft.getCameraEntity();
   }
 
   /**
@@ -188,7 +188,7 @@ public class EntityAgent {
    * @see EntityAgent#isCameraEntityExist
    */
   public @NotNull Entity getRawCameraEntity() {
-    return Objects.requireNonNull(minecraft.cameraEntity);
+    return Objects.requireNonNull(minecraft.getCameraEntity());
   }
 
   /** 获取玩家实体 */
@@ -386,7 +386,7 @@ public class EntityAgent {
     var config = ThirdPerson.getConfig();
     if (config.player_fade_out_enabled) {
       final double C = ThirdPersonConstants.CAMERA_THROUGH_WALL_DETECTION * 2;
-      var cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition());
+      var cameraPosition = LMath.toVector3d(ThirdPerson.CAMERA_AGENT.getRawCamera().position());
       double distance = getRawEyePosition(partialTick).distance(cameraPosition);
 
       targetOpacity = (distance - C) / (1 - C);

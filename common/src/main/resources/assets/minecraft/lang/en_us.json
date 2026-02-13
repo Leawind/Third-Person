@@ -130,7 +130,7 @@
   "leawind_third_person.option.use_to_aim_item_pattern_expressions.desc": "When the item the player is using matches any rule, automatically enter aiming mode.",
   "leawind_third_person.option.use_to_first_person_pattern_expressions": "Temporarily enter first person when used",
   "leawind_third_person.option.use_to_first_person_pattern_expressions.desc": "When the item the player is using matches any rule, temporarily enter first-person view.",
-  "key.categories.leawind_third_person": "Leawind's Third Person",
+  "key.category.leawind_third_person.keybinds": "Leawind's Third Person",
   "key.leawind_third_person.open_config_menu": "Open configuration menu",
   "key.leawind_third_person.toggle_mod_enable": "Toggle mod enable",
   "key.leawind_third_person.toggle_side": "Toggle camera to the other side",

@@ -15,12 +15,10 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
-import net.minecraft.Util;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.TimeUtil;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
@@ -203,8 +201,8 @@ public final class ThirdPersonEvents {
 
       // 计算世界坐标系下的向前和向左 impulse
       // 视线向量
-      var lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
-      var leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
+      var lookImpulse = LMath.toVector3d(camera.forwardVector()).normalize();
+      var leftImpulse = LMath.toVector3d(camera.leftVector()).normalize();
 
       // 水平方向上的视线向量
       var lookImpulseHorizon =
@@ -228,7 +226,7 @@ public final class ThirdPersonEvents {
             ThirdPerson.ENTITY_AGENT
                 .getRawPlayerEntity()
                 .getViewYRot(
-                    (float) (Minecraft.getInstance().getFrameTimeNs() / Util.NANOS_PER_MILLI));
+                    (float) (Minecraft.getInstance().getFrameTimeNs() /  TimeUtil.NANOSECONDS_PER_MILLISECOND));
 
         var playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
         var playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();

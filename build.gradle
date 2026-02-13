@@ -7,7 +7,7 @@ plugins {
 	id "architectury-plugin" version "3.4-SNAPSHOT"
 	// ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
 	id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
-	id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+	id "com.gradleup.shadow" version "9.3.1" apply false
 	
 	// 用于发布至 Modrinth 和 CurseForge
 	// https://github.com/modmuss50/mod-publish-plugin
@@ -85,7 +85,7 @@ subprojects {
 	apply plugin: 'maven-publish'
 	
 	base {
-		archivesBaseName = mod_id
+		archivesName = mod_id
 	}
 	
 	loom { silentMojangMappingsLicense() }

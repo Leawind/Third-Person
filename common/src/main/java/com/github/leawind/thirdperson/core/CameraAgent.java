@@ -128,10 +128,10 @@ public class CameraAgent {
   /** 渲染过程中放置相机 */
   public void onCameraSetup(@NotNull ThirdPersonCameraSetupEvent event) {
     updateTempCameraRotationPosition(event.partialTick);
-    event.setPosition(tempCamera.getPosition());
+    event.setPosition(tempCamera.position());
 
-    float yRot = tempCamera.getYRot();
-    float xRot = tempCamera.getXRot();
+    float yRot = tempCamera.yRot();
+    float xRot = tempCamera.xRot();
     FINITE_CHECKER.checkOnce(xRot, yRot);
 
     event.setRotation(xRot, yRot);
@@ -281,7 +281,7 @@ public class CameraAgent {
 
   /** 获取原始相机位置 */
   public @NotNull Vector3d getRawCameraPosition() {
-    return LMath.toVector3d(getRawCamera().getPosition());
+    return LMath.toVector3d(getRawCamera().position());
   }
 
   /** 第三人称相机朝向 */
@@ -296,7 +296,7 @@ public class CameraAgent {
 
   public Vector2d getRawRotation() {
     var camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
-    return new Vector2d(camera.getXRot(), camera.getYRot());
+    return new Vector2d(camera.xRot(), camera.yRot());
   }
 
   /**
@@ -353,7 +353,7 @@ public class CameraAgent {
    */
   @VersionSensitive
   public @NotNull HitResult pick(double pickRange) {
-    var cameraPos = getRawCamera().getPosition();
+    var cameraPos = getRawCamera().position();
 
     var blockHitResult = pickBlock(pickRange);
     double blockDistance = cameraPos.distanceTo(blockHitResult.getLocation());
@@ -386,8 +386,8 @@ public class CameraAgent {
 
     var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
     var camera = getRawCamera();
-    var viewVector = new Vec3(camera.getLookVector());
-    var pickFrom = camera.getPosition();
+    var viewVector = new Vec3(camera.forwardVector());
+    var pickFrom = camera.position();
     var pickTo = viewVector.scale(pickRange).add(pickFrom);
     var aabb = new AABB(pickFrom, pickTo);
 
@@ -413,8 +413,8 @@ public class CameraAgent {
       @NotNull ClipContext.Fluid fluidShape) {
     var camera = getRawCamera();
 
-    var pickFrom = camera.getPosition();
-    var viewVector = new Vec3(camera.getLookVector());
+    var pickFrom = camera.position();
+    var viewVector = new Vec3(camera.forwardVector());
     var pickTo = pickFrom.add(viewVector.scale(pickRange));
 
     var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
@@ -445,8 +445,8 @@ public class CameraAgent {
   /** 相机是否正在注视某个实体（无视其他实体或方块） */
   @VersionSensitive
   public boolean isLookingAt(@NotNull Entity entity) {
-    var from = getRawCamera().getPosition();
-    var to = from.add(new Vec3(getRawCamera().getLookVector()).scale(getPickRange()));
+    var from = getRawCamera().position();
+    var to = from.add(new Vec3(getRawCamera().forwardVector()).scale(getPickRange()));
     var aabb = entity.getBoundingBox();
     return aabb.contains(from) || aabb.clip(from, to).isPresent();
   }
@@ -466,7 +466,7 @@ public class CameraAgent {
     // 候选目标实体
     List<Entity> candidateTargets = Lists.newArrayList();
 
-    var cameraPos = getRawCamera().getPosition();
+    var cameraPos = getRawCamera().position();
     var cameraRot = getRotation();
     var cameraViewVector = LMath.directionFromRotationDegree(cameraRot).normalize();
 
@@ -538,9 +538,9 @@ public class CameraAgent {
     // 从旋转中心到相机的方向
     Vector3d direction;
     {
-      var forward = LMath.toVector3d(tempCamera.getLookVector());
-      var left = LMath.toVector3d(tempCamera.getLeftVector());
-      var up = LMath.toVector3d(tempCamera.getUpVector());
+      var forward = LMath.toVector3d(tempCamera.forwardVector());
+      var left = LMath.toVector3d(tempCamera.leftVector());
+      var up = LMath.toVector3d(tempCamera.upVector());
 
       double verticalFovHalf = Math.toRadians(fov);
       double horizontalFovHalf =

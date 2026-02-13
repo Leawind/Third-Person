@@ -22,7 +22,7 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
    * @param defaultValue 默认按键
    * @param categoryKey 类别标识符，用于可翻译文本
    */
-  public ModKeyMappingImpl(String id, int defaultValue, String categoryKey) {
+  public ModKeyMappingImpl(String id, int defaultValue, Category categoryKey) {
     super(id, defaultValue, categoryKey);
     mappings.put(id, this);
   }

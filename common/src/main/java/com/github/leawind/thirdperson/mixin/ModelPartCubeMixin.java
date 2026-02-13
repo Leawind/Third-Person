@@ -2,10 +2,10 @@ package com.github.leawind.thirdperson.mixin;
 
 import com.github.leawind.thirdperson.ThirdPerson;
 import com.github.leawind.thirdperson.ThirdPersonStatus;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.TimeUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -21,7 +21,7 @@ public class ModelPartCubeMixin {
   private int compile(int argb) {
     float opacity = ARGB.alpha(argb) / 255f;
 
-    float partialTick = (float) (Minecraft.getInstance().getFrameTimeNs() / Util.NANOS_PER_MILLI);
+    float partialTick = (float) (Minecraft.getInstance().getFrameTimeNs() / TimeUtil.NANOSECONDS_PER_MILLISECOND);
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()
         && ThirdPersonStatus.useCameraEntityOpacity(partialTick)) {

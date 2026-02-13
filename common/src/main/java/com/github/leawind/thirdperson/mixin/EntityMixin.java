@@ -7,7 +7,6 @@ import com.github.leawind.thirdperson.api.client.event.EntityTurnStartEvent;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.MouseHandler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
@@ -61,7 +60,7 @@ public class EntityMixin {
             // 相机实体的眼睛到准星落点距离超过了限制
             pickTo = pickFrom;
           } else {
-            pickFrom = ThirdPerson.CAMERA_AGENT.getRawCamera().getPosition();
+            pickFrom = ThirdPerson.CAMERA_AGENT.getRawCamera().position();
             var pickVector = pickFrom.vectorTo(pickTo).normalize();
             pickTo = pickTo.add(pickVector.scale(1e-4));
           }
