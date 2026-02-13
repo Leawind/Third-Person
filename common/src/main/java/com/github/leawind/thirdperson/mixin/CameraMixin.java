@@ -21,11 +21,17 @@ public class CameraMixin {
    */
   @Inject(
       method = "setup",
-      at =
-          @At(
-              value = "INVOKE",
-              target = "Lnet/minecraft/client/Camera;move(FFF)V",
-              shift = At.Shift.BEFORE),
+      at = {
+              @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/client/Camera;move(FFF)V",
+                ordinal = 0,
+                shift = At.Shift.BEFORE),
+              @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/client/Camera;move(FFF)V",
+                ordinal = 1,
+                shift = At.Shift.BEFORE)},
       cancellable = true)
   private void preMoveCamera(
           Level level, Entity entity, boolean detached, boolean mirror, float partialTickTime, CallbackInfo ci) {
