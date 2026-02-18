@@ -43,7 +43,8 @@ public final class ThirdPerson {
   /** 判断：模组功能已启用，且相机和玩家都已经初始化 */
   public static boolean isAvailable() {
     var minecraft = Minecraft.getInstance();
-    return minecraft.player != null
+    return minecraft != null
+        && minecraft.player != null
         && minecraft.cameraEntity != null
         && getConfig().is_mod_enabled
         && minecraft.gameRenderer.getMainCamera().isInitialized();

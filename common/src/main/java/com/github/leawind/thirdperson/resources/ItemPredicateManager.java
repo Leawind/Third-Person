@@ -4,8 +4,6 @@ import com.github.leawind.thirdperson.ThirdPerson;
 import com.github.leawind.thirdperson.config.Config;
 import com.github.leawind.thirdperson.util.ItemPredicateUtil;
 import com.github.leawind.thirdperson.util.annotation.VersionSensitive;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.util.HashSet;
@@ -13,10 +11,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import net.minecraft.client.resources.SplashManager;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -38,10 +38,8 @@ import org.jetbrains.annotations.NotNull;
  * @see SplashManager
  */
 @VersionSensitive("SimpleJsonResourceReloadListener may not exist in other mc version")
-public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
-  private static final Gson GSON = new GsonBuilder().create();
-
-  private static final String ID = "item_patterns";
+public class ItemPredicateManager extends SimpleJsonResourceReloadListener<JsonElement> {
+  public static final String ID = "item_patterns";
 
   private static final String SET_HOLD_TO_AIM = "hold_to_aim";
   private static final String SET_USE_TO_AIM = "use_to_aim";
@@ -61,7 +59,7 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
   public final Set<Predicate<ItemStack>> useToFirstPersonItemPredicates = new HashSet<>();
 
   public ItemPredicateManager() {
-    super(GSON, ID);
+    super(ExtraCodecs.JSON, FileToIdConverter.json(ID));
   }
 
   /**
