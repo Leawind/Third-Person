@@ -2,7 +2,7 @@ package com.github.leawind.thirdperson;
 
 import com.github.leawind.thirdperson.resources.ItemPredicateManager;
 import dev.architectury.registry.ReloadListenerRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 
 /** 自定义资源包 */
@@ -11,6 +11,6 @@ public final class ThirdPersonResources {
 
   public static void register() {
     ReloadListenerRegistry.register(
-        PackType.CLIENT_RESOURCES, ThirdPersonResources.itemPredicateManager, ResourceLocation.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, ItemPredicateManager.ID));
+        PackType.CLIENT_RESOURCES, ThirdPersonResources.itemPredicateManager, Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, ItemPredicateManager.ID));
   }
 }

@@ -3,22 +3,26 @@ package com.github.leawind.thirdperson;
 import com.github.leawind.thirdperson.core.rotation.RotateTargetEnum;
 import com.github.leawind.thirdperson.util.modkeymapping.ModKeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public final class ThirdPersonKeys {
+  public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, "keybinds"));
+
   public static final ModKeyMapping ADJUST_POSITION =
       ModKeyMapping.of(
-              getId("adjust_position"), InputConstants.KEY_Z, ThirdPersonConstants.KEY_CATEGORY)
+              getId("adjust_position"), InputConstants.KEY_Z, CATEGORY)
           .onDown(ThirdPersonEvents::onStartAdjustingCameraOffset)
           .onUp(ThirdPersonEvents::onStopAdjustingCameraOffset);
 
   public static final ModKeyMapping FORCE_AIMING =
-      ModKeyMapping.of(getId("force_aiming"), ThirdPersonConstants.KEY_CATEGORY);
+      ModKeyMapping.of(getId("force_aiming"), CATEGORY);
 
   public static final ModKeyMapping TOGGLE_MOD_ENABLE =
-      ModKeyMapping.of(getId("toggle_mod_enable"), ThirdPersonConstants.KEY_CATEGORY)
+      ModKeyMapping.of(getId("toggle_mod_enable"), CATEGORY)
           .onDown(
               () -> {
                 var config = ThirdPerson.getConfig();
@@ -34,7 +38,7 @@ public final class ThirdPersonKeys {
               });
 
   public static final ModKeyMapping OPEN_CONFIG_MENU =
-      ModKeyMapping.of(getId("open_config_menu"), ThirdPersonConstants.KEY_CATEGORY)
+      ModKeyMapping.of(getId("open_config_menu"), CATEGORY)
           .onDown(
               () -> {
                 var mc = Minecraft.getInstance();
@@ -45,7 +49,7 @@ public final class ThirdPersonKeys {
 
   public static final ModKeyMapping TOGGLE_SIDE =
       ModKeyMapping.of(
-              getId("toggle_side"), InputConstants.KEY_CAPSLOCK, ThirdPersonConstants.KEY_CATEGORY)
+              getId("toggle_side"), InputConstants.KEY_CAPSLOCK, CATEGORY)
           .onDown(
               () -> {
                 var scheme = ThirdPerson.getConfig().getCameraOffsetScheme();
@@ -59,7 +63,7 @@ public final class ThirdPersonKeys {
           .onPress(() -> ThirdPerson.getConfig().getCameraOffsetScheme().toNextSide());
 
   public static final ModKeyMapping TOGGLE_AIMING =
-      ModKeyMapping.of(getId("toggle_aiming"), ThirdPersonConstants.KEY_CATEGORY)
+      ModKeyMapping.of(getId("toggle_aiming"), CATEGORY)
           .onDown(
               () -> {
                 if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
@@ -68,7 +72,7 @@ public final class ThirdPersonKeys {
               });
 
   public static final ModKeyMapping TOGGLE_PITCH_LOCK =
-      ModKeyMapping.of(getId("toggle_pitch_lock"), ThirdPersonConstants.KEY_CATEGORY)
+      ModKeyMapping.of(getId("toggle_pitch_lock"), CATEGORY)
           .onDown(
               () -> {
                 var config = ThirdPerson.getConfig();

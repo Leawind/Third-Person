@@ -7,6 +7,7 @@ import com.github.leawind.thirdperson.core.EntityAgent;
 import com.github.leawind.thirdperson.util.FiniteChecker;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import dev.architectury.platform.Platform;
+import dev.architectury.platform.client.ConfigurationScreenRegistry;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -22,8 +23,7 @@ public final class ThirdPerson {
   public static EntityAgent ENTITY_AGENT;
   public static CameraAgent CAMERA_AGENT;
 
-  public static void init() {
-    var minecraft = Minecraft.getInstance();
+  public static void init(Minecraft minecraft) {
     LOGGER.debug("Initializing mod {}", ThirdPersonConstants.MOD_NAME);
     MixinExtrasBootstrap.init();
 
@@ -36,8 +36,7 @@ public final class ThirdPerson {
     ThirdPersonKeys.register();
     ThirdPersonEvents.register();
 
-    Platform.getMod(ThirdPersonConstants.MOD_ID)
-        .registerConfigurationScreen(ThirdPerson.CONFIG_MANAGER::getConfigScreen);
+    ConfigurationScreenRegistry.register(Platform.getMod(ThirdPersonConstants.MOD_ID), ThirdPerson.CONFIG_MANAGER::getConfigScreen);
   }
 
   /** 判断：模组功能已启用，且相机和玩家都已经初始化 */
@@ -45,7 +44,7 @@ public final class ThirdPerson {
     var minecraft = Minecraft.getInstance();
     return minecraft != null
         && minecraft.player != null
-        && minecraft.cameraEntity != null
+        && minecraft.getCameraEntity() != null
         && getConfig().is_mod_enabled
         && minecraft.gameRenderer.getMainCamera().isInitialized();
   }

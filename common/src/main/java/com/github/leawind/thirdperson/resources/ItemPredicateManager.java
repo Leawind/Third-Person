@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -71,7 +71,7 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener<JsonE
    */
   @Override
   public void apply(
-      @NotNull Map<ResourceLocation, JsonElement> map,
+      @NotNull Map<Identifier, JsonElement> map,
       ResourceManager resourceManager,
       ProfilerFiller profile) {
     holdToAimItemPatterns.clear();

@@ -98,10 +98,10 @@ public enum RotateTargetEnum {
 
         var camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
         var playerEyePos = ThirdPerson.ENTITY_AGENT.getRawEyePosition(partialTick);
-        var cameraPos = LMath.toVector3d(camera.getPosition());
+        var cameraPos = LMath.toVector3d(camera.position());
         var targetPos = LMath.toVector3d(predicted.getPosition(partialTick));
         var end =
-            LMath.toVector3d(camera.getLookVector())
+            LMath.toVector3d(camera.forwardVector())
                 .normalize(cameraPos.distance(targetPos))
                 .add(cameraPos);
         var eyeToEnd = end.sub(playerEyePos);

@@ -4,10 +4,9 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector2d;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
+import org.joml.*;
+
+import java.lang.Math;
 
 public interface LMath {
 
@@ -134,6 +133,11 @@ public interface LMath {
   @Contract(pure = true)
   static Vector3d toVector3d(Vector3f v) {
     return new Vector3d(v.x, v.y, v.z);
+  }
+
+  @Contract(pure = true)
+  static Vector3d toVector3d(Vector3fc v) {
+    return new Vector3d(v.x(), v.y(), v.z());
   }
 
   @Contract(pure = true)

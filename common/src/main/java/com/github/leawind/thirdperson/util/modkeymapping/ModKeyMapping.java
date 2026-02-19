@@ -103,7 +103,7 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    * @param categoryKey 类别标识符，用于可翻译文本
    */
   @Contract("_,_ -> new")
-  static @NotNull ModKeyMapping of(@NotNull String id, @NotNull String categoryKey) {
+  static @NotNull ModKeyMapping of(@NotNull String id, @NotNull KeyMapping.Category categoryKey) {
     return of(id, InputConstants.UNKNOWN.getValue(), categoryKey);
   }
 
@@ -114,7 +114,7 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    */
   @Contract("_,_,_ -> new")
   static @NotNull ModKeyMapping of(
-      @NotNull String id, int defaultValue, @NotNull String categoryKey) {
+      @NotNull String id, int defaultValue, @NotNull KeyMapping.Category categoryKey) {
     return new ModKeyMappingImpl(id, defaultValue, categoryKey);
   }
 
