@@ -10,6 +10,7 @@ import net.neoforged.fml.common.Mod;
 @Mod(value = ThirdPersonConstants.MOD_ID, dist = net.neoforged.api.distmarker.Dist.CLIENT)
 public final class ThirdPersonNeoForgeClient {
   public ThirdPersonNeoForgeClient(IEventBus modBus) {
+    
     ClientLifecycleEvent.CLIENT_STARTED.register(ThirdPerson::init);
   }
 }

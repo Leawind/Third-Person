@@ -6,12 +6,15 @@ import com.github.leawind.thirdperson.core.CameraAgent;
 import com.github.leawind.thirdperson.core.EntityAgent;
 import com.github.leawind.thirdperson.util.FiniteChecker;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.platform.client.ConfigurationScreenRegistry;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public final class ThirdPerson {
   public static final Logger LOGGER = LoggerFactory.getLogger(ThirdPersonConstants.MOD_NAME);
@@ -48,6 +51,14 @@ public final class ThirdPerson {
         && minecraft.getCameraEntity() != null
         && getConfig().is_mod_enabled
         && minecraft.gameRenderer.getMainCamera().isInitialized();
+  }
+
+  public static File getConfigFile() {
+    return Minecraft.getInstance()
+        .gameDirectory
+        .toPath()
+        .resolve(ThirdPersonConstants.CONFIG_FILE_PATH)
+        .toFile();
   }
 
   /** 获取当前配置实例 */

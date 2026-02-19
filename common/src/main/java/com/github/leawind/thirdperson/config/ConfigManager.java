@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
@@ -39,12 +41,13 @@ public class ConfigManager {
    * <p>如果失败，则记录错误到日志
    */
   public void tryLoad() {
-    ThirdPerson.LOGGER.debug("Trying loading config from {}", ThirdPersonConstants.CONFIG_FILE);
+    var configFile = ThirdPerson.getConfigFile();
+    ThirdPerson.LOGGER.debug("Trying loading config from {}", configFile);
     try {
-      ThirdPersonConstants.CONFIG_FILE.getParentFile().mkdirs();
-      if (ThirdPersonConstants.CONFIG_FILE.exists()) {
+      configFile.getParentFile().mkdirs();
+      if (configFile.exists()) {
         load();
-        ThirdPerson.LOGGER.info("Config is loaded from {}", ThirdPersonConstants.CONFIG_FILE);
+        ThirdPerson.LOGGER.info("Config is loaded from {}", configFile);
       } else {
         ThirdPerson.LOGGER.info("Config not found, creating one.");
         trySave();
@@ -79,7 +82,7 @@ public class ConfigManager {
    * <p>如果失败，则记录错误到日志
    */
   public void trySave() {
-    ThirdPerson.LOGGER.debug("Trying saving config to {}", ThirdPersonConstants.CONFIG_FILE);
+    ThirdPerson.LOGGER.debug("Trying saving config to {}", ThirdPerson.getConfigFile());
     try {
       save();
       ThirdPerson.LOGGER.info("Config is saved.");
@@ -93,14 +96,14 @@ public class ConfigManager {
   public void load() throws IOException {
     config =
         GSON.fromJson(
-            Files.readString(ThirdPersonConstants.CONFIG_FILE.toPath(), StandardCharsets.UTF_8),
+            Files.readString(ThirdPerson.getConfigFile().toPath(), StandardCharsets.UTF_8),
             Config.class);
   }
 
   /** 直接保存配置文件 */
   public void save() throws IOException {
     FileUtils.writeStringToFile(
-        ThirdPersonConstants.CONFIG_FILE, GSON.toJson(this.config), StandardCharsets.UTF_8);
+        ThirdPerson.getConfigFile(), GSON.toJson(this.config), StandardCharsets.UTF_8);
   }
 
   /** 获取配置屏幕 */
