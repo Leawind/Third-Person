@@ -33,11 +33,11 @@ repositories {
 		url = 'https://maven.neoforged.net/releases'
 	}
 	// YACL
-	maven {
-		name = 'Kotlin for Forge'
-		url = 'https://thedarkcolour.github.io/KotlinForForge/'
-		content { includeGroup "thedarkcolour" }
-	}
+	//	maven {
+	//		name = 'Kotlin for Forge'
+	//		url = 'https://thedarkcolour.github.io/KotlinForForge/'
+	//		content { includeGroup "thedarkcolour" }
+	//	}
 }
 
 dependencies {
@@ -58,7 +58,7 @@ dependencies {
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_api_version}"
 	// YACL
-	modImplementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-neoforge"
+	//	modImplementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-neoforge"
 }
 
 shadowJar {
