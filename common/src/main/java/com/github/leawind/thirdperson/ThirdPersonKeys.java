@@ -10,11 +10,12 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public final class ThirdPersonKeys {
-  public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, "keybinds"));
+  public static final KeyMapping.Category CATEGORY =
+      KeyMapping.Category.register(
+          Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, "keybinds"));
 
   public static final ModKeyMapping ADJUST_POSITION =
-      ModKeyMapping.of(
-              getId("adjust_position"), InputConstants.KEY_Z, CATEGORY)
+      ModKeyMapping.of(getId("adjust_position"), InputConstants.KEY_Z, CATEGORY)
           .onDown(ThirdPersonEvents::onStartAdjustingCameraOffset)
           .onUp(ThirdPersonEvents::onStopAdjustingCameraOffset);
 
@@ -48,8 +49,7 @@ public final class ThirdPersonKeys {
               });
 
   public static final ModKeyMapping TOGGLE_SIDE =
-      ModKeyMapping.of(
-              getId("toggle_side"), InputConstants.KEY_CAPSLOCK, CATEGORY)
+      ModKeyMapping.of(getId("toggle_side"), InputConstants.KEY_CAPSLOCK, CATEGORY)
           .onDown(
               () -> {
                 var scheme = ThirdPerson.getConfig().getCameraOffsetScheme();

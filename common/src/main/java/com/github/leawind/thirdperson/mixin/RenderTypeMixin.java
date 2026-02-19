@@ -30,18 +30,21 @@ public class RenderTypeMixin {
    * <p>将 NO_TRANSPARENCY 改成了 TRANSLUCENT_TRANSPARENCY
    */
   @Unique
-  private static final Function<Identifier, RenderType> ARMOR_CUTOUT_NO_CULL_TRANSLUCENT = Util.memoize(identifier -> {
-      RenderSetup renderSetup = RenderSetup.builder(RenderPipelines.ARMOR_CUTOUT_NO_CULL)
-              .withTexture("Sampler0", identifier)
-              .useLightmap()
-              .useOverlay()
-              .sortOnUpload()
-              .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-              .affectsCrumbling()
-              .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
-              .createRenderSetup();
-      return RenderType.create("armor_cutout_no_cull_translucent", renderSetup);
-  });
+  private static final Function<Identifier, RenderType> ARMOR_CUTOUT_NO_CULL_TRANSLUCENT =
+      Util.memoize(
+          identifier -> {
+            RenderSetup renderSetup =
+                RenderSetup.builder(RenderPipelines.ARMOR_CUTOUT_NO_CULL)
+                    .withTexture("Sampler0", identifier)
+                    .useLightmap()
+                    .useOverlay()
+                    .sortOnUpload()
+                    .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+                    .affectsCrumbling()
+                    .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+                    .createRenderSetup();
+            return RenderType.create("armor_cutout_no_cull_translucent", renderSetup);
+          });
 
   /**
    * 对盔甲和鞘翅使用自定义的 RenderType 提供器，实现半透明效果
@@ -61,11 +64,13 @@ public class RenderTypeMixin {
               target = "Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"),
       cancellable = true)
   private static void setTransparencyState(
-          Identifier resourceLocation, @NotNull CallbackInfoReturnable<RenderType> ci) {
+      Identifier resourceLocation, @NotNull CallbackInfoReturnable<RenderType> ci) {
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()
         && ThirdPersonStatus.useCameraEntityOpacity(
-            (float) (Minecraft.getInstance().getFrameTimeNs() /  TimeUtil.NANOSECONDS_PER_MILLISECOND))) {
+            (float)
+                (Minecraft.getInstance().getFrameTimeNs()
+                    / TimeUtil.NANOSECONDS_PER_MILLISECOND))) {
       ci.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(resourceLocation));
       ci.cancel();
     }

@@ -36,7 +36,8 @@ public final class ThirdPerson {
     ThirdPersonKeys.register();
     ThirdPersonEvents.register();
 
-    ConfigurationScreenRegistry.register(Platform.getMod(ThirdPersonConstants.MOD_ID), ThirdPerson.CONFIG_MANAGER::getConfigScreen);
+    ConfigurationScreenRegistry.register(
+        Platform.getMod(ThirdPersonConstants.MOD_ID), ThirdPerson.CONFIG_MANAGER::getConfigScreen);
   }
 
   /** 判断：模组功能已启用，且相机和玩家都已经初始化 */

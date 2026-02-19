@@ -73,9 +73,7 @@ public class EntityMixin {
     return original.call(pickFrom, pickTo, blockShape, fluidShape, entity);
   }
 
-  /**
-   * 鼠标移动事件处理函数会调用此方法旋转玩家，参考 `MouseHandler#turnPlayer()`
-   */
+  /** 鼠标移动事件处理函数会调用此方法旋转玩家，参考 `MouseHandler#turnPlayer()` */
   @Inject(method = "turn", at = @At("HEAD"), cancellable = true)
   private void preTurn(double yRot, double xRot, @NotNull CallbackInfo ci) {
     if (GameEvents.entityTurnStart != null) {

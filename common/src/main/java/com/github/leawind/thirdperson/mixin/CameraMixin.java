@@ -22,19 +22,25 @@ public class CameraMixin {
   @Inject(
       method = "setup",
       at = {
-              @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/Camera;move(FFF)V",
-                ordinal = 0,
-                shift = At.Shift.BEFORE),
-              @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/Camera;move(FFF)V",
-                ordinal = 1,
-                shift = At.Shift.BEFORE)},
+        @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/Camera;move(FFF)V",
+            ordinal = 0,
+            shift = At.Shift.BEFORE),
+        @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/Camera;move(FFF)V",
+            ordinal = 1,
+            shift = At.Shift.BEFORE)
+      },
       cancellable = true)
   private void preMoveCamera(
-          Level level, Entity entity, boolean detached, boolean mirror, float partialTickTime, CallbackInfo ci) {
+      Level level,
+      Entity entity,
+      boolean detached,
+      boolean mirror,
+      float partialTickTime,
+      CallbackInfo ci) {
     if (GameEvents.thirdPersonCameraSetup != null) {
       var event = new ThirdPersonCameraSetupEvent(partialTickTime);
       GameEvents.thirdPersonCameraSetup.accept(event);

@@ -42,21 +42,21 @@ public class LocalPlayerMixin {
    * @param pickRangeSqr 探测距离上限的平方
    */
   @WrapOperation(
-          method = "pick",
-          at =
+      method = "pick",
+      at =
           @At(
-                  value = "INVOKE",
-                  target =
-                          "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;"
-                                  + "Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"))
+              value = "INVOKE",
+              target =
+                  "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;"
+                      + "Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"))
   private static EntityHitResult wrapEntityHit(
-          Entity receiver,
-          Vec3 pickFrom,
-          Vec3 pickTo,
-          AABB aabb,
-          Predicate<Entity> predicate,
-          double pickRangeSqr,
-          Operation<EntityHitResult> original) {
+      Entity receiver,
+      Vec3 pickFrom,
+      Vec3 pickTo,
+      AABB aabb,
+      Predicate<Entity> predicate,
+      double pickRangeSqr,
+      Operation<EntityHitResult> original) {
     if (ThirdPerson.isAvailable() && ThirdPersonStatus.isRenderingInThirdPerson()) {
       if (receiver == Minecraft.getInstance().getCameraEntity()) {
         pickTo = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();

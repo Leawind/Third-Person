@@ -21,7 +21,8 @@ public class ModelPartCubeMixin {
   private int compile(int argb) {
     float opacity = ARGB.alpha(argb) / 255f;
 
-    float partialTick = (float) (Minecraft.getInstance().getFrameTimeNs() / TimeUtil.NANOSECONDS_PER_MILLISECOND);
+    float partialTick =
+        (float) (Minecraft.getInstance().getFrameTimeNs() / TimeUtil.NANOSECONDS_PER_MILLISECOND);
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()
         && ThirdPersonStatus.useCameraEntityOpacity(partialTick)) {

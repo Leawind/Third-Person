@@ -30,27 +30,32 @@ import java.util.Map;
 
 @Mixin(value = LevelRenderer.class, priority = 2000)
 public class LevelRendererMixin {
-  @Shadow
-  @Final
-  private Minecraft minecraft;
+  @Shadow @Final private Minecraft minecraft;
 
-  @Shadow
-  @Final
-  private RenderBuffers renderBuffers;
+  @Shadow @Final private RenderBuffers renderBuffers;
 
-  @Unique
-  private DeltaTracker deltaTracker;
-  @Unique
-  private final Map<EntityRenderState, Entity> entityMap = new HashMap<>();
+  @Unique private DeltaTracker deltaTracker;
+  @Unique private final Map<EntityRenderState, Entity> entityMap = new HashMap<>();
 
   /** 允许取消渲染实体 */
-  @Inject(method = "extractVisibleEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"), cancellable = true)
+  @Inject(
+      method = "extractVisibleEntities",
+      at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"),
+      cancellable = true)
   private void cancelRenderEntity(
-          Camera camera, Frustum frustum, DeltaTracker deltaTracker, LevelRenderState renderState, CallbackInfo ci, @Local Entity entity, @Local EntityRenderState entityRenderState) {
+      Camera camera,
+      Frustum frustum,
+      DeltaTracker deltaTracker,
+      LevelRenderState renderState,
+      CallbackInfo ci,
+      @Local Entity entity,
+      @Local EntityRenderState entityRenderState) {
     this.deltaTracker = deltaTracker;
     entityMap.put(entityRenderState, entity);
     if (GameEvents.renderEntity != null) {
-      float partialTick = deltaTracker.getGameTimeDeltaPartialTick(!minecraft.level.tickRateManager().isEntityFrozen(entity));
+      float partialTick =
+          deltaTracker.getGameTimeDeltaPartialTick(
+              !minecraft.level.tickRateManager().isEntityFrozen(entity));
       var event = new RenderEntityEvent(entity, partialTick);
       if (!GameEvents.renderEntity.apply(event)) {
         ci.cancel();
@@ -58,14 +63,27 @@ public class LevelRendererMixin {
     }
   }
 
-  @Inject(method = "submitEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/client/renderer/state/CameraRenderState;DDDLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V", shift = At.Shift.AFTER))
+  @Inject(
+      method = "submitEntities",
+      at =
+          @At(
+              value = "INVOKE",
+              target =
+                  "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lnet/minecraft/client/renderer/state/CameraRenderState;DDDLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V",
+              shift = At.Shift.AFTER))
   private void postRenderEntity(
-          PoseStack poseStack, LevelRenderState renderState, SubmitNodeCollector nodeCollector, CallbackInfo ci, @Local EntityRenderState entityRenderState) {
+      PoseStack poseStack,
+      LevelRenderState renderState,
+      SubmitNodeCollector nodeCollector,
+      CallbackInfo ci,
+      @Local EntityRenderState entityRenderState) {
     Entity entity = entityMap.remove(entityRenderState);
-    if(entity == null) return;
+    if (entity == null) return;
 
     MultiBufferSource.BufferSource bufferSource = renderBuffers.bufferSource();
-    float partialTick = deltaTracker.getGameTimeDeltaPartialTick(!minecraft.level.tickRateManager().isEntityFrozen(entity));
+    float partialTick =
+        deltaTracker.getGameTimeDeltaPartialTick(
+            !minecraft.level.tickRateManager().isEntityFrozen(entity));
 
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()

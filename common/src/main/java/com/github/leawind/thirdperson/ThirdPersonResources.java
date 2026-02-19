@@ -11,6 +11,8 @@ public final class ThirdPersonResources {
 
   public static void register() {
     ReloadListenerRegistry.register(
-        PackType.CLIENT_RESOURCES, ThirdPersonResources.itemPredicateManager, Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, ItemPredicateManager.ID));
+        PackType.CLIENT_RESOURCES,
+        ThirdPersonResources.itemPredicateManager,
+        Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, ItemPredicateManager.ID));
   }
 }

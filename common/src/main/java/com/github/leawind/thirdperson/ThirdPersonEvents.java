@@ -130,9 +130,7 @@ public final class ThirdPersonEvents {
     }
   }
 
-  /**
-   * 参考 `GameRenderer#render(float, long, boolean)`
-   */
+  /** 参考 `GameRenderer#render(float, long, boolean)` */
   private static void onRenderTickStart(RenderTickStartEvent event) {
     ThirdPersonStatus.forceThirdPersonCrosshair =
         ThirdPersonStatus.shouldRenderThirdPersonCrosshair();
@@ -226,7 +224,9 @@ public final class ThirdPersonEvents {
             ThirdPerson.ENTITY_AGENT
                 .getRawPlayerEntity()
                 .getViewYRot(
-                    (float) (Minecraft.getInstance().getFrameTimeNs() /  TimeUtil.NANOSECONDS_PER_MILLISECOND));
+                    (float)
+                        (Minecraft.getInstance().getFrameTimeNs()
+                            / TimeUtil.NANOSECONDS_PER_MILLISECOND));
 
         var playerLookHorizon = LMath.directionFromRotationDegree(playerYRot).normalize();
         var playerLeftHorizon = LMath.directionFromRotationDegree(playerYRot - 90).normalize();
@@ -258,9 +258,7 @@ public final class ThirdPersonEvents {
     }
   }
 
-  /**
-   * 参考 `MouseHandler#turnPlayer()`
-   */
+  /** 参考 `MouseHandler#turnPlayer()` */
   private static void onMouseTurnPlayerStart(MouseTurnPlayerStartEvent event) {
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isAdjustingCameraOffset()
