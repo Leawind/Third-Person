@@ -2,6 +2,7 @@ package com.github.leawind.thirdperson;
 
 import com.github.leawind.thirdperson.core.EntityAgent;
 import com.github.leawind.thirdperson.util.Surroundings;
+import io.github.leawind.inventory.misc.Lazy;
 import java.io.File;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,9 @@ public final class ThirdPersonConstants {
   public static final String KEY_CATEGORY = "key.categories." + MOD_ID;
 
   public static final String CONFIG_FILE_PATH = "config/" + MOD_ID + ".json";
+  public static final Lazy<File> CONFIG_FILE =
+      new Lazy<>(
+          () -> Minecraft.getInstance().gameDirectory.toPath().resolve(CONFIG_FILE_PATH).toFile());
 
   public static final long CONFIG_LAZY_SAVE_DELAY = 60000L;
 

@@ -41,7 +41,7 @@ public class ConfigManager {
    * <p>如果失败，则记录错误到日志
    */
   public void tryLoad() {
-    var configFile = ThirdPerson.getConfigFile();
+    var configFile = ThirdPersonConstants.CONFIG_FILE.get();
     ThirdPerson.LOGGER.debug("Trying loading config from {}", configFile);
     try {
       configFile.getParentFile().mkdirs();
@@ -82,7 +82,7 @@ public class ConfigManager {
    * <p>如果失败，则记录错误到日志
    */
   public void trySave() {
-    ThirdPerson.LOGGER.debug("Trying saving config to {}", ThirdPerson.getConfigFile());
+    ThirdPerson.LOGGER.debug("Trying saving config to {}", ThirdPersonConstants.CONFIG_FILE.get());
     try {
       save();
       ThirdPerson.LOGGER.info("Config is saved.");
@@ -96,14 +96,14 @@ public class ConfigManager {
   public void load() throws IOException {
     config =
         GSON.fromJson(
-            Files.readString(ThirdPerson.getConfigFile().toPath(), StandardCharsets.UTF_8),
+            Files.readString(ThirdPersonConstants.CONFIG_FILE.get().toPath(), StandardCharsets.UTF_8),
             Config.class);
   }
 
   /** 直接保存配置文件 */
   public void save() throws IOException {
     FileUtils.writeStringToFile(
-        ThirdPerson.getConfigFile(), GSON.toJson(this.config), StandardCharsets.UTF_8);
+        ThirdPersonConstants.CONFIG_FILE.get(), GSON.toJson(this.config), StandardCharsets.UTF_8);
   }
 
   /** 获取配置屏幕 */
