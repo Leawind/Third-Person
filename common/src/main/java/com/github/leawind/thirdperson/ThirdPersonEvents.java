@@ -17,9 +17,7 @@ import dev.architectury.event.events.client.ClientRawInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
@@ -113,7 +111,7 @@ public final class ThirdPersonEvents {
       resetPlayer();
       ThirdPerson.LOGGER.info("on Client player join");
     }
-    config.updateItemPredicates();
+    config.reparseItemPredicates();
     ThirdPersonResources.itemPredicateManager.reparse();
   }
 
@@ -131,9 +129,7 @@ public final class ThirdPersonEvents {
     }
   }
 
-  /**
-   * @see GameRenderer#render(float, long, boolean)
-   */
+  /** 参考 `GameRenderer#render(float, long, boolean)` */
   private static void onRenderTickStart(RenderTickStartEvent event) {
     ThirdPersonStatus.forceThirdPersonCrosshair =
         ThirdPersonStatus.shouldRenderThirdPersonCrosshair();
@@ -205,6 +201,9 @@ public final class ThirdPersonEvents {
       var lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
       var leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
 
+      ThirdPerson.FINITE_CHECKER.checkOnce(lookImpulse.x, lookImpulse.y, lookImpulse.z);
+      ThirdPerson.FINITE_CHECKER.checkOnce(leftImpulse.x, leftImpulse.y, leftImpulse.z);
+
       // 水平方向上的视线向量
       var lookImpulseHorizon =
           new Vector2d(lookImpulse.x, lookImpulse.z).normalize(event.forwardImpulse);
@@ -233,6 +232,9 @@ public final class ThirdPersonEvents {
 
         event.forwardImpulse = (float) (ThirdPersonStatus.impulseHorizon.dot(playerLookHorizon));
         event.leftImpulse = (float) (ThirdPersonStatus.impulseHorizon.dot(playerLeftHorizon));
+
+        ThirdPerson.FINITE_CHECKER.checkOnce(event.forwardImpulse);
+        ThirdPerson.FINITE_CHECKER.checkOnce(event.leftImpulse);
       }
     }
   }
@@ -258,9 +260,7 @@ public final class ThirdPersonEvents {
     }
   }
 
-  /**
-   * @see MouseHandler#turnPlayer()
-   */
+  /** 参考 `MouseHandler#turnPlayer()` */
   private static void onMouseTurnPlayerStart(MouseTurnPlayerStartEvent event) {
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isAdjustingCameraOffset()

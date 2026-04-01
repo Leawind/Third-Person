@@ -9,7 +9,8 @@ import com.github.leawind.thirdperson.util.math.monolist.StaticMonoList;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import java.util.function.Predicate;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +24,9 @@ public class Config extends AbstractConfig {
 
   private final @NotNull CameraOffsetScheme cameraOffsetScheme = new CameraOffsetScheme(this);
 
-  private final @NotNull Set<ItemPredicate> holdToAimItemPredicates = new HashSet<>();
-  private final @NotNull Set<ItemPredicate> useToAimItemPredicates = new HashSet<>();
-  private final @NotNull Set<ItemPredicate> useToFirstPersonItemPredicates = new HashSet<>();
+  private final @NotNull Set<Predicate<ItemStack>> holdToAimItemPredicates = new HashSet<>();
+  private final @NotNull Set<Predicate<ItemStack>> useToAimItemPredicates = new HashSet<>();
+  private final @NotNull Set<Predicate<ItemStack>> useToFirstPersonItemPredicates = new HashSet<>();
 
   private @Nullable MonoList distanceMonoList;
 
@@ -41,7 +42,7 @@ public class Config extends AbstractConfig {
     }
 
     updateDistancesMonoList();
-    updateItemPredicates();
+    reparseItemPredicates();
   }
 
   /** 更新相机到玩家的距离的可调挡位们 */
@@ -56,43 +57,37 @@ public class Config extends AbstractConfig {
             Math::sqrt);
   }
 
+  public void reparseItemPredicates() {
+    if (ItemPredicateUtil.isInitialized()) {
+      reparseItemPredicatesImmediately();
+    } else {
+      ItemPredicateUtil.ON_INITIALIZED.once(
+          "Item predicates in config", e -> reparseItemPredicatesImmediately());
+    }
+  }
+
   /**
    * @see ItemPredicateManager#apply
    */
-  public void updateItemPredicates() {
+  protected void reparseItemPredicatesImmediately() {
     holdToAimItemPredicates.clear();
     useToAimItemPredicates.clear();
     useToFirstPersonItemPredicates.clear();
 
-    int count;
-    count =
-        ItemPredicateUtil.addToSet("minecraft", holdToAimItemPredicates, hold_to_aim_item_patterns);
-    if (count > 0) {
-      ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from configuration", count);
-    }
-    count =
-        ItemPredicateUtil.addToSet("minecraft", useToAimItemPredicates, use_to_aim_item_patterns);
-    if (count > 0) {
-      ThirdPerson.LOGGER.info("Loaded {}  use_to_aim item patterns from configuration", count);
-    }
-    count =
-        ItemPredicateUtil.addToSet(
-            "minecraft", useToFirstPersonItemPredicates, use_to_first_person_patterns);
-    if (count > 0) {
-      ThirdPerson.LOGGER.info(
-          "Loaded {} use_to_first_person item patterns from configuration", count);
-    }
+    holdToAimItemPredicates.addAll(ItemPredicateUtil.parseAll(hold_to_aim_item_patterns));
+    useToAimItemPredicates.addAll(ItemPredicateUtil.parseAll(use_to_aim_item_patterns));
+    useToFirstPersonItemPredicates.addAll(ItemPredicateUtil.parseAll(use_to_first_person_patterns));
   }
 
-  public @NotNull Set<ItemPredicate> getHoldToAimItemPredicates() {
+  public @NotNull Set<Predicate<ItemStack>> getHoldToAimItemPredicates() {
     return holdToAimItemPredicates;
   }
 
-  public @NotNull Set<ItemPredicate> getUseToAimItemPredicates() {
+  public @NotNull Set<Predicate<ItemStack>> getUseToAimItemPredicates() {
     return useToAimItemPredicates;
   }
 
-  public @NotNull Set<ItemPredicate> getUseToFirstPersonItemPredicates() {
+  public @NotNull Set<Predicate<ItemStack>> getUseToFirstPersonItemPredicates() {
     return useToFirstPersonItemPredicates;
   }
 

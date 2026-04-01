@@ -66,9 +66,9 @@ public class EntityAgent {
     ThirdPerson.LOGGER.debug(rotateDecisionMap.toDescription());
   }
 
-  /** 相机实体 {@link Minecraft#cameraEntity} 是否已经存在 */
+  /** 相机实体 {@link Minecraft#getCameraEntity()} 是否已经存在 */
   public boolean isCameraEntityExist() {
-    return minecraft.cameraEntity != null;
+    return minecraft.getCameraEntity() != null;
   }
 
   /**
@@ -170,6 +170,9 @@ public class EntityAgent {
 
   /** 设置实体朝向 */
   public void setRawRotation(@NotNull Vector2d rot) {
+    if (!Double.isFinite(rot.x) || !Double.isFinite(rot.y)) {
+      rot = getRawRotation(1);
+    }
     FINITE_CHECKER.checkOnce(rot.x, rot.y);
     var entity = getRawPlayerEntity();
 
@@ -179,7 +182,7 @@ public class EntityAgent {
 
   /** 玩家当前是否在操控这个实体 */
   public boolean isControlled() {
-    return getRawPlayerEntity() == minecraft.cameraEntity;
+    return getRawPlayerEntity() == minecraft.getCameraEntity();
   }
 
   /**
@@ -188,7 +191,7 @@ public class EntityAgent {
    * @see EntityAgent#isCameraEntityExist
    */
   public @NotNull Entity getRawCameraEntity() {
-    return Objects.requireNonNull(minecraft.cameraEntity);
+    return Objects.requireNonNull(minecraft.getCameraEntity());
   }
 
   /** 获取玩家实体 */
@@ -254,11 +257,7 @@ public class EntityAgent {
     return getRawCameraEntity().isSprinting();
   }
 
-  /**
-   * 正在吃食物
-   *
-   * <p>使用 {@link ItemStack#isEdible()} 判断是否是食物
-   */
+  /** 正在吃食物 */
   public boolean isEating() {
     if (getRawCameraEntity() instanceof LivingEntity livingEntity) {
       return livingEntity.getUseItem().isEdible();

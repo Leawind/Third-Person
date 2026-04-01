@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import java.util.function.Predicate;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
@@ -26,7 +26,8 @@ import org.jetbrains.annotations.NotNull;
  * 物品谓词资源管理器
  *
  * <ul>
- *   <li>物品谓词（ItemPredicate）是指 {@link ItemPredicate}对象，它代表一种规则，可以判断一个物品栈（{@link ItemStack}）是否符合其规则
+ *   <li>物品谓词（ItemPredicate）是指 {@link Predicate<ItemStack>}对象，它代表一种规则，可以判断一个物品栈（{@link
+ *       ItemStack}）是否符合其规则
  *   <li>物品模式（ItemPattern）是字符串，可以用{@link ItemPredicateUtil#parse(String)}将其解析为物品谓词
  * </ul>
  *
@@ -41,24 +42,24 @@ import org.jetbrains.annotations.NotNull;
 public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
   private static final Gson GSON = new GsonBuilder().create();
 
-  private static final String ID = "item_patterns";
+  public static final String ID = "item_patterns";
 
   private static final String SET_HOLD_TO_AIM = "hold_to_aim";
   private static final String SET_USE_TO_AIM = "use_to_aim";
   private static final String SET_USE_TO_FIRST_PERSON = "use_to_first_person";
 
-  public final Map<String, Set<String>> holdToAimItemPatterns = new HashMap<>();
-  public final Map<String, Set<String>> useToAimItemPatterns = new HashMap<>();
-  public final Map<String, Set<String>> useToFirstPersonItemPatterns = new HashMap<>();
+  public final Set<String> holdToAimItemPatterns = new HashSet<>();
+  public final Set<String> useToAimItemPatterns = new HashSet<>();
+  public final Set<String> useToFirstPersonItemPatterns = new HashSet<>();
 
   /** 玩家手持（主手或副手）这些物品时，进入瞄准模式 */
-  public final Set<ItemPredicate> holdToAimItemPredicates = new HashSet<>();
+  public final Set<Predicate<ItemStack>> holdToAimItemPredicates = new HashSet<>();
 
   /** 玩家使用这些物品时，进入瞄准模式 */
-  public final Set<ItemPredicate> useToAimItemPredicates = new HashSet<>();
+  public final Set<Predicate<ItemStack>> useToAimItemPredicates = new HashSet<>();
 
   /** 玩家使用这些物品时，会暂时进入第一人称 */
-  public final Set<ItemPredicate> useToFirstPersonItemPredicates = new HashSet<>();
+  public final Set<Predicate<ItemStack>> useToFirstPersonItemPredicates = new HashSet<>();
 
   public ItemPredicateManager() {
     super(GSON, ID);
@@ -69,7 +70,7 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
    *
    * @param map 资源地址与json数据的映射表
    * @param resourceManager {@link MultiPackResourceManager}的实例
-   * @see Config#updateItemPredicates()
+   * @see Config#reparseItemPredicates()
    */
   @Override
   public void apply(
@@ -84,30 +85,20 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
         (resourceLocation, jsonElement) -> {
           var obj = jsonElement.getAsJsonArray();
           var resourcePath = resourceLocation.getPath().split("/");
-          var namespace = resourceLocation.getNamespace();
 
           if (resourcePath.length >= 2) {
             var resourceSetName = resourcePath[0];
             switch (resourceSetName) {
-              case SET_HOLD_TO_AIM -> addToSet(namespace, holdToAimItemPatterns, obj);
-              case SET_USE_TO_AIM -> addToSet(namespace, useToAimItemPatterns, obj);
-              case SET_USE_TO_FIRST_PERSON ->
-                  addToSet(namespace, useToFirstPersonItemPatterns, obj);
+              case SET_HOLD_TO_AIM -> append(holdToAimItemPatterns, obj);
+              case SET_USE_TO_AIM -> append(useToAimItemPatterns, obj);
+              case SET_USE_TO_FIRST_PERSON -> append(useToFirstPersonItemPatterns, obj);
             }
           }
         });
     reparse();
   }
 
-  private void addToSet(
-      String defaultNs, @NotNull Map<String, Set<String>> patternMap, @NotNull JsonArray arr) {
-    Set<String> patterns;
-    if (patternMap.containsKey(defaultNs)) {
-      patterns = patternMap.get(defaultNs);
-    } else {
-      patterns = new HashSet<>();
-      patternMap.put(defaultNs, patterns);
-    }
+  private void append(@NotNull Set<String> patterns, @NotNull JsonArray arr) {
     arr.forEach(
         ele -> {
           try {
@@ -117,44 +108,29 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener {
             ThirdPerson.LOGGER.warn(e.getMessage());
           }
         });
-    arr.size();
   }
 
+  /**
+   * Parse patterns in {@link #holdToAimItemPatterns} and update {@link #holdToAimItemPredicates}
+   *
+   * <p>If {@link ItemPredicateUtil} is not initialized, it will run after initialization
+   */
   public void reparse() {
+    if (ItemPredicateUtil.isInitialized()) {
+      reparseImmediately();
+    } else {
+      ItemPredicateUtil.ON_INITIALIZED.once(
+          "Item predicates in resource", e -> reparseImmediately());
+    }
+  }
+
+  private void reparseImmediately() {
     holdToAimItemPredicates.clear();
     useToAimItemPredicates.clear();
     useToFirstPersonItemPredicates.clear();
 
-    int count;
-    count = parseToSet(holdToAimItemPredicates, holdToAimItemPatterns);
-    if (count > 0) {
-      ThirdPerson.LOGGER.info("Loaded {} hold_to_aim item patterns from resource pack", count);
-    }
-    count = parseToSet(useToAimItemPredicates, useToAimItemPatterns);
-    if (count > 0) {
-      ThirdPerson.LOGGER.info("Loaded {} use_to_aim item patterns from resource pack", count);
-    }
-    count = parseToSet(useToFirstPersonItemPredicates, useToFirstPersonItemPatterns);
-    if (count > 0) {
-      ThirdPerson.LOGGER.info(
-          "Loaded {} use_to_first_person item patterns from resource pack", count);
-    }
-  }
-
-  private int parseToSet(Set<ItemPredicate> predicates, Map<String, Set<String>> patternMap) {
-    int count = 0;
-    for (var defaultNs : patternMap.keySet()) {
-      var patterns = patternMap.get(defaultNs);
-      for (var pattern : patterns) {
-        try {
-          predicates.add(ItemPredicateUtil.parse(pattern));
-          count++;
-        } catch (IllegalArgumentException e) {
-          ThirdPerson.LOGGER.warn(
-              "Skip invalid item pattern: {} Because {}", pattern, e.getMessage());
-        }
-      }
-    }
-    return count;
+    holdToAimItemPredicates.addAll(ItemPredicateUtil.parseAll(holdToAimItemPatterns));
+    useToAimItemPredicates.addAll(ItemPredicateUtil.parseAll(useToAimItemPatterns));
+    useToFirstPersonItemPredicates.addAll(ItemPredicateUtil.parseAll(useToFirstPersonItemPatterns));
   }
 }
