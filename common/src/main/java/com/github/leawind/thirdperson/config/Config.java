@@ -61,7 +61,7 @@ public class Config extends AbstractConfig {
     if (ItemPredicateUtil.isInitialized()) {
       reparseItemPredicatesImmediately();
     } else {
-      ItemPredicateUtil.ON_INITIALIZED.setOnce(
+      ItemPredicateUtil.ON_INITIALIZED.once(
           "Item predicates in config", e -> reparseItemPredicatesImmediately());
     }
   }

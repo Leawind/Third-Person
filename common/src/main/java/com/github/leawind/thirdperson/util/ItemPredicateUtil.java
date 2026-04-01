@@ -3,7 +3,7 @@ package com.github.leawind.thirdperson.util;
 import com.github.leawind.thirdperson.ThirdPerson;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.leawind.inventory.delegate.Delegate;
+import io.github.leawind.inventory.event.EventEmitter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -21,8 +21,7 @@ public final class ItemPredicateUtil {
   /** 用来解析物品谓词，语法和命令中的物品谓词参数相同（例如 {@code /clear } 命令） */
   private static @Nullable ItemPredicateArgument ITEM_PREDICATE_ARGUMENT = null;
 
-  public static final Delegate<Void> ON_INITIALIZED =
-      new Delegate<>("ItemPredicateUtil Initialized");
+  public static final EventEmitter<Void> ON_INITIALIZED = new EventEmitter<>();
 
   /**
    * 在 Commands 构造函数中Mixin，取得context，并调用此方法，得到 ItemPredicateArgument，可以用它来解析物品谓词。
@@ -31,7 +30,7 @@ public final class ItemPredicateUtil {
    */
   public static void init(CommandBuildContext context) {
     ITEM_PREDICATE_ARGUMENT = ItemPredicateArgument.itemPredicate(context);
-    ON_INITIALIZED.broadcast(null);
+    ON_INITIALIZED.emit();
   }
 
   public static boolean isInitialized() {
