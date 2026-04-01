@@ -32,3 +32,5 @@ run/
 forge*changelog.txt
 
 *.log
+
+.profileconfig.json
