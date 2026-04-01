@@ -30,3 +30,10 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+
+.clinerules/
+.trae/
+.lingma/
+.marscode/
+
+.profileconfig.json
