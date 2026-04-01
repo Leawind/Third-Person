@@ -96,7 +96,8 @@ public class ConfigManager {
   public void load() throws IOException {
     config =
         GSON.fromJson(
-            Files.readString(ThirdPersonConstants.CONFIG_FILE.get().toPath(), StandardCharsets.UTF_8),
+            Files.readString(
+                ThirdPersonConstants.CONFIG_FILE.get().toPath(), StandardCharsets.UTF_8),
             Config.class);
   }
 

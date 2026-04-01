@@ -8,7 +8,6 @@ import com.github.leawind.thirdperson.util.FiniteChecker;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import dev.architectury.platform.Platform;
 import dev.architectury.platform.client.ConfigurationScreenRegistry;
-import java.io.File;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

@@ -6,6 +6,8 @@ import com.github.leawind.thirdperson.api.base.GameEvents;
 import com.github.leawind.thirdperson.api.client.event.RenderEntityEvent;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -24,9 +26,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mixin(value = LevelRenderer.class, priority = 2000)
 public class LevelRendererMixin {

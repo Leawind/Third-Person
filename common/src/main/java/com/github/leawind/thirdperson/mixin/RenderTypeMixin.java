@@ -4,7 +4,6 @@ import com.github.leawind.thirdperson.ThirdPerson;
 import com.github.leawind.thirdperson.ThirdPersonStatus;
 import com.github.leawind.thirdperson.core.EntityAgent;
 import com.github.leawind.thirdperson.util.annotation.VersionSensitive;
-
 import java.util.function.Function;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
