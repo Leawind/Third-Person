@@ -139,7 +139,10 @@ subprojects {
 			}
 			
 		}
-		eachFile {
+		filesMatching("**/fabric.mod.json") {
+			expand rootProject.properties
+		}
+		filesMatching("**/neoforge.mods.toml") {
 			expand rootProject.properties
 		}
 	}

@@ -5,11 +5,11 @@ license = "${mod_license}"
 
 [[mods]]
 modId = "leawind_third_person"
-version = "${version}"
+version = "${mod_version}"
 displayName = "${mod_name}"
 description = "${mod_description}"
 authors = "Leawind"
-logoFile = "TODO"
+logoFile = "${mod_icon}"
 displayURL = "${mod_url_home}"
 
 [[dependencies.leawind_third_person]]
