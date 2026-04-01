@@ -30,6 +30,10 @@ public interface LMath {
    */
   @Contract(pure = true)
   static Vector2d rotationRadianFromDirection(Vector3d d) {
+    double length = d.length();
+    if (length < 1e-5) {
+      return new Vector2d(0, 0);
+    }
     d.normalize();
     return new Vector2d(-Math.asin(d.y), Math.atan2(-d.x, d.z));
   }
@@ -91,6 +95,10 @@ public interface LMath {
    */
   @Contract(pure = true)
   static Vector2d rotationDegreeFromDirection(Vector3d d) {
+    double length = d.length();
+    if (length < 1e-5) {
+      return new Vector2d(0, 0);
+    }
     var nd = new Vector3d(d).normalize();
     return new Vector2d(
         (-Math.toDegrees(Math.asin(nd.y))), Math.toDegrees(Math.atan2(-nd.x, nd.z)));
