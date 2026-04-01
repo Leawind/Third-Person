@@ -24,7 +24,6 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
    */
   public ModKeyMappingImpl(String id, int defaultValue, Category categoryKey) {
     super(id, defaultValue, categoryKey);
-    mappings.put(id, this);
   }
 
   @Override

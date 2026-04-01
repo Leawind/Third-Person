@@ -1,8 +1,6 @@
 package com.github.leawind.thirdperson.util.modkeymapping;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import java.util.HashMap;
 import java.util.function.Supplier;
 import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.Contract;
@@ -10,12 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * 按键映射
- *
- * <p>使用方法：
- *
- * <p>在模组初始化时，首先使用{@link ModKeyMapping#of}实例化所有按键映射，并绑定需要的的事件处理函数。
- *
- * <p>最后调用 {@link ModKeyMapping#registerAll()}方法使用 Architectury API 注册按键。
  *
  * <p>示例：
  *
@@ -29,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
  * </pre>
  */
 public interface ModKeyMapping extends Comparable<KeyMapping> {
-  HashMap<String, ModKeyMappingImpl> mappings = new HashMap<>();
-
   /** 按键是否已按下 */
   boolean isDown();
 
@@ -116,10 +106,5 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
   static @NotNull ModKeyMapping of(
       @NotNull String id, int defaultValue, @NotNull KeyMapping.Category categoryKey) {
     return new ModKeyMappingImpl(id, defaultValue, categoryKey);
-  }
-
-  /** 使用 Architectury API 注册所有已实例化的按键映射 */
-  static void registerAll() {
-    mappings.values().forEach(KeyMappingRegistry::register);
   }
 }

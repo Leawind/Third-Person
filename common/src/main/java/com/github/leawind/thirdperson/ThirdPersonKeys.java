@@ -3,6 +3,13 @@ package com.github.leawind.thirdperson;
 import com.github.leawind.thirdperson.core.rotation.RotateTargetEnum;
 import com.github.leawind.thirdperson.util.modkeymapping.ModKeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
@@ -79,11 +86,35 @@ public final class ThirdPersonKeys {
                 config.lock_camera_pitch_angle = !config.lock_camera_pitch_angle;
               });
 
+  private static Collection<KeyMapping> getAll() {
+    List<KeyMapping> list = new ArrayList<>();
+    for (Field field : ThirdPersonKeys.class.getDeclaredFields()) {
+      var modifiers = field.getModifiers();
+      if (!Modifier.isStatic(modifiers)) {
+        continue;
+      }
+      if (!field.canAccess(null)) {
+        continue;
+      }
+      try {
+        if (field.get(null) instanceof KeyMapping keyMapping) {
+          list.add(keyMapping);
+        }
+      } catch (IllegalAccessException ignored) {
+      }
+    }
+    return list;
+  }
+
   private static @NotNull String getId(@NotNull String name) {
     return "key." + ThirdPersonConstants.MOD_ID + "." + name;
   }
 
   public static void register() {
-    ModKeyMapping.registerAll();
+    register(KeyMappingRegistry::register);
+  }
+
+  public static void register(Consumer<KeyMapping> registrar) {
+    getAll().forEach(registrar);
   }
 }
