@@ -6,12 +6,8 @@
 [![CurseForge downloads](https://img.shields.io/curseforge/dt/930880?style=flat&logo=curseforge&color=F1643%5E&cacheSeconds=3600&label=Downloads)](https://www.curseforge.com/minecraft/mc-mods/leawind-third-person)
 [![Modrinth downloads](https://img.shields.io/modrinth/dt/S3D3QF0M?style=flat&logo=modrinth&color=17B85A&cacheSeconds=3600&label=Downloads)](https://modrinth.com/mod/leawind-third-person)
 
-[![Codacy Badge](https://img.shields.io/codacy/grade/41e70a17218c4773aefb62382b9547a6?logo=codacy)](https://app.codacy.com/gh/Leawind/Third-Person/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Stars](https://img.shields.io/github/stars/LEAWIND/Third-Person?style=flat&logo=github&color=daaa3f)](https://github.com/LEAWIND/Third-Person)
-
-[![Last commit](https://img.shields.io/github/last-commit/LEAWIND/Third-Person?logo=github)](https://github.com/LEAWIND/Third-Person)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/LEAWIND/Third-Person?tab=MIT-1-ov-file)
-[![Documentation](https://img.shields.io/github/deployments/LEAWIND/Third-Person/github-pages?style=flat&logo=github&label=Documentation&cacheSeconds=900)](https://leawind.github.io/Third-Person/en-US/?autolang)
+[![Stars](https://img.shields.io/github/stars/LEAWIND/Third-Person?style=flat&logo=github&color=daaa3f)](https://github.com/LEAWIND/Third-Person)
 
 # Leawind's Third Person
 
