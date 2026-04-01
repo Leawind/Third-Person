@@ -1,1 +1,3 @@
-- Port to 1.21.4 (Thanks to Flonja)
+- Port to 1.21.11 (Thanks to Flonja)
+- Add mod icon
+- fix: rotation not working
