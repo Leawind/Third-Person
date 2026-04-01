@@ -146,6 +146,9 @@ public enum RotateTargetEnum {
   /** 获取玩家当前的目标朝向 */
   public @NotNull Vector2d getRotation(float partialTick) {
     var rotation = rotationGetter.apply(partialTick);
+    if (!Double.isFinite(rotation.x) || !Double.isFinite(rotation.y)) {
+      return ThirdPerson.ENTITY_AGENT.getRawRotation(partialTick);
+    }
     ThirdPerson.FINITE_CHECKER.checkOnce(rotation.x, rotation.y);
     return rotation;
   }

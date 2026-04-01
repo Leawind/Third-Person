@@ -4,9 +4,11 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.joml.*;
-
-import java.lang.Math;
+import org.joml.Vector2d;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.joml.Vector3i;
 
 public interface LMath {
 
@@ -25,10 +27,13 @@ public interface LMath {
    * 将方向转换成角度（弧度制）
    *
    * @param d 方向
-   * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
    */
   @Contract(pure = true)
   static Vector2d rotationRadianFromDirection(Vector3d d) {
+    double length = d.length();
+    if (length < 1e-5) {
+      return new Vector2d(0, 0);
+    }
     d.normalize();
     return new Vector2d(-Math.asin(d.y), Math.atan2(-d.x, d.z));
   }
@@ -86,10 +91,13 @@ public interface LMath {
    * 将方向转换成角度（角度制）
    *
    * @param d 方向
-   * @return [x=俯仰角, y=偏航角] 当 d 的模为 0 时，返回值将包含 NaN
    */
   @Contract(pure = true)
   static Vector2d rotationDegreeFromDirection(Vector3d d) {
+    double length = d.length();
+    if (length < 1e-5) {
+      return new Vector2d(0, 0);
+    }
     var nd = new Vector3d(d).normalize();
     return new Vector2d(
         (-Math.toDegrees(Math.asin(nd.y))), Math.toDegrees(Math.atan2(-nd.x, nd.z)));
