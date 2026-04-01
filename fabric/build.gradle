@@ -14,6 +14,11 @@ configurations {
 	compileClasspath.extendsFrom common
 	runtimeClasspath.extendsFrom common
 	developmentFabric.extendsFrom common
+	
+	shadowBundle {
+		canBeResolved = true
+		canBeConsumed = false
+	}
 }
 dependencies {
 	minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -26,11 +31,17 @@ dependencies {
 	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) {
 		transitive false
 	}
+	shadowBundle project(path: ":common", configuration: "transformProductionFabric")
 	
 	// Architectury-api
 	modImplementation "dev.architectury:architectury-fabric:${architectury_version}"
-	// MixinExtras
-	include implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${fabric_mixin_extras_version}"))
+	// MixinExtras - only for annotation processing, not included in jar
+	implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${fabric_mixin_extras_version}"))
+	
+	// My Inventory
+	shadowBundle "com.github.Leawind:inventory-java:${leawinds_inventory_version}"
+	implementation("com.github.Leawind:inventory-java:${leawinds_inventory_version}")
+	
 	// Cloth Config API
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_api_version}") {
 		exclude group: "net.fabricmc.fabric-api"
@@ -43,8 +54,10 @@ dependencies {
 }
 shadowJar {
 	exclude "architectury.common.json"
-	configurations = [project.configurations.shadowCommon]
+	configurations = [project.configurations.shadowBundle]
 	archiveClassifier = "dev-shadow"
+	
+	relocate "io.github.leawind.inventory", "com.github.leawind.thirdperson.lib.inventory"
 }
 remapJar {
 	injectAccessWidener = true

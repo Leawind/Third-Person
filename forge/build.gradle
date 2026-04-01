@@ -20,6 +20,11 @@ configurations {
 	compileClasspath.extendsFrom common
 	runtimeClasspath.extendsFrom common
 	developmentForge.extendsFrom common
+	
+	shadowBundle {
+		canBeResolved = true
+		canBeConsumed = false
+	}
 }
 dependencies {
 	minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -31,11 +36,17 @@ dependencies {
 	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) {
 		transitive false
 	}
+	shadowBundle project(path: ":common", configuration: "transformProductionForge")
+	
 	// Architectury-api
 	modApi "dev.architectury:architectury-forge:${architectury_version}"
-	// MixinExtras
+	// MixinExtras - only for annotation processing, not included in jar
 	compileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:${forge_mixin_extras_version}")
-	include implementation("io.github.llamalad7:mixinextras-forge:${forge_mixin_extras_version}")
+	
+	// My Inventory
+	shadowBundle "com.github.Leawind:inventory-java:${leawinds_inventory_version}"
+	implementation("com.github.Leawind:inventory-java:${leawinds_inventory_version}")
+	
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-forge:${cloth_config_api_version}"
 	// YACL
@@ -46,8 +57,10 @@ dependencies {
 shadowJar {
 	exclude "fabric.mod.json"
 	exclude "architectury.common.json"
-	configurations = [project.configurations.shadowCommon]
+	configurations = [project.configurations.shadowBundle]
 	archiveClassifier = "dev-shadow"
+	
+	relocate "io.github.leawind.inventory", "com.github.leawind.thirdperson.lib.inventory"
 }
 remapJar {
 	inputFile.set shadowJar.archiveFile
