@@ -50,10 +50,11 @@ dependencies {
 	shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
 	
 	// MixinExtras
-	include implementation(annotationProcessor("io.github.llamalad7:mixinextras-neoforge:${mixinextras_version}"))
+	implementation(annotationProcessor("io.github.llamalad7:mixinextras-neoforge:${mixinextras_version}"))
 	
 	// My Inventory
-	include implementation("com.github.Leawind:inventory-java:${leawinds_inventory_version}")
+	shadowBundle "com.github.Leawind:inventory-java:${leawinds_inventory_version}"
+	implementation("com.github.Leawind:inventory-java:${leawinds_inventory_version}")
 	
 	// Cloth Config API
 	modApi "me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_api_version}"
@@ -64,6 +65,8 @@ dependencies {
 shadowJar {
 	configurations = [project.configurations.shadowBundle]
 	archiveClassifier = 'dev-shadow'
+	
+	relocate "io.github.leawind.inventory", "com.github.leawind.thirdperson.lib.inventory"
 }
 
 remapJar {
