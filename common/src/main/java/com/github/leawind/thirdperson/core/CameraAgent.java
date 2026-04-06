@@ -130,8 +130,8 @@ public class CameraAgent {
     updateTempCameraRotationPosition(event.partialTick);
     event.setPosition(tempCamera.position());
 
-    float yRot = tempCamera.yRot();
-    float xRot = tempCamera.xRot();
+    float yRot = tempCamera.getYRot();
+    float xRot = tempCamera.getXRot();
     FINITE_CHECKER.checkOnce(xRot, yRot);
 
     event.setRotation(xRot, yRot);
@@ -296,7 +296,7 @@ public class CameraAgent {
 
   public Vector2d getRawRotation() {
     var camera = ThirdPerson.CAMERA_AGENT.getRawCamera();
-    return new Vector2d(camera.xRot(), camera.yRot());
+    return new Vector2d(camera.getXRot(), camera.getYRot());
   }
 
   /**
@@ -386,7 +386,7 @@ public class CameraAgent {
 
     var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
     var camera = getRawCamera();
-    var viewVector = new Vec3(camera.forwardVector());
+    var viewVector = new Vec3(camera.getLookVector());
     var pickFrom = camera.position();
     var pickTo = viewVector.scale(pickRange).add(pickFrom);
     var aabb = new AABB(pickFrom, pickTo);
@@ -414,7 +414,7 @@ public class CameraAgent {
     var camera = getRawCamera();
 
     var pickFrom = camera.position();
-    var viewVector = new Vec3(camera.forwardVector());
+    var viewVector = new Vec3(camera.getLookVector());
     var pickTo = pickFrom.add(viewVector.scale(pickRange));
 
     var cameraEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
@@ -446,7 +446,7 @@ public class CameraAgent {
   @VersionSensitive
   public boolean isLookingAt(@NotNull Entity entity) {
     var from = getRawCamera().position();
-    var to = from.add(new Vec3(getRawCamera().forwardVector()).scale(getPickRange()));
+    var to = from.add(new Vec3(getRawCamera().getLookVector()).scale(getPickRange()));
     var aabb = entity.getBoundingBox();
     return aabb.contains(from) || aabb.clip(from, to).isPresent();
   }
@@ -538,9 +538,9 @@ public class CameraAgent {
     // 从旋转中心到相机的方向
     Vector3d direction;
     {
-      var forward = LMath.toVector3d(tempCamera.forwardVector());
-      var left = LMath.toVector3d(tempCamera.leftVector());
-      var up = LMath.toVector3d(tempCamera.upVector());
+      var forward = LMath.toVector3d(tempCamera.getLookVector());
+      var left = LMath.toVector3d(tempCamera.getLeftVector());
+      var up = LMath.toVector3d(tempCamera.getUpVector());
 
       double verticalFovHalf = Math.toRadians(fov);
       double horizontalFovHalf =

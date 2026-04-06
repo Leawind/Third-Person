@@ -101,7 +101,7 @@ public enum RotateTargetEnum {
         var cameraPos = LMath.toVector3d(camera.position());
         var targetPos = LMath.toVector3d(predicted.getPosition(partialTick));
         var end =
-            LMath.toVector3d(camera.forwardVector())
+            LMath.toVector3d(camera.getLookVector())
                 .normalize(cameraPos.distance(targetPos))
                 .add(cameraPos);
         var eyeToEnd = end.sub(playerEyePos);

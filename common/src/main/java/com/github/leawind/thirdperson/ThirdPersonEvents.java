@@ -199,8 +199,8 @@ public final class ThirdPersonEvents {
 
       // 计算世界坐标系下的向前和向左 impulse
       // 视线向量
-      var lookImpulse = LMath.toVector3d(camera.forwardVector()).normalize();
-      var leftImpulse = LMath.toVector3d(camera.leftVector()).normalize();
+      var lookImpulse = LMath.toVector3d(camera.getLookVector()).normalize();
+      var leftImpulse = LMath.toVector3d(camera.getLeftVector()).normalize();
 
       ThirdPerson.FINITE_CHECKER.checkOnce(lookImpulse.x, lookImpulse.y, lookImpulse.z);
       ThirdPerson.FINITE_CHECKER.checkOnce(leftImpulse.x, leftImpulse.y, leftImpulse.z);

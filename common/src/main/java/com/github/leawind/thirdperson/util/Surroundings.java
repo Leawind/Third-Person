@@ -18,10 +18,10 @@ public class Surroundings {
   private static final Pattern BLANK_PATTERN = Pattern.compile("[\\s\\n|]");
   private static final Pattern SEPARATOR_PATTERN = Pattern.compile("[\\s\\n|]+");
 
-  /** Identifier -> offset[] */
+  /** ResourceLocation -> offset[] */
   private final Map<String, List<Vector3i>> identifierMap = new HashMap<>();
 
-  /** Identifier -> Matches[] */
+  /** ResourceLocation -> Matches[] */
   private final Map<String, Matches> matchesMap = new HashMap<>();
 
   /**
@@ -74,7 +74,7 @@ public class Surroundings {
   }
 
   public void match(BlockPos center, BlockGetter level, Predicate<BlockState> predicate) {
-    for (var identifier : getIdentifiers()) {
+    for (var identifier : getResourceLocations()) {
       var seq = new Matches(getOffsets(identifier), center, level);
       matchesMap.put(identifier, seq);
     }
@@ -90,7 +90,7 @@ public class Surroundings {
     return matchesMap.get(identifier);
   }
 
-  public Set<String> getIdentifiers() {
+  public Set<String> getResourceLocations() {
     return identifierMap.keySet();
   }
 

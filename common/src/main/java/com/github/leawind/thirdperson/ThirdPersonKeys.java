@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public final class ThirdPersonKeys {
   public static final KeyMapping.Category CATEGORY =
       KeyMapping.Category.register(
-          Identifier.fromNamespaceAndPath(ThirdPersonConstants.MOD_ID, "keybinds"));
+          ResourceLocation.tryBuild(ThirdPersonConstants.MOD_ID, "keybinds"));
 
   public static final ModKeyMapping ADJUST_POSITION =
       ModKeyMapping.of(getId("adjust_position"), InputConstants.KEY_Z, CATEGORY)

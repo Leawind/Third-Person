@@ -4,7 +4,7 @@ import com.github.leawind.thirdperson.api.base.GameEvents;
 import com.github.leawind.thirdperson.api.client.event.ThirdPersonCameraSetupEvent;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,7 +35,7 @@ public class CameraMixin {
       },
       cancellable = true)
   private void preMoveCamera(
-      Level level,
+      BlockGetter level,
       Entity entity,
       boolean detached,
       boolean mirror,
