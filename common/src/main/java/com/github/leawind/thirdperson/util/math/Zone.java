@@ -18,15 +18,10 @@ public class Zone {
   /**
    * @throws IllegalArgumentException min > max
    */
-  public Zone(double min, double max) {
+  public Zone(double min, double max) throws IllegalArgumentException {
     if (min > max) {
-      if (min - max < 1e-6) { // epsilon protection for some issues with other mods.
-        min = max;
-      } else {
-        throw new IllegalArgumentException(
-                "Minimum cannot be greater than maximum: " + min + " > " + max
-        );
-      }
+      throw new IllegalArgumentException(
+              "Minimum cannot be greater than maximum: " + min + " > " + max);
     }
     this.min = min;
     this.max = max;
@@ -240,7 +235,7 @@ public class Zone {
    * @throws IllegalArgumentException min < max
    */
   public @NotNull Zone withMax(double max) throws IllegalArgumentException {
-    return new Zone(min, max);
+    return new Zone(min, Math.max(max, min));
   }
 
   /**
@@ -251,7 +246,7 @@ public class Zone {
    * @throws IllegalArgumentException min < max
    */
   public @NotNull Zone withMin(double min) throws IllegalArgumentException {
-    return new Zone(min, max);
+    return new Zone(Math.min(min, max), max);
   }
 
   /**
