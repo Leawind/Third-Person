@@ -572,6 +572,8 @@ public class CameraAgent {
 
     var rotateCenterVector3d = getRotateCenterFinally(partialTick);
     double bodyRadius = ThirdPerson.ENTITY_AGENT.getBodyRadius();
+    Entity trackedEntity = ThirdPerson.ENTITY_AGENT.getRawCameraEntity();
+    ((CameraInvoker) tempCamera).setEntity(trackedEntity); // early entity set to fix nullEntity in some other mods.
     var cameraPosition =
         LMath.toVec3(rotateCenterVector3d.sub(direction.mul(bodyRadius + smoothDistance.get())));
     ((CameraInvoker) tempCamera).invokeSetPosition(cameraPosition);
@@ -626,6 +628,7 @@ public class CameraAgent {
         ((CameraInvoker) tempCamera).invokeSetPosition(limitedPosition);
       }
     }
+    ((CameraInvoker) tempCamera).setEntity(null); // and we reset just in case this cause issue later!
   }
 
   /** 平滑更新距离 */

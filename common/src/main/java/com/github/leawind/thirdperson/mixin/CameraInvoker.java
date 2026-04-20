@@ -1,8 +1,10 @@
 package com.github.leawind.thirdperson.mixin;
 
 import net.minecraft.client.Camera;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Camera.class)
@@ -20,4 +22,6 @@ public interface CameraInvoker {
    */
   @Invoker("setRotation")
   void invokeSetRotation(float yRot, float xRot);
+  @Accessor("entity")
+  void setEntity(Entity entity);
 }

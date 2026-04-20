@@ -18,10 +18,15 @@ public class Zone {
   /**
    * @throws IllegalArgumentException min > max
    */
-  public Zone(double min, double max) throws IllegalArgumentException {
+  public Zone(double min, double max) {
     if (min > max) {
-      throw new IllegalArgumentException(
-          "Minimum cannot be greater than maximum: " + min + " > " + max);
+      if (min - max < 1e-6) { // epsilon protection for some issues with other mods.
+        min = max;
+      } else {
+        throw new IllegalArgumentException(
+                "Minimum cannot be greater than maximum: " + min + " > " + max
+        );
+      }
     }
     this.min = min;
     this.max = max;
@@ -270,7 +275,7 @@ public class Zone {
    * @throws IllegalArgumentException radius < 0
    */
   public static @NotNull Zone ofRadius(double center, double radius)
-      throws IllegalArgumentException {
+          throws IllegalArgumentException {
     return new Zone(center - radius, center + radius);
   }
 
@@ -278,7 +283,7 @@ public class Zone {
    * @throws IllegalArgumentException length < 0
    */
   public static @NotNull Zone ofLength(double center, double length)
-      throws IllegalArgumentException {
+          throws IllegalArgumentException {
     return new Zone(center - length / 2, center + length / 2);
   }
 }
