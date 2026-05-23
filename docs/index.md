@@ -5,7 +5,7 @@ head:
       content: '0;url=/Third-Person/en_us/'
 ---
 
-[Redirecting, if it doesn't work, please click here](/Third-Person/en_us/)
+[Redirecting, if it doesn't work, please click here](./en_us)
 
 <script setup>
 import { getRedirectLocale } from './.vitepress/shared/redirect.ts'
