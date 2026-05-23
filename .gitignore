@@ -1,41 +1,28 @@
-# npm
 node_modules/
 
-# Vitepress
-docs/.vitepress/dist
-docs/.vitepress/cache
+# IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
 
-# vscode
-.vscode
+# Generated files
+/dist/
+**/.vitepress/cache/
 
-.draft
+# dotenv
+.env
+.env.*
+!.env.example
 
-# eclipse
-eclipse
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# Obsidian
+.obsidian/
 
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
-
-# vscode
-.vscode
-
-# gradle
-build
-.gradle
-
-# other
-bin
-run
-.architectury-transformer
-
-# Files from Forge MDK
-forge*changelog.txt
+# AI tools
+/.ai/
+.clinerules/
+.cursorrules/
+.kilo/
+.marscode/
+.lingma/
+.trae/
+.codebuddy/

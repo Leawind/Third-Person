@@ -1,0 +1,66 @@
+{
+  "tasks": {
+    "vitepress": "deno run -A npm:vitepress",
+    "docs:dev": "deno task vitepress dev docs",
+    "docs:build": "deno task vitepress build docs",
+    "docs:preview": "deno task vitepress preview docs",
+    "gen-mc-vers-table": "deno run -A scripts/gen-mc-vers-table.ts",
+    "link": "deno run -A scripts/link.ts"
+  },
+  "nodeModulesDir": "auto",
+  "imports": {
+    "@vue/compiler-core": "npm:@vue/compiler-core@^3.5.32",
+    "mermaid": "npm:mermaid@^11.14.0",
+    "@leawind/inventory": "npm:@leawind/inventory@^0.19.4",
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.6",
+    "@std/front-matter": "jsr:@std/front-matter@^1.0.9",
+    "commander": "npm:commander@^14.0.3",
+    "markdown-it-mathjax3": "npm:markdown-it-mathjax3@^4.0.0",
+    "vitepress": "npm:vitepress@^1.6.4",
+    "vitepress-plugin-mermaid": "npm:vitepress-plugin-mermaid@^2.0.17",
+    "vue": "npm:vue@^3.5.32"
+  },
+  "lint": {
+    "include": [
+      "docs/.vitepress",
+      "scripts/"
+    ],
+    "rules": {
+      "exclude": [
+        "ban-types",
+        "no-explicit-any",
+        "no-import-prefix",
+        "no-unreachable",
+        "require-await"
+      ]
+    }
+  },
+  "fmt": {
+    "bracePosition": "sameLine",
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "newLineKind": "lf",
+    "nextControlFlowPosition": "sameLine",
+    "operatorPosition": "nextLine",
+    "proseWrap": "preserve",
+    "quoteProps": "asNeeded",
+    "semiColons": false,
+    "singleBodyPosition": "sameLine",
+    "useBraces": "always",
+    "useTabs": false,
+    "singleQuote": true,
+    "spaceAround": false,
+    "spaceSurroundingProperties": true,
+    "trailingCommas": "onlyMultiLine",
+    "typeLiteral.separatorKind": "semiColon",
+    "include": [
+      ".ai",
+      "**/*.md",
+      "**/*.json",
+      ".github/",
+      "docs/",
+      "scripts/"
+    ],
+    "exclude": []
+  }
+}

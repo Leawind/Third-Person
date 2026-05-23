@@ -1,9 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy to Github Pages
 
 on:
   push:
-    branches: [ gh-pages ]
-
+    branches: [gh-pages]
   workflow_dispatch:
 
 permissions:
@@ -19,48 +18,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
+      - uses: actions/configure-pages@v4
+      - uses: denoland/setup-deno@v2
         with:
-          version: 9.1.0
+          deno-version: v2.7.x
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.19.0
-          cache: pnpm
+      - name: Prebuild
+        run: deno task gen-mc-vers-table
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v4
-
-      - name: Install NPM dependencies
-        run: pnpm install
-
-      - name: prebuild
-        run: pnpm docs:prebuild
-
-      - name: Build
-        run:
-          pnpm docs:build
-          touch docs/.vitepress/dist/.nojekyll
+      - name: Build documentation
+        run: deno task docs:build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: docs/.vitepress/dist
+          path: ./dist
 
   deploy:
-    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
