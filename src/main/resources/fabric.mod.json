@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": ["${author}"],
+  "contact": {
+    "homepage": "${home_url}",
+    "issues": "${issues_url}",
+    "sources": "${source_url}",
+    "email": "leawind@yeah.net"
+  },
+  "license": "${license}",
+  "icon": "${logo_file}",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.github.leawind.thirdperson.fabric.ThirdPersonFabric"],
+    "modmenu": ["com.github.leawind.thirdperson.fabric.ModMenuEntry"]
+  },
+  "mixins": [
+    "${id}.mixins.json",
+    "${id}.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": ">=${minecraftVersion}",
+    "architectury": "*"
+  },
+  "recommends": {
+    "cloth-config2": "*",
+    "modmenu": "*",
+    "yet_another_config_lib_v3": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "Modrinth": "https://modrinth.com/mod/leawind-third-person",
+        "CurseForge": "https://www.curseforge.com/minecraft/mc-mods/leawind-third-person",
+        "BuyMeACoffee": "https://www.buymeacoffee.com/leawind",
+        "Donate": "https://leawind.github.io/Third-Person/en-US/donate?autolang",
+        "MCMOD": "https://www.mcmod.cn/class/12699.html",
+        "Afdian": "https://afdian.com/a/Leawind"
+      }
+    },
+    "modmenu:clientsideOnly": true
+  }
+}
