@@ -22,13 +22,34 @@ out
 # gradle
 build/
 .gradle/
+.kotlin/
 
 # other
 bin/
 run/
 .architectury-transformer/
+*.log
+*.log.gz
 
 # Forge MDK
 forge*changelog.txt
 
-*.log
+# JFR
+.profileconfig.json
+*.jfr
+
+# AI tools
+/.ai/
+.claude/
+.clinerules/
+.codebuddy/
+.cursorrules/
+.kilo/
+.kilocode/
+.lingma/
+.marscode/
+.opencode/
+.trae/
+
+# stonecraft
+/versions/*-*/

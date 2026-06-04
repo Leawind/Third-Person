@@ -1,0 +1,50 @@
+modLoader = "javafml"
+loaderVersion = "*"
+issueTrackerURL = "${issues_url}"
+license = "${license}"
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+description = "${description}"
+authors = "${author}"
+logoFile = "${logo_file}"
+displayURL = "${home_url}"
+
+[[dependencies.${id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraftVersion},)"
+ordering = "NONE"
+side = "CLIENT"
+referraUrl = "https://www.minecraft.net/"
+
+[[dependencies.${id}]]
+modId = "architectury"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
+side = "CLIENT"
+referraUrl = "https://modrinth.com/mod/architectury-api"
+
+[[dependencies.${id}]]
+modId = "cloth_config"
+type = "optional"
+versionRange = "*"
+ordering = "NONE"
+side = "CLIENT"
+referraUrl = "https://modrinth.com/mod/cloth-config"
+
+[[mixins]]
+config = "${id}.mixins.json"
+
+[[mixins]]
+config = "${id}.neoforge.mixins.json"

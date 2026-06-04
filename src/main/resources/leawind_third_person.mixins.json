@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "package": "com.github.leawind.thirdperson.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "CameraInvoker",
+    "CommandsMixin",
+    "ClientLevelInvoker",
+    "GameRendererInvoker",
+    "CameraMixin",
+    "CameraTypeMixin",
+    "LevelRendererMixin",
+    "LocalPlayerMixin",
+    "ModelPartCubeMixin",
+    "RenderTypesMixin",
+    "MinecraftMixin",
+    "GuiMixin",
+    "KeyboardInputMixin",
+    "MouseHandlerMixin",
+    "EntityMixin",
+    "GameRendererMixin",
+    "MouseHandlerMixin"
+  ],
+  "mixins": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
