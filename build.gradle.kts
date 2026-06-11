@@ -104,7 +104,7 @@ dependencies {
     // endregion mods
 
     // region bundled (shadowed)
-    shadowBundle("com.github.Leawind:inventory-java:${project.property("mod.leawinds_inventory_version")}")
+    shadowBundle("com.github.Leawind:inventory-java:0.2.1")
     // endregion
 
     // region test
