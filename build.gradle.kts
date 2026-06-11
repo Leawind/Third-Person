@@ -69,58 +69,42 @@ fun DependencyHandlerScope.shadowBundle(dependencyNotation: String) {
     add("shadowBundle", dependencyNotation)
 }
 dependencies {
-    // region Architectury API (shared abstraction layer)
+    // region mods
+
+    // Fabric API
     if (mod.isFabric) {
-        modImplementation("dev.architectury:architectury-fabric:${project.property("mod.architectury_api_version")}")
         modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("mod.fabric_api_version")}")
     }
-    if (mod.isNeoforge) {
-        modImplementation("dev.architectury:architectury-neoforge:${project.property("mod.architectury_api_version")}")
-    }
+
+    // Architectury API (shared abstraction layer)
+    modImplementation("dev.architectury:architectury-${mod.loader}:${project.property("mod.architectury_api_version")}")
 
     // MixinExtras
-    if (mod.isFabric) {
-        val mixinExtras = "io.github.llamalad7:mixinextras-fabric:${project.property("mod.mixinextras_version")}"
-        include(mixinExtras)
-        implementation(mixinExtras)
-        annotationProcessor(mixinExtras)
-    }
-    if (mod.isNeoforge) {
-        val mixinExtras = "io.github.llamalad7:mixinextras-neoforge:${project.property("mod.mixinextras_version")}"
-        include(mixinExtras)
-        implementation(mixinExtras)
-        annotationProcessor(mixinExtras)
-    }
+    val mixinExtras = "io.github.llamalad7:mixinextras-${mod.loader}:${project.property("mod.mixinextras_version")}"
+    include(mixinExtras)
+    implementation(mixinExtras)
+    annotationProcessor(mixinExtras)
 
     // Cloth Config API
-    if (mod.isFabric) {
-        modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("mod.cloth_config_api_version")}") {
+    modApi("me.shedaniel.cloth:cloth-config-${mod.loader}:${project.property("mod.cloth_config_api_version")}") {
+        if (mod.isFabric) {
             exclude(group = "net.fabricmc.fabric-api")
             exclude(module = "modmenu")
         }
     }
-    if (mod.isNeoforge) {
-        modApi("me.shedaniel.cloth:cloth-config-neoforge:${project.property("mod.cloth_config_api_version")}")
-    }
 
     // YACL (Yet Another Config Lib)
-    if (mod.isFabric) {
-        modImplementation("dev.isxander:yet-another-config-lib:${project.property("mod.yacl_mc_version")}-fabric")
-    }
-    if (mod.isNeoforge) {
-        modImplementation("dev.isxander:yet-another-config-lib:${project.property("mod.yacl_mc_version")}-neoforge")
-    }
+    modImplementation("dev.isxander:yet-another-config-lib:${project.property("mod.yacl_mc_version")}-${mod.loader}")
 
     // ModMenu (Fabric only)
     if (mod.isFabric) {
         modImplementation("com.terraformersmc:modmenu:${project.property("mod.modmenu_version")}")
     }
 
-    // endregion
+    // endregion mods
 
     // region bundled (shadowed)
     shadowBundle("com.github.Leawind:inventory-java:${project.property("mod.leawinds_inventory_version")}")
-    shadowBundle("com.github.ben-manes.caffeine:caffeine:3.2.3")
     // endregion
 
     // region test
@@ -152,25 +136,9 @@ tasks.shadowJar {
 
     minimize()
 
-    // :core
-    dependencies {
-        exclude(dependency("org.slf4j:.*"))
-        exclude(dependency("com.google.errorprone:.*"))
-        exclude(dependency("javax.annotation:.*"))
-        exclude(dependency("org.checkerframework:.*"))
-    }
-
     val dest = "${project.property("mod.group")}.lib"
     // com.github.Leawind:inventory-java
     relocate("io.github.leawind.inventory", "${dest}.inventory")
-
-    // com.github.ben-manes.caffeine:caffeine
-    dependencies {
-        exclude(dependency("com.google.errorprone:.*"))
-        exclude(dependency("org.jspecify:.*"))
-    }
-    relocate("com.github.benmanes.caffeine", "${dest}.caffeine")
-    exclude("META-INF/LICENSE")
 }
 
 tasks.withType<RemapJarTask>().matching { it.name == "remapJar" }.configureEach {
@@ -200,21 +168,4 @@ if (mod.isForge) {
 }
 tasks.test {
     useJUnitPlatform()
-}
-
-publishMods {
-    modrinth {
-        projectId = "S3D3QF0M"
-        if (mod.isFabric) {
-            requires("fabric-api")
-            optional("modmenu")
-        }
-    }
-
-    curseforge {
-        projectId = "930880"
-        clientRequired = true
-        serverRequired = false
-        if (mod.isFabric) requires("fabric-api")
-    }
 }
