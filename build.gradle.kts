@@ -22,7 +22,15 @@ modSettings {
             "maxFps" to "60",
             "renderDistance" to "8",
             "simulationDistance" to "5",
-            "mouseSensitivity" to "0.22"
+            "mouseSensitivity" to "0.22",
+            "key_key.togglePerspective" to "key.keyboard.v",
+            "key_key.leawind_third_person.adjust_position" to "key.keyboard.z",
+            "key_key.leawind_third_person.force_aiming" to "key.mouse.4",
+            "key_key.leawind_third_person.toggle_mod_enable" to "key.keyboard.r",
+            "key_key.leawind_third_person.open_config_menu" to "key.keyboard.grave.accent",
+            "key_key.leawind_third_person.toggle_side" to "key.keyboard.caps.lock",
+            "key_key.leawind_third_person.toggle_aiming" to "key.mouse.5",
+            "key_key.leawind_third_person.toggle_pitch_lock" to "key.keyboard.g",
         )
     }
 
