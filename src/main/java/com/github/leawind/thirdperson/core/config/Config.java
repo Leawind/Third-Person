@@ -1,6 +1,7 @@
-package com.github.leawind.thirdperson.api.config;
+package com.github.leawind.thirdperson.core.config;
 
-import com.github.leawind.thirdperson.core.cameraoffset.CameraOffsetScheme;
+import com.github.leawind.thirdperson.api.config.AbstractConfig;
+import com.github.leawind.thirdperson.impl.cameraoffset.CameraOffsetScheme;
 import com.github.leawind.thirdperson.minecraft.logic.resources.ItemPredicateManager;
 import com.github.leawind.thirdperson.utils.ItemPredicateUtil;
 import com.github.leawind.thirdperson.utils.math.monolist.MonoList;
@@ -10,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +24,13 @@ import org.slf4j.LoggerFactory;
 public class Config extends AbstractConfig {
   public static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 
-  public static final @NotNull Config DEFAULTS = new Config();
+  public static final @NonNull Config DEFAULTS = new Config();
 
-  private final @NotNull CameraOffsetScheme cameraOffsetScheme = new CameraOffsetScheme(this);
+  private final @NonNull CameraOffsetScheme cameraOffsetScheme = new CameraOffsetScheme(this);
 
-  private final @NotNull Set<Predicate<ItemStack>> holdToAimItemPredicates = new HashSet<>();
-  private final @NotNull Set<Predicate<ItemStack>> useToAimItemPredicates = new HashSet<>();
-  private final @NotNull Set<Predicate<ItemStack>> useToFirstPersonItemPredicates = new HashSet<>();
+  private final @NonNull Set<Predicate<ItemStack>> holdToAimItemPredicates = new HashSet<>();
+  private final @NonNull Set<Predicate<ItemStack>> useToAimItemPredicates = new HashSet<>();
+  private final @NonNull Set<Predicate<ItemStack>> useToFirstPersonItemPredicates = new HashSet<>();
 
   private @Nullable MonoList distanceMonoList;
 
@@ -73,23 +74,23 @@ public class Config extends AbstractConfig {
     useToFirstPersonItemPredicates.addAll(ItemPredicateUtil.parseAll(use_to_first_person_patterns));
   }
 
-  public @NotNull Set<Predicate<ItemStack>> getHoldToAimItemPredicates() {
+  public @NonNull Set<Predicate<ItemStack>> getHoldToAimItemPredicates() {
     return holdToAimItemPredicates;
   }
 
-  public @NotNull Set<Predicate<ItemStack>> getUseToAimItemPredicates() {
+  public @NonNull Set<Predicate<ItemStack>> getUseToAimItemPredicates() {
     return useToAimItemPredicates;
   }
 
-  public @NotNull Set<Predicate<ItemStack>> getUseToFirstPersonItemPredicates() {
+  public @NonNull Set<Predicate<ItemStack>> getUseToFirstPersonItemPredicates() {
     return useToFirstPersonItemPredicates;
   }
 
-  public @NotNull CameraOffsetScheme getCameraOffsetScheme() {
+  public @NonNull CameraOffsetScheme getCameraOffsetScheme() {
     return cameraOffsetScheme;
   }
 
-  public @NotNull MonoList getDistanceMonoList() {
+  public @NonNull MonoList getDistanceMonoList() {
     return Objects.requireNonNull(distanceMonoList);
   }
 }

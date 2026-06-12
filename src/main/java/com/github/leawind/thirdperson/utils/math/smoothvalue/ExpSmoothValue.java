@@ -1,30 +1,30 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("unused")
 public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
   /** 平滑系数，越大越平滑 */
-  public @NotNull T smoothFactor;
+  public @NonNull T smoothFactor;
 
   /** 平滑系数乘数，默认应为1 */
-  public @NotNull T smoothFactorWeight; // factor ^ weight
+  public @NonNull T smoothFactorWeight; // factor ^ weight
 
   /** 目标值 */
-  public @NotNull T target;
+  public @NonNull T target;
 
   /** 当前平滑的值 */
-  protected @NotNull T value;
+  protected @NonNull T value;
 
   /** 上次更新时的目标值 */
-  protected @NotNull T lastValue;
+  protected @NonNull T lastValue;
 
   protected ExpSmoothValue(
-      @NotNull T smoothFactor,
-      @NotNull T smoothFactorWeight,
-      @NotNull T value,
-      @NotNull T lastValue,
-      @NotNull T target) {
+      @NonNull T smoothFactor,
+      @NonNull T smoothFactorWeight,
+      @NonNull T value,
+      @NonNull T lastValue,
+      @NonNull T target) {
     this.smoothFactor = smoothFactor;
     this.smoothFactorWeight = smoothFactorWeight;
 
@@ -51,15 +51,15 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
   }
 
   @Override
-  public final @NotNull T get() {
+  public final @NonNull T get() {
     return value;
   }
 
   @Override
-  public abstract @NotNull T get(double t);
+  public abstract @NonNull T get(double t);
 
   @Override
-  public final @NotNull T getLast() {
+  public final @NonNull T getLast() {
     return lastValue;
   }
 
@@ -72,16 +72,16 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
 
   protected abstract void updateWithOutSavingLastValue(double period);
 
-  public abstract void setValue(@NotNull T value);
+  public abstract void setValue(@NonNull T value);
 
   /**
    * 同时设置目标值和当前平滑值
    *
    * <p>不改变旧值
    */
-  public abstract void set(@NotNull T value);
+  public abstract void set(@NonNull T value);
 
-  public abstract void setSmoothFactor(@NotNull T smoothFactor);
+  public abstract void setSmoothFactor(@NonNull T smoothFactor);
 
   abstract void setSmoothFactor(double smoothFactor);
 
@@ -90,10 +90,10 @@ public abstract class ExpSmoothValue<T> implements ISmoothValue<T> {
    *
    * <p>每隔 time 秒，value 变为原来的 multiplier 倍。
    */
-  abstract void setMT(@NotNull T multiplier, @NotNull T time);
+  abstract void setMT(@NonNull T multiplier, @NonNull T time);
 
   /** 根据半衰期设置平滑系数 */
-  abstract void setHalflife(@NotNull T halflife);
+  abstract void setHalflife(@NonNull T halflife);
 
   /** 根据半衰期设置平滑系数 */
   abstract void setHalflife(double halflife);

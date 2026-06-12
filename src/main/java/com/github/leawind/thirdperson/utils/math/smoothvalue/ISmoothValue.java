@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("unused")
 public interface ISmoothValue<T> {
@@ -9,7 +9,7 @@ public interface ISmoothValue<T> {
    *
    * <p>任何时候都可能设置此值
    */
-  void setTarget(@NotNull T endValue);
+  void setTarget(@NonNull T endValue);
 
   /**
    * 记录旧的平滑值，然后更新平滑值
@@ -31,7 +31,7 @@ public interface ISmoothValue<T> {
    *
    * <p>应当使用 {@link ISmoothValue#get(double)}
    */
-  @NotNull
+  @NonNull
   T get();
 
   /**
@@ -43,10 +43,10 @@ public interface ISmoothValue<T> {
    *
    * @param t 自上次更新以来经过的时间占更新间隔的比例，用于线性插值。
    */
-  @NotNull
+  @NonNull
   T get(double t);
 
   /** 获取上次更新前的平滑值（旧值） */
-  @NotNull
+  @NonNull
   T getLast();
 }

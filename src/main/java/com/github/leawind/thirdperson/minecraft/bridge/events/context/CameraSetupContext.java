@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.minecraft.bridge.events.context;
 
-import com.github.leawind.thirdperson.utils.Vecs;
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -23,7 +23,7 @@ public class CameraSetupContext {
     this.detached = detached;
     this.partialTicks = partialTicks;
 
-    pos = Vecs.toVector3d(camera.position());
+    pos = Vectors.toVector3d(camera.position());
     yRot = camera.yRot();
     xRot = camera.xRot();
   }

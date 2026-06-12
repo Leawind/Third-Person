@@ -1,7 +1,7 @@
 package com.github.leawind.thirdperson.api;
 
-import com.github.leawind.thirdperson.api.config.ConfigManager;
 import com.github.leawind.thirdperson.impl.ThirdPersonImpl;
+import com.github.leawind.thirdperson.core.config.ConfigManager;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 

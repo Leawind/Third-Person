@@ -1,9 +1,9 @@
-package com.github.leawind.thirdperson.utils;
+package com.github.leawind.thirdperson.utils.math;
 
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.joml.Vector2d;
 import org.joml.Vector2dc;
 import org.joml.Vector3d;
@@ -11,8 +11,8 @@ import org.joml.Vector3dc;
 import org.joml.Vector3fc;
 import org.joml.Vector3ic;
 
-public final class Vecs {
-  private Vecs() {}
+public final class Vectors {
+  private Vectors() {}
 
   /**
    * 将方向转换成角度（弧度制）
@@ -146,14 +146,14 @@ public final class Vecs {
   }
 
   @Contract("_, _ -> param1")
-  public static @NotNull Vector2d pow(Vector2d v, Vector2dc p) {
+  public static @NonNull Vector2d pow(Vector2d v, Vector2dc p) {
     v.x = Math.pow(v.x, p.x());
     v.y = Math.pow(v.y, p.y());
     return v;
   }
 
   @Contract("_, _ -> param1")
-  public static @NotNull Vector3d pow(Vector3d v, Vector3dc p) {
+  public static @NonNull Vector3d pow(Vector3d v, Vector3dc p) {
     v.x = Math.pow(v.x, p.x());
     v.y = Math.pow(v.y, p.y());
     v.z = Math.pow(v.z, p.z());

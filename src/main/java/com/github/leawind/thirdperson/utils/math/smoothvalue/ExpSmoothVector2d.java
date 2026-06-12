@@ -1,7 +1,7 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.Vecs;
-import org.jetbrains.annotations.NotNull;
+import com.github.leawind.thirdperson.utils.math.Vectors;
+import org.jspecify.annotations.NonNull;
 import org.joml.Vector2d;
 
 @SuppressWarnings("unused")
@@ -15,12 +15,12 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
   }
 
   @Override
-  public void setTarget(@NotNull Vector2d target) {
+  public void setTarget(@NonNull Vector2d target) {
     this.target.set(target);
   }
 
   @Override
-  public @NotNull Vector2d get(double t) {
+  public @NonNull Vector2d get(double t) {
     return new Vector2d(lastValue).lerp(value, t);
   }
 
@@ -32,25 +32,25 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
   @Override
   protected void updateWithOutSavingLastValue(double period) {
     var t =
-        Vecs.pow(new Vector2d(smoothFactor), new Vector2d(smoothFactorWeight).mul(period))
-            .negate()
-            .add(1, 1);
-    Vecs.lerp(value, target, t);
+        Vectors.pow(new Vector2d(smoothFactor), new Vector2d(smoothFactorWeight).mul(period))
+               .negate()
+               .add(1, 1);
+    Vectors.lerp(value, target, t);
   }
 
   @Override
-  public void setValue(@NotNull Vector2d v) {
+  public void setValue(@NonNull Vector2d v) {
     value.set(v);
   }
 
   @Override
-  public void set(@NotNull Vector2d v) {
+  public void set(@NonNull Vector2d v) {
     value.set(v);
     target.set(v);
   }
 
   @Override
-  public void setSmoothFactor(@NotNull Vector2d s) {
+  public void setSmoothFactor(@NonNull Vector2d s) {
     this.smoothFactor.set(s);
   }
 
@@ -60,7 +60,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
   }
 
   @Override
-  public void setMT(@NotNull Vector2d multiplier, @NotNull Vector2d time) {
+  public void setMT(@NonNull Vector2d multiplier, @NonNull Vector2d time) {
     if (multiplier.x < 0 || multiplier.x > 1) {
       throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x);
     } else if (multiplier.y < 0 || multiplier.y > 1) {
@@ -74,7 +74,7 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
   }
 
   @Override
-  public void setHalflife(@NotNull Vector2d halflife) {
+  public void setHalflife(@NonNull Vector2d halflife) {
     setMT(new Vector2d(0.5), halflife);
   }
 

@@ -2,7 +2,7 @@ package com.github.leawind.thirdperson.utils;
 
 import java.util.function.Supplier;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * PossibleSupplier 接口为可能不可用的供应操作提供了一种表示方法。
@@ -37,7 +37,7 @@ public interface PossibleSupplier<T> {
    * @return 一个新的PossibleSupplier实例，封装了提供的供应操作和可用性谓词
    */
   @Contract(value = "_, _ -> new", pure = true)
-  static <E> @NotNull PossibleSupplier<E> of(
+  static <E> @NonNull PossibleSupplier<E> of(
       Supplier<E> supplier, Supplier<Boolean> availablePredicate) {
     return new PossibleSupplier<>() {
       @Override

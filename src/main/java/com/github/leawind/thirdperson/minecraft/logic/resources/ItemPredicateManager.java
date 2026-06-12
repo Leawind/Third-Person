@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.minecraft.logic.resources;
 
-import com.github.leawind.thirdperson.api.config.Config;
+import com.github.leawind.thirdperson.core.config.Config;
 import com.github.leawind.thirdperson.utils.ItemPredicateUtil;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,7 +17,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,7 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener<JsonE
    */
   @Override
   public void apply(
-      @NotNull Map<Identifier, JsonElement> map,
+      @NonNull Map<Identifier, JsonElement> map,
       @NonNull ResourceManager resourceManager,
       @NonNull ProfilerFiller profile) {
     holdToAimItemPatterns.clear();
@@ -97,7 +96,7 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener<JsonE
     reparse();
   }
 
-  private void append(@NotNull Set<String> patterns, @NotNull JsonArray arr) {
+  private void append(@NonNull Set<String> patterns, @NonNull JsonArray arr) {
     arr.forEach(
         ele -> {
           try {
@@ -109,7 +108,7 @@ public class ItemPredicateManager extends SimpleJsonResourceReloadListener<JsonE
         });
   }
 
-  private void reparse() {
+  public void reparse() {
     holdToAimItemPredicates.clear();
     useToAimItemPredicates.clear();
     useToFirstPersonItemPredicates.clear();

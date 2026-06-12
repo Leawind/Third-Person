@@ -1,15 +1,15 @@
-package com.github.leawind.thirdperson.core.screen;
+package com.github.leawind.thirdperson.impl.screen;
 
 import com.github.leawind.thirdperson.api.ThirdPerson;
-import com.github.leawind.thirdperson.api.config.Config;
-import com.github.leawind.thirdperson.api.config.ConfigManager;
+import com.github.leawind.thirdperson.core.config.Config;
+import com.github.leawind.thirdperson.core.config.ConfigManager;
 import com.github.leawind.thirdperson.utils.PossibleSupplier;
 import com.github.leawind.thirdperson.utils.annotation.VersionSensitive;
 import dev.architectury.platform.Platform;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.gui.screens.Screen;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +31,8 @@ public abstract class ConfigScreenBuilder {
    * @param parent 父屏幕
    * @return 配置屏幕
    */
-  @NotNull
-  public abstract Screen build(@NotNull Config config, @Nullable Screen parent);
+  @NonNull
+  public abstract Screen build(@NonNull Config config, @Nullable Screen parent);
 
   /** 已经实现或将来可能实现的构建器们 */
   private static Map<String, PossibleSupplier<ConfigScreenBuilder>> builders = new HashMap<>();
@@ -74,7 +74,7 @@ public abstract class ConfigScreenBuilder {
   }
 
   /** 获取全部可用的构建器 */
-  public static @NotNull Map<String, PossibleSupplier<ConfigScreenBuilder>> getAvailableBuidlers() {
+  public static @NonNull Map<String, PossibleSupplier<ConfigScreenBuilder>> getAvailableBuidlers() {
     final Map<String, PossibleSupplier<ConfigScreenBuilder>> availableBuilders = new HashMap<>();
     builders.forEach(
         (name, builder) -> {

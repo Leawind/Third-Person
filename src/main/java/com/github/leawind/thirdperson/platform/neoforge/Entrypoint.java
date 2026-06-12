@@ -27,7 +27,7 @@ public final class Entrypoint {
 
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-      ThirdPersonKeys.register(event::register);
+      ThirdPersonKeys.registerKeyMappings(event::register);
     }
   }
 }

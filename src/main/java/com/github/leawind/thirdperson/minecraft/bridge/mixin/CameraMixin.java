@@ -2,7 +2,7 @@ package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
 import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
 import com.github.leawind.thirdperson.minecraft.bridge.events.context.CameraSetupContext;
-import com.github.leawind.thirdperson.utils.Vecs;
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -52,7 +52,7 @@ public abstract class CameraMixin {
 
     var ctx = new CameraSetupContext(level, entity, detached, partialTicks, camera);
     GameClientEvents.SETUP_CAMERA.emit(ctx);
-    this.setPosition(Vecs.toVec3(ctx.pos));
+    this.setPosition(Vectors.toVec3(ctx.pos));
     this.setRotation(ctx.yRot, ctx.xRot);
     ci.cancel();
   }

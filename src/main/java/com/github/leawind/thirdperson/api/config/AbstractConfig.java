@@ -1,5 +1,6 @@
 package com.github.leawind.thirdperson.api.config;
 
+import com.github.leawind.thirdperson.api.ThirdPerson;
 import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import net.minecraft.network.chat.Component;
  *
  * <p>定义了所有配置选项及其默认值，可以依照此类编辑配置屏幕
  */
+@Deprecated
 public abstract class AbstractConfig {
   // region 常用
   @Expose public boolean is_mod_enabled = true;
@@ -108,7 +110,7 @@ public abstract class AbstractConfig {
     }
 
     public static Component formatter(PlayerRotateMode value) {
-      return ConfigManager.getText(KEY + "." + value.key);
+      return Component.translatable(ThirdPerson.MOD_ID + "." + KEY + "." + value.key);
     }
   }
 
@@ -128,7 +130,7 @@ public abstract class AbstractConfig {
     }
 
     public static Component formatter(CameraDistanceMode value) {
-      return ConfigManager.getText(KEY + "." + value.key);
+      return Component.translatable(ThirdPerson.MOD_ID + "." + KEY + "." + value.key);
     }
   }
 }

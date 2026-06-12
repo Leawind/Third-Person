@@ -1,13 +1,19 @@
 package com.github.leawind.thirdperson.utils.modkeymapping;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import net.minecraft.client.KeyMapping;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ModKeyMappingImpl.class);
+
   private long holdMs = 300;
   private long pressMs = 300;
   private long keyDownTime = 0;
@@ -16,6 +22,7 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
   private @Nullable Supplier<Boolean> onUp = null;
   private @Nullable Supplier<Boolean> onHold = null;
   private @Nullable Supplier<Boolean> onPress = null;
+  private @Nullable Collection<BooleanSupplier> checkers = null;
 
   /**
    * @param id 按键映射的标识符，用于可翻译文本
@@ -71,19 +78,28 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
   }
 
   @Override
-  public ModKeyMappingImpl holdMs(long holdLength) {
-    this.holdMs = holdLength;
+  public ModKeyMappingImpl setHoldDuration(long ms) {
+    this.holdMs = ms;
     return this;
   }
 
   @Override
-  public ModKeyMappingImpl pressMs(long pressLength) {
-    this.pressMs = pressLength;
+  public ModKeyMappingImpl setPressDuration(long ms) {
+    this.pressMs = ms;
     return this;
   }
 
   @Override
-  public ModKeyMappingImpl onDown(@NotNull Runnable handler) {
+  public ModKeyMapping when(BooleanSupplier checker) {
+    if (checkers == null) {
+      checkers = new ArrayList<>();
+    }
+    checkers.add(checker);
+    return this;
+  }
+
+  @Override
+  public ModKeyMappingImpl onDown(Runnable handler) {
     return onDown(
         () -> {
           handler.run();
@@ -92,13 +108,13 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
   }
 
   @Override
-  public ModKeyMappingImpl onDown(@NotNull Supplier<Boolean> handler) {
+  public ModKeyMappingImpl onDown(Supplier<Boolean> handler) {
     onDown = handler;
     return this;
   }
 
   @Override
-  public ModKeyMappingImpl onUp(@NotNull Runnable handler) {
+  public ModKeyMappingImpl onUp(Runnable handler) {
     return onUp(
         () -> {
           handler.run();
@@ -107,13 +123,13 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
   }
 
   @Override
-  public ModKeyMappingImpl onUp(@NotNull Supplier<Boolean> handler) {
+  public ModKeyMappingImpl onUp(Supplier<Boolean> handler) {
     onUp = handler;
     return this;
   }
 
   @Override
-  public ModKeyMappingImpl onPress(@NotNull Runnable handler) {
+  public ModKeyMappingImpl onPress(Runnable handler) {
     return onPress(
         () -> {
           handler.run();
@@ -122,13 +138,13 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
   }
 
   @Override
-  public ModKeyMappingImpl onPress(@NotNull Supplier<Boolean> handler) {
+  public ModKeyMappingImpl onPress(Supplier<Boolean> handler) {
     onPress = handler;
     return this;
   }
 
   @Override
-  public ModKeyMappingImpl onHold(@NotNull Runnable handler) {
+  public ModKeyMappingImpl onHold(Runnable handler) {
     return onHold(
         () -> {
           handler.run();
@@ -137,12 +153,33 @@ public final class ModKeyMappingImpl extends KeyMapping implements ModKeyMapping
   }
 
   @Override
-  public ModKeyMappingImpl onHold(@NotNull Supplier<Boolean> handler) {
+  public ModKeyMappingImpl onHold(Supplier<Boolean> handler) {
     onHold = handler;
     return this;
   }
 
-  private static boolean runIfNonNull(@Nullable Supplier<Boolean> handler) {
-    return handler != null && handler.get();
+  private boolean runIfNonNull(@Nullable Supplier<Boolean> handler) {
+    if (handler == null) {
+      return false;
+    }
+
+    if (checkers != null) {
+      for (var checker : checkers) {
+        boolean checkResult;
+
+        try {
+          checkResult = checker.getAsBoolean();
+        } catch (RuntimeException e) {
+          LOGGER.warn("RuntimeException thrown while checking key event condition", e);
+          return false;
+        }
+
+        if (!checkResult) {
+          return false;
+        }
+      }
+    }
+
+    return handler.get();
   }
 }

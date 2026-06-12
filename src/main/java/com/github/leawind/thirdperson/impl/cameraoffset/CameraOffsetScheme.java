@@ -1,7 +1,7 @@
-package com.github.leawind.thirdperson.core.cameraoffset;
+package com.github.leawind.thirdperson.impl.cameraoffset;
 
-import com.github.leawind.thirdperson.api.config.Config;
-import org.jetbrains.annotations.NotNull;
+import com.github.leawind.thirdperson.core.config.Config;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 第三人称相机的偏移方案
@@ -11,18 +11,18 @@ import org.jetbrains.annotations.NotNull;
  * <p>默认有两种模式，按F5在第一人称和两种模式间切换
  */
 public class CameraOffsetScheme {
-  private final @NotNull AbstractCameraOffsetMode normalMode;
-  private final @NotNull AbstractCameraOffsetMode aimingMode;
+  private final @NonNull AbstractCameraOffsetMode normalMode;
+  private final @NonNull AbstractCameraOffsetMode aimingMode;
 
   private boolean isAiming = false;
 
-  public CameraOffsetScheme(@NotNull Config config) {
+  public CameraOffsetScheme(@NonNull Config config) {
     normalMode = new CameraOffsetModeNormal(config);
     aimingMode = new CameraOffsetModeAiming(config);
   }
 
   /** 获取当前模式 */
-  public @NotNull AbstractCameraOffsetMode getMode() {
+  public @NonNull AbstractCameraOffsetMode getMode() {
     return isAiming() ? aimingMode : normalMode;
   }
 
@@ -35,7 +35,7 @@ public class CameraOffsetScheme {
   }
 
   /** 获取当前未启用的模式 */
-  public @NotNull AbstractCameraOffsetMode getAnotherMode() {
+  public @NonNull AbstractCameraOffsetMode getAnotherMode() {
     return isAiming() ? normalMode : aimingMode;
   }
 

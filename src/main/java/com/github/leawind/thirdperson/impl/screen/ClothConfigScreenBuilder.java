@@ -1,9 +1,9 @@
-package com.github.leawind.thirdperson.core.screen;
+package com.github.leawind.thirdperson.impl.screen;
 
 import com.github.leawind.thirdperson.api.ThirdPerson;
 import com.github.leawind.thirdperson.api.config.AbstractConfig;
-import com.github.leawind.thirdperson.api.config.Config;
-import com.github.leawind.thirdperson.api.config.ConfigManager;
+import com.github.leawind.thirdperson.core.config.Config;
+import com.github.leawind.thirdperson.core.config.ConfigManager;
 import com.github.leawind.thirdperson.utils.ItemPredicateUtil;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,11 +16,11 @@ import me.shedaniel.clothconfig2.gui.entries.StringListListEntry;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.gui.screens.Screen;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ClothConfigScreenBuilder extends ConfigScreenBuilder {
-  public @NotNull Screen build(@NotNull Config config, @Nullable Screen parent) {
+  public @NonNull Screen build(@NonNull Config config, @Nullable Screen parent) {
     final var builder =
         ConfigBuilder.create()
             .setParentScreen(parent)
