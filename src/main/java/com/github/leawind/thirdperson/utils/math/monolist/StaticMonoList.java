@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.monolist;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
+import com.github.leawind.thirdperson.utils.Vecs;
 import java.util.function.Function;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public class StaticMonoList implements MonoList {
   @Override
   public double offset(double value, int offset) {
     int i = iadsorption(value) + offset * sgn();
-    i = LMath.clamp(i, 0, length() - 1);
+    i = Vecs.clamp(i, 0, length() - 1);
     return list[i];
   }
 

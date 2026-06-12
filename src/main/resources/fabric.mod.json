@@ -15,7 +15,7 @@
   "icon": "${logo_file}",
   "environment": "client",
   "entrypoints": {
-    "client": ["com.github.leawind.thirdperson.platform.fabric.ThirdPersonFabric"],
+    "client": ["com.github.leawind.thirdperson.platform.fabric.Entrypoint"],
     "modmenu": ["com.github.leawind.thirdperson.platform.fabric.ModMenuEntry"]
   },
   "mixins": [

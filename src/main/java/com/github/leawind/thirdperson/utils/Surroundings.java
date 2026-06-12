@@ -1,6 +1,5 @@
 package com.github.leawind.thirdperson.utils;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,7 +113,7 @@ public class Surroundings {
       offsets.toArray(this.offsets);
       for (int i = 0; i < blockStates.length; i++) {
         var offset = offsets.get(i);
-        var pos = center.offset(LMath.toVec3i(offset));
+        var pos = center.offset(Vecs.toVec3i(offset));
         blockStates[i] = level.getBlockState(pos);
       }
     }

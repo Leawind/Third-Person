@@ -10,7 +10,7 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 public class ModMenuEntry implements ModMenuApi {
   @Override
   public ConfigScreenFactory<?> getModConfigScreenFactory() {
-    return ThirdPerson.CONFIG_MANAGER::getConfigScreen;
+    return ThirdPerson.getConfigManager()::getConfigScreen;
   }
 }
 /*?}*/

@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
+import com.github.leawind.thirdperson.utils.Vecs;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
 
@@ -32,10 +32,10 @@ public class ExpSmoothVector2d extends ExpSmoothValue<Vector2d> {
   @Override
   protected void updateWithOutSavingLastValue(double period) {
     var t =
-        LMath.pow(new Vector2d(smoothFactor), new Vector2d(smoothFactorWeight).mul(period))
+        Vecs.pow(new Vector2d(smoothFactor), new Vector2d(smoothFactorWeight).mul(period))
             .negate()
             .add(1, 1);
-    LMath.lerp(value, target, t);
+    Vecs.lerp(value, target, t);
   }
 
   @Override

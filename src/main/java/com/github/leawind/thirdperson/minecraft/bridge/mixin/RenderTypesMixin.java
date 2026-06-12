@@ -1,18 +1,15 @@
 package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
-import com.github.leawind.thirdperson.api.ThirdPerson;
-import com.github.leawind.thirdperson.impl.ThirdPersonStatus;
-import com.github.leawind.thirdperson.impl.EntityAgent;
+import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
+import com.github.leawind.thirdperson.minecraft.bridge.events.context.ModifyArmorRenderTypeContext;
 import com.github.leawind.thirdperson.utils.annotation.VersionSensitive;
 import java.util.function.Function;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.LayeringTransform;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.TimeUtil;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,10 +47,6 @@ public class RenderTypesMixin {
    * 对盔甲和鞘翅使用自定义的 RenderType 提供器，实现半透明效果
    *
    * <p>see ModelPartCubeMixin#compile(float)
-   *
-   * <p>
-   *
-   * @see EntityAgent#getSmoothOpacity(float)
    */
   @VersionSensitive
   @Inject(
@@ -64,14 +57,11 @@ public class RenderTypesMixin {
               target = "Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"),
       cancellable = true)
   private static void setTransparencyState(
-      Identifier resourceLocation, @NotNull CallbackInfoReturnable<RenderType> ci) {
-    if (ThirdPerson.isAvailable()
-        && ThirdPersonStatus.isRenderingInThirdPerson()
-        && ThirdPersonStatus.useCameraEntityOpacity(
-            (float)
-                (Minecraft.getInstance().getFrameTimeNs()
-                    / TimeUtil.NANOSECONDS_PER_MILLISECOND))) {
-      ci.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(resourceLocation));
+      Identifier identifier, @NotNull CallbackInfoReturnable<RenderType> ci) {
+    var ctx = new ModifyArmorRenderTypeContext(identifier);
+    GameClientEvents.MODIFY_ARMOR_RENDER_TYPE.emit(ctx);
+    if (ctx.useTranslucent) {
+      ci.setReturnValue(ARMOR_CUTOUT_NO_CULL_TRANSLUCENT.apply(identifier));
       ci.cancel();
     }
   }

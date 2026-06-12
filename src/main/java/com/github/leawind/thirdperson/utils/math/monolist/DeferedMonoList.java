@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.monolist;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
+import com.github.leawind.thirdperson.utils.Vecs;
 import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +35,7 @@ public class DeferedMonoList implements MonoList {
   @Override
   public double offset(double value, int offset) {
     int i = iadsorption(value) + offset;
-    i = LMath.clamp(i, 0, length() - 1);
+    i = Vecs.clamp(i, 0, length() - 1);
     return get(i);
   }
 

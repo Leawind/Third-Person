@@ -1,9 +1,7 @@
 package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
-import com.github.leawind.thirdperson.api.ThirdPerson;
-import com.github.leawind.thirdperson.impl.ThirdPersonStatus;
-import com.github.leawind.thirdperson.api.base.GameEvents;
-import com.github.leawind.thirdperson.api.client.event.RenderEntityEvent;
+import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
+import com.github.leawind.thirdperson.minecraft.bridge.events.context.ExtractVisibleEntitiesContext;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.HashMap;
@@ -11,6 +9,7 @@ import java.util.Map;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderBuffers;
@@ -46,20 +45,24 @@ public class LevelRendererMixin {
       Camera camera,
       Frustum frustum,
       DeltaTracker deltaTracker,
-      LevelRenderState renderState,
+      LevelRenderState levelRenderState,
       CallbackInfo ci,
       @Local Entity entity,
       @Local EntityRenderState entityRenderState) {
     this.deltaTracker = deltaTracker;
     entityMap.put(entityRenderState, entity);
-    if (GameEvents.renderEntity != null) {
-      float partialTick =
-          deltaTracker.getGameTimeDeltaPartialTick(
-              !minecraft.level.tickRateManager().isEntityFrozen(entity));
-      var event = new RenderEntityEvent(entity, partialTick);
-      if (!GameEvents.renderEntity.apply(event)) {
-        ci.cancel();
-      }
+
+    ClientLevel level = minecraft.level;
+
+    float partialTicks =
+        deltaTracker.getGameTimeDeltaPartialTick(
+            level == null || !level.tickRateManager().isEntityFrozen(entity));
+
+    var ctx = new ExtractVisibleEntitiesContext(entity, partialTicks);
+    GameClientEvents.EXTRACT_VISIBLE_ENTITIES.emit(ctx);
+
+    if (ctx.cancelRendering) {
+      ci.cancel();
     }
   }
 
@@ -73,25 +76,21 @@ public class LevelRendererMixin {
               shift = At.Shift.AFTER))
   private void postRenderEntity(
       PoseStack poseStack,
-      LevelRenderState renderState,
-      SubmitNodeCollector nodeCollector,
+      LevelRenderState levelRenderState,
+      SubmitNodeCollector submitNodeCollector,
       CallbackInfo ci,
       @Local EntityRenderState entityRenderState) {
     Entity entity = entityMap.remove(entityRenderState);
     if (entity == null) return;
 
     MultiBufferSource.BufferSource bufferSource = renderBuffers.bufferSource();
-    float partialTick =
+    ClientLevel level = minecraft.level;
+    float partialTicks =
         deltaTracker.getGameTimeDeltaPartialTick(
-            !minecraft.level.tickRateManager().isEntityFrozen(entity));
-
-    if (ThirdPerson.isAvailable()
-        && ThirdPersonStatus.isRenderingInThirdPerson()
-        && entity == ThirdPerson.ENTITY_AGENT.getRawCameraEntity()) {
-      if (ThirdPersonStatus.useCameraEntityOpacity(partialTick)
-          && ThirdPersonStatus.shouldRenderCameraEntity(partialTick)) {
-        bufferSource.endLastBatch();
-      }
+            level == null || !minecraft.level.tickRateManager().isEntityFrozen(entity));
+    float opacity = ((EntityOpacityAccessor) entity).leawind_third_person$getOpacity();
+    if (opacity < 1.0f) {
+      bufferSource.endLastBatch();
     }
   }
 }
