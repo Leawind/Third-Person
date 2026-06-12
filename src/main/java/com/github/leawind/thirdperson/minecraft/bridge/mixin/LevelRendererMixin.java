@@ -1,5 +1,6 @@
 package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
+import com.github.leawind.thirdperson.minecraft.bridge.EntityOpacityAccessor;
 import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
 import com.github.leawind.thirdperson.minecraft.bridge.events.context.ExtractVisibleEntitiesContext;
 import com.llamalad7.mixinextras.sugar.Local;

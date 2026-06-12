@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -113,7 +115,7 @@ public class Surroundings {
       offsets.toArray(this.offsets);
       for (int i = 0; i < blockStates.length; i++) {
         var offset = offsets.get(i);
-        var pos = center.offset(Vecs.toVec3i(offset));
+        var pos = center.offset(Vectors.toVec3i(offset));
         blockStates[i] = level.getBlockState(pos);
       }
     }

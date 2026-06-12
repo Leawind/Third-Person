@@ -1,8 +1,8 @@
-package com.github.leawind.thirdperson.api.config;
+package com.github.leawind.thirdperson.core.config;
 
 import com.github.leawind.thirdperson.api.ThirdPerson;
 import com.github.leawind.thirdperson.core.Constants;
-import com.github.leawind.thirdperson.core.screen.ConfigScreenBuilder;
+import com.github.leawind.thirdperson.impl.screen.ConfigScreenBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -15,8 +15,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ public class ConfigManager {
           .create();
 
   private final Timer lazySaveTimer = new Timer();
-  private @NotNull Config config = new Config();
+  private @NonNull Config config = new Config();
   private boolean isLazySaveScheduled = false;
 
   public ConfigManager() {}
@@ -69,14 +69,14 @@ public class ConfigManager {
     if (!isLazySaveScheduled) {
       isLazySaveScheduled = true;
       lazySaveTimer.schedule(
-        new TimerTask() {
+          new TimerTask() {
             @Override
             public void run() {
               trySave();
               isLazySaveScheduled = false;
             }
           },
-        Constants.CONFIG_LAZY_SAVE_DELAY);
+          Constants.CONFIG_LAZY_SAVE_DELAY);
     }
   }
 
@@ -100,15 +100,14 @@ public class ConfigManager {
   public void load() throws IOException {
     config =
         GSON.fromJson(
-            Files.readString(
-              Constants.CONFIG_FILE.get().toPath(), StandardCharsets.UTF_8),
+            Files.readString(Constants.CONFIG_FILE.get().toPath(), StandardCharsets.UTF_8),
             Config.class);
   }
 
   /** 直接保存配置文件 */
   public void save() throws IOException {
     FileUtils.writeStringToFile(
-      Constants.CONFIG_FILE.get(), GSON.toJson(this.config), StandardCharsets.UTF_8);
+        Constants.CONFIG_FILE.get(), GSON.toJson(this.config), StandardCharsets.UTF_8);
   }
 
   /** 获取配置屏幕 */
@@ -123,7 +122,7 @@ public class ConfigManager {
   }
 
   /** 获取配置对象 */
-  public @NotNull Config getConfig() {
+  public @NonNull Config getConfig() {
     return this.config;
   }
 
@@ -134,7 +133,7 @@ public class ConfigManager {
    * @return ${mod_id}.${id}
    */
   @Contract(value = "_ -> new", pure = true)
-  public static @NotNull Component getText(@NotNull String name) {
+  public static @NonNull Component getText(@NonNull String name) {
     return Component.translatable(ThirdPerson.MOD_ID + "." + name);
   }
 }

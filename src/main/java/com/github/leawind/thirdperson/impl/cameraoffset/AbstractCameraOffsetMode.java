@@ -1,7 +1,7 @@
-package com.github.leawind.thirdperson.core.cameraoffset;
+package com.github.leawind.thirdperson.impl.cameraoffset;
 
-import com.github.leawind.thirdperson.api.config.Config;
-import org.jetbrains.annotations.NotNull;
+import com.github.leawind.thirdperson.core.config.Config;
+import org.jspecify.annotations.NonNull;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 
@@ -11,9 +11,9 @@ import org.joml.Vector3d;
  * <p>描述相机应该如何偏移
  */
 public abstract class AbstractCameraOffsetMode {
-  protected final @NotNull Config config;
+  protected final @NonNull Config config;
 
-  public AbstractCameraOffsetMode(@NotNull Config config) {
+  public AbstractCameraOffsetMode(@NonNull Config config) {
     this.config = config;
   }
 
@@ -30,7 +30,7 @@ public abstract class AbstractCameraOffsetMode {
    *
    * <p>根据当前是居中还是在两侧自动计算偏移量
    */
-  public void getOffsetRatio(@NotNull Vector2d v) {
+  public void getOffsetRatio(@NonNull Vector2d v) {
     if (isCentered()) {
       v.set(0, getCenterOffsetRatio());
     } else {
@@ -45,14 +45,14 @@ public abstract class AbstractCameraOffsetMode {
   }
 
   /** 眼睛平滑半衰期 */
-  @NotNull
+  @NonNull
   public abstract Vector3d getEyeSmoothHalflife();
 
   /** 距离平滑系数 */
   public abstract double getDistanceSmoothHalflife();
 
   /** 相机偏移平滑系数 */
-  @NotNull
+  @NonNull
   public abstract Vector2d getOffsetSmoothHalflife();
 
   /** 相机到玩家的距离限制 */
@@ -73,7 +73,7 @@ public abstract class AbstractCameraOffsetMode {
   public abstract void toNextSide();
 
   /** 设置当相机位于两侧，而非居中时的偏移量。 */
-  public abstract void setSideOffsetRatio(@NotNull Vector2d v);
+  public abstract void setSideOffsetRatio(@NonNull Vector2d v);
 
   /** 获取当相机居中时的，垂直偏移量 */
   public abstract double getCenterOffsetRatio();
@@ -87,6 +87,6 @@ public abstract class AbstractCameraOffsetMode {
    * @param v 将取得的数据存入该向量
    * @return 与传入参数是同一个对象
    */
-  @NotNull
-  public abstract Vector2d getSideOffsetRatio(@NotNull Vector2d v);
+  @NonNull
+  public abstract Vector2d getSideOffsetRatio(@NonNull Vector2d v);
 }

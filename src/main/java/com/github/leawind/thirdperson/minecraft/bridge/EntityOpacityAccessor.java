@@ -1,4 +1,4 @@
-package com.github.leawind.thirdperson.minecraft.bridge.mixin;
+package com.github.leawind.thirdperson.minecraft.bridge;
 
 public interface EntityOpacityAccessor {
   float leawind_third_person$getOpacity();

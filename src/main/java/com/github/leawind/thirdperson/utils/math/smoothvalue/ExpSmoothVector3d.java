@@ -1,7 +1,7 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.Vecs;
-import org.jetbrains.annotations.NotNull;
+import com.github.leawind.thirdperson.utils.math.Vectors;
+import org.jspecify.annotations.NonNull;
 import org.joml.Vector3d;
 
 @SuppressWarnings("unused")
@@ -19,12 +19,12 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
   }
 
   @Override
-  public void setTarget(@NotNull Vector3d target) {
+  public void setTarget(@NonNull Vector3d target) {
     this.target.set(target);
   }
 
   @Override
-  public @NotNull Vector3d get(double t) {
+  public @NonNull Vector3d get(double t) {
     return new Vector3d(lastValue).lerp(value, t);
   }
 
@@ -36,25 +36,25 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
   @Override
   protected void updateWithOutSavingLastValue(double period) {
     var t =
-        Vecs.pow(new Vector3d(smoothFactor), new Vector3d(smoothFactorWeight).mul(period))
-            .negate()
-            .add(1, 1, 1);
-    Vecs.lerp(value, target, t);
+        Vectors.pow(new Vector3d(smoothFactor), new Vector3d(smoothFactorWeight).mul(period))
+               .negate()
+               .add(1, 1, 1);
+    Vectors.lerp(value, target, t);
   }
 
   @Override
-  public void setValue(@NotNull Vector3d v) {
+  public void setValue(@NonNull Vector3d v) {
     value.set(v);
   }
 
   @Override
-  public void set(@NotNull Vector3d v) {
+  public void set(@NonNull Vector3d v) {
     value.set(v);
     target.set(v);
   }
 
   @Override
-  public void setSmoothFactor(@NotNull Vector3d smoothFactor) {
+  public void setSmoothFactor(@NonNull Vector3d smoothFactor) {
     this.smoothFactor.set(smoothFactor);
   }
 
@@ -64,7 +64,7 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
   }
 
   @Override
-  public void setMT(@NotNull Vector3d multiplier, @NotNull Vector3d time) {
+  public void setMT(@NonNull Vector3d multiplier, @NonNull Vector3d time) {
     if (multiplier.x < 0 || multiplier.x > 1) {
       throw new IllegalArgumentException("Multiplier.x should in [0,1]: " + multiplier.x);
     } else if (multiplier.y < 0 || multiplier.y > 1) {
@@ -81,7 +81,7 @@ public class ExpSmoothVector3d extends ExpSmoothValue<Vector3d> {
   }
 
   @Override
-  public void setHalflife(@NotNull Vector3d halflife) {
+  public void setHalflife(@NonNull Vector3d halflife) {
     setMT(new Vector3d(0.5), halflife);
   }
 

@@ -1,7 +1,7 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.Vecs;
-import org.jetbrains.annotations.NotNull;
+import com.github.leawind.thirdperson.utils.math.Vectors;
+import org.jspecify.annotations.NonNull;
 import org.joml.Vector2d;
 
 /**
@@ -40,9 +40,9 @@ public class ExpSmoothRotation {
     x.setSmoothFactor(smoothFactor);
   }
 
-  public void setTarget(@NotNull Vector2d rot) {
+  public void setTarget(@NonNull Vector2d rot) {
     y.setTarget(rot.y);
-    x.setTarget(Vecs.clamp(rot.x, -90, 90));
+    x.setTarget(Vectors.clamp(rot.x, -90, 90));
   }
 
   /**
@@ -68,7 +68,7 @@ public class ExpSmoothRotation {
    *
    * <p>应当使用 {@link ISmoothValue#get(double)}
    */
-  public @NotNull Vector2d get() {
+  public @NonNull Vector2d get() {
     return new Vector2d(x.get(), y.get());
   }
 
@@ -81,13 +81,13 @@ public class ExpSmoothRotation {
    *
    * @param t 自上次更新以来经过的时间占更新间隔的比例，用于线性插值。
    */
-  public @NotNull Vector2d get(double t) {
+  public @NonNull Vector2d get(double t) {
     return new Vector2d(x.get(t), y.get(t));
   }
 
-  public void set(@NotNull Vector2d v) {
+  public void set(@NonNull Vector2d v) {
     y.set(v.y);
-    x.set(Vecs.clamp(v.x, -90, 90));
+    x.set(Vectors.clamp(v.x, -90, 90));
   }
 
   public void setSmoothFactorWeight(double weight) {
@@ -95,17 +95,17 @@ public class ExpSmoothRotation {
     x.setSmoothFactorWeight(weight);
   }
 
-  public void setValue(@NotNull Vector2d v) {
+  public void setValue(@NonNull Vector2d v) {
     y.setValue(v.y);
-    x.setValue(Vecs.clamp(v.x, -90, 90));
+    x.setValue(Vectors.clamp(v.x, -90, 90));
   }
 
   /** 获取上次更新前的平滑值（旧值） */
-  public @NotNull Vector2d getLast() {
+  public @NonNull Vector2d getLast() {
     return new Vector2d(x.getLast(), y.getLast());
   }
 
-  public static @NotNull ExpSmoothRotation createWithHalflife(double halflife) {
+  public static @NonNull ExpSmoothRotation createWithHalflife(double halflife) {
     var v = new ExpSmoothRotation();
     v.setHalflife(halflife);
     return v;

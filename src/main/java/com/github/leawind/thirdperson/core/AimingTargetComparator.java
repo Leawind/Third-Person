@@ -1,23 +1,35 @@
 package com.github.leawind.thirdperson.core;
 
-import com.github.leawind.thirdperson.utils.Vecs;
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import java.util.Comparator;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 
-/** 在预测玩家想击中的目标实体时，判断两个实体的优先级 */
-public record AimingTargetComparator(Vec3 pos, Vector3d viewVector) implements Comparator<Entity> {
-  @Override
-  public int compare(Entity e1, Entity e2) {
-    return (int) Math.signum(getCost(e1) - getCost(e2));
+/// 在预测玩家想击中的目标实体时，根据其位置比较两个实体的优先级
+public final class AimingTargetComparator implements Comparator<Vec3> {
+  private Vec3 pos;
+  private Vector3d viewVector;
+
+  public AimingTargetComparator(Vec3 pos, Vector3d viewVector) {
+    this.pos = pos;
+    this.viewVector = viewVector;
   }
 
-  /** 计算一个目标实体的代价，值越低越优先 */
-  public double getCost(@NotNull Entity entity) {
-    var entityPos = entity.getPosition(1);
-    var vectorToTarget = Vecs.toVector3d(entityPos.subtract(pos));
+  public void setPos(Vec3 pos) {
+    this.pos = pos;
+  }
+
+  public void setViewVector(Vector3d viewVector) {
+    this.viewVector = viewVector;
+  }
+
+  @Override
+  public int compare(Vec3 a, Vec3 b) {
+    return (int) Math.signum(getCost(a) - getCost(b));
+  }
+
+  private double getCost(Vec3 entityPos) {
+    var vectorToTarget = Vectors.toVector3d(entityPos.subtract(pos));
     if (vectorToTarget.length() < 1e-5) {
       return 0;
     }

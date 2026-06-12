@@ -1,9 +1,9 @@
 package com.github.leawind.thirdperson.utils.math.monolist;
 
-import com.github.leawind.thirdperson.utils.Vecs;
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import java.util.function.Function;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 静态单调列表
@@ -20,7 +20,7 @@ public class StaticMonoList implements MonoList {
    *
    * @param list 列表
    */
-  public StaticMonoList(double @NotNull [] list) {
+  public StaticMonoList(double @NonNull [] list) {
     this.list = list;
     sgn = (int) Math.signum(list[1] - list[0]);
     if (!isMono()) {
@@ -46,7 +46,7 @@ public class StaticMonoList implements MonoList {
   @Override
   public double offset(double value, int offset) {
     int i = iadsorption(value) + offset * sgn();
-    i = Vecs.clamp(i, 0, length() - 1);
+    i = Vectors.clamp(i, 0, length() - 1);
     return list[i];
   }
 
@@ -101,11 +101,11 @@ public class StaticMonoList implements MonoList {
     return list.length;
   }
 
-  public static @NotNull StaticMonoList linear(int length) {
+  public static @NonNull StaticMonoList linear(int length) {
     return of(length, d -> (double) d);
   }
 
-  public static @NotNull StaticMonoList of(int length, @NotNull Function<Integer, Double> getter) {
+  public static @NonNull StaticMonoList of(int length, @NonNull Function<Integer, Double> getter) {
     double[] list = new double[length];
     for (int i = 0; i < length; i++) {
       list[i] = getter.apply(i);
@@ -114,24 +114,24 @@ public class StaticMonoList implements MonoList {
   }
 
   @Contract("_ -> new")
-  public static @NotNull StaticMonoList of(double[] list) {
+  public static @NonNull StaticMonoList of(double[] list) {
     return new StaticMonoList(list);
   }
 
-  public static @NotNull StaticMonoList exp(int length) {
+  public static @NonNull StaticMonoList exp(int length) {
     return of(length, Math::exp);
   }
 
-  public static @NotNull StaticMonoList squared(int length) {
+  public static @NonNull StaticMonoList squared(int length) {
     return of(length, i -> (double) (i * i));
   }
 
-  public static @NotNull StaticMonoList of(
+  public static @NonNull StaticMonoList of(
       int length,
       double min,
       double max,
-      @NotNull Function<Double, Double> f,
-      @NotNull Function<Double, Double> fInv) {
+      @NonNull Function<Double, Double> f,
+      @NonNull Function<Double, Double> fInv) {
     double xmin = fInv.apply(min);
     double xrange = fInv.apply(max) - xmin;
     return of(length, i -> f.apply(i * xrange / length + xmin));

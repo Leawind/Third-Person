@@ -1,5 +1,7 @@
 package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
+import com.github.leawind.thirdperson.api.ThirdPerson;
+import com.github.leawind.thirdperson.impl.ThirdPersonStates;
 import net.minecraft.client.CameraType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,12 +24,20 @@ public class CameraTypeMixin {
   /** 提供API：更改 {@link CameraType#isFirstPerson()} 的返回值 */
   @Inject(method = "isFirstPerson", at = @At("RETURN"), cancellable = true)
   private void isFirstPerson(CallbackInfoReturnable<Boolean> ci) {
-    // TODO
+    var tp = ThirdPerson.getOrNull();
+    if (tp != null && tp.isAvailable()) {
+      ci.setReturnValue(firstPerson ^ ThirdPerson.getOrThrow().getStates(ThirdPersonStates.class).isPerspectiveInverted);
+      ci.cancel();
+    }
   }
 
   /// 提供API：是否跳过原版第二人称视角
   @Inject(method = "cycle", at = @At("RETURN"), cancellable = true)
   private void modifyCycle(CallbackInfoReturnable<CameraType> ci) {
-    // TODO
+    if (ThirdPerson.getConfigManager().getConfig().skip_vanilla_second_person_camera
+        && ci.getReturnValue() != CameraType.FIRST_PERSON) {
+      ci.setReturnValue(CameraType.FIRST_PERSON);
+      ci.cancel();
+    }
   }
 }

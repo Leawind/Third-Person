@@ -2,18 +2,18 @@ package com.github.leawind.thirdperson.impl.model;
 
 import com.github.leawind.thirdperson.api.model.Viewpoint;
 import com.github.leawind.thirdperson.minecraft.bridge.mixin.CameraInvoker;
-import java.util.Objects;
 import net.minecraft.client.Camera;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Quaternionfc;
 import org.joml.Vector3d;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public record ViewpointImpl(Camera camera) implements Viewpoint.Mutable {
-  public ViewpointImpl(Camera camera) {
-    this.camera = Objects.requireNonNull(camera);
-  }
+public record ViewpointImpl(@NonNull Camera camera) implements Viewpoint.Mutable {
+  public static final Logger LOGGER = LoggerFactory.getLogger(ViewpointImpl.class);
 
   @Override
   public Vector3d getPosition() {
@@ -37,8 +37,7 @@ public record ViewpointImpl(Camera camera) implements Viewpoint.Mutable {
 
   @Override
   public float getZRot() {
-    // TODO
-    throw new UnsupportedOperationException();
+    return 0f;
   }
 
   @Override
@@ -73,7 +72,12 @@ public record ViewpointImpl(Camera camera) implements Viewpoint.Mutable {
 
   @Override
   public void setRotation(Quaternionfc rot) {
-    // TODO
-    throw new UnsupportedOperationException();
+    var q = new Quaternionf(rot);
+    float yRot =
+        (float)
+            Math.toDegrees(
+                Math.atan2(2 * (q.y * q.w + q.x * q.z), 1 - 2 * (q.y * q.y + q.z * q.z)));
+    float xRot = (float) Math.toDegrees(Math.asin(2 * (q.y * q.z + q.w * q.x)));
+    setRotation(yRot, xRot);
   }
 }

@@ -1,9 +1,10 @@
 package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
+import com.github.leawind.thirdperson.minecraft.bridge.EntityOpacityAccessor;
 import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
 import com.github.leawind.thirdperson.minecraft.bridge.events.context.PickBlockContext;
 import com.github.leawind.thirdperson.minecraft.bridge.events.context.TurnPlayerContext;
-import com.github.leawind.thirdperson.utils.Vecs;
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -60,15 +61,15 @@ public class EntityMixin implements EntityOpacityAccessor {
       @Local(argsOnly = true) float partialTick) {
     var ctx =
         new PickBlockContext(
-            Vecs.toVector3d(pickFrom), Vecs.toVector3d(pickTo), entity, pickRange, partialTick);
+          Vectors.toVector3d(pickFrom), Vectors.toVector3d(pickTo), entity, pickRange, partialTick);
     GameClientEvents.PICK_BLOCK.emit(ctx);
     return original.call(
-        Vecs.toVec3(ctx.from), Vecs.toVec3(ctx.to), blockShape, fluidShape, entity);
+      Vectors.toVec3(ctx.from), Vectors.toVec3(ctx.to), blockShape, fluidShape, entity);
   }
 
   /** 鼠标移动事件处理函数会调用此方法旋转玩家，参考 `MouseHandler#turnPlayer()` */
   @Inject(method = "turn", at = @At("HEAD"), cancellable = true)
-  private void beforeTurnPlayer(double yRotDelta, double xRotDelta, @NotNull CallbackInfo ci) {
+  private void beforeTurnPlayer(double yRotDelta, double xRotDelta, @NonNull CallbackInfo ci) {
     var ctx = new TurnPlayerContext((Entity) (Object) this, yRotDelta, xRotDelta);
     GameClientEvents.TURN_PLAYER.emit(ctx);
     if (ctx.cancelDefault) {

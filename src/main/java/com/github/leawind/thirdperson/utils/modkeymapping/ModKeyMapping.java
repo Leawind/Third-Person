@@ -1,9 +1,9 @@
 package com.github.leawind.thirdperson.utils.modkeymapping;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import net.minecraft.client.KeyMapping;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 按键映射
@@ -28,50 +28,52 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    *
    * <p>按住一个按键足够长时间后触发长按事件
    *
-   * @param holdLength 长按时长，单位是 ms
+   * @param ms 长按时长，单位是 ms
    */
-  ModKeyMapping holdMs(long holdLength);
+  ModKeyMapping setHoldDuration(long ms);
 
   /**
    * 短按时长
    *
    * <p>按下一个按键，并在足够短的时间内松开，就会触发短按事件。
    *
-   * @param pressLength 短按时长，单位是 ms
+   * @param ms 短按时长，单位是 ms
    */
-  ModKeyMapping pressMs(long pressLength);
+  ModKeyMapping setPressDuration(long ms);
+
+  ModKeyMapping when(BooleanSupplier checker);
 
   /** 当按键被按下时立即触发 */
-  ModKeyMapping onDown(@NotNull Runnable handler);
+  ModKeyMapping onDown(Runnable handler);
 
   /**
    * 当按键被按下时立即触发
    *
    * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 或 onHold 事件
    */
-  ModKeyMapping onDown(@NotNull Supplier<Boolean> handler);
+  ModKeyMapping onDown(Supplier<Boolean> handler);
 
   /** 当按键松开时立即触发，位于 onPress 之前 */
-  ModKeyMapping onUp(@NotNull Runnable handler);
+  ModKeyMapping onUp(Runnable handler);
 
   /**
    * 当按键松开时立即触发，位于 onPress 之前
    *
    * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 事件
    */
-  ModKeyMapping onUp(@NotNull Supplier<Boolean> handler);
+  ModKeyMapping onUp(Supplier<Boolean> handler);
 
   /** 按下一个按键后经过足够短的时间后抬起时触发 */
-  ModKeyMapping onPress(@NotNull Runnable handler);
+  ModKeyMapping onPress(Runnable handler);
 
   /** 按下一个按键后经过足够短的时间后抬起时触发 */
-  ModKeyMapping onPress(@NotNull Supplier<Boolean> handler);
+  ModKeyMapping onPress(Supplier<Boolean> handler);
 
   /** 当按住一个按键时间足够长时触发 */
-  ModKeyMapping onHold(@NotNull Runnable handler);
+  ModKeyMapping onHold(Runnable handler);
 
   /** 当按住一个按键时间足够长时触发 */
-  ModKeyMapping onHold(@NotNull Supplier<Boolean> handler);
+  ModKeyMapping onHold(Supplier<Boolean> handler);
 
   /**
    * 不设置默认按键
@@ -81,7 +83,7 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    * @param id 按键映射的标识符，用于可翻译文本
    * @param categoryKey 类别标识符，用于可翻译文本
    */
-  static @NotNull ModKeyMapping of(@NotNull String id, @NotNull KeyMapping.Category categoryKey) {
+  static ModKeyMapping of(String id, KeyMapping.Category categoryKey) {
     return of(id, InputConstants.UNKNOWN.getValue(), categoryKey);
   }
 
@@ -90,8 +92,7 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    * @param defaultValue 默认按键
    * @param categoryKey 类别标识符，用于可翻译文本
    */
-  static @NotNull ModKeyMapping of(
-      @NotNull String id, int defaultValue, @NotNull KeyMapping.Category categoryKey) {
+  static ModKeyMapping of(String id, int defaultValue, KeyMapping.Category categoryKey) {
     return new ModKeyMappingImpl(id, defaultValue, categoryKey);
   }
 }

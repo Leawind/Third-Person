@@ -1,7 +1,7 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.Vecs;
-import org.jetbrains.annotations.NotNull;
+import com.github.leawind.thirdperson.utils.math.Vectors;
+import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("unused")
 public class ExpSmoothDouble extends ExpSmoothValue<Double> {
@@ -14,13 +14,13 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
   }
 
   @Override
-  public void setTarget(@NotNull Double target) {
+  public void setTarget(@NonNull Double target) {
     this.target = target;
   }
 
   @Override
-  public @NotNull Double get(double t) {
-    return Vecs.lerp(lastValue, value, t);
+  public @NonNull Double get(double t) {
+    return Vectors.lerp(lastValue, value, t);
   }
 
   @Override
@@ -30,21 +30,21 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
   @Override
   protected void updateWithOutSavingLastValue(double period) {
-    value = Vecs.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
+    value = Vectors.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
   }
 
   @Override
-  public void setValue(@NotNull Double d) {
+  public void setValue(@NonNull Double d) {
     value = d;
   }
 
   @Override
-  public void set(@NotNull Double d) {
+  public void set(@NonNull Double d) {
     value = target = d;
   }
 
   @Override
-  public void setSmoothFactor(@NotNull Double smoothFactor) {
+  public void setSmoothFactor(@NonNull Double smoothFactor) {
     this.smoothFactor = smoothFactor;
   }
 
@@ -54,7 +54,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
   }
 
   @Override
-  public void setMT(@NotNull Double multiplier, @NotNull Double time) {
+  public void setMT(@NonNull Double multiplier, @NonNull Double time) {
     if (multiplier < 0 || multiplier > 1) {
       throw new IllegalArgumentException("Multiplier should in [0,1]: " + multiplier);
     } else if (time < 0) {
@@ -64,7 +64,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
   }
 
   @Override
-  public void setHalflife(@NotNull Double halflife) {
+  public void setHalflife(@NonNull Double halflife) {
     setMT(0.5, halflife);
   }
 
@@ -81,7 +81,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
     value = d;
   }
 
-  public static @NotNull ExpSmoothDouble createWithHalflife(double halflife) {
+  public static @NonNull ExpSmoothDouble createWithHalflife(double halflife) {
     var v = new ExpSmoothDouble();
     v.setHalflife(halflife);
     return v;

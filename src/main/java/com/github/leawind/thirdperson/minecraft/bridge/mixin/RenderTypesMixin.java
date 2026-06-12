@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -57,7 +57,7 @@ public class RenderTypesMixin {
               target = "Ljava/util/function/Function;apply(Ljava/lang/Object;)Ljava/lang/Object;"),
       cancellable = true)
   private static void setTransparencyState(
-      Identifier identifier, @NotNull CallbackInfoReturnable<RenderType> ci) {
+      Identifier identifier, @NonNull CallbackInfoReturnable<RenderType> ci) {
     var ctx = new ModifyArmorRenderTypeContext(identifier);
     GameClientEvents.MODIFY_ARMOR_RENDER_TYPE.emit(ctx);
     if (ctx.useTranslucent) {

@@ -1,9 +1,9 @@
-package com.github.leawind.thirdperson.core.screen;
+package com.github.leawind.thirdperson.impl.screen;
 
 import com.github.leawind.thirdperson.api.ThirdPerson;
 import com.github.leawind.thirdperson.api.config.AbstractConfig;
-import com.github.leawind.thirdperson.api.config.Config;
-import com.github.leawind.thirdperson.api.config.ConfigManager;
+import com.github.leawind.thirdperson.core.config.Config;
+import com.github.leawind.thirdperson.core.config.ConfigManager;
 import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -24,12 +24,12 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.Nullable;
 
 public class YaclConfigScreenBuilder extends ConfigScreenBuilder {
   @Override
-  public @NotNull Screen build(@NotNull Config config, @Nullable Screen parent) {
+  public @NonNull Screen build(@NonNull Config config, @Nullable Screen parent) {
     var defaults = Config.DEFAULTS;
     return YetAnotherConfigLib.createBuilder()
         .title(ConfigManager.getText("text.title"))

@@ -1,8 +1,8 @@
 package com.github.leawind.thirdperson.utils.math.monolist;
 
-import com.github.leawind.thirdperson.utils.Vecs;
+import com.github.leawind.thirdperson.utils.math.Vectors;
 import java.util.function.Function;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * 延迟计算的单调列表
@@ -14,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class DeferedMonoList implements MonoList {
   private final int length;
-  private final @NotNull Function<Integer, Double> getter;
+  private final @NonNull Function<Integer, Double> getter;
   private final int sgn;
 
   /**
    * @param length 列表长度
    * @param getter 值与下标的对应关系
    */
-  protected DeferedMonoList(int length, @NotNull Function<Integer, Double> getter) {
+  protected DeferedMonoList(int length, @NonNull Function<Integer, Double> getter) {
     this.length = length;
     this.getter = getter;
     this.sgn = getter.apply(1) > getter.apply(0) ? 1 : -1;
@@ -35,7 +35,7 @@ public class DeferedMonoList implements MonoList {
   @Override
   public double offset(double value, int offset) {
     int i = iadsorption(value) + offset;
-    i = Vecs.clamp(i, 0, length() - 1);
+    i = Vectors.clamp(i, 0, length() - 1);
     return get(i);
   }
 
@@ -92,15 +92,15 @@ public class DeferedMonoList implements MonoList {
     return length;
   }
 
-  public static @NotNull DeferedMonoList exp(int length) {
+  public static @NonNull DeferedMonoList exp(int length) {
     return new DeferedMonoList(length, Math::exp);
   }
 
-  public static @NotNull DeferedMonoList squared(int length) {
+  public static @NonNull DeferedMonoList squared(int length) {
     return new DeferedMonoList(length, i -> (double) (i * i));
   }
 
-  public static @NotNull DeferedMonoList of(int length, @NotNull Function<Integer, Double> getter) {
+  public static @NonNull DeferedMonoList of(int length, @NonNull Function<Integer, Double> getter) {
     return new DeferedMonoList(length, getter);
   }
 }
