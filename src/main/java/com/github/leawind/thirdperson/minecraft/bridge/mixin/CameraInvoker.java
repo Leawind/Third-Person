@@ -8,6 +8,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Camera.class)
 public interface CameraInvoker {
   @Invoker("setPosition")
+  void invokeSetPosition(double x, double y, double z);
+
+  @Invoker("setPosition")
   void invokeSetPosition(Vec3 pos);
 
   /**

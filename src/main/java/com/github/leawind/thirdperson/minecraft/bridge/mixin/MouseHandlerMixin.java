@@ -1,7 +1,7 @@
 package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
-import com.github.leawind.thirdperson.api.base.GameEvents;
-import com.github.leawind.thirdperson.api.client.event.MouseTurnPlayerStartEvent;
+import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
+import com.github.leawind.thirdperson.minecraft.bridge.events.context.MouseTurnPlayerStartContext;
 import net.minecraft.client.MouseHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,22 +15,16 @@ public class MouseHandlerMixin {
   @Shadow private double accumulatedDX;
   @Shadow private double accumulatedDY;
 
-  /**
-   * 在根据鼠标位移转动玩家前触发
-   *
-   * <p>如果在事件处理函数中调用了{@link MouseTurnPlayerStartEvent#cancelDefault()}，则后续处理将会取消，好像鼠标没有移动一样。
-   */
+  /// 在根据鼠标位移转动玩家前触发
   @Inject(method = "turnPlayer(D)V", at = @At(value = "HEAD"), cancellable = true)
   private void preTurnPlayer(CallbackInfo ci) {
-    if (GameEvents.mouseTurnPlayerStart != null) {
-      var event = new MouseTurnPlayerStartEvent(accumulatedDX, accumulatedDY);
-      GameEvents.mouseTurnPlayerStart.accept(event);
-      if (event.isDefaultCancelled()) {
-        // 重置累积变化量
-        accumulatedDX = 0;
-        accumulatedDY = 0;
-        ci.cancel();
-      }
+    var ctx = new MouseTurnPlayerStartContext(accumulatedDX, accumulatedDY);
+    GameClientEvents.MOUSE_TURN_PLAYER_START.emit(ctx);
+    if (ctx.cancelDefault) {
+      // 重置累积变化量
+      accumulatedDX = 0;
+      accumulatedDY = 0;
+      ci.cancel();
     }
   }
 }

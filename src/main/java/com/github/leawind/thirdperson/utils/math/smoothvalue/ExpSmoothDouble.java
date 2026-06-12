@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
+import com.github.leawind.thirdperson.utils.Vecs;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -20,7 +20,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
   @Override
   public @NotNull Double get(double t) {
-    return LMath.lerp(lastValue, value, t);
+    return Vecs.lerp(lastValue, value, t);
   }
 
   @Override
@@ -30,7 +30,7 @@ public class ExpSmoothDouble extends ExpSmoothValue<Double> {
 
   @Override
   protected void updateWithOutSavingLastValue(double period) {
-    value = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
+    value = Vecs.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
   }
 
   @Override

@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
+import com.github.leawind.thirdperson.utils.Vecs;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
 
@@ -42,7 +42,7 @@ public class ExpSmoothRotation {
 
   public void setTarget(@NotNull Vector2d rot) {
     y.setTarget(rot.y);
-    x.setTarget(LMath.clamp(rot.x, -90, 90));
+    x.setTarget(Vecs.clamp(rot.x, -90, 90));
   }
 
   /**
@@ -87,7 +87,7 @@ public class ExpSmoothRotation {
 
   public void set(@NotNull Vector2d v) {
     y.set(v.y);
-    x.set(LMath.clamp(v.x, -90, 90));
+    x.set(Vecs.clamp(v.x, -90, 90));
   }
 
   public void setSmoothFactorWeight(double weight) {
@@ -97,7 +97,7 @@ public class ExpSmoothRotation {
 
   public void setValue(@NotNull Vector2d v) {
     y.setValue(v.y);
-    x.setValue(LMath.clamp(v.x, -90, 90));
+    x.setValue(Vecs.clamp(v.x, -90, 90));
   }
 
   /** 获取上次更新前的平滑值（旧值） */

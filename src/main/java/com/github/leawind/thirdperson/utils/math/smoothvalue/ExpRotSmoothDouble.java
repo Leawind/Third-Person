@@ -1,6 +1,6 @@
 package com.github.leawind.thirdperson.utils.math.smoothvalue;
 
-import com.github.leawind.thirdperson.utils.math.LMath;
+import com.github.leawind.thirdperson.utils.Vecs;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -25,36 +25,36 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 
   @Override
   public void setTarget(double d) {
-    super.setTarget(LMath.floorMod(d, cycle));
+    super.setTarget(Vecs.floorMod(d, cycle));
   }
 
   @Override
   public @NotNull Double get(double t) {
-    lastValue = LMath.floorMod(lastValue, cycle);
-    value = LMath.floorMod(value, cycle);
-    double delta = LMath.floorMod(value - lastValue, cycle);
+    lastValue = Vecs.floorMod(lastValue, cycle);
+    value = Vecs.floorMod(value, cycle);
+    double delta = Vecs.floorMod(value - lastValue, cycle);
     if (delta > cycle / 2) {
       delta -= cycle;
     }
     value = lastValue + delta;
-    return LMath.lerp(lastValue, value, t);
+    return Vecs.lerp(lastValue, value, t);
   }
 
   @Override
   protected void updateWithOutSavingLastValue(double period) {
-    value = LMath.floorMod(value, cycle);
-    target = LMath.floorMod(target, cycle);
-    double delta = LMath.floorMod(target - value, cycle);
+    value = Vecs.floorMod(value, cycle);
+    target = Vecs.floorMod(target, cycle);
+    double delta = Vecs.floorMod(target - value, cycle);
     if (delta > cycle / 2) {
       delta -= cycle;
     }
     target = value + delta;
-    value = LMath.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
+    value = Vecs.lerp(value, target, 1 - Math.pow(smoothFactor, smoothFactorWeight * period));
   }
 
   @Override
   public void set(@NotNull Double d) {
-    d = LMath.floorMod(d, cycle);
+    d = Vecs.floorMod(d, cycle);
     super.set(d);
   }
 
@@ -65,7 +65,7 @@ public class ExpRotSmoothDouble extends ExpSmoothDouble {
 
   @Override
   public void setValue(double d) {
-    d = LMath.floorMod(d, cycle);
+    d = Vecs.floorMod(d, cycle);
     super.setValue(d);
   }
 

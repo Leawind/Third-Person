@@ -1,7 +1,4 @@
-/**
- * Public API for Leawind's Third Person mod.
- *
- * <p>Other mods depending on this mod should only access classes in this package
- * and its sub-packages.
- */
+@ApiStatus.Experimental
 package com.github.leawind.thirdperson.api;
+
+import org.jetbrains.annotations.ApiStatus;

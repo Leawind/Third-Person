@@ -3,7 +3,6 @@ package com.github.leawind.thirdperson.utils.modkeymapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import java.util.function.Supplier;
 import net.minecraft.client.KeyMapping;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,7 +30,6 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    *
    * @param holdLength 长按时长，单位是 ms
    */
-  @Contract("_ -> this")
   ModKeyMapping holdMs(long holdLength);
 
   /**
@@ -41,11 +39,9 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    *
    * @param pressLength 短按时长，单位是 ms
    */
-  @Contract("_ -> this")
   ModKeyMapping pressMs(long pressLength);
 
   /** 当按键被按下时立即触发 */
-  @Contract("_ -> this")
   ModKeyMapping onDown(@NotNull Runnable handler);
 
   /**
@@ -53,11 +49,9 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    *
    * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 或 onHold 事件
    */
-  @Contract("_ -> this")
   ModKeyMapping onDown(@NotNull Supplier<Boolean> handler);
 
   /** 当按键松开时立即触发，位于 onPress 之前 */
-  @Contract("_ -> this")
   ModKeyMapping onUp(@NotNull Runnable handler);
 
   /**
@@ -65,23 +59,18 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    *
    * @param handler 事件处理函数。若其返回true，则不会触发后续的 onPress 事件
    */
-  @Contract("_ -> this")
   ModKeyMapping onUp(@NotNull Supplier<Boolean> handler);
 
   /** 按下一个按键后经过足够短的时间后抬起时触发 */
-  @Contract("_ -> this")
   ModKeyMapping onPress(@NotNull Runnable handler);
 
   /** 按下一个按键后经过足够短的时间后抬起时触发 */
-  @Contract("_ -> this")
   ModKeyMapping onPress(@NotNull Supplier<Boolean> handler);
 
   /** 当按住一个按键时间足够长时触发 */
-  @Contract("_ -> this")
   ModKeyMapping onHold(@NotNull Runnable handler);
 
   /** 当按住一个按键时间足够长时触发 */
-  @Contract("_ -> this")
   ModKeyMapping onHold(@NotNull Supplier<Boolean> handler);
 
   /**
@@ -92,7 +81,6 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    * @param id 按键映射的标识符，用于可翻译文本
    * @param categoryKey 类别标识符，用于可翻译文本
    */
-  @Contract("_,_ -> new")
   static @NotNull ModKeyMapping of(@NotNull String id, @NotNull KeyMapping.Category categoryKey) {
     return of(id, InputConstants.UNKNOWN.getValue(), categoryKey);
   }
@@ -102,7 +90,6 @@ public interface ModKeyMapping extends Comparable<KeyMapping> {
    * @param defaultValue 默认按键
    * @param categoryKey 类别标识符，用于可翻译文本
    */
-  @Contract("_,_,_ -> new")
   static @NotNull ModKeyMapping of(
       @NotNull String id, int defaultValue, @NotNull KeyMapping.Category categoryKey) {
     return new ModKeyMappingImpl(id, defaultValue, categoryKey);
