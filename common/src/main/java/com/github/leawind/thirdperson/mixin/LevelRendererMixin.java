@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("unused")
 @Mixin(value = LevelRenderer.class, priority = 2000)
 public class LevelRendererMixin {
   @Shadow @Final private Minecraft minecraft;

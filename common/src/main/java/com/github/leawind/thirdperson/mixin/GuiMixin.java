@@ -6,6 +6,7 @@ import net.minecraft.client.gui.Gui;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+@SuppressWarnings("unused")
 @Mixin(value = Gui.class, priority = 2000)
 public class GuiMixin {
   @ModifyExpressionValue(

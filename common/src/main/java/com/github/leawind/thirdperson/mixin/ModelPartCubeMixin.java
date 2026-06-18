@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+@SuppressWarnings("unused")
 @Mixin(value = ModelPart.Cube.class, priority = 2000)
 public class ModelPartCubeMixin {
   @ModifyVariable(

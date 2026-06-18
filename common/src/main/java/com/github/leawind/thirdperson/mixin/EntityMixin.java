@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /** */
+@SuppressWarnings("unused")
 @Mixin(value = Entity.class, priority = 2000)
 public class EntityMixin {
   /**

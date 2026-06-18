@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /** handleKeybinds 方法中会处理各种按键事件， 其中包括鼠标使用、攻击、选取按键 */
+@SuppressWarnings("unused")
 @Mixin(value = Minecraft.class, priority = 2000)
 public class MinecraftMixin {
   /** 注入到 handleKeybinds 头部，触发相应事件 */
