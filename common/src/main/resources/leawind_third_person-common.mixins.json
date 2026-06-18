@@ -13,7 +13,7 @@
     "LevelRendererMixin",
     "LocalPlayerMixin",
     "ModelPartCubeMixin",
-    "RenderTypeMixin",
+    "RenderTypesMixin",
     "MinecraftMixin",
     "GuiMixin",
     "KeyboardInputMixin",

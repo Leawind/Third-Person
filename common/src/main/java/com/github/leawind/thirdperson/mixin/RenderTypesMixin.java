@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = RenderTypes.class, priority = 2000)
-public class RenderTypeMixin {
+public class RenderTypesMixin {
   /**
    * 修改自 RenderType#ARMOR_CUTOUT_NO_CULL
    *
