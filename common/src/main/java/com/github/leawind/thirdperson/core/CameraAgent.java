@@ -171,7 +171,7 @@ public class CameraAgent {
                     ClipContext.Fluid.NONE,
                     entity));
     if (hitResult.getType() == HitResult.Type.BLOCK) {
-      limit = limit.withMax(hitResult.getLocation().y);
+      limit = limit.withMax(Math.max(hitResult.getLocation().y, limit.min));
     }
 
     pickEnd = new Vec3(eyePosition.x, limit.min, eyePosition.z);
@@ -186,7 +186,7 @@ public class CameraAgent {
                     ClipContext.Fluid.NONE,
                     entity));
     if (hitResult.getType() == HitResult.Type.BLOCK) {
-      limit = limit.withMin(hitResult.getLocation().y);
+      limit = limit.withMin(Math.min(hitResult.getLocation().y, limit.max));
     }
 
     for (int i = 0; i < 4; i++) {
@@ -205,7 +205,7 @@ public class CameraAgent {
                       ClipContext.Fluid.NONE,
                       entity));
       if (hitResult.getType() == HitResult.Type.BLOCK) {
-        limit = limit.withMax(hitResult.getLocation().y);
+        limit = limit.withMax(Math.max(hitResult.getLocation().y, limit.min));
       }
 
       pickEnd = new Vec3(eyePosition.x + offsetX, limit.min, eyePosition.z + offsetZ);
@@ -220,7 +220,7 @@ public class CameraAgent {
                       ClipContext.Fluid.NONE,
                       entity));
       if (hitResult.getType() == HitResult.Type.BLOCK) {
-        limit = limit.withMin(hitResult.getLocation().y);
+        limit = limit.withMin(Math.min(hitResult.getLocation().y, limit.max));
       }
     }
 
