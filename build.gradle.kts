@@ -81,11 +81,11 @@ dependencies {
 
     // Fabric API
     if (mod.isFabric) {
-        modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("mod.fabric_api_version")}")
+        implementation("net.fabricmc.fabric-api:fabric-api:${project.property("mod.fabric_api_version")}")
     }
 
     // Architectury API (shared abstraction layer)
-    modImplementation("dev.architectury:architectury-${mod.loader}:${project.property("mod.architectury_api_version")}")
+    implementation("dev.architectury:architectury-${mod.loader}:${project.property("mod.architectury_api_version")}")
 
     // MixinExtras
     val mixinExtras = "io.github.llamalad7:mixinextras-${mod.loader}:${project.property("mod.mixinextras_version")}"
@@ -94,7 +94,7 @@ dependencies {
     annotationProcessor(mixinExtras)
 
     // Cloth Config API
-    modApi("me.shedaniel.cloth:cloth-config-${mod.loader}:${project.property("mod.cloth_config_api_version")}") {
+    api("me.shedaniel.cloth:cloth-config-${mod.loader}:${project.property("mod.cloth_config_api_version")}") {
         if (mod.isFabric) {
             exclude(group = "net.fabricmc.fabric-api")
             exclude(module = "modmenu")
@@ -102,11 +102,11 @@ dependencies {
     }
 
     // YACL (Yet Another Config Lib)
-    modImplementation("dev.isxander:yet-another-config-lib:${project.property("mod.yacl_mc_version")}-${mod.loader}")
+    implementation("dev.isxander:yet-another-config-lib:${project.property("mod.yacl_mc_version")}-${mod.loader}")
 
     // ModMenu (Fabric only)
     if (mod.isFabric) {
-        modImplementation("com.terraformersmc:modmenu:${project.property("mod.modmenu_version")}")
+        implementation("com.terraformersmc:modmenu:${project.property("mod.modmenu_version")}")
     }
 
     // endregion mods

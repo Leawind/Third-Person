@@ -35,7 +35,7 @@ public class CameraTypeMixin {
   @Inject(method = "cycle", at = @At("RETURN"), cancellable = true)
   private void modifyCycle(CallbackInfoReturnable<CameraType> ci) {
     if (ThirdPerson.getConfigManager().getConfig().skip_vanilla_second_person_camera
-        && ci.getReturnValue() != CameraType.FIRST_PERSON) {
+        && ci.getReturnValue() == CameraType.THIRD_PERSON_FRONT) {
       ci.setReturnValue(CameraType.FIRST_PERSON);
       ci.cancel();
     }

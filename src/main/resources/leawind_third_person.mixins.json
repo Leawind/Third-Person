@@ -6,7 +6,6 @@
   "client": [
     "CameraInvoker",
     "ClientLevelInvoker",
-    "GameRendererInvoker",
     "CameraMixin",
     "CameraTypeMixin",
     "LevelRendererMixin",
@@ -18,8 +17,7 @@
     "KeyboardInputMixin",
     "MouseHandlerMixin",
     "EntityMixin",
-    "GameRendererMixin",
-    "MouseHandlerMixin"
+    "GameRendererMixin"
   ],
   "mixins": [],
   "injectors": {

@@ -2,11 +2,14 @@ package com.github.leawind.thirdperson.minecraft.bridge.mixin;
 
 import com.github.leawind.thirdperson.minecraft.bridge.events.GameClientEvents;
 import com.github.leawind.thirdperson.minecraft.bridge.events.context.CameraSetupContext;
+import com.github.leawind.thirdperson.minecraft.bridge.events.context.EventContext;
 import com.github.leawind.thirdperson.utils.math.Vectors;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.Camera;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,36 +24,42 @@ public abstract class CameraMixin {
   @Shadow
   protected abstract void setRotation(float f, float g);
 
+  @Shadow
+  private @Nullable Level level;
+
+  @Shadow
+  private @Nullable Entity entity;
+
+  @Shadow
+  private boolean detached;
+
+  @ModifyReturnValue(method = "getFov", at = @At(value = "RETURN"))
+  private float modifyFov(float fov) {
+    var ctx = new EventContext<>(fov);
+    GameClientEvents.MODIFY_FOV.emit(ctx);
+    return ctx.get();
+  }
+
   /// `setup` 方法中第三人称下移动相机之前
   ///
   /// `setup` 方法位于真正渲染画面之前。
   ///
   /// `GameRender#render` -> `GameRender#renderLevel` -> `Camera#setup`
   @Inject(
-      method = "setup",
+      method = "alignWithEntity",
       at = {
         @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/Camera;move(FFF)V",
-            ordinal = 0,
-            shift = At.Shift.BEFORE),
-        @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/Camera;move(FFF)V",
-            ordinal = 1,
             shift = At.Shift.BEFORE)
       },
       cancellable = true)
   private void beforeMoveCamera(
-      Level level,
-      Entity entity,
-      boolean detached,
-      boolean mirror,
       float partialTicks,
       CallbackInfo ci) {
     var camera = (Camera) (Object) this;
 
-    var ctx = new CameraSetupContext(level, entity, detached, partialTicks, camera);
+    var ctx = new CameraSetupContext(this.level, this.entity, this.detached, partialTicks, camera);
     GameClientEvents.SETUP_CAMERA.emit(ctx);
     this.setPosition(Vectors.toVec3(ctx.pos));
     this.setRotation(ctx.yRot, ctx.xRot);
