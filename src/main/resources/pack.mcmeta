@@ -1,6 +1,6 @@
 {
-    "pack": {
-        "description": "${name} Resource Pack",
-        "pack_format": 48
-    }
+	"pack": {
+		"description": "Leawind's Third Person Resources",
+		"pack_format": 48
+	}
 }

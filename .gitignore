@@ -27,7 +27,6 @@ build/
 # other
 bin/
 run/
-.architectury-transformer/
 *.log
 *.log.gz
 
@@ -37,6 +36,11 @@ forge*changelog.txt
 # JFR
 .profileconfig.json
 *.jfr
+
+# env
+.env
+.env.*
+!.env.example
 
 # AI tools
 /.ai/
@@ -48,8 +52,13 @@ forge*changelog.txt
 .kilocode/
 .lingma/
 .marscode/
+.mimocode/
 .opencode/
 .trae/
 
-# stonecraft
-/versions/*-*/
+AGENTS.md
+AGENTS-*.md
+
+# stonecutter
+/versions/*-*/*
+!/versions/*-*/gradle.properties

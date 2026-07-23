@@ -1,0 +1,36 @@
+modLoader = "javafml"
+loaderVersion = "*"
+issueTrackerURL = "https://github.com/${github}/issues"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+description = "${mod_description}"
+authors = "${mod_author}"
+logoFile = "logo.png"
+displayURL = "https://github.com/${github}"
+logoBlur = false
+
+[["dependencies.${mod_id}"]]
+modId = "minecraft"
+type = "required"
+versionRange = "${mc}"
+ordering = "NONE"
+side = "CLIENT"
+referralUrl = "https://www.minecraft.net/"
+
+[["dependencies.${mod_id}"]]
+modId = "neoforge"
+type = "required"
+versionRange = "${loaderVersion}"
+ordering = "NONE"
+side = "CLIENT"
+
+[["dependencies.${mod_id}"]]
+modId = "perspective_api"
+type = "required"
+versionRange = "*"
+ordering = "NONE"
+side = "CLIENT"

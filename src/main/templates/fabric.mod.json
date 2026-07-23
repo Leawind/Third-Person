@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["${mod_author}"],
+  "contact": {
+    "homepage": "https://github.com/${github}",
+    "issues": "https://github.com/${github}/issues",
+    "sources": "https://github.com/${github}",
+    "email": "leawind@yeah.net"
+  },
+  "license": "${mod_license}",
+  "icon": "logo.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["${mod_group}.platform.fabric.Entrypoint"]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "perspective_api": "*",
+    "minecraft": "${mc}"
+  },
+  "recommends": {
+    "modmenu": "*",
+    "yet_another_config_lib_v3": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "GitHub": "https://github.com/${github}"
+      }
+    },
+    "modmenu:clientsideOnly": true
+  }
+}
