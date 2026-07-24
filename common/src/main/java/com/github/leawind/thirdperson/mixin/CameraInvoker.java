@@ -20,4 +20,8 @@ public interface CameraInvoker {
    */
   @Invoker("setRotation")
   void invokeSetRotation(float yRot, float xRot);
+
+  /** 计算相机垂直视野角度，单位是角度制 */
+  @Invoker("calculateFov")
+  float invokeCalculateFov(float partialTick);
 }
