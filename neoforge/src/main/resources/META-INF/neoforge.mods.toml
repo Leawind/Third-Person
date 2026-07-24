@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "*"
+loaderVersion = "[1,)"
 issueTrackerURL = "${mod_url_issue}"
 license = "${mod_license}"
 
@@ -15,7 +15,7 @@ displayURL = "${mod_url_home}"
 [[dependencies.leawind_third_person]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "CLIENT"
 
