@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.Sync
+import org.gradle.jvm.tasks.Jar
 import org.gradle.language.jvm.tasks.ProcessResources
 
 plugins {
@@ -7,9 +9,16 @@ plugins {
     id("me.modmuss50.mod-publish-plugin")
 }
 
-// ========== Versions & Project Info ==========
+// region Versions & Project Info
 val mcVersion: String by project
-val modVersionString = property("mod.version")!!.toString()
+val modGroupValue = requiredProp("mod.group")
+val modIdValue = requiredProp("mod.id")
+val modVersionValue = requiredProp("mod.version")
+val modNameValue = requiredProp("mod.name")
+val modDescriptionValue = requiredProp("mod.description")
+val modAuthorValue = requiredProp("mod.author")
+val modLicenseValue = requiredProp("mod.license")
+val modSourceUrlValue = requiredProp("mod.source_url")
 
 val isFabric = modstitch.isLoom
 val isNeoforge = modstitch.isModDevGradleRegular
@@ -22,30 +31,37 @@ val loader = when {
 }
 
 val supportsUnitTesting = isFabric || (isNeoforge && stonecutter.current.parsed >= "1.20.5")
+// endregion
 
-// ========== ModStitch Setup ==========
+// region ModStitch Setup
 modstitch {
     minecraftVersion = mcVersion
 
     loom {
-        prop("deps.fabricLoader") { fabricLoaderVersion = it }
+        if (isFabric) {
+            fabricLoaderVersion = requiredProp("deps.fabricLoader")
+        }
     }
 
     moddevgradle {
-        prop("deps.neoforge") { neoForgeVersion = it }
-        prop("deps.forge") { forgeVersion = it }
+        if (isNeoforge) {
+            neoForgeVersion = requiredProp("deps.neoforge")
+        }
+        if (isForge) {
+            forgeVersion = requiredProp("deps.forge")
+        }
     }
 
     metadata {
-        modId = "leawind_third_person"
-        modName = "Leawind's Third Person"
-        modVersion = "$modVersionString+$loader-$mcVersion"
-        modGroup = "io.github.leawind.thirdperson"
-        modDescription = "A practical, smooth, feature-rich third-person mod."
-        modLicense = "MIT"
-        modAuthor = "Leawind"
+        modId = modIdValue
+        modName = modNameValue
+        modVersion = "$modVersionValue+$loader-$mcVersion"
+        modGroup = modGroupValue
+        modDescription = modDescriptionValue
+        modLicense = modLicenseValue
+        modAuthor = modAuthorValue
 
-        replacementProperties.put("github", "Leawind/Third-Person")
+        replacementProperties.put("github", modSourceUrlValue.removePrefix("https://github.com/"))
         replacementProperties.put("mc", "*")
         replacementProperties.put("loaderVersion", "*")
     }
@@ -62,8 +78,9 @@ modstitch {
         unitTesting()
     }
 }
+// endregion
 
-// ========== Stonecutter ==========
+// region Stonecutter
 stonecutter {
     constants {
         put("fabric", isFabric)
@@ -84,12 +101,16 @@ stonecutter {
         )
     }
 }
+// endregion
 
-// ========== Dependencies ==========
-configurations.all {
-    resolutionStrategy {
+// region Dependencies
+// Forge's transitive `net.minecraftforge:unsafe` dependency uses the dynamic version `2.11.+`.
+if (isForge || (isNeoforge && stonecutter.current.parsed < "1.21")) {
+    configurations.configureEach {
+        resolutionStrategy {
         force("org.apache.logging.log4j:log4j-api:2.24.3")
         force("org.apache.logging.log4j:log4j-core:2.24.3")
+        }
     }
 }
 
@@ -98,13 +119,13 @@ dependencies {
     modstitchModImplementation("maven.modrinth:LIqveQm1:${property("mod.perspective_api_version")}+${loader}-$mcVersion")
 
     // Fabric API
-    prop("deps.fabricApi") { modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:$it") }
+    optionalProp("deps.fabricApi") { modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:$it") }
 
     // ModMenu (optional)
-    prop("mod.modmenu_version") { modstitchModImplementation("com.terraformersmc:modmenu:$it") }
+    optionalProp("mod.modmenu_version") { modstitchModImplementation("com.terraformersmc:modmenu:$it") }
 
     // YACL (optional, recommended)
-    prop("mod.yacl_version") { modstitchModImplementation("dev.isxander:yet-another-config-lib:$it") }
+    optionalProp("mod.yacl_version") { modstitchModImplementation("dev.isxander:yet-another-config-lib:$it") }
 
     // Compile only
     compileOnly("org.jspecify:jspecify:1.0.0")
@@ -122,8 +143,9 @@ dependencies {
         exclude(group = "com.google.guava", module = "guava")
     }
 }
+// endregion
 
-// ========== Tasks ==========
+// region Tasks
 tasks.test {
     useJUnitPlatform()
     if (!supportsUnitTesting) {
@@ -137,7 +159,7 @@ if (!supportsUnitTesting) {
     }
 }
 
-tasks.withType<JavaCompile> {
+tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.add("-parameters")
 }
 
@@ -157,14 +179,14 @@ if (isForge) {
         exclude("leawind_third_person.refmap.json")
     }
 }
+// endregion
 
-// ========== Publishing ==========
-val buildAndCollect by tasks.registering(Copy::class) {
-    group = "build"
-    dependsOn(modstitch.finalJarTask, tasks.named("sourcesJar"))
+// region Publishing
+val sourcesJar = tasks.named<Jar>("sourcesJar")
+rootProject.tasks.named<Sync>("buildAndCollect") {
+    dependsOn(modstitch.finalJarTask, sourcesJar)
     from(modstitch.finalJarTask.flatMap { it.archiveFile })
-    from(tasks.named("sourcesJar").flatMap { (it as org.gradle.jvm.tasks.Jar).archiveFile })
-    into(rootProject.layout.buildDirectory.dir("libs"))
+    from(sourcesJar.flatMap { it.archiveFile })
 }
 
 val changelogFile = rootProject.file("CHANGELOG.md")
@@ -173,14 +195,14 @@ val changelogText = if (changelogFile.exists()) changelogFile.readText() else ""
 afterEvaluate {
     publishMods {
         dryRun.set(System.getenv("DRY_RUN") != "false")
-        displayName.set("$modVersionString for $mcVersion $loader")
+        displayName.set("$modVersionValue for $mcVersion $loader")
         file = modstitch.finalJarTask.flatMap { it.archiveFile }
         additionalFiles.from(tasks.named("sourcesJar"))
         changelog.set(changelogText)
 
-        type = if (modVersionString.contains("beta", true)) {
+        type = if (modVersionValue.contains("beta", true)) {
             BETA
-        } else if (modVersionString.contains("alpha", true)) {
+        } else if (modVersionValue.contains("alpha", true)) {
             ALPHA
         } else {
             STABLE
@@ -211,12 +233,12 @@ afterEvaluate {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            artifactId = "leawind_third_person"
-            version = "$modVersionString+$loader-$mcVersion"
+            artifactId = modIdValue
+            version = "$modVersionValue+$loader-$mcVersion"
             from(components["java"])
             pom {
-                name.set("Leawind's Third Person")
-                description.set("A practical, smooth, feature-rich third-person mod.")
+                name.set(modNameValue)
+                description.set(modDescriptionValue)
             }
         }
     }
@@ -224,7 +246,14 @@ publishing {
         mavenLocal()
     }
 }
+// endregion
 
-fun <T> prop(property: String, block: (String) -> T?): T? {
+// region Helpers
+fun requiredProp(property: String): String =
+    findProperty(property)?.toString()?.takeIf { it.isNotBlank() }
+        ?: error("Required Gradle property '$property' is missing or blank")
+
+fun <T> optionalProp(property: String, block: (String) -> T?): T? {
     return findProperty(property)?.toString()?.takeIf { it.isNotBlank() }?.let(block)
 }
+// endregion
