@@ -1,6 +1,4 @@
-import org.gradle.api.tasks.Sync
 import org.gradle.jvm.tasks.Jar
-import org.gradle.language.jvm.tasks.ProcessResources
 
 plugins {
     id("dev.kikugie.stonecutter")
@@ -33,13 +31,26 @@ val loader = when {
 val supportsUnitTesting = isFabric || (isNeoforge && stonecutter.current.parsed >= "1.20.5")
 // endregion
 
-// region ModStitch Setup
 modstitch {
     minecraftVersion = mcVersion
 
     loom {
         if (isFabric) {
             fabricLoaderVersion = requiredProp("deps.fabricLoader")
+            configureLoom {
+                runs.named("client") {
+                    runDir = project.relativePath(rootProject.file("run"))
+                }
+            }
+        }
+    }
+
+    if (!isFabric) {
+        runs {
+            register("client") {
+                client()
+                gameDirectory.set(rootProject.layout.projectDirectory.dir("run"))
+            }
         }
     }
 
@@ -51,6 +62,7 @@ modstitch {
             forgeVersion = requiredProp("deps.forge")
         }
     }
+
 
     metadata {
         modId = modIdValue
@@ -78,9 +90,7 @@ modstitch {
         unitTesting()
     }
 }
-// endregion
 
-// region Stonecutter
 stonecutter {
     constants {
         put("fabric", isFabric)
@@ -101,15 +111,14 @@ stonecutter {
         )
     }
 }
-// endregion
 
 // region Dependencies
 // Forge's transitive `net.minecraftforge:unsafe` dependency uses the dynamic version `2.11.+`.
 if (isForge || (isNeoforge && stonecutter.current.parsed < "1.21")) {
     configurations.configureEach {
         resolutionStrategy {
-        force("org.apache.logging.log4j:log4j-api:2.24.3")
-        force("org.apache.logging.log4j:log4j-core:2.24.3")
+            force("org.apache.logging.log4j:log4j-api:2.24.3")
+            force("org.apache.logging.log4j:log4j-core:2.24.3")
         }
     }
 }
@@ -146,6 +155,13 @@ dependencies {
 // endregion
 
 // region Tasks
+
+tasks.withType<JavaExec>().configureEach {
+    if (name == "runClient") {
+        workingDir(rootProject.layout.projectDirectory.dir("run"))
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
     if (!supportsUnitTesting) {
