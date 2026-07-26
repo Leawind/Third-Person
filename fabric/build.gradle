@@ -29,16 +29,16 @@ configurations {
 
 repositories {
 	// Mod Menu
-	maven { url "https://maven.terraformersmc.com/releases" }
+	maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 dependencies {
-	common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+	common(project(':common')) { transitive false }
 	shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 	
-	modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-	modImplementation "dev.architectury:architectury-fabric:${architectury_api_version}"
+	implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+	implementation "dev.architectury:architectury-fabric:${architectury_api_version}"
 	
 	// MixinExtras
 	implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixinextras_version}"))
@@ -48,23 +48,28 @@ dependencies {
 	implementation("com.github.Leawind:inventory-java:${leawinds_inventory_version}")
 	
 	// Cloth Config API
-	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_api_version}") {
+	implementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_api_version}") {
 		exclude group: "net.fabricmc.fabric-api"
 		exclude module: 'modmenu'
 	}
 	// YACL
-	modImplementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-fabric"
+	implementation "dev.isxander:yet-another-config-lib:${yacl_mc_version}-fabric"
 	// ModMenu
-	modImplementation "com.terraformersmc:modmenu:${modmenu_version}"
+	implementation "com.terraformersmc:modmenu:${modmenu_version}"
+}
+
+jar {
+	archiveClassifier = "dev"
 }
 
 shadowJar {
 	configurations = [project.configurations.shadowBundle]
-	archiveClassifier = "dev-shadow"
-	
+	archiveClassifier = ""
+	manifest {
+		attributes "Fabric-Mapping-Namespace": "official"
+	}
+
 	relocate "io.github.leawind.inventory", "com.github.leawind.thirdperson.lib.inventory"
 }
 
-remapJar {
-	inputFile.set shadowJar.archiveFile
-}
+assemble.dependsOn shadowJar
