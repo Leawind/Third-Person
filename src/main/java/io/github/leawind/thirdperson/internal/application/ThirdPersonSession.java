@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.application;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoother;
+import io.github.leawind.thirdperson.internal.core.camera.TightSpaceDetector;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.core.input.LookController;
@@ -18,9 +19,12 @@ public final class ThirdPersonSession {
   private final CameraSmoother cameraSmoother = new CameraSmoother();
   private final CameraAdjustmentController cameraAdjustmentController =
       new CameraAdjustmentController();
+  private final TightSpaceDetector tightSpaceDetector = new TightSpaceDetector();
   private CameraPose lastSafeCameraPose;
   private CameraPose finalCameraPose;
   private CameraProfileSlot cameraAdjustmentSlot;
+  private boolean temporaryFirstPersonRequested;
+  private CameraMode modeBeforeTemporaryFirstPerson = CameraMode.NORMAL;
 
   public boolean isPerspectiveActive() {
     return perspectiveActive;
@@ -44,6 +48,32 @@ public final class ThirdPersonSession {
 
   public CameraAdjustmentController cameraAdjustmentController() {
     return cameraAdjustmentController;
+  }
+
+  public TightSpaceDetector tightSpaceDetector() {
+    return tightSpaceDetector;
+  }
+
+  public boolean isTemporaryFirstPersonRequested() {
+    return temporaryFirstPersonRequested;
+  }
+
+  public CameraMode compositionMode() {
+    return mode == CameraMode.TEMP_FIRST_PERSON ? modeBeforeTemporaryFirstPerson : mode;
+  }
+
+  public void requestTemporaryFirstPerson(boolean requested) {
+    if (requested == temporaryFirstPersonRequested) {
+      return;
+    }
+    temporaryFirstPersonRequested = requested;
+    if (requested) {
+      modeBeforeTemporaryFirstPerson =
+          mode == CameraMode.AIMING ? CameraMode.AIMING : CameraMode.NORMAL;
+      mode = CameraMode.TEMP_FIRST_PERSON;
+    } else if (perspectiveActive) {
+      mode = modeBeforeTemporaryFirstPerson;
+    }
   }
 
   public Optional<CameraProfileSlot> cameraAdjustmentSlot() {
@@ -99,8 +129,11 @@ public final class ThirdPersonSession {
     lookController.reset();
     cameraSmoother.reset();
     cameraAdjustmentController.reset();
+    tightSpaceDetector.reset();
     cameraAdjustmentSlot = null;
     lastSafeCameraPose = null;
     finalCameraPose = null;
+    temporaryFirstPersonRequested = false;
+    modeBeforeTemporaryFirstPerson = CameraMode.NORMAL;
   }
 }

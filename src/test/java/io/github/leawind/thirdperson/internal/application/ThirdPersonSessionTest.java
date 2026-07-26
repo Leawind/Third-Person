@@ -52,4 +52,20 @@ class ThirdPersonSessionTest {
     var session = new ThirdPersonSession();
     assertThrows(IllegalStateException.class, () -> session.setMode(CameraMode.NORMAL));
   }
+
+  @Test
+  void temporaryFirstPersonPreservesItsCompositionMode() {
+    var session = new ThirdPersonSession();
+    session.activatePerspective();
+    session.setMode(CameraMode.AIMING);
+
+    session.requestTemporaryFirstPerson(true);
+    assertTrue(session.isTemporaryFirstPersonRequested());
+    assertEquals(CameraMode.TEMP_FIRST_PERSON, session.mode());
+    assertEquals(CameraMode.AIMING, session.compositionMode());
+
+    session.requestTemporaryFirstPerson(false);
+    assertFalse(session.isTemporaryFirstPersonRequested());
+    assertEquals(CameraMode.AIMING, session.mode());
+  }
 }

@@ -32,6 +32,14 @@ public final class ThirdPersonRuntime {
     return config.enabled() && session.isControllingCamera();
   }
 
+  public ThirdPersonConfig.CameraProfile cameraProfile(boolean centered) {
+    ThirdPersonConfig.CameraProfile profile =
+        session.compositionMode() == CameraMode.AIMING
+            ? config.camera().aiming()
+            : config.camera().normal();
+    return centered ? profile.centered() : profile;
+  }
+
   public void initialize() {
     if (initialized) {
       return;
@@ -41,14 +49,20 @@ public final class ThirdPersonRuntime {
   }
 
   public void onPerspectiveActivated() {
-    session.activatePerspective();
+    if (!session.isPerspectiveActive()) {
+      session.activatePerspective();
+    } else if (!session.isTemporaryFirstPersonRequested()) {
+      session.setMode(CameraMode.NORMAL);
+    }
     if (!config.enabled()) {
       session.setMode(CameraMode.BYPASS);
     }
   }
 
   public void onPerspectiveDeactivated() {
-    session.reset();
+    if (!session.isTemporaryFirstPersonRequested()) {
+      session.reset();
+    }
   }
 
   public void onClientIdentityChanged(boolean perspectiveCurrent) {
@@ -98,9 +112,21 @@ public final class ThirdPersonRuntime {
   }
 
   public void setAiming(boolean aiming) {
-    if (!session.isPerspectiveActive() || !config.enabled()) {
+    if (!session.isPerspectiveActive()
+        || !config.enabled()
+        || session.mode() == CameraMode.TEMP_FIRST_PERSON) {
       return;
     }
     session.setMode(aiming ? CameraMode.AIMING : CameraMode.NORMAL);
+  }
+
+  public void requestTemporaryFirstPerson(boolean requested) {
+    if (!session.isPerspectiveActive() || !config.enabled()) {
+      requested = false;
+    }
+    session.requestTemporaryFirstPerson(requested);
+    if (!config.enabled() && session.isPerspectiveActive()) {
+      session.setMode(CameraMode.BYPASS);
+    }
   }
 }

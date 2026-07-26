@@ -71,6 +71,12 @@ public record ThirdPersonConfig(
     public CameraParameters cameraParameters() {
       return new CameraParameters(distance, offsetX, offsetY);
     }
+
+    public CameraProfile centered() {
+      return offsetX == 0.0
+          ? this
+          : new CameraProfile(distance, 0.0, offsetY, fovMultiplier);
+    }
   }
 
   public record AimingSettings(boolean smartAiming) {}

@@ -4,6 +4,7 @@ import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfig
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftClientIntegration;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftInputIntegration;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
+import io.github.leawind.thirdperson.internal.integration.perspective.MinecraftTemporaryFirstPersonIntegration;
 
 public final class ModEntrypoint {
   private ModEntrypoint() {}
@@ -14,5 +15,6 @@ public final class ModEntrypoint {
     MinecraftKeyIntegration.register();
     MinecraftClientIntegration.register();
     MinecraftInputIntegration.register();
+    MinecraftTemporaryFirstPersonIntegration.register();
   }
 }

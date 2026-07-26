@@ -17,6 +17,9 @@ class ThirdPersonConfigTest {
     assertEquals(SmoothingPreset.BALANCED, config.camera().smoothing());
     assertEquals(PlayerRotationMode.AUTO, config.player().rotationMode());
     assertEquals(ReticleMode.AUTO, config.hud().reticle());
+    assertEquals(0.0, config.camera().normal().centered().offsetX());
+    assertEquals(
+        config.camera().normal().distance(), config.camera().normal().centered().distance());
   }
 
   @Test
