@@ -7,6 +7,7 @@
 	"client": [
 		"EntityMixin",
 		"GuiMixin",
+		"LocalPlayerMixin",
 		"MinecraftMixin",
 		"MouseHandlerMixin"
 	],

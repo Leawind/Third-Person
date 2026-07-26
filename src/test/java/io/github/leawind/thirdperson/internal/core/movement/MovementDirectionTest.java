@@ -2,10 +2,23 @@ package io.github.leawind.thirdperson.internal.core.movement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 class MovementDirectionTest {
+  @Test
+  void sprintingImpulseAcceptsEveryDirectionAtTheSameMagnitude() {
+    assertTrue(MovementDirection.hasDirectionalImpulse(0.0, 1.0, 0.8));
+    assertTrue(MovementDirection.hasDirectionalImpulse(0.0, -1.0, 0.8));
+    assertTrue(MovementDirection.hasDirectionalImpulse(1.0, 0.0, 0.8));
+    assertTrue(MovementDirection.hasDirectionalImpulse(-1.0, 0.0, 0.8));
+    assertTrue(MovementDirection.hasDirectionalImpulse(0.8, 0.0, 0.8));
+    assertFalse(MovementDirection.hasDirectionalImpulse(0.5, 0.5, 0.8));
+    assertFalse(MovementDirection.hasDirectionalImpulse(0.0, 0.0, 0.0));
+    assertFalse(MovementDirection.hasDirectionalImpulse(Double.NaN, 1.0, 0.8));
+  }
+
   @Test
   void forwardInputFacesCameraYaw() {
     assertEquals(

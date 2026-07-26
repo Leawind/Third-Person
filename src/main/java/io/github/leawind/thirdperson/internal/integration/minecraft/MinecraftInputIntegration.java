@@ -3,7 +3,9 @@ package io.github.leawind.thirdperson.internal.integration.minecraft;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementYawEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
+import io.github.leawind.thirdperson.internal.core.movement.MovementDirection;
 import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfigIntegration;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 
@@ -20,6 +22,8 @@ public final class MinecraftInputIntegration {
     registered = true;
     LocalPlayerTurnEvent.register(MinecraftInputIntegration::onTurn);
     LocalPlayerMovementYawEvent.register(MinecraftInputIntegration::modifyMovementYaw);
+    LocalPlayerSprintImpulseEvent.register(
+        MinecraftInputIntegration::modifySprintImpulseCondition);
     MouseScrollEvent.register(MinecraftInputIntegration::onScroll);
   }
 
@@ -53,6 +57,20 @@ public final class MinecraftInputIntegration {
     }
     var lookController = runtime.session().lookController();
     return lookController.isInitialized() ? lookController.yawDegrees() : vanillaYaw;
+  }
+
+  private static boolean modifySprintImpulseCondition(
+      boolean vanillaResult,
+      double leftImpulse,
+      double forwardImpulse,
+      double minimumMagnitude) {
+    var runtime = ThirdPersonRuntime.getInstance();
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || !runtime.isCameraControlEnabled()) {
+      return vanillaResult;
+    }
+    return MovementDirection.hasDirectionalImpulse(
+        leftImpulse, forwardImpulse, minimumMagnitude);
   }
 
   private static boolean onScroll(double xOffset, double yOffset) {

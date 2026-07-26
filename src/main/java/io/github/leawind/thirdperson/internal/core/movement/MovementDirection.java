@@ -8,6 +8,21 @@ public final class MovementDirection {
 
   private MovementDirection() {}
 
+  public static boolean hasDirectionalImpulse(
+      double leftImpulse, double forwardImpulse, double minimumMagnitude) {
+    if (!Double.isFinite(leftImpulse)
+        || !Double.isFinite(forwardImpulse)
+        || !Double.isFinite(minimumMagnitude)
+        || minimumMagnitude < 0.0) {
+      return false;
+    }
+    double lengthSquared =
+        leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;
+    return Double.isFinite(lengthSquared)
+        && lengthSquared > 0.0
+        && lengthSquared >= minimumMagnitude * minimumMagnitude;
+  }
+
   public static OptionalDouble facingYawDegrees(
       double leftImpulse, double forwardImpulse, double cameraYawDegrees) {
     if (!Double.isFinite(leftImpulse)
