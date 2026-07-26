@@ -21,11 +21,11 @@ public record ThirdPersonConfig(
               new CameraProfile(2.4, -0.30, 0.16, 0.9),
               new SmoothingSettings(
                   0.0,
-                  0.45,
-                  0.04,
-                  0.08,
-                  new ModeSmoothing(0.25, 0.20, 0.08, 0.72),
-                  new ModeSmoothing(0.05, 0.05, 0.03, 0.04)),
+                  0.07,
+                  0.05,
+                  0.05,
+                  new ModeSmoothing(0.064, 0.08, 0.06, 0.08),
+                  new ModeSmoothing(0.02, 0.025, 0.025, 0.08)),
               true),
           new AimingSettings(true),
           new PlayerSettings(PlayerRotationMode.AUTO),
@@ -109,9 +109,7 @@ public record ThirdPersonConfig(
     }
 
     public CameraProfile centered() {
-      return offsetX == 0.0
-          ? this
-          : new CameraProfile(distance, 0.0, offsetY, fovMultiplier);
+      return offsetX == 0.0 ? this : new CameraProfile(distance, 0.0, offsetY, fovMultiplier);
     }
   }
 
@@ -130,8 +128,8 @@ public record ThirdPersonConfig(
   }
 
   private static void requireHalfLife(double value) {
-    if (!Double.isFinite(value) || value < 0.0 || value > 1.0) {
-      throw new IllegalArgumentException("Smoothing half-life must be within [0, 1]");
+    if (!Double.isFinite(value) || value < 0.0 || value > 0.2) {
+      throw new IllegalArgumentException("Smoothing half-life must be within [0, 0.2]");
     }
   }
 }

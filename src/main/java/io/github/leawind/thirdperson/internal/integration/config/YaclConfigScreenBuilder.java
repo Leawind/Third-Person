@@ -99,25 +99,13 @@ final class YaclConfigScreenBuilder {
                     halfLifeOption(
                         "normal_pivot_horizontal_half_life",
                         defaults.camera().smoothing().normal().horizontalPivotHalfLife(),
-                        () ->
-                            draft
-                                .value()
-                                .camera()
-                                .smoothing()
-                                .normal()
-                                .horizontalPivotHalfLife(),
+                        () -> draft.value().camera().smoothing().normal().horizontalPivotHalfLife(),
                         draft::setNormalHorizontalPivotHalfLife))
                 .option(
                     halfLifeOption(
                         "normal_pivot_vertical_half_life",
                         defaults.camera().smoothing().normal().verticalPivotHalfLife(),
-                        () ->
-                            draft
-                                .value()
-                                .camera()
-                                .smoothing()
-                                .normal()
-                                .verticalPivotHalfLife(),
+                        () -> draft.value().camera().smoothing().normal().verticalPivotHalfLife(),
                         draft::setNormalVerticalPivotHalfLife))
                 .option(
                     halfLifeOption(
@@ -135,25 +123,13 @@ final class YaclConfigScreenBuilder {
                     halfLifeOption(
                         "aiming_pivot_horizontal_half_life",
                         defaults.camera().smoothing().aiming().horizontalPivotHalfLife(),
-                        () ->
-                            draft
-                                .value()
-                                .camera()
-                                .smoothing()
-                                .aiming()
-                                .horizontalPivotHalfLife(),
+                        () -> draft.value().camera().smoothing().aiming().horizontalPivotHalfLife(),
                         draft::setAimingHorizontalPivotHalfLife))
                 .option(
                     halfLifeOption(
                         "aiming_pivot_vertical_half_life",
                         defaults.camera().smoothing().aiming().verticalPivotHalfLife(),
-                        () ->
-                            draft
-                                .value()
-                                .camera()
-                                .smoothing()
-                                .aiming()
-                                .verticalPivotHalfLife(),
+                        () -> draft.value().camera().smoothing().aiming().verticalPivotHalfLife(),
                         draft::setAimingVerticalPivotHalfLife))
                 .option(
                     halfLifeOption(
@@ -256,11 +232,7 @@ final class YaclConfigScreenBuilder {
   }
 
   private static <E extends Enum<E>> Option<E> enumOption(
-      String key,
-      E defaultValue,
-      Supplier<E> getter,
-      Consumer<E> setter,
-      Class<E> enumClass) {
+      String key, E defaultValue, Supplier<E> getter, Consumer<E> setter, Class<E> enumClass) {
     return Option.<E>createBuilder()
         .name(text("option." + key))
         .description(OptionDescription.of(text("option." + key + ".desc")))
@@ -271,11 +243,7 @@ final class YaclConfigScreenBuilder {
                     .enumClass(enumClass)
                     .formatValue(
                         value ->
-                            text(
-                                "value."
-                                    + key
-                                    + "."
-                                    + value.name().toLowerCase(Locale.ROOT))))
+                            text("value." + key + "." + value.name().toLowerCase(Locale.ROOT))))
         .build();
   }
 
@@ -291,11 +259,8 @@ final class YaclConfigScreenBuilder {
   }
 
   private static Option<Double> halfLifeOption(
-      String key,
-      double defaultValue,
-      Supplier<Double> getter,
-      Consumer<Double> setter) {
-    return numberOption(key, defaultValue, getter, setter, 0.0, 1.0, 0.005, 3);
+      String key, double defaultValue, Supplier<Double> getter, Consumer<Double> setter) {
+    return numberOption(key, defaultValue, getter, setter, 0.0, 0.2, 0.001, 4);
   }
 
   private static Option<Double> numberOption(
@@ -319,8 +284,7 @@ final class YaclConfigScreenBuilder {
                     .formatValue(
                         value ->
                             Component.literal(
-                                String.format(
-                                    Locale.ROOT, "%." + decimalPlaces + "f", value))))
+                                String.format(Locale.ROOT, "%." + decimalPlaces + "f", value))))
         .build();
   }
 
@@ -567,8 +531,7 @@ final class YaclConfigScreenBuilder {
                   halfLife));
     }
 
-    private void updateNormalSmoothing(
-        UnaryOperator<ThirdPersonConfig.ModeSmoothing> update) {
+    private void updateNormalSmoothing(UnaryOperator<ThirdPersonConfig.ModeSmoothing> update) {
       updateSmoothing(
           smoothing ->
               new ThirdPersonConfig.SmoothingSettings(
@@ -580,8 +543,7 @@ final class YaclConfigScreenBuilder {
                   smoothing.aiming()));
     }
 
-    private void updateAimingSmoothing(
-        UnaryOperator<ThirdPersonConfig.ModeSmoothing> update) {
+    private void updateAimingSmoothing(UnaryOperator<ThirdPersonConfig.ModeSmoothing> update) {
       updateSmoothing(
           smoothing ->
               new ThirdPersonConfig.SmoothingSettings(
@@ -593,8 +555,7 @@ final class YaclConfigScreenBuilder {
                   update.apply(smoothing.aiming())));
     }
 
-    private void updateSmoothing(
-        UnaryOperator<ThirdPersonConfig.SmoothingSettings> update) {
+    private void updateSmoothing(UnaryOperator<ThirdPersonConfig.SmoothingSettings> update) {
       var camera = value.camera();
       setCamera(
           new ThirdPersonConfig.CameraSettings(

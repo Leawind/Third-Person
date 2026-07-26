@@ -15,10 +15,10 @@ class ThirdPersonConfigTest {
     assertEquals(-0.18, config.camera().normal().offsetX());
     assertEquals(2.4, config.camera().aiming().distance());
     assertEquals(0.0, config.camera().smoothing().rotationHalfLife());
-    assertEquals(0.25, config.camera().smoothing().normal().horizontalPivotHalfLife());
-    assertEquals(0.20, config.camera().smoothing().normal().verticalPivotHalfLife());
-    assertEquals(0.72, config.camera().smoothing().normal().distanceHalfLife());
-    assertEquals(0.04, config.camera().smoothing().aiming().distanceHalfLife());
+    assertEquals(0.064, config.camera().smoothing().normal().horizontalPivotHalfLife());
+    assertEquals(0.08, config.camera().smoothing().normal().verticalPivotHalfLife());
+    assertEquals(0.08, config.camera().smoothing().normal().distanceHalfLife());
+    assertEquals(0.08, config.camera().smoothing().aiming().distanceHalfLife());
     assertEquals(PlayerRotationMode.AUTO, config.player().rotationMode());
     assertEquals(ReticleMode.AUTO, config.hud().reticle());
     assertEquals(0.0, config.camera().normal().centered().offsetX());
@@ -37,5 +37,8 @@ class ThirdPersonConfigTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> new ThirdPersonConfig.ModeSmoothing(-0.1, 0.0, 0.0, 0.0));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> new ThirdPersonConfig.ModeSmoothing(0.3, 0.0, 0.0, 0.0));
   }
 }

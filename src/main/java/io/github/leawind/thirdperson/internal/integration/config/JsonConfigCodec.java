@@ -20,7 +20,7 @@ final class JsonConfigCodec {
   private static final Codec<Double> DISTANCE_CODEC = Codec.doubleRange(0.0, 16.0);
   private static final Codec<Double> OFFSET_CODEC = Codec.doubleRange(-1.0, 1.0);
   private static final Codec<Double> FOV_MULTIPLIER_CODEC = Codec.doubleRange(0.25, 2.0);
-  private static final Codec<Double> HALF_LIFE_CODEC = Codec.doubleRange(0.0, 1.0);
+  private static final Codec<Double> HALF_LIFE_CODEC = Codec.doubleRange(0.0, 0.2);
 
   private static final Codec<ThirdPersonConfig.CameraProfile> CAMERA_PROFILE_CODEC =
       RecordCodecBuilder.create(
@@ -76,7 +76,8 @@ final class JsonConfigCodec {
                           .forGetter(ThirdPersonConfig.SmoothingSettings::adjustingOffsetHalfLife),
                       HALF_LIFE_CODEC
                           .fieldOf("adjustingDistanceHalfLife")
-                          .forGetter(ThirdPersonConfig.SmoothingSettings::adjustingDistanceHalfLife),
+                          .forGetter(
+                              ThirdPersonConfig.SmoothingSettings::adjustingDistanceHalfLife),
                       MODE_SMOOTHING_CODEC
                           .fieldOf("normal")
                           .forGetter(ThirdPersonConfig.SmoothingSettings::normal),
@@ -146,15 +147,9 @@ final class JsonConfigCodec {
                           .fieldOf("schemaVersion")
                           .forGetter(ThirdPersonConfig::schemaVersion),
                       Codec.BOOL.fieldOf("enabled").forGetter(ThirdPersonConfig::enabled),
-                      CAMERA_SETTINGS_CODEC
-                          .fieldOf("camera")
-                          .forGetter(ThirdPersonConfig::camera),
-                      AIMING_SETTINGS_CODEC
-                          .fieldOf("aiming")
-                          .forGetter(ThirdPersonConfig::aiming),
-                      PLAYER_SETTINGS_CODEC
-                          .fieldOf("player")
-                          .forGetter(ThirdPersonConfig::player),
+                      CAMERA_SETTINGS_CODEC.fieldOf("camera").forGetter(ThirdPersonConfig::camera),
+                      AIMING_SETTINGS_CODEC.fieldOf("aiming").forGetter(ThirdPersonConfig::aiming),
+                      PLAYER_SETTINGS_CODEC.fieldOf("player").forGetter(ThirdPersonConfig::player),
                       HUD_SETTINGS_CODEC.fieldOf("hud").forGetter(ThirdPersonConfig::hud))
                   .apply(instance, ThirdPersonConfig::new));
 
@@ -177,8 +172,7 @@ final class JsonConfigCodec {
           try {
             return DataResult.success(Enum.valueOf(type, name.toUpperCase(Locale.ROOT)));
           } catch (IllegalArgumentException exception) {
-            return DataResult.error(
-                () -> "Unknown " + type.getSimpleName() + " value: " + name);
+            return DataResult.error(() -> "Unknown " + type.getSimpleName() + " value: " + name);
           }
         },
         value -> value.name().toLowerCase(Locale.ROOT));
