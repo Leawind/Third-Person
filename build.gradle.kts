@@ -17,6 +17,7 @@ val modDescriptionValue = requiredProp("mod.description")
 val modAuthorValue = requiredProp("mod.author")
 val modLicenseValue = requiredProp("mod.license")
 val modSourceUrlValue = requiredProp("mod.source_url")
+val minecraftDependency = requiredProp("meta.mcDep")
 
 val isFabric = modstitch.isLoom
 val isNeoforge = modstitch.isModDevGradleRegular
@@ -27,6 +28,16 @@ val loader = when {
     isForge -> "forge"
     else -> error("Unknown loader")
 }
+// Extra version labels are declared by each version variant for publishing platforms.
+val publishedMinecraftVersions = buildList {
+    add(mcVersion)
+    findProperty("publish.additionalMcVersions")
+        ?.toString()
+        ?.split(',')
+        ?.map(String::trim)
+        ?.filter(String::isNotEmpty)
+        ?.forEach(::add)
+}.distinct()
 
 val supportsUnitTesting = isFabric || (isNeoforge && stonecutter.current.parsed >= "1.20.5")
 // endregion
@@ -74,7 +85,7 @@ modstitch {
         modAuthor = modAuthorValue
 
         replacementProperties.put("github", modSourceUrlValue.removePrefix("https://github.com/"))
-        replacementProperties.put("mc", "*")
+        replacementProperties.put("mc", minecraftDependency)
         replacementProperties.put("loaderVersion", "*")
     }
 
@@ -228,7 +239,7 @@ afterEvaluate {
         modrinth {
             accessToken = System.getenv("MODRINTH_TOKEN")
             projectId = System.getenv("MODRINTH_ID")
-            minecraftVersions.add(mcVersion)
+            minecraftVersions.addAll(publishedMinecraftVersions)
             if (isFabric) {
                 optional { slug.set("modmenu") }
             }
@@ -236,7 +247,7 @@ afterEvaluate {
         curseforge {
             accessToken = System.getenv("CURSEFORGE_TOKEN")
             projectId = System.getenv("CURSEFORGE_ID")
-            minecraftVersions.add(mcVersion)
+            minecraftVersions.addAll(publishedMinecraftVersions)
             clientRequired = true
             serverRequired = false
             if (isFabric) {
