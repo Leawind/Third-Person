@@ -22,11 +22,13 @@ public final class ThirdPersonKeyMappings {
       new KeyMapping(key("adjust_camera"), InputConstants.KEY_Z, CATEGORY);
   public static final KeyMapping SWITCH_SHOULDER =
       new KeyMapping(key("switch_shoulder"), InputConstants.KEY_CAPSLOCK, CATEGORY);
+  public static final KeyMapping AIM =
+      new KeyMapping(key("aim"), InputConstants.UNKNOWN.getValue(), CATEGORY);
 
   private ThirdPersonKeyMappings() {}
 
   public static List<KeyMapping> all() {
-    return List.of(ADJUST_CAMERA, SWITCH_SHOULDER);
+    return List.of(ADJUST_CAMERA, SWITCH_SHOULDER, AIM);
   }
 
   private static String key(String name) {

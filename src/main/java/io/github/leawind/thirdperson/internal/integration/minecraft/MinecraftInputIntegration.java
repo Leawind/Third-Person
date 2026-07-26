@@ -32,7 +32,12 @@ public final class MinecraftInputIntegration {
     if (adjustment.isAdjusting()) {
       adjustment
           .turn(rawYaw, rawPitch)
-          .map(runtime::updateNormalCameraProfile)
+          .flatMap(
+              profile ->
+                  runtime
+                      .session()
+                      .cameraAdjustmentSlot()
+                      .map(slot -> runtime.updateCameraProfile(slot, profile)))
           .ifPresent(MinecraftConfigIntegration::scheduleSave);
       return Double.isFinite(rawYaw) && Double.isFinite(rawPitch);
     }
@@ -59,7 +64,12 @@ public final class MinecraftInputIntegration {
     }
     adjustment
         .scroll(yOffset)
-        .map(runtime::updateNormalCameraProfile)
+        .flatMap(
+            profile ->
+                runtime
+                    .session()
+                    .cameraAdjustmentSlot()
+                    .map(slot -> runtime.updateCameraProfile(slot, profile)))
         .ifPresent(MinecraftConfigIntegration::scheduleSave);
     return Double.isFinite(xOffset) && Double.isFinite(yOffset) && yOffset != 0.0;
   }

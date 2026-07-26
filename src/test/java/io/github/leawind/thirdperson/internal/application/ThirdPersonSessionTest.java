@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
+import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
@@ -21,19 +23,28 @@ class ThirdPersonSessionTest {
 
     session.activatePerspective();
     session.setMode(CameraMode.AIMING);
+    session.beginCameraAdjustment(
+        CameraProfileSlot.AIMING, ThirdPersonConfig.defaults().camera().aiming());
     session.recordSafeCameraPose(
         CameraPose.tryCreate(new Vector3d(1.0, 2.0, 3.0), new Quaternionf(), 70.0f)
+            .orElseThrow());
+    session.recordFinalCameraPose(
+        CameraPose.tryCreate(new Vector3d(4.0, 5.0, 6.0), new Quaternionf(), 75.0f)
             .orElseThrow());
     assertTrue(session.isPerspectiveActive());
     assertTrue(session.isControllingCamera());
     assertEquals(CameraMode.AIMING, session.mode());
     assertTrue(session.lastSafeCameraPose().isPresent());
+    assertTrue(session.finalCameraPose().isPresent());
+    assertEquals(CameraProfileSlot.AIMING, session.cameraAdjustmentSlot().orElseThrow());
 
     session.reset();
     assertFalse(session.isPerspectiveActive());
     assertFalse(session.isControllingCamera());
     assertEquals(CameraMode.BYPASS, session.mode());
     assertTrue(session.lastSafeCameraPose().isEmpty());
+    assertTrue(session.finalCameraPose().isEmpty());
+    assertTrue(session.cameraAdjustmentSlot().isEmpty());
   }
 
   @Test

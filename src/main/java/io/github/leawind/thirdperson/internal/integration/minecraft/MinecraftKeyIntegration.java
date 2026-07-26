@@ -2,6 +2,10 @@ package io.github.leawind.thirdperson.internal.integration.minecraft;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
+import io.github.leawind.thirdperson.internal.core.aiming.AimModeResolver;
+import io.github.leawind.thirdperson.internal.core.aiming.AimUseAnimation;
+import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
+import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfigIntegration;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
@@ -42,11 +46,33 @@ public final class MinecraftKeyIntegration {
             *//*? }*/
             && minecraft.isWindowActive();
 
-    var adjustment = runtime.session().cameraAdjustmentController();
+    boolean usingItem = minecraft.player != null && minecraft.player.isUsingItem();
+    AimUseAnimation useAnimation =
+        usingItem
+            ? mapUseAnimation(minecraft.player.getUseItem().getUseAnimation().name())
+            : AimUseAnimation.NONE;
+    runtime.setAiming(
+        acceptsInput
+            && AimModeResolver.shouldAim(
+                ThirdPersonKeyMappings.AIM.isDown(),
+                runtime.config().aiming().smartAiming(),
+                usingItem,
+                useAnimation));
+
+    var session = runtime.session();
+    var adjustment = session.cameraAdjustmentController();
     if (acceptsInput && ThirdPersonKeyMappings.ADJUST_CAMERA.isDown()) {
-      adjustment.begin(runtime.config().camera().normal());
+      CameraProfileSlot slot =
+          session.mode() == CameraMode.AIMING
+              ? CameraProfileSlot.AIMING
+              : CameraProfileSlot.NORMAL;
+      ThirdPersonConfig.CameraProfile profile =
+          slot == CameraProfileSlot.AIMING
+              ? runtime.config().camera().aiming()
+              : runtime.config().camera().normal();
+      session.beginCameraAdjustment(slot, profile);
     } else if (adjustment.isAdjusting()) {
-      adjustment.finish();
+      session.finishCameraAdjustment();
       MinecraftConfigIntegration.flushScheduledSave();
     }
 
@@ -54,12 +80,29 @@ public final class MinecraftKeyIntegration {
       if (!acceptsInput) {
         continue;
       }
-      ThirdPersonConfig.CameraProfile profile = runtime.config().camera().normal();
+      CameraProfileSlot slot =
+          session.mode() == CameraMode.AIMING
+              ? CameraProfileSlot.AIMING
+              : CameraProfileSlot.NORMAL;
+      ThirdPersonConfig.CameraProfile profile =
+          slot == CameraProfileSlot.AIMING
+              ? runtime.config().camera().aiming()
+              : runtime.config().camera().normal();
       var mirrored =
           new ThirdPersonConfig.CameraProfile(
               profile.distance(), -profile.offsetX(), profile.offsetY(), profile.fovMultiplier());
-      ThirdPersonConfig updated = runtime.updateNormalCameraProfile(mirrored);
+      ThirdPersonConfig updated = runtime.updateCameraProfile(slot, mirrored);
       MinecraftConfigIntegration.scheduleSave(updated);
     }
+  }
+
+  private static AimUseAnimation mapUseAnimation(String name) {
+    return switch (name) {
+      case "BOW" -> AimUseAnimation.BOW;
+      case "CROSSBOW" -> AimUseAnimation.CROSSBOW;
+      case "SPEAR", "TRIDENT" -> AimUseAnimation.SPEAR;
+      case "NONE" -> AimUseAnimation.NONE;
+      default -> AimUseAnimation.OTHER;
+    };
   }
 }

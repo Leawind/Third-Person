@@ -4,6 +4,7 @@ import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.core.movement.MovementDirection;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
+import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -53,6 +54,11 @@ public final class MinecraftClientIntegration {
 
     var lookController = runtime.session().lookController();
     if (!lookController.isInitialized()) {
+      return;
+    }
+    if (runtime.session().mode() == CameraMode.AIMING) {
+      player.setYRot(lookController.yawDegrees());
+      player.setXRot(lookController.pitchDegrees());
       return;
     }
     MovementDirection.facingYawDegrees(

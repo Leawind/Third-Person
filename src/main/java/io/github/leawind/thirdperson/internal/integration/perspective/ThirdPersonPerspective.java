@@ -9,6 +9,7 @@ import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.core.camera.CameraParameters;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraRig;
+import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -74,7 +75,10 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     double aspectRatio =
         windowHeight > 0 ? (double) minecraft.getWindow().getWidth() / windowHeight : 1.0;
 
-    var profile = runtime.config().camera().normal();
+    var profile =
+        runtime.session().mode() == CameraMode.AIMING
+            ? runtime.config().camera().aiming()
+            : runtime.config().camera().normal();
     CameraParameters cameraParameters = profile.cameraParameters();
     float targetFov = (float) (state.getFovDeg() * profile.fovMultiplier());
     CameraPose idealPose =
@@ -115,6 +119,20 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     }
     runtime.session().recordSafeCameraPose(resolvedPose);
     applyPose(state, resolvedPose);
+  }
+
+  @Override
+  public void postApplyWhenActive(
+      @NonNull PerspectiveState state, @NonNull PerspectiveContext context) {
+    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
+      return;
+    }
+    Entity entity = context.entity();
+    if (entity == null || entity != Minecraft.getInstance().player) {
+      return;
+    }
+    CameraPose.tryCreate(state.position(), state.rotation(), state.getFovDeg())
+        .ifPresent(runtime.session()::recordFinalCameraPose);
   }
 
   private void applyLastSafePose(PerspectiveState.Mutable state) {

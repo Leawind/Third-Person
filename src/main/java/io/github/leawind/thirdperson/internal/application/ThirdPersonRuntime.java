@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.application;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
+import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import java.util.Objects;
 
 /// Process-wide owner of services and the current Minecraft-independent session state.
@@ -62,11 +63,21 @@ public final class ThirdPersonRuntime {
     if (!session.isPerspectiveActive()) {
       return;
     }
-    session.setMode(config.enabled() ? CameraMode.NORMAL : CameraMode.BYPASS);
+    if (!config.enabled()) {
+      session.setMode(CameraMode.BYPASS);
+    } else if (session.mode() == CameraMode.BYPASS) {
+      session.setMode(CameraMode.NORMAL);
+    }
   }
 
   public ThirdPersonConfig updateNormalCameraProfile(
       ThirdPersonConfig.CameraProfile profile) {
+    return updateCameraProfile(CameraProfileSlot.NORMAL, profile);
+  }
+
+  public ThirdPersonConfig updateCameraProfile(
+      CameraProfileSlot slot, ThirdPersonConfig.CameraProfile profile) {
+    Objects.requireNonNull(slot, "slot");
     Objects.requireNonNull(profile, "profile");
     ThirdPersonConfig previous = config;
     ThirdPersonConfig.CameraSettings previousCamera = previous.camera();
@@ -75,8 +86,8 @@ public final class ThirdPersonRuntime {
             previous.schemaVersion(),
             previous.enabled(),
             new ThirdPersonConfig.CameraSettings(
-                profile,
-                previousCamera.aiming(),
+                slot == CameraProfileSlot.NORMAL ? profile : previousCamera.normal(),
+                slot == CameraProfileSlot.AIMING ? profile : previousCamera.aiming(),
                 previousCamera.smoothing(),
                 previousCamera.temporaryFirstPersonInTightSpace()),
             previous.aiming(),
@@ -84,5 +95,12 @@ public final class ThirdPersonRuntime {
             previous.hud());
     updateConfig(updated);
     return updated;
+  }
+
+  public void setAiming(boolean aiming) {
+    if (!session.isPerspectiveActive() || !config.enabled()) {
+      return;
+    }
+    session.setMode(aiming ? CameraMode.AIMING : CameraMode.NORMAL);
   }
 }

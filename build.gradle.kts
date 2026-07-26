@@ -150,6 +150,9 @@ dependencies {
     // Compile only
     compileOnly("org.jspecify:jspecify:1.0.0")
     compileOnly("org.jetbrains:annotations:24.0.1")
+    // Perspective API already provides MixinExtras at runtime; Forge does not expose it
+    // transitively on this mod's compile classpath.
+    compileOnly("io.github.llamalad7:mixinextras-common:0.5.4")
     compileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
     annotationProcessor("com.google.auto.service:auto-service:1.1.1")
 
