@@ -1,3 +1,2 @@
-- Port to 1.21.11 (Thanks to Flonja)
-- Add mod icon
-- fix: rotation not working
+- Port to 26.1 (Thanks to avpbynf)
+- fix: swap mod issue and source URLs
