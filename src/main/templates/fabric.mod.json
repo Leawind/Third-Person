@@ -15,7 +15,8 @@
   "icon": "assets/${mod_id}/logo.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["${mod_group}.platform.fabric.Entrypoint"]
+    "client": ["${mod_group}.platform.fabric.Entrypoint"],
+    "modmenu": ["${mod_group}.platform.fabric.ModMenuEntry"]
   },
   "depends": {
     "fabricloader": "*",

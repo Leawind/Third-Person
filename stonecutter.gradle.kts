@@ -32,6 +32,10 @@ allprojects {
             forRepository { maven("https://maven.isxander.dev/releases") }
             filter { includeGroup("dev.isxander") }
         }
+        exclusiveContent {
+            forRepository { maven("https://maven.quiltmc.org/repository/release") }
+            filter { includeGroup("org.quiltmc.parsers") }
+        }
         maven("https://maven.neoforged.net/releases/") {
             content { includeGroupByRegex("net\\.neoforged(\\..*)?") }
         }

@@ -144,8 +144,10 @@ dependencies {
     // ModMenu (optional)
     optionalProp("mod.modmenu_version") { modstitchModImplementation("com.terraformersmc:modmenu:$it") }
 
-    // YACL (optional, recommended)
-    optionalProp("mod.yacl_version") { modstitchModImplementation("dev.isxander:yet-another-config-lib:$it") }
+    // YACL (optional at runtime, present in development for the isolated config screen builder)
+    modstitchModImplementation(
+        "dev.isxander:yet-another-config-lib:${requiredProp("mod.yacl_version")}-$loader"
+    )
 
     // Compile only
     compileOnly("org.jspecify:jspecify:1.0.0")
@@ -246,6 +248,7 @@ afterEvaluate {
             if (isFabric) {
                 optional { slug.set("modmenu") }
             }
+            optional { slug.set("yacl") }
         }
         curseforge {
             accessToken = System.getenv("CURSEFORGE_TOKEN")
@@ -256,6 +259,7 @@ afterEvaluate {
             if (isFabric) {
                 optional { slug.set("modmenu") }
             }
+            optional { slug.set("yacl") }
         }
     }
 }

@@ -14,6 +14,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 public final class Entrypoint {
   public Entrypoint(IEventBus modBus) {
     ModEntrypoint.initialize();
+    NeoForgeConfigScreenIntegration.register();
     modBus.addListener(Entrypoint::registerKeyMappings);
   }
 
@@ -36,6 +37,7 @@ public final class Entrypoint {
       return;
     }
     ModEntrypoint.initialize();
+    NeoForgeConfigScreenIntegration.register();
     modBus.addListener(Entrypoint::registerKeyMappings);
   }
 

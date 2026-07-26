@@ -40,3 +40,4 @@ mandatory = false
 versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
+referralUrl = "https://modrinth.com/mod/yacl"

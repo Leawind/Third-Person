@@ -68,6 +68,11 @@ public final class MinecraftConfigIntegration {
     saveDelayTicks = 20;
   }
 
+  public static void saveNow(ThirdPersonConfig config) {
+    scheduleSave(config);
+    flushScheduledSave();
+  }
+
   public static void flushScheduledSave() {
     if (pendingSave == null || configPath == null) {
       return;
