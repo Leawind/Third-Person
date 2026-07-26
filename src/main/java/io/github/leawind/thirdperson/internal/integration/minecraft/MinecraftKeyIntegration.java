@@ -9,6 +9,7 @@ import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfigIntegration;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
+import io.github.leawind.thirdperson.internal.integration.resource.MinecraftAimingRuleIntegration;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -57,7 +58,8 @@ public final class MinecraftKeyIntegration {
                 ThirdPersonKeyMappings.AIM.isDown(),
                 runtime.config().aiming().smartAiming(),
                 usingItem,
-                useAnimation));
+                useAnimation,
+                MinecraftAimingRuleIntegration.currentAction()));
 
     var session = runtime.session();
     var adjustment = session.cameraAdjustmentController();

@@ -20,4 +20,29 @@ class AimModeResolverTest {
     assertFalse(AimModeResolver.shouldAim(false, false, true, AimUseAnimation.BOW));
     assertFalse(AimModeResolver.shouldAim(false, true, true, AimUseAnimation.OTHER));
   }
+
+  @Test
+  void resourceRulesParticipateOnlyWhenSmartAimingIsEnabled() {
+    assertTrue(
+        AimModeResolver.shouldAim(
+            false,
+            true,
+            false,
+            AimUseAnimation.NONE,
+            AimRuleAction.AIM_WHILE_HOLDING));
+    assertFalse(
+        AimModeResolver.shouldAim(
+            false,
+            false,
+            true,
+            AimUseAnimation.BOW,
+            AimRuleAction.AIM_WHILE_USING));
+    assertFalse(
+        AimModeResolver.shouldAim(
+            false,
+            true,
+            true,
+            AimUseAnimation.OTHER,
+            AimRuleAction.FIRST_PERSON_WHILE_USING));
+  }
 }
