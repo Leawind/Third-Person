@@ -51,8 +51,6 @@ public final class ThirdPersonRuntime {
   public void onPerspectiveActivated() {
     if (!session.isPerspectiveActive()) {
       session.activatePerspective();
-    } else if (!session.isTemporaryFirstPersonRequested()) {
-      session.setMode(CameraMode.NORMAL);
     }
     if (!config.enabled()) {
       session.setMode(CameraMode.BYPASS);

@@ -13,7 +13,7 @@ abstract class MouseHandlerMixin {
   @Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
   private void beforeMouseScroll(
       long windowHandle, double xOffset, double yOffset, CallbackInfo ci) {
-    if (PerspectiveGuard.isThirdPersonCurrent()
+    if (PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
         && MouseScrollEvent.emit(xOffset, yOffset)) {
       ci.cancel();
     }

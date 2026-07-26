@@ -25,7 +25,8 @@ public final class MinecraftInputIntegration {
 
   private static boolean onTurn(double rawYaw, double rawPitch) {
     var runtime = ThirdPersonRuntime.getInstance();
-    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || !runtime.isCameraControlEnabled()) {
       return false;
     }
     var adjustment = runtime.session().cameraAdjustmentController();
@@ -46,7 +47,8 @@ public final class MinecraftInputIntegration {
 
   private static float modifyMovementYaw(float vanillaYaw) {
     var runtime = ThirdPersonRuntime.getInstance();
-    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || !runtime.isCameraControlEnabled()) {
       return vanillaYaw;
     }
     var lookController = runtime.session().lookController();
@@ -55,7 +57,8 @@ public final class MinecraftInputIntegration {
 
   private static boolean onScroll(double xOffset, double yOffset) {
     var runtime = ThirdPersonRuntime.getInstance();
-    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || !runtime.isCameraControlEnabled()) {
       return false;
     }
     var adjustment = runtime.session().cameraAdjustmentController();

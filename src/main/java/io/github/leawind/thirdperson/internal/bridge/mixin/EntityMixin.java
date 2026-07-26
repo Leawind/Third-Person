@@ -25,7 +25,7 @@ abstract class EntityMixin {
     Minecraft minecraft = Minecraft.getInstance();
     if ((Object) this != minecraft.player
         || ((Entity) (Object) this).isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrent()) {
+        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
       return vanillaYaw;
     }
     return LocalPlayerMovementYawEvent.emit(vanillaYaw);
@@ -36,7 +36,7 @@ abstract class EntityMixin {
     Minecraft minecraft = Minecraft.getInstance();
     if ((Object) this != minecraft.player
         || ((Entity) (Object) this).isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrent()) {
+        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
       return;
     }
     if (LocalPlayerTurnEvent.emit(rawYaw, rawPitch)) {

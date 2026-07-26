@@ -55,7 +55,8 @@ public final class MinecraftTemporaryFirstPersonIntegration {
         || !runtime.config().enabled()
         || !session.isPerspectiveActive()
         || player == null
-        || minecraft.level == null) {
+        || minecraft.level == null
+        || minecraft.getCameraEntity() != player) {
       session.tightSpaceDetector().reset();
       runtime.requestTemporaryFirstPerson(false);
       return;

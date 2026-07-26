@@ -42,7 +42,7 @@ public final class MinecraftClientIntegration {
       runtime.onPerspectiveActivated();
     }
 
-    if (!currentPerspective
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
         || player == null
         || !runtime.isCameraControlEnabled()
         || runtime.config().player().rotationMode() == PlayerRotationMode.VANILLA

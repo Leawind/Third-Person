@@ -9,7 +9,7 @@ public final class MinecraftHudIntegration {
 
   public static boolean shouldRenderReticle(boolean vanillaDecision) {
     ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
-    boolean current = PerspectiveGuard.isThirdPersonCurrent();
+    boolean current = PerspectiveGuard.isThirdPersonCurrentForLocalPlayer();
     return ReticlePolicy.shouldRender(
         vanillaDecision,
         current,

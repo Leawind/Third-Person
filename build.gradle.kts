@@ -245,7 +245,9 @@ afterEvaluate {
             accessToken = System.getenv("MODRINTH_TOKEN")
             projectId = System.getenv("MODRINTH_ID")
             minecraftVersions.addAll(publishedMinecraftVersions)
+            requires("perspective-api")
             if (isFabric) {
+                requires("fabric-api")
                 optional { slug.set("modmenu") }
             }
             optional { slug.set("yacl") }
@@ -256,7 +258,9 @@ afterEvaluate {
             minecraftVersions.addAll(publishedMinecraftVersions)
             clientRequired = true
             serverRequired = false
+            requires("perspective-api")
             if (isFabric) {
+                requires("fabric-api")
                 optional { slug.set("modmenu") }
             }
             optional { slug.set("yacl") }

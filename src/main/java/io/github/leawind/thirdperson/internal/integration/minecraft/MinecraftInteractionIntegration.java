@@ -20,7 +20,7 @@ public final class MinecraftInteractionIntegration {
     ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
     Minecraft minecraft = Minecraft.getInstance();
     var player = minecraft.player;
-    if (!PerspectiveGuard.isThirdPersonCurrent()
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
         || !runtime.isCameraControlEnabled()
         || player == null
         || minecraft.level == null

@@ -15,22 +15,49 @@ A practical, smooth, feature-rich third person mod for all Minecraft players.
 
 </div>
 
-- **Client Side Only** No need to install on server. So you can join servers with this mod.
-- **Free Rotation** Freely rotate the view while keeping the player's body stationary.
-- **Free Adjustment of Camera Position**
-	- While holding `Z`, moving the mouse adjusts the camera offset (the player's position on the screen), and the mouse
-	  wheel adjusts the distance between the camera and the player
-	- **Quick Switching of Camera Offset (Left|Center|Right)** Short press `CapsLock` to toggle between left and right.
-	  Hold `CapsLock` to center the camera
-- **Smart Aim Mode** Automatically switches to aim mode based on the item the player is holding and its using status.
-  Rules can be customized. So it can be compatible with items from other mods
-- **Shooting like first-person** When aiming at enemies in third-person, it predicts the target entity you want to shoot
-  at, allowing you to simply place the crosshair above the enemy as if in first-person
-- **Player Transparency** When the player entity obstructs the view, it becomes semi-transparent (May not be compatible
-  with Sodium. This feature is disabled by default)
-- **Smooth Perspective Switching** Smooth transition between first and third person perspectives
-- **Disable Anytime** If the mod causes issues, you can disable it anytime in-game through the configuration menu or
-  hotkey, reverting to the original third-person perspective
+- **Client-side only.** Servers do not need to install the mod.
+- **Free camera rotation.** Looking around does not immediately rotate the player's body; movement remains relative to
+  the camera.
+- **Adjustable shoulder camera.** Hold `Z`, move the mouse to adjust the screen-space offset, and use the wheel to adjust
+  distance. Press `Caps Lock` to switch shoulders. Both keys can be rebound.
+- **Normal and aiming compositions.** Bows, crossbows, spears, a manually bound aim key, and resource-pack rules can
+  activate the closer aiming camera.
+- **Third-person interaction alignment.** Attacks, item use, and block picking align the player's authoritative look ray
+  with the rendered camera intent, then reuse vanilla picking without increasing reach.
+- **Safe camera collision.** The camera contracts immediately near blocks and expands smoothly after the obstruction is
+  gone. Tight spaces and spyglass use temporarily select Perspective API's first-person view.
+- **Smooth perspective switching.** Perspective API owns perspective selection, transitions, and cooperation with other
+  API-based camera mods.
+- **Focused configuration.** A small validated JSON config is always available. Install YACL for the optional in-game
+  screen; Fabric users can open it through Mod Menu.
+
+## Requirements and supported versions
+
+[Perspective API](https://modrinth.com/mod/perspective-api) is required. Fabric builds also require
+[Fabric API](https://modrinth.com/mod/fabric-api). YACL and Mod Menu are optional.
+
+- Minecraft 1.20.1: Fabric and Forge
+- Minecraft 1.20.4: Fabric and NeoForge
+- Minecraft 1.21–1.21.1: Fabric and NeoForge
+- Minecraft 1.21.11: Fabric and NeoForge
+- Minecraft 26.1–26.1.2: Fabric and NeoForge
+- Minecraft 26.2: Fabric and NeoForge
+
+## Resource-pack aiming rules
+
+Additional modded items can opt into aiming or temporary first person. Put one rule per JSON file under
+`assets/<namespace>/leawind_third_person/aiming_rules/`:
+
+```json
+{
+  "items": ["example:rifle"],
+  "action": "aim_while_using",
+  "priority": 100
+}
+```
+
+Valid actions are `aim_while_holding`, `aim_while_using`, and `first_person_while_using`. Higher-priority matching rules
+win. The `smartAiming` setting controls automatic vanilla and resource-pack rules.
 
 ## Contributors
 

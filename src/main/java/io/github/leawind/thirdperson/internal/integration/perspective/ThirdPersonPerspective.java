@@ -46,7 +46,8 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   @Override
   public void applyCameraState(
       PerspectiveState.@NonNull Mutable state, @NonNull PerspectiveContext context) {
-    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || !runtime.isCameraControlEnabled()) {
       return;
     }
 
@@ -87,11 +88,12 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
 
+    double deltaSeconds = frameDeltaSeconds();
     CameraPose smoothedPose =
         runtime
             .session()
             .cameraSmoother()
-            .update(idealPose, frameDeltaSeconds(), runtime.config().camera().smoothing())
+            .update(idealPose, deltaSeconds, runtime.config().camera().smoothing())
             .orElse(null);
     if (smoothedPose == null) {
       applyLastSafePose(state);
@@ -99,8 +101,18 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     }
 
     var idealPosition = smoothedPose.copyPosition(new Vector3d());
-    var resolvedPosition =
+    var collisionResolvedPosition =
         MinecraftCameraCollision.resolve(entity, pivot, idealPosition).orElse(null);
+    if (collisionResolvedPosition == null) {
+      applyLastSafePose(state);
+      return;
+    }
+    var resolvedPosition =
+        runtime
+            .session()
+            .collisionRecovery()
+            .resolve(pivot, collisionResolvedPosition, deltaSeconds)
+            .orElse(null);
     if (resolvedPosition == null) {
       applyLastSafePose(state);
       return;
@@ -121,7 +133,8 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   @Override
   public void postApplyWhenActive(
       @NonNull PerspectiveState state, @NonNull PerspectiveContext context) {
-    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || !runtime.isCameraControlEnabled()) {
       return;
     }
     Entity entity = context.entity();
