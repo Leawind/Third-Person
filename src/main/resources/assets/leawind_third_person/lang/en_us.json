@@ -1,3 +1,5 @@
 {
-  "key.leawind_third_person.toggle": "Toggle Third Person"
+  "key.leawind_third_person.toggle": "Toggle Third Person",
+  "perspective.leawind_third_person.third_person.name": "Leawind's Third Person",
+  "perspective.leawind_third_person.third_person.description": "A smooth, configurable over-the-shoulder perspective"
 }

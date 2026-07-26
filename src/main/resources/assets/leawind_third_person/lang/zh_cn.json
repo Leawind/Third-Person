@@ -1,3 +1,5 @@
 {
-  "key.leawind_third_person.toggle": "切换第三人称"
+  "key.leawind_third_person.toggle": "切换第三人称",
+  "perspective.leawind_third_person.third_person.name": "Leawind 的第三人称",
+  "perspective.leawind_third_person.third_person.description": "平滑且可调整的越肩第三人称视角"
 }

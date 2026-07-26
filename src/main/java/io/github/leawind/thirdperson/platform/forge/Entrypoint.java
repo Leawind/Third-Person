@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.platform.forge;
 
 /*? if forge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.logic.ModEntrypoint;
+import io.github.leawind.thirdperson.internal.application.ModEntrypoint;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
