@@ -7,6 +7,7 @@ import com.github.leawind.thirdperson.api.client.event.MouseTurnPlayerStartEvent
 import com.github.leawind.thirdperson.api.client.event.RenderEntityEvent;
 import com.github.leawind.thirdperson.api.client.event.RenderTickStartEvent;
 import com.github.leawind.thirdperson.api.client.event.ThirdPersonCameraSetupEvent;
+import com.github.leawind.thirdperson.mixin.MinecraftInvoker;
 import com.github.leawind.thirdperson.util.ItemPredicateUtil;
 import com.github.leawind.thirdperson.util.annotation.VersionSensitive;
 import com.github.leawind.thirdperson.util.math.LMath;
@@ -164,7 +165,7 @@ public final class ThirdPersonEvents {
       }
       var minecraft = Minecraft.getInstance();
       minecraft.gameRenderer.checkEntityPostEffect(minecraft.getCameraEntity());
-      minecraft.levelRenderer.needsUpdate();
+      minecraft.levelRenderer.allChanged();
 
       ThirdPersonStatus.wasRenderInThirdPersonLastRenderTick = isRenderingInThirdPerson;
     }
@@ -258,7 +259,7 @@ public final class ThirdPersonEvents {
       if (ThirdPersonStatus.isRenderingInThirdPerson()) {
         if (ThirdPerson.ENTITY_AGENT.isInteracting()) {
           // 立即更新玩家注视着的目标 Minecraft#hitResult
-          Minecraft.getInstance().gameRenderer.pick(1f);
+          ((MinecraftInvoker) (Object) Minecraft.getInstance()).invokePick(1f);
         }
       }
     }
