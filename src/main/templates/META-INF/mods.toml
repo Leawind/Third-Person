@@ -15,29 +15,28 @@ logoBlur = false
 
 [["dependencies.${mod_id}"]]
 modId = "minecraft"
-type = "required"
+mandatory = true
 versionRange = "${mc}"
 ordering = "NONE"
 side = "CLIENT"
-referralUrl = "https://www.minecraft.net/"
 
 [["dependencies.${mod_id}"]]
-modId = "neoforge"
-type = "required"
-versionRange = "${loaderVersion}"
+modId = "forge"
+mandatory = true
+versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
 
 [["dependencies.${mod_id}"]]
 modId = "perspective_api"
-type = "required"
+mandatory = true
 versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
 
 [["dependencies.${mod_id}"]]
 modId = "yet_another_config_lib_v3"
-type = "optional"
+mandatory = false
 versionRange = "*"
 ordering = "NONE"
 side = "CLIENT"
