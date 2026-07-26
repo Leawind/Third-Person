@@ -50,8 +50,8 @@ public final class ThirdPersonKeys {
           .onDown(
               () -> {
                 var mc = Minecraft.getInstance();
-                if (mc.screen == null) {
-                  mc.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
+                if (mc.gui.screen() == null) {
+                  mc.gui.setScreen(ThirdPerson.CONFIG_MANAGER.getConfigScreen(null));
                 }
               });
 

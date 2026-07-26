@@ -62,7 +62,7 @@ public class LocalPlayerMixin {
         pickTo = ThirdPerson.CAMERA_AGENT.getHitResult().getLocation();
         if (ThirdPersonStatus.shouldPickFromCamera()) {
           // 从相机到准星处
-          pickFrom = Minecraft.getInstance().gameRenderer.getMainCamera().position();
+          pickFrom = Minecraft.getInstance().gameRenderer.mainCamera().position();
           var pickVector = pickFrom.vectorTo(pickTo).normalize().scale(1e-4);
           pickTo = pickTo.add(pickVector);
         } else {

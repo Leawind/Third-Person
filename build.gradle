@@ -4,9 +4,9 @@ import groovy.json.JsonSlurper
 import java.nio.file.Files
 
 plugins {
-	id "architectury-plugin" version "3.4-SNAPSHOT"
+	id "architectury-plugin" version "3.5.169"
 	// ref: https://maven.architectury.dev/dev/architectury/architectury-loom/
-	id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
+	id "dev.architectury.loom" version "1.17.491" apply false
 	id "com.gradleup.shadow" version "9.3.1" apply false
 	
 	// 用于发布至 Modrinth 和 CurseForge
@@ -80,7 +80,7 @@ allprojects {
 }
 
 subprojects {
-	apply plugin: 'dev.architectury.loom'
+	apply plugin: 'dev.architectury.loom-no-remap'
 	apply plugin: 'architectury-plugin'
 	apply plugin: 'maven-publish'
 	
@@ -89,7 +89,7 @@ subprojects {
 	}
 	
 	loom { silentMojangMappingsLicense() }
-	
+
 	repositories {
 		maven { url "https://maven.shedaniel.me/" }
 		
@@ -99,24 +99,12 @@ subprojects {
 			url 'https://maven.isxander.dev/releases'
 		}
 		
-		maven {
-			name = 'ParchmentMC'
-			url = 'https://maven.parchmentmc.org'
-		}
-		
-		
 		mavenCentral()
 		maven { url 'https://jitpack.io' }
 	}
 	
 	dependencies {
 		minecraft "net.minecraft:minecraft:$minecraft_version"
-		//		mappings loom.officialMojangMappings()
-		
-		mappings loom.layered() {
-			officialMojangMappings()
-			parchment("org.parchmentmc.data:parchment-${parchment_version}@zip")
-		}
 	}
 	
 	processResources {
@@ -128,8 +116,11 @@ subprojects {
 			}
 			try{
 				Map meta = new JsonSlurper().parse(f) as Map
-				// meta.pack.pack_format = Integer.parseInt(resource_pack_format)
-				((Map) meta.pack).pack_format = Integer.parseInt(resource_pack_format)
+				// Since format 64+, pack.mcmeta requires min_format/max_format instead of pack_format
+				((Map) meta.pack).description = "${mod_name} Resource Pack".toString()
+				((Map) meta.pack).min_format = Integer.parseInt(resource_pack_format)
+				((Map) meta.pack).max_format = Integer.parseInt(resource_pack_format)
+				((Map) meta.pack).remove('pack_format')
 				
 				def writer = new FileWriter(f)
 				writer.write(JsonOutput.prettyPrint(JsonOutput.toJson(meta)))

@@ -2,15 +2,15 @@ package com.github.leawind.thirdperson.mixin;
 
 import com.github.leawind.thirdperson.ThirdPersonStatus;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Hud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @SuppressWarnings("unused")
-@Mixin(value = Gui.class, priority = 2000)
+@Mixin(value = Hud.class, priority = 2000)
 public class GuiMixin {
   @ModifyExpressionValue(
-      method = "renderCrosshair",
+      method = "extractCrosshair",
       at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
   private boolean isFirstPerson(boolean isFirstPersonReally) {
     return isFirstPersonReally || ThirdPersonStatus.forceThirdPersonCrosshair;

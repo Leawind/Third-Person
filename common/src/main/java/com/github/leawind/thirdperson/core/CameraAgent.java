@@ -7,7 +7,6 @@ import com.github.leawind.thirdperson.api.client.event.ThirdPersonCameraSetupEve
 import com.github.leawind.thirdperson.config.AbstractConfig;
 import com.github.leawind.thirdperson.mixin.CameraInvoker;
 import com.github.leawind.thirdperson.mixin.ClientLevelInvoker;
-import com.github.leawind.thirdperson.mixin.GameRendererInvoker;
 import com.github.leawind.thirdperson.util.FiniteChecker;
 import com.github.leawind.thirdperson.util.annotation.VersionSensitive;
 import com.github.leawind.thirdperson.util.math.LMath;
@@ -276,7 +275,7 @@ public class CameraAgent {
 
   /** 获取原版相机对象 */
   public @NotNull Camera getRawCamera() {
-    return Objects.requireNonNull(Minecraft.getInstance().gameRenderer.getMainCamera());
+    return Objects.requireNonNull(Minecraft.getInstance().gameRenderer.mainCamera());
   }
 
   /** 获取原始相机位置 */
@@ -526,9 +525,7 @@ public class CameraAgent {
     // 垂直视野角度一半(弧度制）
     double aspectRatio =
         (double) minecraft.getWindow().getWidth() / minecraft.getWindow().getHeight();
-    double fov =
-        ((GameRendererInvoker) minecraft.gameRenderer)
-            .invokeGetFov(getRawCamera(), partialTick, true);
+    double fov = ((CameraInvoker) getRawCamera()).invokeCalculateFov(partialTick);
     double verticalRadianHalf = Math.toRadians(fov) / 2;
 
     double heightHalf =
