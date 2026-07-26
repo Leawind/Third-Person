@@ -58,7 +58,7 @@
   "config.leawind_third_person.option.use_to_first_person_item_patterns": "使用时临时第一人称",
   "config.leawind_third_person.option.use_to_first_person_item_patterns.desc": "正在使用的物品符合任一额外谓词时通过 Perspective API 临时切换到第一人称",
   "config.leawind_third_person.option.rotation_mode": "玩家转向",
-  "config.leawind_third_person.option.rotation_mode.desc": "自动朝向移动和瞄准意图，或保留原版转向",
+  "config.leawind_third_person.option.rotation_mode.desc": "根据兴趣点、移动、交互与瞄准意图自动转向，或保留原版转向",
   "config.leawind_third_person.option.reticle": "第三人称准星",
   "config.leawind_third_person.option.reticle.desc": "选择本视角何时显示屏幕中央准星",
   "config.leawind_third_person.option.normal_distance": "距离",

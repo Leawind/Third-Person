@@ -48,4 +48,15 @@ class MovementDirectionTest {
     assertFalse(MovementDirection.facingYawDegrees(0.0, 0.0, 0.0).isPresent());
     assertFalse(MovementDirection.facingYawDegrees(Double.NaN, 1.0, 0.0).isPresent());
   }
+
+  @Test
+  void threeDimensionalFacingFollowsCameraPitchForForwardMovement() {
+    var forward = MovementDirection.facingRotation(0.0, 1.0, 45.0, 30.0).orElseThrow();
+    var lateral = MovementDirection.facingRotation(1.0, 0.0, 0.0, 60.0).orElseThrow();
+
+    assertEquals(45.0f, forward.yawDegrees(), 1.0e-5f);
+    assertEquals(30.0f, forward.pitchDegrees(), 1.0e-5f);
+    assertEquals(-90.0f, lateral.yawDegrees(), 1.0e-5f);
+    assertEquals(0.0f, lateral.pitchDegrees(), 1.0e-5f);
+  }
 }

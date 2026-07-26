@@ -58,7 +58,7 @@
   "config.leawind_third_person.option.use_to_first_person_item_patterns": "First Person While Using",
   "config.leawind_third_person.option.use_to_first_person_item_patterns.desc": "Temporarily switch through Perspective API while the active item matches an additional predicate",
   "config.leawind_third_person.option.rotation_mode": "Player Rotation",
-  "config.leawind_third_person.option.rotation_mode.desc": "Automatically face movement and aiming intent, or preserve vanilla rotation",
+  "config.leawind_third_person.option.rotation_mode.desc": "Automatically face points of interest, movement, interaction, and aiming intent, or preserve vanilla rotation",
   "config.leawind_third_person.option.reticle": "Third-Person Reticle",
   "config.leawind_third_person.option.reticle.desc": "Choose when the centered reticle is shown in this perspective",
   "config.leawind_third_person.option.normal_distance": "Distance",

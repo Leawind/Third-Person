@@ -7,8 +7,9 @@ import io.github.leawind.thirdperson.internal.core.camera.CollisionRecovery;
 import io.github.leawind.thirdperson.internal.core.camera.TightSpaceDetector;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
-import io.github.leawind.thirdperson.internal.core.input.LookController;
 import io.github.leawind.thirdperson.internal.core.input.CameraAdjustmentController;
+import io.github.leawind.thirdperson.internal.core.input.LookController;
+import io.github.leawind.thirdperson.internal.core.player.PlayerRotationController;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -17,6 +18,8 @@ public final class ThirdPersonSession {
   private boolean perspectiveActive;
   private CameraMode mode = CameraMode.BYPASS;
   private final LookController lookController = new LookController();
+  private final PlayerRotationController playerRotationController =
+      new PlayerRotationController();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
   private final CollisionRecovery collisionRecovery = new CollisionRecovery();
   private final CameraAdjustmentController cameraAdjustmentController =
@@ -42,6 +45,10 @@ public final class ThirdPersonSession {
 
   public LookController lookController() {
     return lookController;
+  }
+
+  public PlayerRotationController playerRotationController() {
+    return playerRotationController;
   }
 
   public CameraSmoother cameraSmoother() {
@@ -133,6 +140,7 @@ public final class ThirdPersonSession {
     perspectiveActive = false;
     mode = CameraMode.BYPASS;
     lookController.reset();
+    playerRotationController.reset();
     cameraSmoother.reset();
     collisionRecovery.reset();
     cameraAdjustmentController.reset();
