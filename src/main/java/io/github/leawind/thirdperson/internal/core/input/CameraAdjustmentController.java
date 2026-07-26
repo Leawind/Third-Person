@@ -8,7 +8,7 @@ import java.util.Optional;
 /// Applies bounded mouse and wheel adjustments to one camera profile.
 public final class CameraAdjustmentController {
   private static final double OFFSET_INPUT_SCALE = 0.0025;
-  private static final double DISTANCE_SCROLL_STEP = 0.25;
+  private static final double DISTANCE_SCROLL_FACTOR = 1.25;
 
   private ThirdPersonConfig.CameraProfile profile;
   private boolean adjusting;
@@ -41,8 +41,16 @@ public final class CameraAdjustmentController {
     if (!adjusting || !Double.isFinite(yOffset) || yOffset == 0.0) {
       return Optional.empty();
     }
+    double factor = Math.pow(DISTANCE_SCROLL_FACTOR, Math.abs(yOffset));
+    double distance;
+    if (!Double.isFinite(factor)) {
+      distance = yOffset > 0.0 ? 0.0 : 16.0;
+    } else {
+      distance =
+          yOffset > 0.0 ? profile.distance() / factor : profile.distance() * factor;
+    }
     return replace(
-        profile.distance() - yOffset * DISTANCE_SCROLL_STEP,
+        distance,
         profile.offsetX(),
         profile.offsetY());
   }
