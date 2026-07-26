@@ -45,4 +45,14 @@ class AimModeResolverTest {
             AimUseAnimation.OTHER,
             AimRuleAction.FIRST_PERSON_WHILE_USING));
   }
+
+  @Test
+  void chargedCrossbowAimsWhileHeldRatherThanOnlyWhileUsed() {
+    assertTrue(
+        AimModeResolver.shouldAim(
+            false, true, false, AimUseAnimation.NONE, true, null));
+    assertFalse(
+        AimModeResolver.shouldAim(
+            false, false, false, AimUseAnimation.NONE, true, null));
+  }
 }

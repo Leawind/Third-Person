@@ -12,7 +12,7 @@ public final class AimModeResolver {
       boolean usingItem,
       AimUseAnimation useAnimation) {
     return shouldAim(
-        manualAiming, smartAimingEnabled, usingItem, useAnimation, null);
+        manualAiming, smartAimingEnabled, usingItem, useAnimation, false, null);
   }
 
   public static boolean shouldAim(
@@ -21,12 +21,31 @@ public final class AimModeResolver {
       boolean usingItem,
       AimUseAnimation useAnimation,
       AimRuleAction resourceAction) {
+    return shouldAim(
+        manualAiming,
+        smartAimingEnabled,
+        usingItem,
+        useAnimation,
+        false,
+        resourceAction);
+  }
+
+  public static boolean shouldAim(
+      boolean manualAiming,
+      boolean smartAimingEnabled,
+      boolean usingItem,
+      AimUseAnimation useAnimation,
+      boolean holdingChargedCrossbow,
+      AimRuleAction resourceAction) {
     Objects.requireNonNull(useAnimation, "useAnimation");
     if (manualAiming) {
       return true;
     }
     if (!smartAimingEnabled) {
       return false;
+    }
+    if (holdingChargedCrossbow) {
+      return true;
     }
     if (resourceAction == AimRuleAction.AIM_WHILE_HOLDING
         || resourceAction == AimRuleAction.AIM_WHILE_USING) {

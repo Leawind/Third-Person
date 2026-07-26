@@ -13,6 +13,8 @@ import io.github.leawind.thirdperson.internal.integration.resource.MinecraftAimi
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
 
 /// Handles key edges after each client tick while platform entrypoints only register mappings.
 public final class MinecraftKeyIntegration {
@@ -66,6 +68,7 @@ public final class MinecraftKeyIntegration {
                 runtime.config().aiming().smartAiming(),
                 usingItem,
                 useAnimation,
+                isHoldingChargedCrossbow(minecraft),
                 MinecraftAimingRuleIntegration.currentAction()));
 
     var session = runtime.session();
@@ -155,5 +158,16 @@ public final class MinecraftKeyIntegration {
       case "NONE" -> AimUseAnimation.NONE;
       default -> AimUseAnimation.OTHER;
     };
+  }
+
+  private static boolean isHoldingChargedCrossbow(Minecraft minecraft) {
+    var player = minecraft.player;
+    return player != null
+        && (isChargedCrossbow(player.getMainHandItem())
+            || isChargedCrossbow(player.getOffhandItem()));
+  }
+
+  private static boolean isChargedCrossbow(ItemStack stack) {
+    return stack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(stack);
   }
 }
