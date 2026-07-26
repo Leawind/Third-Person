@@ -45,14 +45,8 @@ public final class MinecraftConfigIntegration {
     ThirdPersonConfig config = ThirdPersonConfig.defaults();
     try {
       if (Files.exists(path)) {
-        DecodedConfig decoded = STORE.load(path);
-        config = decoded.config();
-        if (decoded.migrated()) {
-          STORE.save(path, config);
-          ThirdPerson.LOGGER.info("Migrated config at {}", path);
-        } else {
-          ThirdPerson.LOGGER.info("Loaded config from {}", path);
-        }
+        config = STORE.load(path);
+        ThirdPerson.LOGGER.info("Loaded config from {}", path);
       } else {
         STORE.save(path, config);
         ThirdPerson.LOGGER.info("Created config at {}", path);

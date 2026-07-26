@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 final class JsonConfigStore {
-  DecodedConfig load(Path path) throws IOException {
+  ThirdPersonConfig load(Path path) throws IOException {
     return JsonConfigCodec.decode(Files.readString(path, StandardCharsets.UTF_8));
   }
 

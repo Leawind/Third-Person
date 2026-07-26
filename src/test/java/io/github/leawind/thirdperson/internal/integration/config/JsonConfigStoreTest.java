@@ -19,7 +19,7 @@ class JsonConfigStoreTest {
 
     store.save(path, ThirdPersonConfig.defaults());
 
-    assertEquals(ThirdPersonConfig.defaults(), store.load(path).config());
+    assertEquals(ThirdPersonConfig.defaults(), store.load(path));
     try (var children = Files.list(path.getParent())) {
       assertFalse(children.anyMatch(child -> child.getFileName().toString().endsWith(".tmp")));
     }
