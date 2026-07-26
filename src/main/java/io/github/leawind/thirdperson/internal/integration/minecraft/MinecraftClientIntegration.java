@@ -47,7 +47,6 @@ public final class MinecraftClientIntegration {
         || !runtime.isCameraControlEnabled()
         || runtime.config().player().rotationMode() == PlayerRotationMode.VANILLA
         || player.isPassenger()
-        || player.isFallFlying()
         || player.isSwimming()) {
       return;
     }
@@ -56,7 +55,7 @@ public final class MinecraftClientIntegration {
     if (!lookController.isInitialized()) {
       return;
     }
-    if (runtime.session().mode() == CameraMode.AIMING) {
+    if (player.isFallFlying() || runtime.session().mode() == CameraMode.AIMING) {
       player.setYRot(lookController.yawDegrees());
       player.setXRot(lookController.pitchDegrees());
       return;
