@@ -1,6 +1,7 @@
 {
     "pack": {
-        "description": "${mod_name} Resource Pack",
-        "pack_format": 48
+        "description": "Leawind's Third Person Resource Pack",
+        "min_format": 84,
+        "max_format": 84
     }
 }
