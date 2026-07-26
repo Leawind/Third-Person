@@ -34,4 +34,11 @@ public final class ThirdPersonRuntime {
   public void onPerspectiveDeactivated() {
     session.reset();
   }
+
+  public void onClientIdentityChanged(boolean perspectiveCurrent) {
+    session.reset();
+    if (perspectiveCurrent) {
+      session.activatePerspective();
+    }
+  }
 }
