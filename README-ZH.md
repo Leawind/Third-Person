@@ -30,9 +30,21 @@
 - **平滑切换视角** 在第一/第三人称视角间平滑过渡
 - **随时禁用** 如果此模组引发了故障，你随时可以在游戏中通过配置界面或快捷键来禁用此模组，恢复成原版第三人称视角
 
+## 贡献者
+
+[ArctynFox](https://github.com/ArctynFox),
+[Flonja](https://github.com/Flonja),
+[Serrenos](https://github.com/Serrenos),
+[avpbynf](https://github.com/avpbynf)
+
+## 感谢
+
+[Nakou](https://github.com/Nakou),
+[CodeZhangBorui](https://github.com/CodeZhangBorui)
+
 <div align=center>
 <details>
-<summary>捐赠</summary>
+<summary>捐赠作者</summary>
 
 <img alt=ΨQ src="https://github.com/Leawind/Third-Person/raw/gh-pages/docs/public/donate/IHY-216.jpg" width=648/>
 

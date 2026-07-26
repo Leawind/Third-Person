@@ -32,9 +32,21 @@ A practical, smooth, feature-rich third person mod for all Minecraft players.
 - **Disable Anytime** If the mod causes issues, you can disable it anytime in-game through the configuration menu or
   hotkey, reverting to the original third-person perspective
 
+## Contributors
+
+[ArctynFox](https://github.com/ArctynFox),
+[Flonja](https://github.com/Flonja),
+[Serrenos](https://github.com/Serrenos),
+[avpbynf](https://github.com/avpbynf)
+
+## Thanks
+
+[Nakou](https://github.com/Nakou),
+[CodeZhangBorui](https://github.com/CodeZhangBorui)
+
 <div align=center>
 <details>
-<summary>Donates</summary>
+<summary>Donate to author</summary>
 
 <img alt=ΨQ src="https://github.com/Leawind/Third-Person/raw/gh-pages/docs/public/donate/IHY-216.jpg" width=648/>
 
