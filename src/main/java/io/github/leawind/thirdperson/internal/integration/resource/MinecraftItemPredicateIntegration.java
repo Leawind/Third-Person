@@ -14,7 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.item.ItemPredicateArgument;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+/*? if !neoforge {*/
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
+/*? }*/
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,7 +27,9 @@ public final class MinecraftItemPredicateIntegration {
       new MinecraftItemPatternReloadListener();
   private static final Match NONE = new Match(false, false);
 
+  /*? if !neoforge {*/
   private static ReloadableResourceManager registeredResourceManager;
+  /*? }*/
   private static ClientPacketListener compiledConnection;
   private static ItemPatternSet compiledResources;
   private static ThirdPersonConfig.AimingSettings compiledConfig;
@@ -50,9 +55,16 @@ public final class MinecraftItemPredicateIntegration {
     return currentMatch.firstPerson();
   }
 
+  /// Exposes the shared listener to loader lifecycle adapters.
+  public static PreparableReloadListener reloadListener() {
+    return RELOAD_LISTENER;
+  }
+
   private static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();
+    /*? if !neoforge {*/
     registerReloadListener(minecraft);
+    /*? }*/
 
     ClientPacketListener connection = minecraft.getConnection();
     Player player = minecraft.player;
@@ -80,6 +92,7 @@ public final class MinecraftItemPredicateIntegration {
     currentMatch = predicates.match(player);
   }
 
+  /*? if !neoforge {*/
   private static void registerReloadListener(Minecraft minecraft) {
     var resourceManager = minecraft.getResourceManager();
     if (resourceManager instanceof ReloadableResourceManager reloadable
@@ -89,6 +102,7 @@ public final class MinecraftItemPredicateIntegration {
       RELOAD_LISTENER.loadImmediately(reloadable);
     }
   }
+  /*? }*/
 
   private static CompiledPredicates compile(
       ClientPacketListener connection,
