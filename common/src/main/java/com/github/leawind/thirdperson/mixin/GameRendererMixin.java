@@ -4,11 +4,11 @@ import com.github.leawind.thirdperson.ThirdPerson;
 import com.github.leawind.thirdperson.ThirdPersonStatus;
 import com.github.leawind.thirdperson.api.base.GameEvents;
 import com.github.leawind.thirdperson.api.client.event.RenderTickStartEvent;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -39,16 +39,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = GameRenderer.class, priority = 2000)
 public abstract class GameRendererMixin {
 
-  @ModifyReturnValue(method = "getFov", at = @At(value = "RETURN", ordinal = 1))
-  private float modifyFov(float fov) {
-    if (!((GameRenderer) (Object) this).isPanoramicMode()
-        && ThirdPerson.isAvailable()
-        && ThirdPersonStatus.isRenderingInThirdPerson()) {
-      fov /= (float) ThirdPerson.CAMERA_AGENT.getSmoothFovDivisor();
-    }
-    return fov;
-  }
-
   /** 渲染tick前 */
   @Inject(method = "render", at = @At("HEAD"))
   private void preRender(DeltaTracker deltaTracker, boolean doRenderLevel, CallbackInfo ci) {
@@ -60,7 +50,7 @@ public abstract class GameRendererMixin {
 
   /** 禁用第三人称视角摇晃 */
   @Inject(method = "bobView", at = @At("HEAD"), cancellable = true)
-  private void cancelBobView(PoseStack poseStack, float partialTick, CallbackInfo ci) {
+  private void cancelBobView(CameraRenderState cameraState, PoseStack poseStack, CallbackInfo ci) {
     if (ThirdPerson.isAvailable()
         && ThirdPersonStatus.isRenderingInThirdPerson()
         && ThirdPerson.getConfig().disable_third_person_bob_view) {

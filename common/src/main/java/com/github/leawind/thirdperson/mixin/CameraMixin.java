@@ -1,10 +1,11 @@
 package com.github.leawind.thirdperson.mixin;
 
+import com.github.leawind.thirdperson.ThirdPerson;
+import com.github.leawind.thirdperson.ThirdPersonStatus;
 import com.github.leawind.thirdperson.api.base.GameEvents;
 import com.github.leawind.thirdperson.api.client.event.ThirdPersonCameraSetupEvent;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.Camera;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = Camera.class, priority = 2000)
 public class CameraMixin {
   /**
-   * setup 方法中第三人称下移动相机之前
+   * alignWithEntity 方法中第三人称下移动相机之前
    *
-   * <p>setup 方法位于真正渲染画面之前。
+   * <p>alignWithEntity 方法位于真正渲染画面之前。
    *
-   * <p>GameRender#render -> GameRender#renderLevel -> Camera#setup
+   * <p>GameRenderer#render -> Camera#update -> Camera#alignWithEntity
    */
   @Inject(
-      method = "setup",
+      method = "alignWithEntity",
       at = {
         @At(
             value = "INVOKE",
@@ -35,13 +36,7 @@ public class CameraMixin {
             shift = At.Shift.BEFORE)
       },
       cancellable = true)
-  private void preMoveCamera(
-      Level level,
-      Entity entity,
-      boolean detached,
-      boolean mirror,
-      float partialTickTime,
-      CallbackInfo ci) {
+  private void preMoveCamera(float partialTickTime, CallbackInfo ci) {
     if (GameEvents.thirdPersonCameraSetup != null) {
       var event = new ThirdPersonCameraSetupEvent(partialTickTime);
       GameEvents.thirdPersonCameraSetup.accept(event);
@@ -52,5 +47,15 @@ public class CameraMixin {
         ci.cancel();
       }
     }
+  }
+
+  @ModifyReturnValue(method = "calculateFov", at = @At(value = "RETURN", ordinal = 1))
+  private float modifyFov(float fov) {
+    if (!((Camera) (Object) this).isPanoramicMode()
+        && ThirdPerson.isAvailable()
+        && ThirdPersonStatus.isRenderingInThirdPerson()) {
+      fov /= (float) ThirdPerson.CAMERA_AGENT.getSmoothFovDivisor();
+    }
+    return fov;
   }
 }
