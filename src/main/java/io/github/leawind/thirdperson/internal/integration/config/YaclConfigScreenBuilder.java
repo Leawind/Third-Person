@@ -175,6 +175,17 @@ final class YaclConfigScreenBuilder {
                         -1.0,
                         1.0,
                         0.01))
+                .option(
+                    doubleOption(
+                        "normal_centered_offset_y",
+                        defaults.camera().normal().centeredOffsetY(),
+                        () -> draft.value().camera().normal().centeredOffsetY(),
+                        value ->
+                            draft.updateNormal(
+                                profile -> profileWithCenteredOffsetY(profile, value)),
+                        -1.0,
+                        1.0,
+                        0.01))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -204,6 +215,17 @@ final class YaclConfigScreenBuilder {
                         defaults.camera().aiming().offsetY(),
                         () -> draft.value().camera().aiming().offsetY(),
                         value -> draft.updateAiming(profile -> profileWithOffsetY(profile, value)),
+                        -1.0,
+                        1.0,
+                        0.01))
+                .option(
+                    doubleOption(
+                        "aiming_centered_offset_y",
+                        defaults.camera().aiming().centeredOffsetY(),
+                        () -> draft.value().camera().aiming().centeredOffsetY(),
+                        value ->
+                            draft.updateAiming(
+                                profile -> profileWithCenteredOffsetY(profile, value)),
                         -1.0,
                         1.0,
                         0.01))
@@ -291,25 +313,56 @@ final class YaclConfigScreenBuilder {
   private static ThirdPersonConfig.CameraProfile profileWithDistance(
       ThirdPersonConfig.CameraProfile profile, double distance) {
     return new ThirdPersonConfig.CameraProfile(
-        distance, profile.offsetX(), profile.offsetY(), profile.fovMultiplier());
+        distance,
+        profile.offsetX(),
+        profile.offsetY(),
+        profile.centeredOffsetY(),
+        profile.fovMultiplier(),
+        profile.centered());
   }
 
   private static ThirdPersonConfig.CameraProfile profileWithOffsetX(
       ThirdPersonConfig.CameraProfile profile, double offsetX) {
     return new ThirdPersonConfig.CameraProfile(
-        profile.distance(), offsetX, profile.offsetY(), profile.fovMultiplier());
+        profile.distance(),
+        offsetX,
+        profile.offsetY(),
+        profile.centeredOffsetY(),
+        profile.fovMultiplier(),
+        profile.centered());
   }
 
   private static ThirdPersonConfig.CameraProfile profileWithOffsetY(
       ThirdPersonConfig.CameraProfile profile, double offsetY) {
     return new ThirdPersonConfig.CameraProfile(
-        profile.distance(), profile.offsetX(), offsetY, profile.fovMultiplier());
+        profile.distance(),
+        profile.offsetX(),
+        offsetY,
+        profile.centeredOffsetY(),
+        profile.fovMultiplier(),
+        profile.centered());
+  }
+
+  private static ThirdPersonConfig.CameraProfile profileWithCenteredOffsetY(
+      ThirdPersonConfig.CameraProfile profile, double centeredOffsetY) {
+    return new ThirdPersonConfig.CameraProfile(
+        profile.distance(),
+        profile.offsetX(),
+        profile.offsetY(),
+        centeredOffsetY,
+        profile.fovMultiplier(),
+        profile.centered());
   }
 
   private static ThirdPersonConfig.CameraProfile profileWithFov(
       ThirdPersonConfig.CameraProfile profile, double fovMultiplier) {
     return new ThirdPersonConfig.CameraProfile(
-        profile.distance(), profile.offsetX(), profile.offsetY(), fovMultiplier);
+        profile.distance(),
+        profile.offsetX(),
+        profile.offsetY(),
+        profile.centeredOffsetY(),
+        fovMultiplier,
+        profile.centered());
   }
 
   private static Component text(String key) {

@@ -36,6 +36,20 @@ class CameraAdjustmentControllerTest {
   }
 
   @Test
+  void centeredAdjustmentChangesOnlyItsVerticalOffset() {
+    var controller = new CameraAdjustmentController();
+    ThirdPersonConfig.CameraProfile side = ThirdPersonConfig.defaults().camera().normal();
+    controller.begin(side.withCentered(true));
+
+    ThirdPersonConfig.CameraProfile centered = controller.turn(1000.0, 100.0).orElseThrow();
+
+    assertTrue(centered.centered());
+    assertEquals(side.offsetX(), centered.offsetX());
+    assertEquals(side.offsetY(), centered.offsetY());
+    assertEquals(side.centeredOffsetY() + 0.25, centered.centeredOffsetY());
+  }
+
+  @Test
   void unchangedGestureDoesNotRequestACommit() {
     var controller = new CameraAdjustmentController();
     controller.begin(ThirdPersonConfig.defaults().camera().normal());

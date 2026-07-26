@@ -36,9 +36,15 @@ final class JsonConfigCodec {
                       OFFSET_CODEC
                           .fieldOf("offsetY")
                           .forGetter(ThirdPersonConfig.CameraProfile::offsetY),
+                      OFFSET_CODEC
+                          .fieldOf("centeredOffsetY")
+                          .forGetter(ThirdPersonConfig.CameraProfile::centeredOffsetY),
                       FOV_MULTIPLIER_CODEC
                           .fieldOf("fovMultiplier")
-                          .forGetter(ThirdPersonConfig.CameraProfile::fovMultiplier))
+                          .forGetter(ThirdPersonConfig.CameraProfile::fovMultiplier),
+                      Codec.BOOL
+                          .fieldOf("centered")
+                          .forGetter(ThirdPersonConfig.CameraProfile::centered))
                   .apply(instance, ThirdPersonConfig.CameraProfile::new));
 
   private static final Codec<ThirdPersonConfig.ModeSmoothing> MODE_SMOOTHING_CODEC =

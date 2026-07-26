@@ -17,8 +17,8 @@ public record ThirdPersonConfig(
           CURRENT_SCHEMA_VERSION,
           true,
           new CameraSettings(
-              new CameraProfile(4.0, -0.18, 0.12, 1.0),
-              new CameraProfile(2.4, -0.30, 0.16, 0.9),
+              new CameraProfile(4.0, -0.18, 0.12, 0.24, 1.0, false),
+              new CameraProfile(2.4, -0.30, 0.16, 0.48, 0.9, false),
               new SmoothingSettings(
                   0.0,
                   0.07,
@@ -88,16 +88,23 @@ public record ThirdPersonConfig(
   }
 
   public record CameraProfile(
-      double distance, double offsetX, double offsetY, double fovMultiplier) {
+      double distance,
+      double offsetX,
+      double offsetY,
+      double centeredOffsetY,
+      double fovMultiplier,
+      boolean centered) {
     public CameraProfile {
       if (!Double.isFinite(distance)
           || !Double.isFinite(offsetX)
           || !Double.isFinite(offsetY)
+          || !Double.isFinite(centeredOffsetY)
           || !Double.isFinite(fovMultiplier)
           || distance < 0.0
           || distance > 16.0
           || Math.abs(offsetX) > 1.0
           || Math.abs(offsetY) > 1.0
+          || Math.abs(centeredOffsetY) > 1.0
           || fovMultiplier < 0.25
           || fovMultiplier > 2.0) {
         throw new IllegalArgumentException("Invalid camera profile");
@@ -105,11 +112,16 @@ public record ThirdPersonConfig(
     }
 
     public CameraParameters cameraParameters() {
-      return new CameraParameters(distance, offsetX, offsetY);
+      return centered
+          ? new CameraParameters(distance, 0.0, centeredOffsetY)
+          : new CameraParameters(distance, offsetX, offsetY);
     }
 
-    public CameraProfile centered() {
-      return offsetX == 0.0 ? this : new CameraProfile(distance, 0.0, offsetY, fovMultiplier);
+    public CameraProfile withCentered(boolean centered) {
+      return this.centered == centered
+          ? this
+          : new CameraProfile(
+              distance, offsetX, offsetY, centeredOffsetY, fovMultiplier, centered);
     }
   }
 

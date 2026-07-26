@@ -112,15 +112,30 @@ public final class MinecraftKeyIntegration {
         slot == CameraProfileSlot.AIMING
             ? runtime.config().camera().aiming()
             : runtime.config().camera().normal();
-    double offsetX = centered ? 0.0 : nextShoulderOffset(slot, profile.offsetX());
-    if (offsetX == profile.offsetX()) {
+    ThirdPersonConfig.CameraProfile updatedProfile;
+    if (centered) {
+      updatedProfile = profile.withCentered(true);
+    } else if (profile.centered()) {
+      updatedProfile = profile.withCentered(false);
+    } else {
+      updatedProfile = withOffsetX(profile, nextShoulderOffset(slot, profile.offsetX()));
+    }
+    if (updatedProfile.equals(profile)) {
       return;
     }
-    var updatedProfile =
-        new ThirdPersonConfig.CameraProfile(
-            profile.distance(), offsetX, profile.offsetY(), profile.fovMultiplier());
     ThirdPersonConfig updated = runtime.updateCameraProfile(slot, updatedProfile);
     MinecraftConfigIntegration.scheduleSave(updated);
+  }
+
+  private static ThirdPersonConfig.CameraProfile withOffsetX(
+      ThirdPersonConfig.CameraProfile profile, double offsetX) {
+    return new ThirdPersonConfig.CameraProfile(
+        profile.distance(),
+        offsetX,
+        profile.offsetY(),
+        profile.centeredOffsetY(),
+        profile.fovMultiplier(),
+        false);
   }
 
   private static double nextShoulderOffset(CameraProfileSlot slot, double currentOffset) {

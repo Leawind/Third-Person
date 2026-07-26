@@ -31,10 +31,18 @@ public final class CameraAdjustmentController {
     if (!adjusting || !Double.isFinite(rawYaw) || !Double.isFinite(rawPitch)) {
       return Optional.empty();
     }
+    if (profile.centered()) {
+      return replace(
+          profile.distance(),
+          profile.offsetX(),
+          profile.offsetY(),
+          profile.centeredOffsetY() + rawPitch * OFFSET_INPUT_SCALE);
+    }
     return replace(
         profile.distance(),
         profile.offsetX() - rawYaw * OFFSET_INPUT_SCALE,
-        profile.offsetY() + rawPitch * OFFSET_INPUT_SCALE);
+        profile.offsetY() + rawPitch * OFFSET_INPUT_SCALE,
+        profile.centeredOffsetY());
   }
 
   public Optional<ThirdPersonConfig.CameraProfile> scroll(double yOffset) {
@@ -52,7 +60,8 @@ public final class CameraAdjustmentController {
     return replace(
         distance,
         profile.offsetX(),
-        profile.offsetY());
+        profile.offsetY(),
+        profile.centeredOffsetY());
   }
 
   public Optional<ThirdPersonConfig.CameraProfile> finish() {
@@ -70,13 +79,16 @@ public final class CameraAdjustmentController {
   }
 
   private Optional<ThirdPersonConfig.CameraProfile> replace(
-      double distance, double offsetX, double offsetY) {
+      double distance, double offsetX, double offsetY, double centeredOffsetY) {
     var next =
         new ThirdPersonConfig.CameraProfile(
             ConfigValidation.finiteClamped(distance, 0.0, 16.0, profile.distance()),
             ConfigValidation.finiteClamped(offsetX, -1.0, 1.0, profile.offsetX()),
             ConfigValidation.finiteClamped(offsetY, -1.0, 1.0, profile.offsetY()),
-            profile.fovMultiplier());
+            ConfigValidation.finiteClamped(
+                centeredOffsetY, -1.0, 1.0, profile.centeredOffsetY()),
+            profile.fovMultiplier(),
+            profile.centered());
     if (next.equals(profile)) {
       return Optional.empty();
     }

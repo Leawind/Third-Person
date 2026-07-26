@@ -21,19 +21,23 @@ class ThirdPersonConfigTest {
     assertEquals(0.08, config.camera().smoothing().aiming().distanceHalfLife());
     assertEquals(PlayerRotationMode.AUTO, config.player().rotationMode());
     assertEquals(ReticleMode.AUTO, config.hud().reticle());
-    assertEquals(0.0, config.camera().normal().centered().offsetX());
+    assertEquals(0.24, config.camera().normal().centeredOffsetY());
+    assertEquals(0.0, config.camera().normal().withCentered(true).cameraParameters().anchorNdcX());
     assertEquals(
-        config.camera().normal().distance(), config.camera().normal().centered().distance());
+        0.24, config.camera().normal().withCentered(true).cameraParameters().anchorNdcY());
+    assertEquals(
+        config.camera().normal().offsetY(),
+        config.camera().normal().withCentered(true).offsetY());
   }
 
   @Test
   void profileRejectsInvalidDirectConstruction() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> new ThirdPersonConfig.CameraProfile(Double.NaN, 0.0, 0.0, 1.0));
+        () -> new ThirdPersonConfig.CameraProfile(Double.NaN, 0.0, 0.0, 0.0, 1.0, false));
     assertThrows(
         IllegalArgumentException.class,
-        () -> new ThirdPersonConfig.CameraProfile(4.0, 2.0, 0.0, 1.0));
+        () -> new ThirdPersonConfig.CameraProfile(4.0, 2.0, 0.0, 0.0, 1.0, false));
     assertThrows(
         IllegalArgumentException.class,
         () -> new ThirdPersonConfig.ModeSmoothing(-0.1, 0.0, 0.0, 0.0));

@@ -38,7 +38,7 @@ public final class ThirdPersonRuntime {
         session.compositionMode() == CameraMode.AIMING
             ? config.camera().aiming()
             : config.camera().normal();
-    return centered ? profile.centered() : profile;
+    return centered ? profile.withCentered(true) : profile;
   }
 
   public CameraSmoothingParameters cameraSmoothing(boolean flyingOrSwimming) {
