@@ -3,15 +3,22 @@ package io.github.leawind.thirdperson.platform.neoforge;
 /*? if neoforge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ModEntrypoint;
+import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
 /^?   if >=1.21.11 {^/
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 @Mod(value = ThirdPerson.MOD_ID, dist = Dist.CLIENT)
 public final class Entrypoint {
   public Entrypoint(IEventBus modBus) {
     ModEntrypoint.initialize();
+    modBus.addListener(Entrypoint::registerKeyMappings);
+  }
+
+  private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+    MinecraftKeyIntegration.registerKeyMappings(event::register);
   }
 }
 
@@ -20,6 +27,7 @@ public final class Entrypoint {
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 @Mod(value = ThirdPerson.MOD_ID)
 public final class Entrypoint {
@@ -28,6 +36,11 @@ public final class Entrypoint {
       return;
     }
     ModEntrypoint.initialize();
+    modBus.addListener(Entrypoint::registerKeyMappings);
+  }
+
+  private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+    MinecraftKeyIntegration.registerKeyMappings(event::register);
   }
 }
 ^//^?   }^/

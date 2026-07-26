@@ -64,4 +64,25 @@ public final class ThirdPersonRuntime {
     }
     session.setMode(config.enabled() ? CameraMode.NORMAL : CameraMode.BYPASS);
   }
+
+  public ThirdPersonConfig updateNormalCameraProfile(
+      ThirdPersonConfig.CameraProfile profile) {
+    Objects.requireNonNull(profile, "profile");
+    ThirdPersonConfig previous = config;
+    ThirdPersonConfig.CameraSettings previousCamera = previous.camera();
+    ThirdPersonConfig updated =
+        new ThirdPersonConfig(
+            previous.schemaVersion(),
+            previous.enabled(),
+            new ThirdPersonConfig.CameraSettings(
+                profile,
+                previousCamera.aiming(),
+                previousCamera.smoothing(),
+                previousCamera.temporaryFirstPersonInTightSpace()),
+            previous.aiming(),
+            previous.player(),
+            previous.hud());
+    updateConfig(updated);
+    return updated;
+  }
 }

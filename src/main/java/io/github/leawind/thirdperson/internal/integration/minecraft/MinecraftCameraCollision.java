@@ -19,8 +19,11 @@ public final class MinecraftCameraCollision {
       Entity entity, Vector3dc pivot, Vector3dc desiredCamera) {
     var direction = new Vector3d(desiredCamera).sub(pivot);
     double desiredDistance = direction.length();
-    if (!Double.isFinite(desiredDistance) || desiredDistance <= 1.0e-9) {
+    if (!Double.isFinite(desiredDistance)) {
       return Optional.empty();
+    }
+    if (desiredDistance <= 1.0e-9) {
+      return Optional.of(new Vector3d(pivot));
     }
     direction.div(desiredDistance);
 

@@ -2,7 +2,9 @@ package io.github.leawind.thirdperson.internal.application;
 
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.core.camera.CameraSmoother;
 import io.github.leawind.thirdperson.internal.core.input.LookController;
+import io.github.leawind.thirdperson.internal.core.input.CameraAdjustmentController;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -11,6 +13,9 @@ public final class ThirdPersonSession {
   private boolean perspectiveActive;
   private CameraMode mode = CameraMode.BYPASS;
   private final LookController lookController = new LookController();
+  private final CameraSmoother cameraSmoother = new CameraSmoother();
+  private final CameraAdjustmentController cameraAdjustmentController =
+      new CameraAdjustmentController();
   private CameraPose lastSafeCameraPose;
 
   public boolean isPerspectiveActive() {
@@ -27,6 +32,14 @@ public final class ThirdPersonSession {
 
   public LookController lookController() {
     return lookController;
+  }
+
+  public CameraSmoother cameraSmoother() {
+    return cameraSmoother;
+  }
+
+  public CameraAdjustmentController cameraAdjustmentController() {
+    return cameraAdjustmentController;
   }
 
   public Optional<CameraPose> lastSafeCameraPose() {
@@ -54,6 +67,8 @@ public final class ThirdPersonSession {
     perspectiveActive = false;
     mode = CameraMode.BYPASS;
     lookController.reset();
+    cameraSmoother.reset();
+    cameraAdjustmentController.reset();
     lastSafeCameraPose = null;
   }
 }

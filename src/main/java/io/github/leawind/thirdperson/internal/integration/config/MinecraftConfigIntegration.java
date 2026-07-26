@@ -14,6 +14,9 @@ public final class MinecraftConfigIntegration {
   private static final JsonConfigStore STORE = new JsonConfigStore();
   private static boolean registered;
   private static boolean loaded;
+  private static Path configPath;
+  private static ThirdPersonConfig pendingSave;
+  private static int saveDelayTicks;
 
   private MinecraftConfigIntegration() {}
 
@@ -27,6 +30,7 @@ public final class MinecraftConfigIntegration {
 
   private static void loadOnce() {
     if (loaded) {
+      saveIfDue();
       return;
     }
     loaded = true;
@@ -37,6 +41,7 @@ public final class MinecraftConfigIntegration {
             .toPath()
             .resolve("config")
             .resolve(ThirdPerson.MOD_ID + ".json");
+    configPath = path;
     ThirdPersonConfig config = ThirdPersonConfig.defaults();
     try {
       if (Files.exists(path)) {
@@ -56,5 +61,30 @@ public final class MinecraftConfigIntegration {
       ThirdPerson.LOGGER.error("Failed to load config from {}; using defaults", path, exception);
     }
     ThirdPersonRuntime.getInstance().updateConfig(config);
+  }
+
+  public static void scheduleSave(ThirdPersonConfig config) {
+    pendingSave = config;
+    saveDelayTicks = 20;
+  }
+
+  public static void flushScheduledSave() {
+    if (pendingSave == null || configPath == null) {
+      return;
+    }
+    ThirdPersonConfig config = pendingSave;
+    pendingSave = null;
+    saveDelayTicks = 0;
+    try {
+      STORE.save(configPath, config);
+    } catch (IOException exception) {
+      ThirdPerson.LOGGER.error("Failed to save config to {}", configPath, exception);
+    }
+  }
+
+  private static void saveIfDue() {
+    if (pendingSave != null && saveDelayTicks > 0 && --saveDelayTicks == 0) {
+      flushScheduledSave();
+    }
   }
 }

@@ -28,15 +28,18 @@ import org.jspecify.annotations.NonNull;
     switchable = true)
 @SuppressWarnings("unused")
 public final class ThirdPersonPerspective implements PerspectiveBehavior {
+  private long lastFrameNanos;
   private final ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
 
   @Override
   public void onActivate() {
+    lastFrameNanos = 0L;
     runtime.onPerspectiveActivated();
   }
 
   @Override
   public void onDeactivate() {
+    lastFrameNanos = 0L;
     runtime.onPerspectiveDeactivated();
   }
 
@@ -83,7 +86,18 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
 
-    var idealPosition = idealPose.copyPosition(new Vector3d());
+    CameraPose smoothedPose =
+        runtime
+            .session()
+            .cameraSmoother()
+            .update(idealPose, frameDeltaSeconds(), runtime.config().camera().smoothing())
+            .orElse(null);
+    if (smoothedPose == null) {
+      applyLastSafePose(state);
+      return;
+    }
+
+    var idealPosition = smoothedPose.copyPosition(new Vector3d());
     var resolvedPosition =
         MinecraftCameraCollision.resolve(entity, pivot, idealPosition).orElse(null);
     if (resolvedPosition == null) {
@@ -91,8 +105,10 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
 
+    var smoothedRotation = smoothedPose.copyRotation(new Quaternionf());
     CameraPose resolvedPose =
-        CameraPose.tryCreate(resolvedPosition, rotation, targetFov).orElse(null);
+        CameraPose.tryCreate(resolvedPosition, smoothedRotation, smoothedPose.fovDegrees())
+            .orElse(null);
     if (resolvedPose == null) {
       applyLastSafePose(state);
       return;
@@ -109,5 +125,16 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     pose.copyPosition(state.position());
     pose.copyRotation(state.rotation());
     state.setFovDeg(pose.fovDegrees());
+  }
+
+  private double frameDeltaSeconds() {
+    long now = System.nanoTime();
+    if (lastFrameNanos == 0L || now <= lastFrameNanos) {
+      lastFrameNanos = now;
+      return 0.0;
+    }
+    double deltaSeconds = (now - lastFrameNanos) * 1.0e-9;
+    lastFrameNanos = now;
+    return Math.min(deltaSeconds, 0.1);
   }
 }

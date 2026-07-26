@@ -6,7 +6,8 @@
 	"refmap": "leawind_third_person.refmap.json",
 	"client": [
 		"EntityMixin",
-		"MinecraftMixin"
+		"MinecraftMixin",
+		"MouseHandlerMixin"
 	],
 	"mixins": [
 	],
