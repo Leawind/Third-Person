@@ -1,14 +1,17 @@
 package io.github.leawind.thirdperson.internal.application;
 
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
+import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.input.LookController;
 import java.util.Objects;
+import java.util.Optional;
 
 /// Minecraft-independent mutable state for one active client session.
 public final class ThirdPersonSession {
   private boolean perspectiveActive;
   private CameraMode mode = CameraMode.BYPASS;
   private final LookController lookController = new LookController();
+  private CameraPose lastSafeCameraPose;
 
   public boolean isPerspectiveActive() {
     return perspectiveActive;
@@ -18,8 +21,20 @@ public final class ThirdPersonSession {
     return mode;
   }
 
+  public boolean isControllingCamera() {
+    return perspectiveActive && mode != CameraMode.BYPASS;
+  }
+
   public LookController lookController() {
     return lookController;
+  }
+
+  public Optional<CameraPose> lastSafeCameraPose() {
+    return Optional.ofNullable(lastSafeCameraPose);
+  }
+
+  public void recordSafeCameraPose(CameraPose pose) {
+    lastSafeCameraPose = Objects.requireNonNull(pose, "pose");
   }
 
   public void activatePerspective() {
@@ -39,5 +54,6 @@ public final class ThirdPersonSession {
     perspectiveActive = false;
     mode = CameraMode.BYPASS;
     lookController.reset();
+    lastSafeCameraPose = null;
   }
 }

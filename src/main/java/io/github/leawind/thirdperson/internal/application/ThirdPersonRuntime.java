@@ -1,12 +1,16 @@
 package io.github.leawind.thirdperson.internal.application;
 
 import io.github.leawind.thirdperson.ThirdPerson;
+import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
+import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
+import java.util.Objects;
 
 /// Process-wide owner of services and the current Minecraft-independent session state.
 public final class ThirdPersonRuntime {
   private static final ThirdPersonRuntime INSTANCE = new ThirdPersonRuntime();
 
   private final ThirdPersonSession session = new ThirdPersonSession();
+  private volatile ThirdPersonConfig config = ThirdPersonConfig.defaults();
   private boolean initialized;
 
   private ThirdPersonRuntime() {}
@@ -19,6 +23,14 @@ public final class ThirdPersonRuntime {
     return session;
   }
 
+  public ThirdPersonConfig config() {
+    return config;
+  }
+
+  public boolean isCameraControlEnabled() {
+    return config.enabled() && session.isControllingCamera();
+  }
+
   public void initialize() {
     if (initialized) {
       return;
@@ -29,6 +41,9 @@ public final class ThirdPersonRuntime {
 
   public void onPerspectiveActivated() {
     session.activatePerspective();
+    if (!config.enabled()) {
+      session.setMode(CameraMode.BYPASS);
+    }
   }
 
   public void onPerspectiveDeactivated() {
@@ -38,7 +53,15 @@ public final class ThirdPersonRuntime {
   public void onClientIdentityChanged(boolean perspectiveCurrent) {
     session.reset();
     if (perspectiveCurrent) {
-      session.activatePerspective();
+      onPerspectiveActivated();
     }
+  }
+
+  public void updateConfig(ThirdPersonConfig config) {
+    this.config = Objects.requireNonNull(config, "config");
+    if (!session.isPerspectiveActive()) {
+      return;
+    }
+    session.setMode(config.enabled() ? CameraMode.NORMAL : CameraMode.BYPASS);
   }
 }

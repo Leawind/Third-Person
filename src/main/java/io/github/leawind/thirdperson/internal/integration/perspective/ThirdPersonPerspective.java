@@ -28,9 +28,6 @@ import org.jspecify.annotations.NonNull;
     switchable = true)
 @SuppressWarnings("unused")
 public final class ThirdPersonPerspective implements PerspectiveBehavior {
-  private static final CameraParameters NORMAL_CAMERA =
-      new CameraParameters(4.0, -0.18, 0.12);
-
   private final ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
 
   @Override
@@ -46,7 +43,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   @Override
   public void applyCameraState(
       PerspectiveState.@NonNull Mutable state, @NonNull PerspectiveContext context) {
-    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.session().isPerspectiveActive()) {
+    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return;
     }
 
@@ -64,6 +61,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
 
     var rotation = new Quaternionf();
     if (!lookController.copyRotation(rotation)) {
+      applyLastSafePose(state);
       return;
     }
 
@@ -73,11 +71,15 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     double aspectRatio =
         windowHeight > 0 ? (double) minecraft.getWindow().getWidth() / windowHeight : 1.0;
 
+    var profile = runtime.config().camera().normal();
+    CameraParameters cameraParameters = profile.cameraParameters();
+    float targetFov = (float) (state.getFovDeg() * profile.fovMultiplier());
     CameraPose idealPose =
         CameraRig.calculate(
-                pivot, rotation, NORMAL_CAMERA, state.getFovDeg(), aspectRatio)
+                pivot, rotation, cameraParameters, targetFov, aspectRatio)
             .orElse(null);
     if (idealPose == null) {
+      applyLastSafePose(state);
       return;
     }
 
@@ -85,15 +87,27 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     var resolvedPosition =
         MinecraftCameraCollision.resolve(entity, pivot, idealPosition).orElse(null);
     if (resolvedPosition == null) {
+      applyLastSafePose(state);
       return;
     }
 
     CameraPose resolvedPose =
-        CameraPose.tryCreate(resolvedPosition, rotation, state.getFovDeg()).orElse(null);
+        CameraPose.tryCreate(resolvedPosition, rotation, targetFov).orElse(null);
     if (resolvedPose == null) {
+      applyLastSafePose(state);
       return;
     }
-    resolvedPose.copyPosition(state.position());
-    resolvedPose.copyRotation(state.rotation());
+    runtime.session().recordSafeCameraPose(resolvedPose);
+    applyPose(state, resolvedPose);
+  }
+
+  private void applyLastSafePose(PerspectiveState.Mutable state) {
+    runtime.session().lastSafeCameraPose().ifPresent(pose -> applyPose(state, pose));
+  }
+
+  private static void applyPose(PerspectiveState.Mutable state, CameraPose pose) {
+    pose.copyPosition(state.position());
+    pose.copyRotation(state.rotation());
+    state.setFovDeg(pose.fovDegrees());
   }
 }

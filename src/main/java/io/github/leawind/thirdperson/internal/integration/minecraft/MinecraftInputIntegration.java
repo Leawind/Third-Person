@@ -21,20 +21,19 @@ public final class MinecraftInputIntegration {
   }
 
   private static boolean onTurn(double rawYaw, double rawPitch) {
-    if (!PerspectiveGuard.isThirdPersonCurrent()) {
+    var runtime = ThirdPersonRuntime.getInstance();
+    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return false;
     }
-    return ThirdPersonRuntime.getInstance()
-        .session()
-        .lookController()
-        .turn(rawYaw, rawPitch);
+    return runtime.session().lookController().turn(rawYaw, rawPitch);
   }
 
   private static float modifyMovementYaw(float vanillaYaw) {
-    if (!PerspectiveGuard.isThirdPersonCurrent()) {
+    var runtime = ThirdPersonRuntime.getInstance();
+    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return vanillaYaw;
     }
-    var lookController = ThirdPersonRuntime.getInstance().session().lookController();
+    var lookController = runtime.session().lookController();
     return lookController.isInitialized() ? lookController.yawDegrees() : vanillaYaw;
   }
 }

@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.integration.minecraft;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.core.movement.MovementDirection;
+import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -42,6 +43,8 @@ public final class MinecraftClientIntegration {
 
     if (!currentPerspective
         || player == null
+        || !runtime.isCameraControlEnabled()
+        || runtime.config().player().rotationMode() == PlayerRotationMode.VANILLA
         || player.isPassenger()
         || player.isFallFlying()
         || player.isSwimming()) {

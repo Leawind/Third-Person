@@ -34,7 +34,9 @@ abstract class EntityMixin {
   @Inject(method = "turn", at = @At("HEAD"), cancellable = true)
   private void beforeTurn(double rawYaw, double rawPitch, CallbackInfo ci) {
     Minecraft minecraft = Minecraft.getInstance();
-    if ((Object) this != minecraft.player || !PerspectiveGuard.isThirdPersonCurrent()) {
+    if ((Object) this != minecraft.player
+        || ((Entity) (Object) this).isPassenger()
+        || !PerspectiveGuard.isThirdPersonCurrent()) {
       return;
     }
     if (LocalPlayerTurnEvent.emit(rawYaw, rawPitch)) {
