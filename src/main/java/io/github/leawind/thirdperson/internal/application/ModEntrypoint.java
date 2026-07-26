@@ -5,7 +5,7 @@ import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCli
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftInputIntegration;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
 import io.github.leawind.thirdperson.internal.integration.perspective.MinecraftTemporaryFirstPersonIntegration;
-import io.github.leawind.thirdperson.internal.integration.resource.MinecraftAimingRuleIntegration;
+import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
 
 public final class ModEntrypoint {
   private ModEntrypoint() {}
@@ -13,7 +13,7 @@ public final class ModEntrypoint {
   public static void initialize() {
     ThirdPersonRuntime.getInstance().initialize();
     MinecraftConfigIntegration.register();
-    MinecraftAimingRuleIntegration.register();
+    MinecraftItemPredicateIntegration.register();
     MinecraftKeyIntegration.register();
     MinecraftClientIntegration.register();
     MinecraftInputIntegration.register();

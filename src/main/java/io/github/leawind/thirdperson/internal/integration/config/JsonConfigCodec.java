@@ -11,6 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
+import java.util.List;
 import java.util.Locale;
 
 final class JsonConfigCodec {
@@ -122,7 +123,19 @@ final class JsonConfigCodec {
                   .group(
                       Codec.BOOL
                           .fieldOf("smartAiming")
-                          .forGetter(ThirdPersonConfig.AimingSettings::smartAiming))
+                          .forGetter(ThirdPersonConfig.AimingSettings::smartAiming),
+                      Codec.STRING
+                          .listOf()
+                          .optionalFieldOf("holdToAimItemPatterns", List.of())
+                          .forGetter(ThirdPersonConfig.AimingSettings::holdToAimItemPatterns),
+                      Codec.STRING
+                          .listOf()
+                          .optionalFieldOf("useToAimItemPatterns", List.of())
+                          .forGetter(ThirdPersonConfig.AimingSettings::useToAimItemPatterns),
+                      Codec.STRING
+                          .listOf()
+                          .optionalFieldOf("useToFirstPersonItemPatterns", List.of())
+                          .forGetter(ThirdPersonConfig.AimingSettings::useToFirstPersonItemPatterns))
                   .apply(instance, ThirdPersonConfig.AimingSettings::new));
 
   private static final Codec<ThirdPersonConfig.PlayerSettings> PLAYER_SETTINGS_CODEC =

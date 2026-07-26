@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.core.config;
 
 import io.github.leawind.thirdperson.internal.core.camera.CameraParameters;
+import java.util.List;
 import java.util.Objects;
 
 /// Immutable, validated runtime configuration.
@@ -27,7 +28,7 @@ public record ThirdPersonConfig(
                   new ModeSmoothing(0.064, 0.08, 0.06, 0.08, 0.0),
                   new ModeSmoothing(0.02, 0.025, 0.025, 0.08, 0.0)),
               true),
-          new AimingSettings(true),
+          new AimingSettings(true, List.of(), List.of(), List.of()),
           new PlayerSettings(PlayerRotationMode.AUTO),
           new HudSettings(ReticleMode.AUTO));
 
@@ -127,7 +128,28 @@ public record ThirdPersonConfig(
     }
   }
 
-  public record AimingSettings(boolean smartAiming) {}
+  public record AimingSettings(
+      boolean smartAiming,
+      List<String> holdToAimItemPatterns,
+      List<String> useToAimItemPatterns,
+      List<String> useToFirstPersonItemPatterns) {
+    private static final int MAX_PATTERNS_PER_LIST = 1024;
+
+    public AimingSettings {
+      holdToAimItemPatterns = copyPatterns(holdToAimItemPatterns, "holdToAimItemPatterns");
+      useToAimItemPatterns = copyPatterns(useToAimItemPatterns, "useToAimItemPatterns");
+      useToFirstPersonItemPatterns =
+          copyPatterns(useToFirstPersonItemPatterns, "useToFirstPersonItemPatterns");
+    }
+
+    private static List<String> copyPatterns(List<String> patterns, String name) {
+      Objects.requireNonNull(patterns, name);
+      if (patterns.size() > MAX_PATTERNS_PER_LIST || patterns.stream().anyMatch(Objects::isNull)) {
+        throw new IllegalArgumentException(name + " must contain at most 1024 non-null values");
+      }
+      return List.copyOf(patterns);
+    }
+  }
 
   public record PlayerSettings(PlayerRotationMode rotationMode) {
     public PlayerSettings {

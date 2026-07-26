@@ -40,6 +40,11 @@ val publishedMinecraftVersions = buildList {
 }.distinct()
 
 val supportsUnitTesting = isFabric || (isNeoforge && stonecutter.current.parsed >= "1.20.5")
+val chargedCrossbowItemPredicate = if (stonecutter.current.parsed >= "1.20.5") {
+    "minecraft:crossbow[!minecraft:charged_projectiles=[]]"
+} else {
+    "minecraft:crossbow{Charged:1b}"
+}
 // endregion
 
 modstitch {
@@ -204,6 +209,12 @@ tasks.withType<Jar>().configureEach {
 }
 tasks.withType<ProcessResources>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    inputs.property("chargedCrossbowItemPredicate", chargedCrossbowItemPredicate)
+    filesMatching("assets/leawind_third_person/item_patterns/hold_to_aim/vanilla.json") {
+        filter { line: String ->
+            line.replace("@charged_crossbow_item_predicate@", chargedCrossbowItemPredicate)
+        }
+    }
 }
 
 if (isForge) {

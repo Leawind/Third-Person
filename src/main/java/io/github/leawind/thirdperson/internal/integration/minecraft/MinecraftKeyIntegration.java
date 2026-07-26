@@ -3,18 +3,15 @@ package io.github.leawind.thirdperson.internal.integration.minecraft;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.core.aiming.AimModeResolver;
-import io.github.leawind.thirdperson.internal.core.aiming.AimUseAnimation;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfigIntegration;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
-import io.github.leawind.thirdperson.internal.integration.resource.MinecraftAimingRuleIntegration;
+import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.ItemStack;
 
 /// Handles key edges after each client tick while platform entrypoints only register mappings.
 public final class MinecraftKeyIntegration {
@@ -56,20 +53,12 @@ public final class MinecraftKeyIntegration {
 
     shoulderKeyTracker().tick().drain();
 
-    boolean usingItem = minecraft.player != null && minecraft.player.isUsingItem();
-    AimUseAnimation useAnimation =
-        usingItem
-            ? mapUseAnimation(minecraft.player.getUseItem().getUseAnimation().name())
-            : AimUseAnimation.NONE;
     runtime.setAiming(
         acceptsInput
             && AimModeResolver.shouldAim(
                 ThirdPersonKeyMappings.AIM.isDown(),
                 runtime.config().aiming().smartAiming(),
-                usingItem,
-                useAnimation,
-                isHoldingChargedCrossbow(minecraft),
-                MinecraftAimingRuleIntegration.currentAction()));
+                MinecraftItemPredicateIntegration.isAutomaticallyAiming()));
 
     var session = runtime.session();
     var adjustment = session.cameraAdjustmentController();
@@ -150,24 +139,4 @@ public final class MinecraftKeyIntegration {
         : ThirdPersonConfig.defaults().camera().normal().offsetX();
   }
 
-  private static AimUseAnimation mapUseAnimation(String name) {
-    return switch (name) {
-      case "BOW" -> AimUseAnimation.BOW;
-      case "CROSSBOW" -> AimUseAnimation.CROSSBOW;
-      case "SPEAR", "TRIDENT" -> AimUseAnimation.SPEAR;
-      case "NONE" -> AimUseAnimation.NONE;
-      default -> AimUseAnimation.OTHER;
-    };
-  }
-
-  private static boolean isHoldingChargedCrossbow(Minecraft minecraft) {
-    var player = minecraft.player;
-    return player != null
-        && (isChargedCrossbow(player.getMainHandItem())
-            || isChargedCrossbow(player.getOffhandItem()));
-  }
-
-  private static boolean isChargedCrossbow(ItemStack stack) {
-    return stack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(stack);
-  }
 }

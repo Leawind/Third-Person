@@ -32,6 +32,25 @@ class JsonConfigCodecTest {
   }
 
   @Test
+  void roundTripsCustomItemPredicates() {
+    ThirdPersonConfig defaults = ThirdPersonConfig.defaults();
+    ThirdPersonConfig config =
+        new ThirdPersonConfig(
+            defaults.schemaVersion(),
+            defaults.enabled(),
+            defaults.camera(),
+            new ThirdPersonConfig.AimingSettings(
+                true, java.util.List.of("#example:ranged"), java.util.List.of(), java.util.List.of()),
+            defaults.player(),
+            defaults.hud());
+
+    ThirdPersonConfig decoded = JsonConfigCodec.decode(JsonConfigCodec.encode(config));
+
+    assertEquals(
+        java.util.List.of("#example:ranged"), decoded.aiming().holdToAimItemPatterns());
+  }
+
+  @Test
   void rejectsOutOfRangeNumbers() {
     String json =
         JsonConfigCodec.encode(ThirdPersonConfig.defaults())

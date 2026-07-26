@@ -8,51 +8,13 @@ import org.junit.jupiter.api.Test;
 class AimModeResolverTest {
   @Test
   void manualAimingAlwaysWins() {
-    assertTrue(AimModeResolver.shouldAim(true, false, false, AimUseAnimation.NONE));
+    assertTrue(AimModeResolver.shouldAim(true, false, false));
   }
 
   @Test
-  void smartAimingRequiresAnActiveSupportedAnimation() {
-    assertTrue(AimModeResolver.shouldAim(false, true, true, AimUseAnimation.BOW));
-    assertTrue(AimModeResolver.shouldAim(false, true, true, AimUseAnimation.CROSSBOW));
-    assertTrue(AimModeResolver.shouldAim(false, true, true, AimUseAnimation.SPEAR));
-    assertFalse(AimModeResolver.shouldAim(false, true, false, AimUseAnimation.BOW));
-    assertFalse(AimModeResolver.shouldAim(false, false, true, AimUseAnimation.BOW));
-    assertFalse(AimModeResolver.shouldAim(false, true, true, AimUseAnimation.OTHER));
-  }
-
-  @Test
-  void resourceRulesParticipateOnlyWhenSmartAimingIsEnabled() {
-    assertTrue(
-        AimModeResolver.shouldAim(
-            false,
-            true,
-            false,
-            AimUseAnimation.NONE,
-            AimRuleAction.AIM_WHILE_HOLDING));
-    assertFalse(
-        AimModeResolver.shouldAim(
-            false,
-            false,
-            true,
-            AimUseAnimation.BOW,
-            AimRuleAction.AIM_WHILE_USING));
-    assertFalse(
-        AimModeResolver.shouldAim(
-            false,
-            true,
-            true,
-            AimUseAnimation.OTHER,
-            AimRuleAction.FIRST_PERSON_WHILE_USING));
-  }
-
-  @Test
-  void chargedCrossbowAimsWhileHeldRatherThanOnlyWhileUsed() {
-    assertTrue(
-        AimModeResolver.shouldAim(
-            false, true, false, AimUseAnimation.NONE, true, null));
-    assertFalse(
-        AimModeResolver.shouldAim(
-            false, false, false, AimUseAnimation.NONE, true, null));
+  void automaticAimingIsGatedBySmartAiming() {
+    assertTrue(AimModeResolver.shouldAim(false, true, true));
+    assertFalse(AimModeResolver.shouldAim(false, true, false));
+    assertFalse(AimModeResolver.shouldAim(false, false, true));
   }
 }

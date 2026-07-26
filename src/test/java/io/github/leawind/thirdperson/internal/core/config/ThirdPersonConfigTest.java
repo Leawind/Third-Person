@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.core.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class ThirdPersonConfigTest {
@@ -30,6 +31,9 @@ class ThirdPersonConfigTest {
     assertEquals(
         config.camera().normal().offsetY(),
         config.camera().normal().withCentered(true).offsetY());
+    assertEquals(List.of(), config.aiming().holdToAimItemPatterns());
+    assertEquals(List.of(), config.aiming().useToAimItemPatterns());
+    assertEquals(List.of(), config.aiming().useToFirstPersonItemPatterns());
   }
 
   @Test
@@ -46,5 +50,18 @@ class ThirdPersonConfigTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> new ThirdPersonConfig.ModeSmoothing(0.3, 0.0, 0.0, 0.0, 0.0));
+  }
+
+  @Test
+  void aimingSettingsDefensivelyCopyItemPatternLists() {
+    var patterns = new java.util.ArrayList<>(List.of("minecraft:bow"));
+    var aiming = new ThirdPersonConfig.AimingSettings(true, patterns, List.of(), List.of());
+
+    patterns.add("minecraft:crossbow");
+
+    assertEquals(List.of("minecraft:bow"), aiming.holdToAimItemPatterns());
+    assertThrows(
+        UnsupportedOperationException.class,
+        () -> aiming.holdToAimItemPatterns().add("minecraft:trident"));
   }
 }

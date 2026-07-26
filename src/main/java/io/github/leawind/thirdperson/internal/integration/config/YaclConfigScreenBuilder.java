@@ -1,17 +1,20 @@
 package io.github.leawind.thirdperson.internal.integration.config;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
+import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -66,6 +69,29 @@ final class YaclConfigScreenBuilder {
                         () -> draft.value().hud().reticle(),
                         draft::setReticleMode,
                         ReticleMode.class))
+                .build())
+        .category(
+            ConfigCategory.createBuilder()
+                .name(text("category.item_predicates"))
+                .tooltip(text("category.item_predicates.desc"))
+                .group(
+                    itemPatternOption(
+                        "hold_to_aim_item_patterns",
+                        defaults.aiming().holdToAimItemPatterns(),
+                        () -> draft.value().aiming().holdToAimItemPatterns(),
+                        draft::setHoldToAimItemPatterns))
+                .group(
+                    itemPatternOption(
+                        "use_to_aim_item_patterns",
+                        defaults.aiming().useToAimItemPatterns(),
+                        () -> draft.value().aiming().useToAimItemPatterns(),
+                        draft::setUseToAimItemPatterns))
+                .group(
+                    itemPatternOption(
+                        "use_to_first_person_item_patterns",
+                        defaults.aiming().useToFirstPersonItemPatterns(),
+                        () -> draft.value().aiming().useToFirstPersonItemPatterns(),
+                        draft::setUseToFirstPersonItemPatterns))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -297,6 +323,23 @@ final class YaclConfigScreenBuilder {
     return numberOption(key, defaultValue, getter, setter, 0.0, 0.2, 0.001, 4);
   }
 
+  private static ListOption<String> itemPatternOption(
+      String key,
+      List<String> defaultValue,
+      Supplier<List<String>> getter,
+      Consumer<List<String>> setter) {
+    return ListOption.<String>createBuilder()
+        .name(text("option." + key))
+        .description(OptionDescription.of(text("option." + key + ".desc")))
+        .binding(defaultValue, getter, setter)
+        .controller(StringControllerBuilder::create)
+        .initial("")
+        .maximumNumberOfEntries(1024)
+        .insertEntriesAtEnd(true)
+        .collapsed(false)
+        .build();
+  }
+
   private static Option<Double> numberOption(
       String key,
       double defaultValue,
@@ -416,12 +459,52 @@ final class YaclConfigScreenBuilder {
     }
 
     private void setSmartAiming(boolean enabled) {
+      var aiming = value.aiming();
+      setAiming(
+          new ThirdPersonConfig.AimingSettings(
+              enabled,
+              aiming.holdToAimItemPatterns(),
+              aiming.useToAimItemPatterns(),
+              aiming.useToFirstPersonItemPatterns()));
+    }
+
+    private void setHoldToAimItemPatterns(List<String> patterns) {
+      var aiming = value.aiming();
+      setAiming(
+          new ThirdPersonConfig.AimingSettings(
+              aiming.smartAiming(),
+              patterns,
+              aiming.useToAimItemPatterns(),
+              aiming.useToFirstPersonItemPatterns()));
+    }
+
+    private void setUseToAimItemPatterns(List<String> patterns) {
+      var aiming = value.aiming();
+      setAiming(
+          new ThirdPersonConfig.AimingSettings(
+              aiming.smartAiming(),
+              aiming.holdToAimItemPatterns(),
+              patterns,
+              aiming.useToFirstPersonItemPatterns()));
+    }
+
+    private void setUseToFirstPersonItemPatterns(List<String> patterns) {
+      var aiming = value.aiming();
+      setAiming(
+          new ThirdPersonConfig.AimingSettings(
+              aiming.smartAiming(),
+              aiming.holdToAimItemPatterns(),
+              aiming.useToAimItemPatterns(),
+              patterns));
+    }
+
+    private void setAiming(ThirdPersonConfig.AimingSettings aiming) {
       value =
           new ThirdPersonConfig(
               value.schemaVersion(),
               value.enabled(),
               value.camera(),
-              new ThirdPersonConfig.AimingSettings(enabled),
+              aiming,
               value.player(),
               value.hud());
     }

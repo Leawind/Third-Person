@@ -45,19 +45,20 @@ A practical, smooth, feature-rich third person mod for all Minecraft players.
 
 ## Resource-pack aiming rules
 
-Additional modded items can opt into aiming or temporary first person. Put one rule per JSON file under
-`assets/<namespace>/leawind_third_person/aiming_rules/`:
+Automatic aiming is entirely driven by item predicates. Each JSON file is an array of expressions using the same
+syntax as the item argument accepted by `/clear`. Put files in one of these resource-pack directories:
+
+- `assets/<namespace>/item_patterns/hold_to_aim/`
+- `assets/<namespace>/item_patterns/use_to_aim/`
+- `assets/<namespace>/item_patterns/use_to_first_person/`
 
 ```json
-{
-  "items": ["example:rifle"],
-  "action": "aim_while_using",
-  "priority": 100
-}
+["example:rifle", "#example:ranged[example:mode=aim]"]
 ```
 
-Valid actions are `aim_while_holding`, `aim_while_using`, and `first_person_while_using`. Higher-priority matching rules
-win. The `smartAiming` setting controls automatic vanilla and resource-pack rules.
+The mod's vanilla behavior is supplied through the same resource mechanism. Extra predicates can also be edited in
+the YACL config screen. The `smartAiming` setting controls all automatic predicate behavior; the manual aim key remains
+independent.
 
 ## Contributors
 

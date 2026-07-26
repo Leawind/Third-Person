@@ -8,8 +8,7 @@ import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraRig;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
-import io.github.leawind.thirdperson.internal.core.aiming.AimRuleAction;
-import io.github.leawind.thirdperson.internal.integration.resource.MinecraftAimingRuleIntegration;
+import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
 import net.minecraft.client.Minecraft;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -69,20 +68,16 @@ public final class MinecraftTemporaryFirstPersonIntegration {
       lookController.initialize(player.getXRot(), player.getYRot());
     }
 
-    boolean spyglass =
-        player.isUsingItem()
-            && "SPYGLASS".equals(player.getUseItem().getUseAnimation().name());
-    boolean resourceFirstPerson =
+    boolean itemFirstPerson =
         runtime.config().aiming().smartAiming()
-            && MinecraftAimingRuleIntegration.currentAction()
-                == AimRuleAction.FIRST_PERSON_WHILE_USING;
+            && MinecraftItemPredicateIntegration.isRequestingFirstPerson();
     boolean tight = false;
     if (runtime.config().camera().temporaryFirstPersonInTightSpace()) {
       tight = updateTightSpace(minecraft, runtime);
     } else {
       session.tightSpaceDetector().reset();
     }
-    runtime.requestTemporaryFirstPerson(spyglass || resourceFirstPerson || tight);
+    runtime.requestTemporaryFirstPerson(itemFirstPerson || tight);
   }
 
   private static boolean updateTightSpace(Minecraft minecraft, ThirdPersonRuntime runtime) {
