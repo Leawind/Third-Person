@@ -33,8 +33,8 @@ public final class CameraAdjustmentController {
     }
     return replace(
         profile.distance(),
-        profile.offsetX() + rawYaw * OFFSET_INPUT_SCALE,
-        profile.offsetY() - rawPitch * OFFSET_INPUT_SCALE);
+        profile.offsetX() - rawYaw * OFFSET_INPUT_SCALE,
+        profile.offsetY() + rawPitch * OFFSET_INPUT_SCALE);
   }
 
   public Optional<ThirdPersonConfig.CameraProfile> scroll(double yOffset) {

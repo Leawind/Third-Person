@@ -16,7 +16,11 @@ import net.minecraft.client.Minecraft;
 
 /// Handles key edges after each client tick while platform entrypoints only register mappings.
 public final class MinecraftKeyIntegration {
+  private static final int CENTER_HOLD_TICKS = 4;
+
   private static boolean registered;
+  private static boolean acceptsInputThisTick;
+  private static KeyStateTracker shoulderKeyTracker;
 
   private MinecraftKeyIntegration() {}
 
@@ -46,6 +50,9 @@ public final class MinecraftKeyIntegration {
             /*&& minecraft.screen == null
             *//*? }*/
             && minecraft.isWindowActive();
+    acceptsInputThisTick = acceptsInput;
+
+    shoulderKeyTracker().tick().drain();
 
     boolean usingItem = minecraft.player != null && minecraft.player.isUsingItem();
     AimUseAnimation useAnimation =
@@ -77,25 +84,52 @@ public final class MinecraftKeyIntegration {
       session.finishCameraAdjustment();
       MinecraftConfigIntegration.flushScheduledSave();
     }
+  }
 
-    while (ThirdPersonKeyMappings.SWITCH_SHOULDER.consumeClick()) {
-      if (!acceptsInput) {
-        continue;
-      }
-      CameraProfileSlot slot =
-          session.mode() == CameraMode.AIMING
-              ? CameraProfileSlot.AIMING
-              : CameraProfileSlot.NORMAL;
-      ThirdPersonConfig.CameraProfile profile =
-          slot == CameraProfileSlot.AIMING
-              ? runtime.config().camera().aiming()
-              : runtime.config().camera().normal();
-      var mirrored =
-          new ThirdPersonConfig.CameraProfile(
-              profile.distance(), -profile.offsetX(), profile.offsetY(), profile.fovMultiplier());
-      ThirdPersonConfig updated = runtime.updateCameraProfile(slot, mirrored);
-      MinecraftConfigIntegration.scheduleSave(updated);
+  private static KeyStateTracker shoulderKeyTracker() {
+    if (shoulderKeyTracker == null) {
+      shoulderKeyTracker =
+          KeyStateTracker.builder(ThirdPersonKeyMappings.SWITCH_SHOULDER)
+              .setHoldTicks(CENTER_HOLD_TICKS)
+              .onPress(() -> updateShoulder(false))
+              .onHoldStart(() -> updateShoulder(true))
+              .build();
     }
+    return shoulderKeyTracker;
+  }
+
+  private static void updateShoulder(boolean centered) {
+    if (!acceptsInputThisTick) {
+      return;
+    }
+    ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
+    var session = runtime.session();
+    CameraProfileSlot slot =
+        session.mode() == CameraMode.AIMING
+            ? CameraProfileSlot.AIMING
+            : CameraProfileSlot.NORMAL;
+    ThirdPersonConfig.CameraProfile profile =
+        slot == CameraProfileSlot.AIMING
+            ? runtime.config().camera().aiming()
+            : runtime.config().camera().normal();
+    double offsetX = centered ? 0.0 : nextShoulderOffset(slot, profile.offsetX());
+    if (offsetX == profile.offsetX()) {
+      return;
+    }
+    var updatedProfile =
+        new ThirdPersonConfig.CameraProfile(
+            profile.distance(), offsetX, profile.offsetY(), profile.fovMultiplier());
+    ThirdPersonConfig updated = runtime.updateCameraProfile(slot, updatedProfile);
+    MinecraftConfigIntegration.scheduleSave(updated);
+  }
+
+  private static double nextShoulderOffset(CameraProfileSlot slot, double currentOffset) {
+    if (currentOffset != 0.0) {
+      return -currentOffset;
+    }
+    return slot == CameraProfileSlot.AIMING
+        ? ThirdPersonConfig.defaults().camera().aiming().offsetX()
+        : ThirdPersonConfig.defaults().camera().normal().offsetX();
   }
 
   private static AimUseAnimation mapUseAnimation(String name) {

@@ -15,8 +15,8 @@ class CameraAdjustmentControllerTest {
     controller.begin(defaults);
 
     ThirdPersonConfig.CameraProfile turned = controller.turn(1000.0, -1000.0).orElseThrow();
-    assertEquals(1.0, turned.offsetX());
-    assertEquals(1.0, turned.offsetY());
+    assertEquals(-1.0, turned.offsetX());
+    assertEquals(-1.0, turned.offsetY());
 
     ThirdPersonConfig.CameraProfile zoomed = controller.scroll(1000.0).orElseThrow();
     assertEquals(0.0, zoomed.distance());
