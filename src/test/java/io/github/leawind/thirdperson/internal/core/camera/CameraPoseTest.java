@@ -36,4 +36,22 @@ class CameraPoseTest {
     assertFalse(CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 180.0f).isPresent());
     assertTrue(CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).isPresent());
   }
+
+  @Test
+  void replacingPositionCannotChangeRotationOrFov() {
+    var rotation = new Quaternionf().rotationYXZ(0.7f, -0.2f, 0.0f);
+    var original = CameraPose.tryCreate(new Vector3d(), rotation, 73.0f).orElseThrow();
+
+    CameraPose moved = original.withPosition(new Vector3d(4.0, 5.0, 6.0)).orElseThrow();
+
+    assertEquals(new Vector3d(4.0, 5.0, 6.0), moved.copyPosition(new Vector3d()));
+    assertEquals(
+        1.0f,
+        Math.abs(
+            moved
+                .copyRotation(new Quaternionf())
+                .dot(original.copyRotation(new Quaternionf()))),
+        1.0e-6f);
+    assertEquals(73.0f, moved.fovDegrees());
+  }
 }

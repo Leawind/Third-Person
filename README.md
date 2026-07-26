@@ -18,8 +18,8 @@ A practical, smooth, feature-rich third person mod for all Minecraft players.
 - **Client-side only.** Servers do not need to install the mod.
 - **Free camera rotation.** Looking around does not immediately rotate the player's body; movement remains relative to
   the camera.
-- **Adjustable shoulder camera.** Hold `Z`, move the mouse to adjust the screen-space offset, and use the wheel to adjust
-  distance. Press `Caps Lock` to switch shoulders. Both keys can be rebound.
+- **Adjustable shoulder camera.** Hold `Z`, move the mouse to adjust the screen-space offset, and use the wheel to scale
+  distance by 1.25 per step. Tap `Caps Lock` to switch shoulders or hold it to center. Both keys can be rebound.
 - **Normal and aiming compositions.** Bows, crossbows, spears, a manually bound aim key, and resource-pack rules can
   activate the closer aiming camera.
 - **Third-person interaction alignment.** Attacks, item use, and block picking align the player's authoritative look ray

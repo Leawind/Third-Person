@@ -3,45 +3,55 @@ package io.github.leawind.thirdperson.internal.core.camera;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.leawind.thirdperson.internal.core.config.SmoothingPreset;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
 class CameraSmootherTest {
+  private static final CameraSmoothingParameters BALANCED =
+      new CameraSmoothingParameters(0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+
   @Test
-  void exponentialPositionSmoothingIsFrameRateIndependent() {
-    CameraPose start = pose(0.0, new Quaternionf(), 70.0f);
-    CameraPose target = pose(10.0, new Quaternionf(), 90.0f);
+  void independentSmoothingIsFrameRateIndependent() {
+    CameraInput start = input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f);
+    CameraInput target =
+        input(10.0, new Quaternionf().rotationY(0.5f), 6.0, 0.5, -0.25, 90.0f);
     var oneFrame = new CameraSmoother();
     var twoFrames = new CameraSmoother();
-    oneFrame.update(start, 0.0, SmoothingPreset.BALANCED).orElseThrow();
-    twoFrames.update(start, 0.0, SmoothingPreset.BALANCED).orElseThrow();
+    oneFrame.update(start, 0.0, BALANCED).orElseThrow();
+    twoFrames.update(start, 0.0, BALANCED).orElseThrow();
 
-    CameraPose first =
-        oneFrame.update(target, 0.1, SmoothingPreset.BALANCED).orElseThrow();
-    twoFrames.update(target, 0.05, SmoothingPreset.BALANCED).orElseThrow();
-    CameraPose second =
-        twoFrames.update(target, 0.05, SmoothingPreset.BALANCED).orElseThrow();
+    CameraInput first = oneFrame.update(target, 0.1, BALANCED).orElseThrow();
+    twoFrames.update(target, 0.05, BALANCED).orElseThrow();
+    CameraInput second = twoFrames.update(target, 0.05, BALANCED).orElseThrow();
 
     assertEquals(
-        first.copyPosition(new Vector3d()).x,
-        second.copyPosition(new Vector3d()).x,
+        first.copyPivot(new Vector3d()).x,
+        second.copyPivot(new Vector3d()).x,
         1.0e-9);
+    assertEquals(first.parameters().distance(), second.parameters().distance(), 1.0e-9);
+    assertEquals(first.parameters().anchorNdcX(), second.parameters().anchorNdcX(), 1.0e-9);
     assertEquals(first.fovDegrees(), second.fovDegrees(), 1.0e-5f);
   }
 
   @Test
   void equivalentNegativeQuaternionUsesTheShortestArc() {
     var smoother = new CameraSmoother();
-    smoother.update(pose(0.0, new Quaternionf(), 70.0f), 0.0, SmoothingPreset.BALANCED);
+    smoother.update(
+        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
 
-    CameraPose result =
+    CameraInput result =
         smoother
             .update(
-                pose(0.0, new Quaternionf(0.0f, 0.0f, 0.0f, -1.0f), 70.0f),
+                input(
+                    0.0,
+                    new Quaternionf(0.0f, 0.0f, 0.0f, -1.0f),
+                    2.0,
+                    0.0,
+                    0.0,
+                    70.0f),
                 0.05,
-                SmoothingPreset.BALANCED)
+                BALANCED)
             .orElseThrow();
 
     Quaternionf rotation = result.copyRotation(new Quaternionf());
@@ -52,21 +62,60 @@ class CameraSmootherTest {
   }
 
   @Test
-  void offPresetAppliesTargetImmediately() {
+  void zeroRotationHalfLifeAppliesMouseRotationImmediately() {
     var smoother = new CameraSmoother();
-    smoother.update(pose(0.0, new Quaternionf(), 70.0f), 0.0, SmoothingPreset.BALANCED);
+    smoother.update(
+        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    var targetRotation = new Quaternionf().rotationYXZ(0.8f, -0.3f, 0.0f);
+    var immediateRotation =
+        new CameraSmoothingParameters(0.25, 0.25, 0.0, 0.25, 0.25, 0.25);
 
-    CameraPose result =
+    CameraInput result =
         smoother
-            .update(pose(8.0, new Quaternionf().rotationY(1.0f), 80.0f), 0.001, SmoothingPreset.OFF)
+            .update(
+                input(10.0, targetRotation, 6.0, 0.5, -0.25, 90.0f),
+                0.01,
+                immediateRotation)
             .orElseThrow();
 
-    assertEquals(8.0, result.copyPosition(new Vector3d()).x);
+    Quaternionf actual = result.copyRotation(new Quaternionf());
+    assertEquals(1.0f, Math.abs(actual.dot(targetRotation)), 1.0e-6f);
+    assertTrue(result.copyPivot(new Vector3d()).x < 10.0);
+  }
+
+  @Test
+  void zeroHalfLivesApplyEveryTargetImmediately() {
+    var smoother = new CameraSmoother();
+    smoother.update(
+        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    var immediate = new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+    CameraInput result =
+        smoother
+            .update(
+                input(8.0, new Quaternionf().rotationY(1.0f), 5.0, 0.4, 0.2, 80.0f),
+                0.001,
+                immediate)
+            .orElseThrow();
+
+    assertEquals(8.0, result.copyPivot(new Vector3d()).x);
+    assertEquals(5.0, result.parameters().distance());
+    assertEquals(0.4, result.parameters().anchorNdcX());
     assertEquals(80.0f, result.fovDegrees());
   }
 
-  private static CameraPose pose(double x, Quaternionf rotation, float fovDegrees) {
-    return CameraPose.tryCreate(new Vector3d(x, 0.0, 0.0), rotation, fovDegrees)
+  private static CameraInput input(
+      double pivotX,
+      Quaternionf rotation,
+      double distance,
+      double offsetX,
+      double offsetY,
+      float fovDegrees) {
+    return CameraInput.tryCreate(
+            new Vector3d(pivotX, 0.0, 0.0),
+            rotation,
+            new CameraParameters(distance, offsetX, offsetY),
+            fovDegrees)
         .orElseThrow();
   }
 }

@@ -11,7 +11,6 @@ import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
-import io.github.leawind.thirdperson.internal.core.config.SmoothingPreset;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -42,13 +41,6 @@ final class YaclConfigScreenBuilder {
                         () -> draft.value().enabled(),
                         draft::setEnabled))
                 .option(
-                    enumOption(
-                        "smoothing",
-                        defaults.camera().smoothing(),
-                        () -> draft.value().camera().smoothing(),
-                        draft::setSmoothing,
-                        SmoothingPreset.class))
-                .option(
                     booleanOption(
                         "tight_space",
                         defaults.camera().temporaryFirstPersonInTightSpace(),
@@ -74,6 +66,107 @@ final class YaclConfigScreenBuilder {
                         () -> draft.value().hud().reticle(),
                         draft::setReticleMode,
                         ReticleMode.class))
+                .build())
+        .category(
+            ConfigCategory.createBuilder()
+                .name(text("category.smoothing"))
+                .tooltip(text("category.smoothing.desc"))
+                .option(
+                    halfLifeOption(
+                        "rotation_half_life",
+                        defaults.camera().smoothing().rotationHalfLife(),
+                        () -> draft.value().camera().smoothing().rotationHalfLife(),
+                        draft::setRotationHalfLife))
+                .option(
+                    halfLifeOption(
+                        "flying_pivot_half_life",
+                        defaults.camera().smoothing().flyingPivotHalfLife(),
+                        () -> draft.value().camera().smoothing().flyingPivotHalfLife(),
+                        draft::setFlyingPivotHalfLife))
+                .option(
+                    halfLifeOption(
+                        "adjusting_offset_half_life",
+                        defaults.camera().smoothing().adjustingOffsetHalfLife(),
+                        () -> draft.value().camera().smoothing().adjustingOffsetHalfLife(),
+                        draft::setAdjustingOffsetHalfLife))
+                .option(
+                    halfLifeOption(
+                        "adjusting_distance_half_life",
+                        defaults.camera().smoothing().adjustingDistanceHalfLife(),
+                        () -> draft.value().camera().smoothing().adjustingDistanceHalfLife(),
+                        draft::setAdjustingDistanceHalfLife))
+                .option(
+                    halfLifeOption(
+                        "normal_pivot_horizontal_half_life",
+                        defaults.camera().smoothing().normal().horizontalPivotHalfLife(),
+                        () ->
+                            draft
+                                .value()
+                                .camera()
+                                .smoothing()
+                                .normal()
+                                .horizontalPivotHalfLife(),
+                        draft::setNormalHorizontalPivotHalfLife))
+                .option(
+                    halfLifeOption(
+                        "normal_pivot_vertical_half_life",
+                        defaults.camera().smoothing().normal().verticalPivotHalfLife(),
+                        () ->
+                            draft
+                                .value()
+                                .camera()
+                                .smoothing()
+                                .normal()
+                                .verticalPivotHalfLife(),
+                        draft::setNormalVerticalPivotHalfLife))
+                .option(
+                    halfLifeOption(
+                        "normal_offset_half_life",
+                        defaults.camera().smoothing().normal().offsetHalfLife(),
+                        () -> draft.value().camera().smoothing().normal().offsetHalfLife(),
+                        draft::setNormalOffsetHalfLife))
+                .option(
+                    halfLifeOption(
+                        "normal_distance_half_life",
+                        defaults.camera().smoothing().normal().distanceHalfLife(),
+                        () -> draft.value().camera().smoothing().normal().distanceHalfLife(),
+                        draft::setNormalDistanceHalfLife))
+                .option(
+                    halfLifeOption(
+                        "aiming_pivot_horizontal_half_life",
+                        defaults.camera().smoothing().aiming().horizontalPivotHalfLife(),
+                        () ->
+                            draft
+                                .value()
+                                .camera()
+                                .smoothing()
+                                .aiming()
+                                .horizontalPivotHalfLife(),
+                        draft::setAimingHorizontalPivotHalfLife))
+                .option(
+                    halfLifeOption(
+                        "aiming_pivot_vertical_half_life",
+                        defaults.camera().smoothing().aiming().verticalPivotHalfLife(),
+                        () ->
+                            draft
+                                .value()
+                                .camera()
+                                .smoothing()
+                                .aiming()
+                                .verticalPivotHalfLife(),
+                        draft::setAimingVerticalPivotHalfLife))
+                .option(
+                    halfLifeOption(
+                        "aiming_offset_half_life",
+                        defaults.camera().smoothing().aiming().offsetHalfLife(),
+                        () -> draft.value().camera().smoothing().aiming().offsetHalfLife(),
+                        draft::setAimingOffsetHalfLife))
+                .option(
+                    halfLifeOption(
+                        "aiming_distance_half_life",
+                        defaults.camera().smoothing().aiming().distanceHalfLife(),
+                        () -> draft.value().camera().smoothing().aiming().distanceHalfLife(),
+                        draft::setAimingDistanceHalfLife))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -194,6 +287,26 @@ final class YaclConfigScreenBuilder {
       double min,
       double max,
       double step) {
+    return numberOption(key, defaultValue, getter, setter, min, max, step, 2);
+  }
+
+  private static Option<Double> halfLifeOption(
+      String key,
+      double defaultValue,
+      Supplier<Double> getter,
+      Consumer<Double> setter) {
+    return numberOption(key, defaultValue, getter, setter, 0.0, 1.0, 0.005, 3);
+  }
+
+  private static Option<Double> numberOption(
+      String key,
+      double defaultValue,
+      Supplier<Double> getter,
+      Consumer<Double> setter,
+      double min,
+      double max,
+      double step,
+      int decimalPlaces) {
     return Option.<Double>createBuilder()
         .name(text("option." + key))
         .description(OptionDescription.of(text("option." + key + ".desc")))
@@ -205,7 +318,9 @@ final class YaclConfigScreenBuilder {
                     .step(step)
                     .formatValue(
                         value ->
-                            Component.literal(String.format(Locale.ROOT, "%.2f", value))))
+                            Component.literal(
+                                String.format(
+                                    Locale.ROOT, "%." + decimalPlaces + "f", value))))
         .build();
   }
 
@@ -262,16 +377,6 @@ final class YaclConfigScreenBuilder {
               value.aiming(),
               value.player(),
               value.hud());
-    }
-
-    private void setSmoothing(SmoothingPreset smoothing) {
-      var camera = value.camera();
-      setCamera(
-          new ThirdPersonConfig.CameraSettings(
-              camera.normal(),
-              camera.aiming(),
-              smoothing,
-              camera.temporaryFirstPersonInTightSpace()));
     }
 
     private void setTemporaryFirstPersonInTightSpace(boolean enabled) {
@@ -331,6 +436,171 @@ final class YaclConfigScreenBuilder {
               camera.normal(),
               update.apply(camera.aiming()),
               camera.smoothing(),
+              camera.temporaryFirstPersonInTightSpace()));
+    }
+
+    private void setRotationHalfLife(double halfLife) {
+      updateSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.SmoothingSettings(
+                  halfLife,
+                  smoothing.flyingPivotHalfLife(),
+                  smoothing.adjustingOffsetHalfLife(),
+                  smoothing.adjustingDistanceHalfLife(),
+                  smoothing.normal(),
+                  smoothing.aiming()));
+    }
+
+    private void setFlyingPivotHalfLife(double halfLife) {
+      updateSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.SmoothingSettings(
+                  smoothing.rotationHalfLife(),
+                  halfLife,
+                  smoothing.adjustingOffsetHalfLife(),
+                  smoothing.adjustingDistanceHalfLife(),
+                  smoothing.normal(),
+                  smoothing.aiming()));
+    }
+
+    private void setAdjustingOffsetHalfLife(double halfLife) {
+      updateSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.SmoothingSettings(
+                  smoothing.rotationHalfLife(),
+                  smoothing.flyingPivotHalfLife(),
+                  halfLife,
+                  smoothing.adjustingDistanceHalfLife(),
+                  smoothing.normal(),
+                  smoothing.aiming()));
+    }
+
+    private void setAdjustingDistanceHalfLife(double halfLife) {
+      updateSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.SmoothingSettings(
+                  smoothing.rotationHalfLife(),
+                  smoothing.flyingPivotHalfLife(),
+                  smoothing.adjustingOffsetHalfLife(),
+                  halfLife,
+                  smoothing.normal(),
+                  smoothing.aiming()));
+    }
+
+    private void setNormalHorizontalPivotHalfLife(double halfLife) {
+      updateNormalSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  halfLife,
+                  smoothing.verticalPivotHalfLife(),
+                  smoothing.offsetHalfLife(),
+                  smoothing.distanceHalfLife()));
+    }
+
+    private void setNormalVerticalPivotHalfLife(double halfLife) {
+      updateNormalSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  halfLife,
+                  smoothing.offsetHalfLife(),
+                  smoothing.distanceHalfLife()));
+    }
+
+    private void setNormalOffsetHalfLife(double halfLife) {
+      updateNormalSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  smoothing.verticalPivotHalfLife(),
+                  halfLife,
+                  smoothing.distanceHalfLife()));
+    }
+
+    private void setNormalDistanceHalfLife(double halfLife) {
+      updateNormalSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  smoothing.verticalPivotHalfLife(),
+                  smoothing.offsetHalfLife(),
+                  halfLife));
+    }
+
+    private void setAimingHorizontalPivotHalfLife(double halfLife) {
+      updateAimingSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  halfLife,
+                  smoothing.verticalPivotHalfLife(),
+                  smoothing.offsetHalfLife(),
+                  smoothing.distanceHalfLife()));
+    }
+
+    private void setAimingVerticalPivotHalfLife(double halfLife) {
+      updateAimingSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  halfLife,
+                  smoothing.offsetHalfLife(),
+                  smoothing.distanceHalfLife()));
+    }
+
+    private void setAimingOffsetHalfLife(double halfLife) {
+      updateAimingSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  smoothing.verticalPivotHalfLife(),
+                  halfLife,
+                  smoothing.distanceHalfLife()));
+    }
+
+    private void setAimingDistanceHalfLife(double halfLife) {
+      updateAimingSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  smoothing.verticalPivotHalfLife(),
+                  smoothing.offsetHalfLife(),
+                  halfLife));
+    }
+
+    private void updateNormalSmoothing(
+        UnaryOperator<ThirdPersonConfig.ModeSmoothing> update) {
+      updateSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.SmoothingSettings(
+                  smoothing.rotationHalfLife(),
+                  smoothing.flyingPivotHalfLife(),
+                  smoothing.adjustingOffsetHalfLife(),
+                  smoothing.adjustingDistanceHalfLife(),
+                  update.apply(smoothing.normal()),
+                  smoothing.aiming()));
+    }
+
+    private void updateAimingSmoothing(
+        UnaryOperator<ThirdPersonConfig.ModeSmoothing> update) {
+      updateSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.SmoothingSettings(
+                  smoothing.rotationHalfLife(),
+                  smoothing.flyingPivotHalfLife(),
+                  smoothing.adjustingOffsetHalfLife(),
+                  smoothing.adjustingDistanceHalfLife(),
+                  smoothing.normal(),
+                  update.apply(smoothing.aiming())));
+    }
+
+    private void updateSmoothing(
+        UnaryOperator<ThirdPersonConfig.SmoothingSettings> update) {
+      var camera = value.camera();
+      setCamera(
+          new ThirdPersonConfig.CameraSettings(
+              camera.normal(),
+              camera.aiming(),
+              update.apply(camera.smoothing()),
               camera.temporaryFirstPersonInTightSpace()));
     }
 

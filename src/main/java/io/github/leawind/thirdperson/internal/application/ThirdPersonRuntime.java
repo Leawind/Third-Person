@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.application;
 
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
+import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import java.util.Objects;
@@ -38,6 +39,34 @@ public final class ThirdPersonRuntime {
             ? config.camera().aiming()
             : config.camera().normal();
     return centered ? profile.centered() : profile;
+  }
+
+  public CameraSmoothingParameters cameraSmoothing(boolean flyingOrSwimming) {
+    ThirdPersonConfig.SmoothingSettings smoothing = config.camera().smoothing();
+    ThirdPersonConfig.ModeSmoothing modeSmoothing =
+        session.compositionMode() == CameraMode.AIMING
+            ? smoothing.aiming()
+            : smoothing.normal();
+    double horizontalPivotHalfLife =
+        flyingOrSwimming
+            ? smoothing.flyingPivotHalfLife()
+            : modeSmoothing.horizontalPivotHalfLife();
+    double verticalPivotHalfLife =
+        flyingOrSwimming
+            ? smoothing.flyingPivotHalfLife()
+            : modeSmoothing.verticalPivotHalfLife();
+    boolean adjusting = session.cameraAdjustmentController().isAdjusting();
+    double offsetHalfLife =
+        adjusting ? smoothing.adjustingOffsetHalfLife() : modeSmoothing.offsetHalfLife();
+    double distanceHalfLife =
+        adjusting ? smoothing.adjustingDistanceHalfLife() : modeSmoothing.distanceHalfLife();
+    return new CameraSmoothingParameters(
+        horizontalPivotHalfLife,
+        verticalPivotHalfLife,
+        smoothing.rotationHalfLife(),
+        offsetHalfLife,
+        distanceHalfLife,
+        distanceHalfLife);
   }
 
   public void initialize() {

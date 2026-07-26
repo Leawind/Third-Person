@@ -8,7 +8,6 @@ import com.google.gson.JsonParser;
 import io.github.leawind.thirdperson.internal.core.config.ConfigValidation;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
-import io.github.leawind.thirdperson.internal.core.config.SmoothingPreset;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.Locale;
 
@@ -26,7 +25,17 @@ final class JsonConfigCodec {
 
     JsonObject root = parsed.getAsJsonObject();
     boolean legacy = !root.has("schemaVersion") && root.has("is_mod_enabled");
-    return legacy ? decodeLegacy(root) : new DecodedConfig(decodeCurrent(root), false);
+    if (legacy) {
+      return decodeLegacy(root);
+    }
+    int schemaVersion = integer(root, "schemaVersion", ThirdPersonConfig.CURRENT_SCHEMA_VERSION);
+    if (schemaVersion == 1) {
+      return new DecodedConfig(decodeSchema1(root), true);
+    }
+    if (schemaVersion != ThirdPersonConfig.CURRENT_SCHEMA_VERSION) {
+      throw new IllegalArgumentException("Unsupported config schema version: " + schemaVersion);
+    }
+    return new DecodedConfig(decodeCurrent(root), false);
   }
 
   static String encode(ThirdPersonConfig config) {
@@ -37,7 +46,7 @@ final class JsonConfigCodec {
     JsonObject camera = new JsonObject();
     camera.add("normal", encodeProfile(config.camera().normal()));
     camera.add("aiming", encodeProfile(config.camera().aiming()));
-    camera.addProperty("smoothing", lowerName(config.camera().smoothing()));
+    camera.add("smoothing", encodeSmoothing(config.camera().smoothing()));
     camera.addProperty(
         "temporaryFirstPersonInTightSpace",
         config.camera().temporaryFirstPersonInTightSpace());
@@ -59,11 +68,28 @@ final class JsonConfigCodec {
 
   private static ThirdPersonConfig decodeCurrent(JsonObject root) {
     ThirdPersonConfig defaults = ThirdPersonConfig.defaults();
-    int schemaVersion = integer(root, "schemaVersion", ThirdPersonConfig.CURRENT_SCHEMA_VERSION);
-    if (schemaVersion != ThirdPersonConfig.CURRENT_SCHEMA_VERSION) {
-      throw new IllegalArgumentException("Unsupported config schema version: " + schemaVersion);
-    }
     JsonObject camera = object(root, "camera");
+    return decodeConfig(
+        root,
+        camera,
+        decodeSmoothing(object(camera, "smoothing"), defaults.camera().smoothing()));
+  }
+
+  private static ThirdPersonConfig decodeSchema1(JsonObject root) {
+    ThirdPersonConfig defaults = ThirdPersonConfig.defaults();
+    JsonObject camera = object(root, "camera");
+    return decodeConfig(
+        root,
+        camera,
+        migrateSchema1Smoothing(
+            string(camera, "smoothing", "balanced"), defaults.camera().smoothing()));
+  }
+
+  private static ThirdPersonConfig decodeConfig(
+      JsonObject root,
+      JsonObject camera,
+      ThirdPersonConfig.SmoothingSettings smoothing) {
+    ThirdPersonConfig defaults = ThirdPersonConfig.defaults();
     JsonObject aiming = object(root, "aiming");
     JsonObject player = object(root, "player");
     JsonObject hud = object(root, "hud");
@@ -74,11 +100,7 @@ final class JsonConfigCodec {
         new ThirdPersonConfig.CameraSettings(
             decodeProfile(object(camera, "normal"), defaults.camera().normal()),
             decodeProfile(object(camera, "aiming"), defaults.camera().aiming()),
-            enumValue(
-                camera,
-                "smoothing",
-                SmoothingPreset.class,
-                defaults.camera().smoothing()),
+            smoothing,
             bool(
                 camera,
                 "temporaryFirstPersonInTightSpace",
@@ -121,7 +143,7 @@ final class JsonConfigCodec {
             new ThirdPersonConfig.CameraSettings(
                 normal,
                 aiming,
-                defaults.camera().smoothing(),
+                decodeLegacySmoothing(root, defaults.camera().smoothing()),
                 bool(
                     root,
                     "temp_first_person_in_narrow_space",
@@ -130,6 +152,112 @@ final class JsonConfigCodec {
             defaults.player(),
             defaults.hud()),
         true);
+  }
+
+  private static ThirdPersonConfig.SmoothingSettings decodeLegacySmoothing(
+      JsonObject root, ThirdPersonConfig.SmoothingSettings defaults) {
+    return new ThirdPersonConfig.SmoothingSettings(
+        defaults.rotationHalfLife(),
+        halfLife(root, "flying_smooth_halflife", defaults.flyingPivotHalfLife()),
+        halfLife(
+            root,
+            "adjusting_camera_offset_smooth_halflife",
+            defaults.adjustingOffsetHalfLife()),
+        halfLife(
+            root,
+            "adjusting_distance_smooth_halflife",
+            defaults.adjustingDistanceHalfLife()),
+        new ThirdPersonConfig.ModeSmoothing(
+            halfLife(
+                root,
+                "normal_smooth_halflife_horizon",
+                defaults.normal().horizontalPivotHalfLife()),
+            halfLife(
+                root,
+                "normal_smooth_halflife_vertical",
+                defaults.normal().verticalPivotHalfLife()),
+            halfLife(
+                root,
+                "normal_camera_offset_smooth_halflife",
+                defaults.normal().offsetHalfLife()),
+            halfLife(
+                root,
+                "normal_distance_smooth_halflife",
+                defaults.normal().distanceHalfLife())),
+        new ThirdPersonConfig.ModeSmoothing(
+            halfLife(
+                root,
+                "aiming_smooth_halflife_horizon",
+                defaults.aiming().horizontalPivotHalfLife()),
+            halfLife(
+                root,
+                "aiming_smooth_halflife_vertical",
+                defaults.aiming().verticalPivotHalfLife()),
+            halfLife(
+                root,
+                "aiming_camera_offset_smooth_halflife",
+                defaults.aiming().offsetHalfLife()),
+            halfLife(
+                root,
+                "aiming_distance_smooth_halflife",
+                defaults.aiming().distanceHalfLife())));
+  }
+
+  private static JsonObject encodeSmoothing(ThirdPersonConfig.SmoothingSettings smoothing) {
+    JsonObject object = new JsonObject();
+    object.addProperty("rotationHalfLife", smoothing.rotationHalfLife());
+    object.addProperty("flyingPivotHalfLife", smoothing.flyingPivotHalfLife());
+    object.addProperty("adjustingOffsetHalfLife", smoothing.adjustingOffsetHalfLife());
+    object.addProperty("adjustingDistanceHalfLife", smoothing.adjustingDistanceHalfLife());
+    object.add("normal", encodeModeSmoothing(smoothing.normal()));
+    object.add("aiming", encodeModeSmoothing(smoothing.aiming()));
+    return object;
+  }
+
+  private static JsonObject encodeModeSmoothing(ThirdPersonConfig.ModeSmoothing smoothing) {
+    JsonObject object = new JsonObject();
+    object.addProperty("horizontalPivotHalfLife", smoothing.horizontalPivotHalfLife());
+    object.addProperty("verticalPivotHalfLife", smoothing.verticalPivotHalfLife());
+    object.addProperty("offsetHalfLife", smoothing.offsetHalfLife());
+    object.addProperty("distanceHalfLife", smoothing.distanceHalfLife());
+    return object;
+  }
+
+  private static ThirdPersonConfig.SmoothingSettings decodeSmoothing(
+      JsonObject object, ThirdPersonConfig.SmoothingSettings defaults) {
+    return new ThirdPersonConfig.SmoothingSettings(
+        halfLife(object, "rotationHalfLife", defaults.rotationHalfLife()),
+        halfLife(object, "flyingPivotHalfLife", defaults.flyingPivotHalfLife()),
+        halfLife(object, "adjustingOffsetHalfLife", defaults.adjustingOffsetHalfLife()),
+        halfLife(object, "adjustingDistanceHalfLife", defaults.adjustingDistanceHalfLife()),
+        decodeModeSmoothing(object(object, "normal"), defaults.normal()),
+        decodeModeSmoothing(object(object, "aiming"), defaults.aiming()));
+  }
+
+  private static ThirdPersonConfig.ModeSmoothing decodeModeSmoothing(
+      JsonObject object, ThirdPersonConfig.ModeSmoothing defaults) {
+    return new ThirdPersonConfig.ModeSmoothing(
+        halfLife(
+            object, "horizontalPivotHalfLife", defaults.horizontalPivotHalfLife()),
+        halfLife(object, "verticalPivotHalfLife", defaults.verticalPivotHalfLife()),
+        halfLife(object, "offsetHalfLife", defaults.offsetHalfLife()),
+        halfLife(object, "distanceHalfLife", defaults.distanceHalfLife()));
+  }
+
+  private static ThirdPersonConfig.SmoothingSettings migrateSchema1Smoothing(
+      String preset, ThirdPersonConfig.SmoothingSettings defaults) {
+    return switch (preset.toLowerCase(Locale.ROOT)) {
+      case "off" -> uniformSmoothing(0.0);
+      case "fast" -> uniformSmoothing(0.035);
+      case "cinematic" -> uniformSmoothing(0.25);
+      default -> defaults;
+    };
+  }
+
+  private static ThirdPersonConfig.SmoothingSettings uniformSmoothing(double halfLife) {
+    var mode = new ThirdPersonConfig.ModeSmoothing(halfLife, halfLife, halfLife, halfLife);
+    return new ThirdPersonConfig.SmoothingSettings(
+        0.0, halfLife, halfLife, halfLife, mode, mode);
   }
 
   private static ThirdPersonConfig.CameraProfile decodeProfile(
@@ -182,6 +310,19 @@ final class JsonConfigCodec {
     JsonElement value = object.get(name);
     try {
       return value != null && value.isJsonPrimitive() ? value.getAsDouble() : fallback;
+    } catch (RuntimeException ignored) {
+      return fallback;
+    }
+  }
+
+  private static double halfLife(JsonObject object, String name, double fallback) {
+    return ConfigValidation.finiteClamped(number(object, name, fallback), 0.0, 1.0, fallback);
+  }
+
+  private static String string(JsonObject object, String name, String fallback) {
+    JsonElement value = object.get(name);
+    try {
+      return value != null && value.isJsonPrimitive() ? value.getAsString() : fallback;
     } catch (RuntimeException ignored) {
       return fallback;
     }

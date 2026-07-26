@@ -11,7 +11,7 @@ public record ThirdPersonConfig(
     AimingSettings aiming,
     PlayerSettings player,
     HudSettings hud) {
-  public static final int CURRENT_SCHEMA_VERSION = 1;
+  public static final int CURRENT_SCHEMA_VERSION = 2;
   private static final ThirdPersonConfig DEFAULTS =
       new ThirdPersonConfig(
           CURRENT_SCHEMA_VERSION,
@@ -19,7 +19,13 @@ public record ThirdPersonConfig(
           new CameraSettings(
               new CameraProfile(4.0, -0.18, 0.12, 1.0),
               new CameraProfile(2.4, -0.30, 0.16, 0.9),
-              SmoothingPreset.BALANCED,
+              new SmoothingSettings(
+                  0.0,
+                  0.45,
+                  0.04,
+                  0.08,
+                  new ModeSmoothing(0.25, 0.20, 0.08, 0.72),
+                  new ModeSmoothing(0.05, 0.05, 0.03, 0.04)),
               true),
           new AimingSettings(true),
           new PlayerSettings(PlayerRotationMode.AUTO),
@@ -42,12 +48,42 @@ public record ThirdPersonConfig(
   public record CameraSettings(
       CameraProfile normal,
       CameraProfile aiming,
-      SmoothingPreset smoothing,
+      SmoothingSettings smoothing,
       boolean temporaryFirstPersonInTightSpace) {
     public CameraSettings {
       Objects.requireNonNull(normal, "normal");
       Objects.requireNonNull(aiming, "aiming");
       Objects.requireNonNull(smoothing, "smoothing");
+    }
+  }
+
+  public record SmoothingSettings(
+      double rotationHalfLife,
+      double flyingPivotHalfLife,
+      double adjustingOffsetHalfLife,
+      double adjustingDistanceHalfLife,
+      ModeSmoothing normal,
+      ModeSmoothing aiming) {
+    public SmoothingSettings {
+      requireHalfLife(rotationHalfLife);
+      requireHalfLife(flyingPivotHalfLife);
+      requireHalfLife(adjustingOffsetHalfLife);
+      requireHalfLife(adjustingDistanceHalfLife);
+      Objects.requireNonNull(normal, "normal");
+      Objects.requireNonNull(aiming, "aiming");
+    }
+  }
+
+  public record ModeSmoothing(
+      double horizontalPivotHalfLife,
+      double verticalPivotHalfLife,
+      double offsetHalfLife,
+      double distanceHalfLife) {
+    public ModeSmoothing {
+      requireHalfLife(horizontalPivotHalfLife);
+      requireHalfLife(verticalPivotHalfLife);
+      requireHalfLife(offsetHalfLife);
+      requireHalfLife(distanceHalfLife);
     }
   }
 
@@ -90,6 +126,12 @@ public record ThirdPersonConfig(
   public record HudSettings(ReticleMode reticle) {
     public HudSettings {
       Objects.requireNonNull(reticle, "reticle");
+    }
+  }
+
+  private static void requireHalfLife(double value) {
+    if (!Double.isFinite(value) || value < 0.0 || value > 1.0) {
+      throw new IllegalArgumentException("Smoothing half-life must be within [0, 1]");
     }
   }
 }

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
-import io.github.leawind.thirdperson.internal.core.config.SmoothingPreset;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,7 @@ class JsonConfigCodecTest {
         JsonConfigCodec.decode(
             """
             {
-              "schemaVersion": 1,
+              "schemaVersion": 2,
               "camera": {
                 "normal": {
                   "distance": 100,
@@ -34,7 +33,10 @@ class JsonConfigCodecTest {
                   "offsetY": 0.25,
                   "fovMultiplier": 0.01
                 },
-                "smoothing": "unknown"
+                "smoothing": {
+                  "rotationHalfLife": 100,
+                  "normal": { "horizontalPivotHalfLife": -10 }
+                }
               },
               "player": { "rotationMode": "vanilla" },
               "hud": { "reticle": "on" }
@@ -45,7 +47,10 @@ class JsonConfigCodecTest {
     assertEquals(-1.0, decoded.config().camera().normal().offsetX());
     assertEquals(0.25, decoded.config().camera().normal().offsetY());
     assertEquals(0.25, decoded.config().camera().normal().fovMultiplier());
-    assertEquals(SmoothingPreset.BALANCED, decoded.config().camera().smoothing());
+    assertEquals(1.0, decoded.config().camera().smoothing().rotationHalfLife());
+    assertEquals(
+        0.0,
+        decoded.config().camera().smoothing().normal().horizontalPivotHalfLife());
     assertEquals(PlayerRotationMode.VANILLA, decoded.config().player().rotationMode());
     assertEquals(ReticleMode.ON, decoded.config().hud().reticle());
   }
@@ -65,6 +70,8 @@ class JsonConfigCodecTest {
               "aiming_offset_x": -0.4,
               "aiming_offset_y": 0.3,
               "aiming_fov_divisor": 1.25,
+              "normal_distance_smooth_halflife": 0.5,
+              "aiming_camera_offset_smooth_halflife": 0.015,
               "player_fade_out_enabled": true
             }
             """);
@@ -75,12 +82,31 @@ class JsonConfigCodecTest {
     assertEquals(3.5, decoded.config().camera().normal().distance());
     assertEquals(1.75, decoded.config().camera().aiming().distance());
     assertEquals(0.8, decoded.config().camera().aiming().fovMultiplier());
+    assertEquals(0.5, decoded.config().camera().smoothing().normal().distanceHalfLife());
+    assertEquals(0.015, decoded.config().camera().smoothing().aiming().offsetHalfLife());
+  }
+
+  @Test
+  void migratesSchemaOnePresetWithoutKeepingMouseRotationLag() {
+    DecodedConfig decoded =
+        JsonConfigCodec.decode(
+            """
+            {
+              "schemaVersion": 1,
+              "camera": { "smoothing": "cinematic" }
+            }
+            """);
+
+    assertTrue(decoded.migrated());
+    assertEquals(0.0, decoded.config().camera().smoothing().rotationHalfLife());
+    assertEquals(0.25, decoded.config().camera().smoothing().normal().distanceHalfLife());
+    assertEquals(0.25, decoded.config().camera().smoothing().aiming().offsetHalfLife());
   }
 
   @Test
   void rejectsFutureSchema() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> JsonConfigCodec.decode("{\"schemaVersion\": 2}"));
+        () -> JsonConfigCodec.decode("{\"schemaVersion\": 3}"));
   }
 }
