@@ -63,7 +63,10 @@ final class JsonConfigCodec {
                           .forGetter(ThirdPersonConfig.ModeSmoothing::offsetHalfLife),
                       HALF_LIFE_CODEC
                           .fieldOf("distanceHalfLife")
-                          .forGetter(ThirdPersonConfig.ModeSmoothing::distanceHalfLife))
+                          .forGetter(ThirdPersonConfig.ModeSmoothing::distanceHalfLife),
+                      HALF_LIFE_CODEC
+                          .fieldOf("fovHalfLife")
+                          .forGetter(ThirdPersonConfig.ModeSmoothing::fovHalfLife))
                   .apply(instance, ThirdPersonConfig.ModeSmoothing::new));
 
   private static final Codec<ThirdPersonConfig.SmoothingSettings> SMOOTHING_SETTINGS_CODEC =

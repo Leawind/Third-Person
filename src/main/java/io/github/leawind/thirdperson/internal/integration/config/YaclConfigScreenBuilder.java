@@ -121,6 +121,12 @@ final class YaclConfigScreenBuilder {
                         draft::setNormalDistanceHalfLife))
                 .option(
                     halfLifeOption(
+                        "normal_fov_half_life",
+                        defaults.camera().smoothing().normal().fovHalfLife(),
+                        () -> draft.value().camera().smoothing().normal().fovHalfLife(),
+                        draft::setNormalFovHalfLife))
+                .option(
+                    halfLifeOption(
                         "aiming_pivot_horizontal_half_life",
                         defaults.camera().smoothing().aiming().horizontalPivotHalfLife(),
                         () -> draft.value().camera().smoothing().aiming().horizontalPivotHalfLife(),
@@ -143,6 +149,12 @@ final class YaclConfigScreenBuilder {
                         defaults.camera().smoothing().aiming().distanceHalfLife(),
                         () -> draft.value().camera().smoothing().aiming().distanceHalfLife(),
                         draft::setAimingDistanceHalfLife))
+                .option(
+                    halfLifeOption(
+                        "aiming_fov_half_life",
+                        defaults.camera().smoothing().aiming().fovHalfLife(),
+                        () -> draft.value().camera().smoothing().aiming().fovHalfLife(),
+                        draft::setAimingFovHalfLife))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -511,7 +523,8 @@ final class YaclConfigScreenBuilder {
                   halfLife,
                   smoothing.verticalPivotHalfLife(),
                   smoothing.offsetHalfLife(),
-                  smoothing.distanceHalfLife()));
+                  smoothing.distanceHalfLife(),
+                  smoothing.fovHalfLife()));
     }
 
     private void setNormalVerticalPivotHalfLife(double halfLife) {
@@ -521,7 +534,8 @@ final class YaclConfigScreenBuilder {
                   smoothing.horizontalPivotHalfLife(),
                   halfLife,
                   smoothing.offsetHalfLife(),
-                  smoothing.distanceHalfLife()));
+                  smoothing.distanceHalfLife(),
+                  smoothing.fovHalfLife()));
     }
 
     private void setNormalOffsetHalfLife(double halfLife) {
@@ -531,7 +545,8 @@ final class YaclConfigScreenBuilder {
                   smoothing.horizontalPivotHalfLife(),
                   smoothing.verticalPivotHalfLife(),
                   halfLife,
-                  smoothing.distanceHalfLife()));
+                  smoothing.distanceHalfLife(),
+                  smoothing.fovHalfLife()));
     }
 
     private void setNormalDistanceHalfLife(double halfLife) {
@@ -541,6 +556,18 @@ final class YaclConfigScreenBuilder {
                   smoothing.horizontalPivotHalfLife(),
                   smoothing.verticalPivotHalfLife(),
                   smoothing.offsetHalfLife(),
+                  halfLife,
+                  smoothing.fovHalfLife()));
+    }
+
+    private void setNormalFovHalfLife(double halfLife) {
+      updateNormalSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  smoothing.verticalPivotHalfLife(),
+                  smoothing.offsetHalfLife(),
+                  smoothing.distanceHalfLife(),
                   halfLife));
     }
 
@@ -551,7 +578,8 @@ final class YaclConfigScreenBuilder {
                   halfLife,
                   smoothing.verticalPivotHalfLife(),
                   smoothing.offsetHalfLife(),
-                  smoothing.distanceHalfLife()));
+                  smoothing.distanceHalfLife(),
+                  smoothing.fovHalfLife()));
     }
 
     private void setAimingVerticalPivotHalfLife(double halfLife) {
@@ -561,7 +589,8 @@ final class YaclConfigScreenBuilder {
                   smoothing.horizontalPivotHalfLife(),
                   halfLife,
                   smoothing.offsetHalfLife(),
-                  smoothing.distanceHalfLife()));
+                  smoothing.distanceHalfLife(),
+                  smoothing.fovHalfLife()));
     }
 
     private void setAimingOffsetHalfLife(double halfLife) {
@@ -571,7 +600,8 @@ final class YaclConfigScreenBuilder {
                   smoothing.horizontalPivotHalfLife(),
                   smoothing.verticalPivotHalfLife(),
                   halfLife,
-                  smoothing.distanceHalfLife()));
+                  smoothing.distanceHalfLife(),
+                  smoothing.fovHalfLife()));
     }
 
     private void setAimingDistanceHalfLife(double halfLife) {
@@ -581,6 +611,18 @@ final class YaclConfigScreenBuilder {
                   smoothing.horizontalPivotHalfLife(),
                   smoothing.verticalPivotHalfLife(),
                   smoothing.offsetHalfLife(),
+                  halfLife,
+                  smoothing.fovHalfLife()));
+    }
+
+    private void setAimingFovHalfLife(double halfLife) {
+      updateAimingSmoothing(
+          smoothing ->
+              new ThirdPersonConfig.ModeSmoothing(
+                  smoothing.horizontalPivotHalfLife(),
+                  smoothing.verticalPivotHalfLife(),
+                  smoothing.offsetHalfLife(),
+                  smoothing.distanceHalfLife(),
                   halfLife));
     }
 

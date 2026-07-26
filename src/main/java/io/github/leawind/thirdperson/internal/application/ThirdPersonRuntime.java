@@ -66,7 +66,7 @@ public final class ThirdPersonRuntime {
         smoothing.rotationHalfLife(),
         offsetHalfLife,
         distanceHalfLife,
-        distanceHalfLife);
+        modeSmoothing.fovHalfLife());
   }
 
   public void initialize() {

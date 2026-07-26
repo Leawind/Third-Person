@@ -19,6 +19,8 @@ class ThirdPersonConfigTest {
     assertEquals(0.08, config.camera().smoothing().normal().verticalPivotHalfLife());
     assertEquals(0.08, config.camera().smoothing().normal().distanceHalfLife());
     assertEquals(0.08, config.camera().smoothing().aiming().distanceHalfLife());
+    assertEquals(0.0, config.camera().smoothing().normal().fovHalfLife());
+    assertEquals(0.0, config.camera().smoothing().aiming().fovHalfLife());
     assertEquals(PlayerRotationMode.AUTO, config.player().rotationMode());
     assertEquals(ReticleMode.AUTO, config.hud().reticle());
     assertEquals(0.24, config.camera().normal().centeredOffsetY());
@@ -40,9 +42,9 @@ class ThirdPersonConfigTest {
         () -> new ThirdPersonConfig.CameraProfile(4.0, 2.0, 0.0, 0.0, 1.0, false));
     assertThrows(
         IllegalArgumentException.class,
-        () -> new ThirdPersonConfig.ModeSmoothing(-0.1, 0.0, 0.0, 0.0));
+        () -> new ThirdPersonConfig.ModeSmoothing(-0.1, 0.0, 0.0, 0.0, 0.0));
     assertThrows(
         IllegalArgumentException.class,
-        () -> new ThirdPersonConfig.ModeSmoothing(0.3, 0.0, 0.0, 0.0));
+        () -> new ThirdPersonConfig.ModeSmoothing(0.3, 0.0, 0.0, 0.0, 0.0));
   }
 }

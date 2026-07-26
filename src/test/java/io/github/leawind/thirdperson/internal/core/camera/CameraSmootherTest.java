@@ -84,6 +84,25 @@ class CameraSmootherTest {
   }
 
   @Test
+  void zeroFovHalfLifePreservesImmediateVanillaFovEffects() {
+    var smoother = new CameraSmoother();
+    smoother.update(
+        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    var immediateFov = new CameraSmoothingParameters(0.1, 0.1, 0.1, 0.1, 0.1, 0.0);
+
+    CameraInput result =
+        smoother
+            .update(
+                input(0.0, new Quaternionf(), 6.0, 0.0, 0.0, 80.5f),
+                0.01,
+                immediateFov)
+            .orElseThrow();
+
+    assertEquals(80.5f, result.fovDegrees());
+    assertTrue(result.parameters().distance() < 6.0);
+  }
+
+  @Test
   void zeroHalfLivesApplyEveryTargetImmediately() {
     var smoother = new CameraSmoother();
     smoother.update(

@@ -24,8 +24,8 @@ public record ThirdPersonConfig(
                   0.07,
                   0.05,
                   0.05,
-                  new ModeSmoothing(0.064, 0.08, 0.06, 0.08),
-                  new ModeSmoothing(0.02, 0.025, 0.025, 0.08)),
+                  new ModeSmoothing(0.064, 0.08, 0.06, 0.08, 0.0),
+                  new ModeSmoothing(0.02, 0.025, 0.025, 0.08, 0.0)),
               true),
           new AimingSettings(true),
           new PlayerSettings(PlayerRotationMode.AUTO),
@@ -78,12 +78,14 @@ public record ThirdPersonConfig(
       double horizontalPivotHalfLife,
       double verticalPivotHalfLife,
       double offsetHalfLife,
-      double distanceHalfLife) {
+      double distanceHalfLife,
+      double fovHalfLife) {
     public ModeSmoothing {
       requireHalfLife(horizontalPivotHalfLife);
       requireHalfLife(verticalPivotHalfLife);
       requireHalfLife(offsetHalfLife);
       requireHalfLife(distanceHalfLife);
+      requireHalfLife(fovHalfLife);
     }
   }
 
