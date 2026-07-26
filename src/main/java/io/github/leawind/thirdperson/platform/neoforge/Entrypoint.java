@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.platform.neoforge;
 
 /*? if neoforge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.application.ModEntrypoint;
+import io.github.leawind.thirdperson.internal.bootstrap.ModBootstrap;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
 /^?   if >=1.21.11 {^/
 import net.neoforged.api.distmarker.Dist;
@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 @Mod(value = ThirdPerson.MOD_ID, dist = Dist.CLIENT)
 public final class Entrypoint {
   public Entrypoint(IEventBus modBus) {
-    ModEntrypoint.initialize();
+    ModBootstrap.initialize();
     NeoForgeConfigScreenIntegration.register();
     modBus.addListener(Entrypoint::registerKeyMappings);
   }
@@ -36,7 +36,7 @@ public final class Entrypoint {
     if (FMLEnvironment.dist != Dist.CLIENT) {
       return;
     }
-    ModEntrypoint.initialize();
+    ModBootstrap.initialize();
     NeoForgeConfigScreenIntegration.register();
     modBus.addListener(Entrypoint::registerKeyMappings);
   }

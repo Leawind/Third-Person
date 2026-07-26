@@ -1,8 +1,6 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
-import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
-import net.minecraft.client.Minecraft;
 /*? if >1.21 {*/
 import net.minecraft.client.player.ClientInput;
 /*? } else {*/
@@ -36,14 +34,9 @@ abstract class LocalPlayerMixin {
   private boolean modifyForwardImpulse(
       ClientInput input, boolean vanillaResult, double minimumMagnitude) {
     LocalPlayer player = (LocalPlayer) (Object) this;
-    if (player != Minecraft.getInstance().player
-        || player.isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
-      return vanillaResult;
-    }
     Vec2 movement = input.getMoveVector();
     return LocalPlayerSprintImpulseEvent.emit(
-        vanillaResult, movement.x, movement.y, minimumMagnitude);
+        player, vanillaResult, movement.x, movement.y, minimumMagnitude);
   }
   /*? } else {*/
   /*@Inject(
@@ -52,16 +45,11 @@ abstract class LocalPlayerMixin {
       cancellable = true)
   private void useDirectionalStartingImpulse(CallbackInfoReturnable<Boolean> cir) {
     LocalPlayer player = (LocalPlayer) (Object) this;
-    if (player != Minecraft.getInstance().player
-        || player.isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
-      return;
-    }
     Input input = player.input;
     Vec2 movement = input.getMoveVector();
     double minimumMagnitude = player.isUnderWater() ? MOVING_THRESHOLD : 0.8;
     if (LocalPlayerSprintImpulseEvent.emit(
-        false, movement.x, movement.y, minimumMagnitude)) {
+        player, false, movement.x, movement.y, minimumMagnitude)) {
       cir.setReturnValue(true);
     }
   }
@@ -75,14 +63,9 @@ abstract class LocalPlayerMixin {
   private boolean keepSprintingWithDirectionalInput(Input input) {
     LocalPlayer player = (LocalPlayer) (Object) this;
     boolean vanillaResult = input.hasForwardImpulse();
-    if (player != Minecraft.getInstance().player
-        || player.isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
-      return vanillaResult;
-    }
     Vec2 movement = input.getMoveVector();
     return LocalPlayerSprintImpulseEvent.emit(
-        vanillaResult, movement.x, movement.y, MOVING_THRESHOLD);
+        player, vanillaResult, movement.x, movement.y, MOVING_THRESHOLD);
   }
   *//*? }*/
 }

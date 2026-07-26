@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.integration.minecraft;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
+import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.core.aiming.AimGeometry;
 import io.github.leawind.thirdperson.internal.core.math.FiniteMath;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
@@ -14,7 +15,17 @@ import org.joml.Vector3f;
 
 /// Aligns the authoritative player ray with the rendered camera intent before vanilla repicks.
 public final class MinecraftInteractionIntegration {
+  private static boolean registered;
+
   private MinecraftInteractionIntegration() {}
+
+  public static void register() {
+    if (registered) {
+      return;
+    }
+    registered = true;
+    BeforeInteractionEvent.register(MinecraftInteractionIntegration::alignPlayerToCameraIntent);
+  }
 
   public static boolean alignPlayerToCameraIntent() {
     ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();

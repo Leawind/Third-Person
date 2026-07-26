@@ -1,7 +1,7 @@
 /*? if fabric {*/
 package io.github.leawind.thirdperson.platform.fabric;
 
-import io.github.leawind.thirdperson.internal.application.ModEntrypoint;
+import io.github.leawind.thirdperson.internal.bootstrap.ModBootstrap;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
 import net.fabricmc.api.ClientModInitializer;
 /*? if >=26.1 {*/
@@ -13,7 +13,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 @SuppressWarnings("unused")
 public final class Entrypoint implements ClientModInitializer {
   public void onInitializeClient() {
-    ModEntrypoint.initialize();
+    ModBootstrap.initialize();
     /*? if >=26.1 {*/
     MinecraftKeyIntegration.registerKeyMappings(KeyMappingHelper::registerKeyMapping);
     /*? } else {*/

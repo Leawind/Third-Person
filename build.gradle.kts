@@ -190,6 +190,10 @@ tasks.test {
     }
 }
 
+tasks.named("check") {
+    dependsOn(rootProject.tasks.named("checkArchitecture"))
+}
+
 if (!supportsUnitTesting) {
     tasks.compileTestJava {
         enabled = false

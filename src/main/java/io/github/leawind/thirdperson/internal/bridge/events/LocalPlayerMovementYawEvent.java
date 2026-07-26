@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.bridge.events;
 
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import net.minecraft.client.player.LocalPlayer;
 
 /// Neutral bridge event for the yaw used to transform local-player movement input.
 public final class LocalPlayerMovementYawEvent {
@@ -13,16 +14,17 @@ public final class LocalPlayerMovementYawEvent {
     LISTENERS.add(Objects.requireNonNull(listener, "listener"));
   }
 
-  public static float emit(float vanillaYaw) {
+  public static float emit(LocalPlayer player, float vanillaYaw) {
+    Objects.requireNonNull(player, "player");
     float yaw = vanillaYaw;
     for (Listener listener : LISTENERS) {
-      yaw = listener.modifyYaw(yaw);
+      yaw = listener.modifyYaw(player, yaw);
     }
     return yaw;
   }
 
   @FunctionalInterface
   public interface Listener {
-    float modifyYaw(float vanillaYaw);
+    float modifyYaw(LocalPlayer player, float vanillaYaw);
   }
 }

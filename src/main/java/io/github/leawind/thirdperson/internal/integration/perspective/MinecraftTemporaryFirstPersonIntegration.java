@@ -3,10 +3,9 @@ package io.github.leawind.thirdperson.internal.integration.perspective;
 import io.github.leawind.perspectiveapi.api.PerspectiveAPI;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
+import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
-import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
-import io.github.leawind.thirdperson.internal.core.camera.CameraRig;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
 import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
 import net.minecraft.client.Minecraft;
@@ -90,30 +89,27 @@ public final class MinecraftTemporaryFirstPersonIntegration {
       return false;
     }
 
-    var profile = runtime.cameraProfile(player.isFallFlying() || player.isSwimming());
     var eye = player.getEyePosition(1.0f);
     var pivot = new Vector3d(eye.x, eye.y, eye.z);
     int height = minecraft.getWindow().getHeight();
     double aspect = height > 0 ? (double) minecraft.getWindow().getWidth() / height : 1.0;
     float fov = minecraft.options.fov().get().floatValue();
-    CameraPose ideal =
-        CameraRig.calculate(pivot, rotation, profile.cameraParameters(), fov, aspect)
+    CameraFrameInput frame =
+        CameraFrameInput.tryCreate(
+                pivot,
+                rotation,
+                fov,
+                aspect,
+                player.isFallFlying() || player.isSwimming(),
+                0.0)
             .orElse(null);
-    if (ideal == null) {
+    if (frame == null) {
       session.tightSpaceDetector().reset();
       return false;
     }
-
-    Vector3d resolved =
-        MinecraftCameraCollision.resolve(
-                player, pivot, ideal.copyPosition(new Vector3d()))
-            .orElse(null);
-    if (resolved == null) {
-      session.tightSpaceDetector().reset();
-      return false;
-    }
-    return session
-        .tightSpaceDetector()
-        .update(resolved.distance(pivot), profile.distance());
+    return runtime.updateTightSpace(
+        frame,
+        (collisionPivot, desiredPosition) ->
+            MinecraftCameraCollision.resolve(player, collisionPivot, desiredPosition));
   }
 }

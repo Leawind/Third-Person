@@ -1,17 +1,22 @@
 package io.github.leawind.thirdperson.internal.application;
 
-import io.github.leawind.thirdperson.ThirdPerson;
+import io.github.leawind.thirdperson.internal.application.camera.CameraController;
+import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
+import io.github.leawind.thirdperson.internal.application.port.CameraCollisionPort;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
+import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import java.util.Objects;
+import java.util.Optional;
 
 /// Process-wide owner of services and the current Minecraft-independent session state.
 public final class ThirdPersonRuntime {
   private static final ThirdPersonRuntime INSTANCE = new ThirdPersonRuntime();
 
   private final ThirdPersonSession session = new ThirdPersonSession();
+  private final CameraController cameraController = new CameraController(session);
   private volatile ThirdPersonConfig config = ThirdPersonConfig.defaults();
   private boolean initialized;
 
@@ -69,12 +74,28 @@ public final class ThirdPersonRuntime {
         modeSmoothing.fovHalfLife());
   }
 
-  public void initialize() {
+  public Optional<CameraPose> updateCamera(
+      CameraFrameInput frame, CameraCollisionPort collision) {
+    Objects.requireNonNull(frame, "frame");
+    return cameraController.update(
+        frame,
+        cameraProfile(frame.flyingOrSwimming()),
+        cameraSmoothing(frame.flyingOrSwimming()),
+        collision);
+  }
+
+  public boolean updateTightSpace(CameraFrameInput frame, CameraCollisionPort collision) {
+    Objects.requireNonNull(frame, "frame");
+    return cameraController.updateTightSpace(
+        frame, cameraProfile(frame.flyingOrSwimming()), collision);
+  }
+
+  public boolean initialize() {
     if (initialized) {
-      return;
+      return false;
     }
     initialized = true;
-    ThirdPerson.LOGGER.info("{} initialized", ThirdPerson.MOD_NAME);
+    return true;
   }
 
   public void onPerspectiveActivated() {

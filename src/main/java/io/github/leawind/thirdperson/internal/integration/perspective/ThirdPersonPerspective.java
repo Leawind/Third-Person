@@ -6,10 +6,8 @@ import io.github.leawind.perspectiveapi.api.PerspectiveState;
 import io.github.leawind.perspectiveapi.api.context.PerspectiveContext;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
-import io.github.leawind.thirdperson.internal.core.camera.CameraInput;
-import io.github.leawind.thirdperson.internal.core.camera.CameraParameters;
+import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
-import io.github.leawind.thirdperson.internal.core.camera.CameraRig;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -77,70 +75,25 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     double aspectRatio =
         windowHeight > 0 ? (double) minecraft.getWindow().getWidth() / windowHeight : 1.0;
 
-    boolean flyingOrSwimming = player.isFallFlying() || player.isSwimming();
-    var profile = runtime.cameraProfile(flyingOrSwimming);
-    CameraParameters cameraParameters = profile.cameraParameters();
-    float targetFov = (float) (state.getFovDeg() * profile.fovMultiplier());
-    CameraInput targetInput =
-        CameraInput.tryCreate(pivot, rotation, cameraParameters, targetFov).orElse(null);
-    if (targetInput == null) {
-      applyLastSafePose(state);
-      return;
-    }
-
-    double deltaSeconds = frameDeltaSeconds();
-    CameraInput smoothedInput =
-        runtime
-            .session()
-            .cameraSmoother()
-            .update(targetInput, deltaSeconds, runtime.cameraSmoothing(flyingOrSwimming))
+    CameraFrameInput frame =
+        CameraFrameInput.tryCreate(
+                pivot,
+                rotation,
+                state.getFovDeg(),
+                aspectRatio,
+                player.isFallFlying() || player.isSwimming(),
+                frameDeltaSeconds())
             .orElse(null);
-    if (smoothedInput == null) {
+    if (frame == null) {
       applyLastSafePose(state);
       return;
     }
-
-    var smoothedPivot = smoothedInput.copyPivot(new Vector3d());
-    var smoothedRotation = smoothedInput.copyRotation(new Quaternionf());
-    CameraPose idealPose =
-        CameraRig.calculate(
-                smoothedPivot,
-                smoothedRotation,
-                smoothedInput.parameters(),
-                smoothedInput.fovDegrees(),
-                aspectRatio)
-            .orElse(null);
-    if (idealPose == null) {
-      applyLastSafePose(state);
-      return;
-    }
-
-    var idealPosition = idealPose.copyPosition(new Vector3d());
-    var collisionResolvedPosition =
-        MinecraftCameraCollision.resolve(entity, pivot, idealPosition).orElse(null);
-    if (collisionResolvedPosition == null) {
-      applyLastSafePose(state);
-      return;
-    }
-    var resolvedPosition =
-        runtime
-            .session()
-            .collisionRecovery()
-            .resolve(pivot, collisionResolvedPosition, deltaSeconds)
-            .orElse(null);
-    if (resolvedPosition == null) {
-      applyLastSafePose(state);
-      return;
-    }
-
-    // Collision is position-only by construction: orientation and FOV remain those of idealPose.
-    CameraPose resolvedPose = idealPose.withPosition(resolvedPosition).orElse(null);
-    if (resolvedPose == null) {
-      applyLastSafePose(state);
-      return;
-    }
-    runtime.session().recordSafeCameraPose(resolvedPose);
-    applyPose(state, resolvedPose);
+    runtime
+        .updateCamera(
+            frame,
+            (collisionPivot, desiredPosition) ->
+                MinecraftCameraCollision.resolve(entity, collisionPivot, desiredPosition))
+        .ifPresent(pose -> applyPose(state, pose));
   }
 
   @Override

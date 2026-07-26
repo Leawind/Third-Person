@@ -1,8 +1,7 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
+import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
-import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftInteractionIntegration;
-import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -55,8 +54,7 @@ abstract class MinecraftMixin {
 
   @Unique
   private void alignAndRepick() {
-    if (!PerspectiveGuard.isThirdPersonCurrent()
-        || !MinecraftInteractionIntegration.alignPlayerToCameraIntent()) {
+    if (!BeforeInteractionEvent.emit()) {
       return;
     }
     /*? if >=26.1 {*/

@@ -1,9 +1,9 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
-import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementYawEvent;
-import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
+import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,24 +22,16 @@ abstract class EntityMixin {
                   "Lnet/minecraft/world/entity/Entity;getInputVector(Lnet/minecraft/world/phys/Vec3;FF)Lnet/minecraft/world/phys/Vec3;"),
       index = 2)
   private float modifyMovementYaw(float vanillaYaw) {
-    Minecraft minecraft = Minecraft.getInstance();
-    if ((Object) this != minecraft.player
-        || ((Entity) (Object) this).isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
-      return vanillaYaw;
-    }
-    return LocalPlayerMovementYawEvent.emit(vanillaYaw);
+    Entity entity = (Entity) (Object) this;
+    LocalPlayer player = Minecraft.getInstance().player;
+    return entity == player ? LocalPlayerMovementYawEvent.emit(player, vanillaYaw) : vanillaYaw;
   }
 
   @Inject(method = "turn", at = @At("HEAD"), cancellable = true)
   private void beforeTurn(double rawYaw, double rawPitch, CallbackInfo ci) {
-    Minecraft minecraft = Minecraft.getInstance();
-    if ((Object) this != minecraft.player
-        || ((Entity) (Object) this).isPassenger()
-        || !PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()) {
-      return;
-    }
-    if (LocalPlayerTurnEvent.emit(rawYaw, rawPitch)) {
+    Entity entity = (Entity) (Object) this;
+    LocalPlayer player = Minecraft.getInstance().player;
+    if (entity == player && LocalPlayerTurnEvent.emit(player, rawYaw, rawPitch)) {
       ci.cancel();
     }
   }
