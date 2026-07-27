@@ -7,12 +7,15 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.leawind.thirdperson.internal.core.config.NormalPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 final class JsonConfigCodec {
   private static final Gson GSON =
@@ -145,7 +148,16 @@ final class JsonConfigCodec {
                   .group(
                       enumCodec(PlayerRotationMode.class)
                           .fieldOf("rotationMode")
-                          .forGetter(ThirdPersonConfig.PlayerSettings::rotationMode))
+                          .forGetter(ThirdPersonConfig.PlayerSettings::rotationMode),
+                      fieldWithDefault(
+                              enumCodec(NormalPlayerRotationMode.class),
+                              "normalMode",
+                              NormalPlayerRotationMode.INTEREST_POINT)
+                          .forGetter(ThirdPersonConfig.PlayerSettings::normalMode),
+                      fieldWithDefault(Codec.BOOL, "autoRotateInteracting", true)
+                          .forGetter(ThirdPersonConfig.PlayerSettings::autoRotateInteracting),
+                      fieldWithDefault(Codec.BOOL, "doNotRotateWhenEating", true)
+                          .forGetter(ThirdPersonConfig.PlayerSettings::doNotRotateWhenEating))
                   .apply(instance, ThirdPersonConfig.PlayerSettings::new));
 
   private static final Codec<ThirdPersonConfig.HudSettings> HUD_SETTINGS_CODEC =
@@ -198,6 +210,13 @@ final class JsonConfigCodec {
           }
         },
         value -> value.name().toLowerCase(Locale.ROOT));
+  }
+
+  private static <T> MapCodec<T> fieldWithDefault(
+      Codec<T> codec, String name, T defaultValue) {
+    return codec
+        .optionalFieldOf(name)
+        .xmap(value -> value.orElse(defaultValue), Optional::of);
   }
 
   private static <T> T requireResult(DataResult<T> result, String operation) {

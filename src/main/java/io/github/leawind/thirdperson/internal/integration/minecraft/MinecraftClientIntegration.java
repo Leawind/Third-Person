@@ -8,6 +8,7 @@ import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.movement.MovementDirection;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationDecision;
+import io.github.leawind.thirdperson.internal.core.player.PlayerRotationGeometry;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationState;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationStrategy;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationTarget;
@@ -26,7 +27,7 @@ import org.joml.Vector3d;
 public final class MinecraftClientIntegration {
   private static final double CLIENT_TICK_SECONDS = 0.05;
   private static final float HORIZONTAL_ROTATION_PITCH = 0.1f;
-  private static final float VANILLA_HEAD_ROTATION_LIMIT_DEGREES = 85.0f;
+  private static final float VANILLA_HEAD_ROTATION_LIMIT_DEGREES = 50.0f;
 
   private static boolean registered;
   private static ClientLevel previousLevel;
@@ -70,21 +71,25 @@ public final class MinecraftClientIntegration {
     if (!lookController.isInitialized()) {
       return;
     }
+    var playerSettings = runtime.config().player();
     boolean interacting =
-        (minecraft.options.keyUse.isDown()
+        playerSettings.autoRotateInteracting()
+            && (minecraft.options.keyUse.isDown()
                 || minecraft.options.keyAttack.isDown()
                 || minecraft.options.keyPickItem.isDown())
-            && !isEating(player);
+            && !(playerSettings.doNotRotateWhenEating() && isEating(player));
     PlayerRotationDecision decision =
         PlayerRotationStrategy.resolve(
             new PlayerRotationState(
+                playerSettings.normalMode(),
                 runtime.session().mode() == CameraMode.AIMING,
                 player.isSwimming(),
                 minecraft.options.keySprint.isDown() || player.isSprinting(),
                 player.isFallFlying(),
                 interacting,
                 player.isPassenger(),
-                player.getVehicle() instanceof LivingEntity));
+                player.getVehicle() instanceof LivingEntity,
+                MovementDirection.hasDirectionalImpulse(player.xxa, player.zza, 1.0e-5)));
 
     LookRotation current = new LookRotation(player.getYRot(), player.getXRot());
     LookRotation target =
@@ -161,7 +166,7 @@ public final class MinecraftClientIntegration {
     }
     float cameraYaw = runtime.session().lookController().yawDegrees();
     boolean cameraBehindPlayer =
-        Math.abs(shortestDegrees(cameraYaw - player.yBodyRot)) < 90.0f;
+        Math.abs(PlayerRotationGeometry.shortestDifference(cameraYaw, player.yBodyRot)) < 90.0f;
     Optional<Vector3d> point =
         cameraBehindPlayer
             ? MinecraftPlayerRotationTargeting.cameraHit(minecraft, runtime, false)
@@ -172,7 +177,10 @@ public final class MinecraftClientIntegration {
         .map(
             rotation ->
                 new LookRotation(
-                    clampYawAroundBody(rotation.yawDegrees(), player.yBodyRot),
+                    PlayerRotationGeometry.clampYawAround(
+                        rotation.yawDegrees(),
+                        player.yBodyRot,
+                        VANILLA_HEAD_ROTATION_LIMIT_DEGREES),
                     rotation.pitchDegrees()));
   }
 
@@ -180,29 +188,6 @@ public final class MinecraftClientIntegration {
       LocalPlayer player, Vector3d point) {
     var eye = player.getEyePosition(1.0f);
     return AimGeometry.lookAt(new Vector3d(eye.x, eye.y, eye.z), point);
-  }
-
-  private static float clampYawAroundBody(float yaw, float bodyYaw) {
-    float difference = shortestDegrees(yaw - bodyYaw);
-    float clamped =
-        Math.max(
-            -VANILLA_HEAD_ROTATION_LIMIT_DEGREES,
-            Math.min(VANILLA_HEAD_ROTATION_LIMIT_DEGREES, difference));
-    return wrapDegrees(bodyYaw + clamped);
-  }
-
-  private static float shortestDegrees(float degrees) {
-    return wrapDegrees(degrees);
-  }
-
-  private static float wrapDegrees(float value) {
-    float wrapped = value % 360.0f;
-    if (wrapped >= 180.0f) {
-      wrapped -= 360.0f;
-    } else if (wrapped < -180.0f) {
-      wrapped += 360.0f;
-    }
-    return wrapped;
   }
 
   private static boolean isEating(LocalPlayer player) {

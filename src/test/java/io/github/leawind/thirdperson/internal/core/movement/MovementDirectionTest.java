@@ -50,6 +50,12 @@ class MovementDirectionTest {
   }
 
   @Test
+  void legacyMovementThresholdAcceptsSmallDirectionalImpulse() {
+    assertTrue(MovementDirection.facingYawDegrees(0.0, 1.0e-5, 0.0).isPresent());
+    assertFalse(MovementDirection.facingYawDegrees(0.0, 0.99e-5, 0.0).isPresent());
+  }
+
+  @Test
   void threeDimensionalFacingFollowsCameraPitchForForwardMovement() {
     var forward = MovementDirection.facingRotation(0.0, 1.0, 45.0, 30.0).orElseThrow();
     var lateral = MovementDirection.facingRotation(1.0, 0.0, 0.0, 60.0).orElseThrow();

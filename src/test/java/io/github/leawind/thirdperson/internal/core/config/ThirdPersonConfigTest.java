@@ -23,6 +23,9 @@ class ThirdPersonConfigTest {
     assertEquals(0.0, config.camera().smoothing().normal().fovHalfLife());
     assertEquals(0.0, config.camera().smoothing().aiming().fovHalfLife());
     assertEquals(PlayerRotationMode.AUTO, config.player().rotationMode());
+    assertEquals(NormalPlayerRotationMode.INTEREST_POINT, config.player().normalMode());
+    assertEquals(true, config.player().autoRotateInteracting());
+    assertEquals(true, config.player().doNotRotateWhenEating());
     assertEquals(ReticleMode.AUTO, config.hud().reticle());
     assertEquals(0.24, config.camera().normal().centeredOffsetY());
     assertEquals(0.0, config.camera().normal().withCentered(true).cameraParameters().anchorNdcX());

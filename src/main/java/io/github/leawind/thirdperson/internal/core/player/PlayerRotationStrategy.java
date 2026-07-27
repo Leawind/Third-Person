@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.core.player;
 
+import io.github.leawind.thirdperson.internal.core.config.NormalPlayerRotationMode;
 import java.util.Objects;
 
 /// Selects the same rotation behavior and priority as the legacy automatic strategy.
@@ -10,6 +11,18 @@ public final class PlayerRotationStrategy {
     Objects.requireNonNull(state, "state");
     if (state.aiming()) {
       return immediate(PlayerRotationTarget.PREDICTED_TARGET_ENTITY);
+    }
+    switch (state.normalMode()) {
+      case CAMERA_CROSSHAIR -> {
+        return immediate(PlayerRotationTarget.CAMERA_HIT_RESULT);
+      }
+      case PARALLEL_WITH_CAMERA -> {
+        return immediate(PlayerRotationTarget.CAMERA_ROTATION);
+      }
+      case NONE -> {
+        return immediate(PlayerRotationTarget.CURRENT_ROTATION);
+      }
+      case INTEREST_POINT, MOVING_DIRECTION -> {}
     }
     if (state.fallFlying()) {
       return immediate(PlayerRotationTarget.CAMERA_ROTATION);
@@ -28,7 +41,14 @@ public final class PlayerRotationStrategy {
           ? smooth(PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION, 0.1)
           : smooth(PlayerRotationTarget.INTEREST_POINT, 0.15);
     }
-    return smooth(PlayerRotationTarget.INTEREST_POINT, 0.03);
+    if (state.normalMode() == NormalPlayerRotationMode.MOVING_DIRECTION) {
+      return smooth(PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION, 0.06);
+    }
+    return smooth(
+        state.moving()
+            ? PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION
+            : PlayerRotationTarget.INTEREST_POINT,
+        0.03);
   }
 
   private static PlayerRotationDecision immediate(PlayerRotationTarget target) {

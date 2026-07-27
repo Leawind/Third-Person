@@ -6,7 +6,7 @@ import java.util.OptionalDouble;
 
 /// Minecraft-independent conversion from camera-relative input to a world-facing yaw.
 public final class MovementDirection {
-  private static final double MIN_INPUT_LENGTH_SQUARED = 1.0e-7;
+  private static final double MIN_INPUT_LENGTH_SQUARED = 1.0e-10;
 
   private MovementDirection() {}
 

@@ -29,7 +29,11 @@ public record ThirdPersonConfig(
                   new ModeSmoothing(0.02, 0.025, 0.025, 0.08, 0.0)),
               true),
           new AimingSettings(true, List.of(), List.of(), List.of()),
-          new PlayerSettings(PlayerRotationMode.AUTO),
+          new PlayerSettings(
+              PlayerRotationMode.AUTO,
+              NormalPlayerRotationMode.INTEREST_POINT,
+              true,
+              true),
           new HudSettings(ReticleMode.AUTO));
 
   public ThirdPersonConfig {
@@ -151,9 +155,14 @@ public record ThirdPersonConfig(
     }
   }
 
-  public record PlayerSettings(PlayerRotationMode rotationMode) {
+  public record PlayerSettings(
+      PlayerRotationMode rotationMode,
+      NormalPlayerRotationMode normalMode,
+      boolean autoRotateInteracting,
+      boolean doNotRotateWhenEating) {
     public PlayerSettings {
       Objects.requireNonNull(rotationMode, "rotationMode");
+      Objects.requireNonNull(normalMode, "normalMode");
     }
   }
 

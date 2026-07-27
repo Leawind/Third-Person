@@ -11,6 +11,7 @@ import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
+import io.github.leawind.thirdperson.internal.core.config.NormalPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.config.ReticleMode;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
@@ -57,6 +58,18 @@ final class YaclConfigScreenBuilder {
                         draft::setSmartAiming))
                 .option(
                     enumOption(
+                        "reticle",
+                        defaults.hud().reticle(),
+                        () -> draft.value().hud().reticle(),
+                        draft::setReticleMode,
+                        ReticleMode.class))
+                .build())
+        .category(
+            ConfigCategory.createBuilder()
+                .name(text("category.player_rotation"))
+                .tooltip(text("category.player_rotation.desc"))
+                .option(
+                    enumOption(
                         "rotation_mode",
                         defaults.player().rotationMode(),
                         () -> draft.value().player().rotationMode(),
@@ -64,11 +77,23 @@ final class YaclConfigScreenBuilder {
                         PlayerRotationMode.class))
                 .option(
                     enumOption(
-                        "reticle",
-                        defaults.hud().reticle(),
-                        () -> draft.value().hud().reticle(),
-                        draft::setReticleMode,
-                        ReticleMode.class))
+                        "normal_rotation_mode",
+                        defaults.player().normalMode(),
+                        () -> draft.value().player().normalMode(),
+                        draft::setNormalPlayerRotationMode,
+                        NormalPlayerRotationMode.class))
+                .option(
+                    booleanOption(
+                        "auto_rotate_interacting",
+                        defaults.player().autoRotateInteracting(),
+                        () -> draft.value().player().autoRotateInteracting(),
+                        draft::setAutoRotateInteracting))
+                .option(
+                    booleanOption(
+                        "do_not_rotate_when_eating",
+                        defaults.player().doNotRotateWhenEating(),
+                        () -> draft.value().player().doNotRotateWhenEating(),
+                        draft::setDoNotRotateWhenEating))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -510,13 +535,53 @@ final class YaclConfigScreenBuilder {
     }
 
     private void setPlayerRotationMode(PlayerRotationMode mode) {
+      var player = value.player();
+      setPlayer(
+          new ThirdPersonConfig.PlayerSettings(
+              mode,
+              player.normalMode(),
+              player.autoRotateInteracting(),
+              player.doNotRotateWhenEating()));
+    }
+
+    private void setNormalPlayerRotationMode(NormalPlayerRotationMode mode) {
+      var player = value.player();
+      setPlayer(
+          new ThirdPersonConfig.PlayerSettings(
+              player.rotationMode(),
+              mode,
+              player.autoRotateInteracting(),
+              player.doNotRotateWhenEating()));
+    }
+
+    private void setAutoRotateInteracting(boolean enabled) {
+      var player = value.player();
+      setPlayer(
+          new ThirdPersonConfig.PlayerSettings(
+              player.rotationMode(),
+              player.normalMode(),
+              enabled,
+              player.doNotRotateWhenEating()));
+    }
+
+    private void setDoNotRotateWhenEating(boolean enabled) {
+      var player = value.player();
+      setPlayer(
+          new ThirdPersonConfig.PlayerSettings(
+              player.rotationMode(),
+              player.normalMode(),
+              player.autoRotateInteracting(),
+              enabled));
+    }
+
+    private void setPlayer(ThirdPersonConfig.PlayerSettings player) {
       value =
           new ThirdPersonConfig(
               value.schemaVersion(),
               value.enabled(),
               value.camera(),
               value.aiming(),
-              new ThirdPersonConfig.PlayerSettings(mode),
+              player,
               value.hud());
     }
 
