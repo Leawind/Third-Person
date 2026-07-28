@@ -25,16 +25,11 @@ class ThirdPersonSessionTest {
     session.setMode(CameraMode.AIMING);
     session.beginCameraAdjustment(
         CameraProfileSlot.AIMING, ThirdPersonConfig.defaults().camera().aiming());
-    session.recordSafeCameraPose(
-        CameraPose.tryCreate(new Vector3d(1.0, 2.0, 3.0), new Quaternionf(), 70.0f)
-            .orElseThrow());
     session.recordFinalCameraPose(
-        CameraPose.tryCreate(new Vector3d(4.0, 5.0, 6.0), new Quaternionf(), 75.0f)
-            .orElseThrow());
+        CameraPose.tryCreate(new Vector3d(4.0, 5.0, 6.0), new Quaternionf(), 75.0f).orElseThrow());
     assertTrue(session.isPerspectiveActive());
     assertTrue(session.isControllingCamera());
     assertEquals(CameraMode.AIMING, session.mode());
-    assertTrue(session.lastSafeCameraPose().isPresent());
     assertTrue(session.finalCameraPose().isPresent());
     assertEquals(CameraProfileSlot.AIMING, session.cameraAdjustmentSlot().orElseThrow());
 
@@ -42,7 +37,6 @@ class ThirdPersonSessionTest {
     assertFalse(session.isPerspectiveActive());
     assertFalse(session.isControllingCamera());
     assertEquals(CameraMode.BYPASS, session.mode());
-    assertTrue(session.lastSafeCameraPose().isEmpty());
     assertTrue(session.finalCameraPose().isEmpty());
     assertTrue(session.cameraAdjustmentSlot().isEmpty());
   }
@@ -58,8 +52,6 @@ class ThirdPersonSessionTest {
     var session = new ThirdPersonSession();
     session.activatePerspective();
     session.lookController().initialize(15.0f, 30.0f);
-    session.recordSafeCameraPose(
-        CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
     session.recordFinalCameraPose(
         CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
 
@@ -67,23 +59,6 @@ class ThirdPersonSessionTest {
 
     assertTrue(session.isPerspectiveActive());
     assertFalse(session.lookController().isInitialized());
-    assertTrue(session.lastSafeCameraPose().isEmpty());
     assertTrue(session.finalCameraPose().isEmpty());
-  }
-
-  @Test
-  void temporaryFirstPersonPreservesItsCompositionMode() {
-    var session = new ThirdPersonSession();
-    session.activatePerspective();
-    session.setMode(CameraMode.AIMING);
-
-    session.requestTemporaryFirstPerson(true);
-    assertTrue(session.isTemporaryFirstPersonRequested());
-    assertEquals(CameraMode.TEMP_FIRST_PERSON, session.mode());
-    assertEquals(CameraMode.AIMING, session.compositionMode());
-
-    session.requestTemporaryFirstPerson(false);
-    assertFalse(session.isTemporaryFirstPersonRequested());
-    assertEquals(CameraMode.AIMING, session.mode());
   }
 }

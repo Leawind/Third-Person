@@ -25,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 public final class MinecraftItemPredicateIntegration {
   private static final MinecraftItemPatternReloadListener RELOAD_LISTENER =
       new MinecraftItemPatternReloadListener();
-  private static final Match NONE = new Match(false, false);
 
   /*? if !neoforge {*/
   private static ReloadableResourceManager registeredResourceManager;
@@ -34,7 +33,7 @@ public final class MinecraftItemPredicateIntegration {
   private static ItemPatternSet compiledResources;
   private static ThirdPersonConfig.AimingSettings compiledConfig;
   private static CompiledPredicates predicates = CompiledPredicates.empty();
-  private static volatile Match currentMatch = NONE;
+  private static volatile boolean automaticallyAiming;
   private static boolean registered;
 
   private MinecraftItemPredicateIntegration() {}
@@ -48,11 +47,7 @@ public final class MinecraftItemPredicateIntegration {
   }
 
   public static boolean isAutomaticallyAiming() {
-    return currentMatch.aiming();
-  }
-
-  public static boolean isRequestingFirstPerson() {
-    return currentMatch.firstPerson();
+    return automaticallyAiming;
   }
 
   /// Exposes the shared listener to loader lifecycle adapters.
@@ -69,13 +64,12 @@ public final class MinecraftItemPredicateIntegration {
     ClientPacketListener connection = minecraft.getConnection();
     Player player = minecraft.player;
     if (connection == null || player == null || minecraft.level == null) {
-      currentMatch = NONE;
+      automaticallyAiming = false;
       return;
     }
 
     ItemPatternSet resources = RELOAD_LISTENER.snapshot();
-    ThirdPersonConfig.AimingSettings config =
-        ThirdPersonRuntime.getInstance().config().aiming();
+    ThirdPersonConfig.AimingSettings config = ThirdPersonRuntime.getInstance().config().aiming();
     if (connection != compiledConnection
         || resources != compiledResources
         || config != compiledConfig) {
@@ -89,7 +83,7 @@ public final class MinecraftItemPredicateIntegration {
       compiledResources = resources;
       compiledConfig = config;
     }
-    currentMatch = predicates.match(player);
+    automaticallyAiming = predicates.matches(player);
   }
 
   /*? if !neoforge {*/
@@ -102,6 +96,7 @@ public final class MinecraftItemPredicateIntegration {
       RELOAD_LISTENER.loadImmediately(reloadable);
     }
   }
+
   /*? }*/
 
   private static CompiledPredicates compile(
@@ -113,9 +108,7 @@ public final class MinecraftItemPredicateIntegration {
             CommandBuildContext.simple(connection.registryAccess(), connection.enabledFeatures()));
     return new CompiledPredicates(
         compilePatterns(parser, resources.holdToAim(), config.holdToAimItemPatterns()),
-        compilePatterns(parser, resources.useToAim(), config.useToAimItemPatterns()),
-        compilePatterns(
-            parser, resources.useToFirstPerson(), config.useToFirstPersonItemPatterns()));
+        compilePatterns(parser, resources.useToAim(), config.useToAimItemPatterns()));
   }
 
   private static List<Predicate<ItemStack>> compilePatterns(
@@ -144,27 +137,20 @@ public final class MinecraftItemPredicateIntegration {
     return List.copyOf(compiled);
   }
 
-  private record Match(boolean aiming, boolean firstPerson) {}
-
   private record CompiledPredicates(
-      List<Predicate<ItemStack>> holdToAim,
-      List<Predicate<ItemStack>> useToAim,
-      List<Predicate<ItemStack>> useToFirstPerson) {
+      List<Predicate<ItemStack>> holdToAim, List<Predicate<ItemStack>> useToAim) {
     private static CompiledPredicates empty() {
-      return new CompiledPredicates(List.of(), List.of(), List.of());
+      return new CompiledPredicates(List.of(), List.of());
     }
 
-    private Match match(Player player) {
+    private boolean matches(Player player) {
       boolean aiming =
           anyMatches(player.getMainHandItem(), holdToAim)
               || anyMatches(player.getOffhandItem(), holdToAim);
-      boolean firstPerson = false;
       if (player.isUsingItem()) {
-        ItemStack used = player.getUseItem();
-        aiming |= anyMatches(used, useToAim);
-        firstPerson = anyMatches(used, useToFirstPerson);
+        aiming |= anyMatches(player.getUseItem(), useToAim);
       }
-      return aiming || firstPerson ? new Match(aiming, firstPerson) : NONE;
+      return aiming;
     }
 
     private static boolean anyMatches(ItemStack stack, List<Predicate<ItemStack>> predicates) {

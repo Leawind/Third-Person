@@ -3,8 +3,6 @@ package io.github.leawind.thirdperson.internal.application;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoother;
-import io.github.leawind.thirdperson.internal.core.camera.CollisionRecovery;
-import io.github.leawind.thirdperson.internal.core.camera.TightSpaceDetector;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.core.input.CameraAdjustmentController;
@@ -18,18 +16,12 @@ public final class ThirdPersonSession {
   private boolean perspectiveActive;
   private CameraMode mode = CameraMode.BYPASS;
   private final LookController lookController = new LookController();
-  private final PlayerRotationController playerRotationController =
-      new PlayerRotationController();
+  private final PlayerRotationController playerRotationController = new PlayerRotationController();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
-  private final CollisionRecovery collisionRecovery = new CollisionRecovery();
   private final CameraAdjustmentController cameraAdjustmentController =
       new CameraAdjustmentController();
-  private final TightSpaceDetector tightSpaceDetector = new TightSpaceDetector();
-  private CameraPose lastSafeCameraPose;
   private CameraPose finalCameraPose;
   private CameraProfileSlot cameraAdjustmentSlot;
-  private boolean temporaryFirstPersonRequested;
-  private CameraMode modeBeforeTemporaryFirstPerson = CameraMode.NORMAL;
 
   public boolean isPerspectiveActive() {
     return perspectiveActive;
@@ -55,38 +47,8 @@ public final class ThirdPersonSession {
     return cameraSmoother;
   }
 
-  public CollisionRecovery collisionRecovery() {
-    return collisionRecovery;
-  }
-
   public CameraAdjustmentController cameraAdjustmentController() {
     return cameraAdjustmentController;
-  }
-
-  public TightSpaceDetector tightSpaceDetector() {
-    return tightSpaceDetector;
-  }
-
-  public boolean isTemporaryFirstPersonRequested() {
-    return temporaryFirstPersonRequested;
-  }
-
-  public CameraMode compositionMode() {
-    return mode == CameraMode.TEMP_FIRST_PERSON ? modeBeforeTemporaryFirstPerson : mode;
-  }
-
-  public void requestTemporaryFirstPerson(boolean requested) {
-    if (requested == temporaryFirstPersonRequested) {
-      return;
-    }
-    temporaryFirstPersonRequested = requested;
-    if (requested) {
-      modeBeforeTemporaryFirstPerson =
-          mode == CameraMode.AIMING ? CameraMode.AIMING : CameraMode.NORMAL;
-      mode = CameraMode.TEMP_FIRST_PERSON;
-    } else if (perspectiveActive) {
-      mode = modeBeforeTemporaryFirstPerson;
-    }
   }
 
   public Optional<CameraProfileSlot> cameraAdjustmentSlot() {
@@ -107,14 +69,6 @@ public final class ThirdPersonSession {
     cameraAdjustmentSlot = null;
   }
 
-  public Optional<CameraPose> lastSafeCameraPose() {
-    return Optional.ofNullable(lastSafeCameraPose);
-  }
-
-  public void recordSafeCameraPose(CameraPose pose) {
-    lastSafeCameraPose = Objects.requireNonNull(pose, "pose");
-  }
-
   public Optional<CameraPose> finalCameraPose() {
     return Optional.ofNullable(finalCameraPose);
   }
@@ -127,9 +81,6 @@ public final class ThirdPersonSession {
   public void resetCameraTracking() {
     lookController.reset();
     cameraSmoother.reset();
-    collisionRecovery.reset();
-    tightSpaceDetector.reset();
-    lastSafeCameraPose = null;
     finalCameraPose = null;
   }
 
@@ -153,7 +104,5 @@ public final class ThirdPersonSession {
     playerRotationController.reset();
     cameraAdjustmentController.reset();
     cameraAdjustmentSlot = null;
-    temporaryFirstPersonRequested = false;
-    modeBeforeTemporaryFirstPerson = CameraMode.NORMAL;
   }
 }

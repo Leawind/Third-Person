@@ -29,14 +29,11 @@ class ThirdPersonConfigTest {
     assertEquals(ReticleMode.AUTO, config.hud().reticle());
     assertEquals(0.24, config.camera().normal().centeredOffsetY());
     assertEquals(0.0, config.camera().normal().withCentered(true).cameraParameters().anchorNdcX());
+    assertEquals(0.24, config.camera().normal().withCentered(true).cameraParameters().anchorNdcY());
     assertEquals(
-        0.24, config.camera().normal().withCentered(true).cameraParameters().anchorNdcY());
-    assertEquals(
-        config.camera().normal().offsetY(),
-        config.camera().normal().withCentered(true).offsetY());
+        config.camera().normal().offsetY(), config.camera().normal().withCentered(true).offsetY());
     assertEquals(List.of(), config.aiming().holdToAimItemPatterns());
     assertEquals(List.of(), config.aiming().useToAimItemPatterns());
-    assertEquals(List.of(), config.aiming().useToFirstPersonItemPatterns());
   }
 
   @Test
@@ -58,7 +55,7 @@ class ThirdPersonConfigTest {
   @Test
   void aimingSettingsDefensivelyCopyItemPatternLists() {
     var patterns = new java.util.ArrayList<>(List.of("minecraft:bow"));
-    var aiming = new ThirdPersonConfig.AimingSettings(true, patterns, List.of(), List.of());
+    var aiming = new ThirdPersonConfig.AimingSettings(true, patterns, List.of());
 
     patterns.add("minecraft:crossbow");
 

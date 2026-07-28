@@ -7,7 +7,6 @@ import java.util.Objects;
 /// Immutable, validated runtime configuration.
 public record ThirdPersonConfig(
     int schemaVersion,
-    boolean enabled,
     CameraSettings camera,
     AimingSettings aiming,
     PlayerSettings player,
@@ -16,7 +15,6 @@ public record ThirdPersonConfig(
   private static final ThirdPersonConfig DEFAULTS =
       new ThirdPersonConfig(
           CURRENT_SCHEMA_VERSION,
-          true,
           new CameraSettings(
               new CameraProfile(4.0, -0.18, 0.12, 0.24, 1.0, false),
               new CameraProfile(2.4, -0.30, 0.16, 0.48, 0.9, false),
@@ -26,14 +24,10 @@ public record ThirdPersonConfig(
                   0.05,
                   0.05,
                   new ModeSmoothing(0.064, 0.08, 0.06, 0.08, 0.0),
-                  new ModeSmoothing(0.02, 0.025, 0.025, 0.08, 0.0)),
-              true),
-          new AimingSettings(true, List.of(), List.of(), List.of()),
+                  new ModeSmoothing(0.02, 0.025, 0.025, 0.08, 0.0))),
+          new AimingSettings(true, List.of(), List.of()),
           new PlayerSettings(
-              PlayerRotationMode.AUTO,
-              NormalPlayerRotationMode.INTEREST_POINT,
-              true,
-              true),
+              PlayerRotationMode.AUTO, NormalPlayerRotationMode.INTEREST_POINT, true, true),
           new HudSettings(ReticleMode.AUTO));
 
   public ThirdPersonConfig {
@@ -51,10 +45,7 @@ public record ThirdPersonConfig(
   }
 
   public record CameraSettings(
-      CameraProfile normal,
-      CameraProfile aiming,
-      SmoothingSettings smoothing,
-      boolean temporaryFirstPersonInTightSpace) {
+      CameraProfile normal, CameraProfile aiming, SmoothingSettings smoothing) {
     public CameraSettings {
       Objects.requireNonNull(normal, "normal");
       Objects.requireNonNull(aiming, "aiming");
@@ -127,23 +118,17 @@ public record ThirdPersonConfig(
     public CameraProfile withCentered(boolean centered) {
       return this.centered == centered
           ? this
-          : new CameraProfile(
-              distance, offsetX, offsetY, centeredOffsetY, fovMultiplier, centered);
+          : new CameraProfile(distance, offsetX, offsetY, centeredOffsetY, fovMultiplier, centered);
     }
   }
 
   public record AimingSettings(
-      boolean smartAiming,
-      List<String> holdToAimItemPatterns,
-      List<String> useToAimItemPatterns,
-      List<String> useToFirstPersonItemPatterns) {
+      boolean smartAiming, List<String> holdToAimItemPatterns, List<String> useToAimItemPatterns) {
     private static final int MAX_PATTERNS_PER_LIST = 1024;
 
     public AimingSettings {
       holdToAimItemPatterns = copyPatterns(holdToAimItemPatterns, "holdToAimItemPatterns");
       useToAimItemPatterns = copyPatterns(useToAimItemPatterns, "useToAimItemPatterns");
-      useToFirstPersonItemPatterns =
-          copyPatterns(useToFirstPersonItemPatterns, "useToFirstPersonItemPatterns");
     }
 
     private static List<String> copyPatterns(List<String> patterns, String name) {

@@ -5,14 +5,12 @@ import java.util.List;
 import java.util.Objects;
 
 /// Immutable item-predicate expressions collected from client resource packs.
-record ItemPatternSet(
-    List<String> holdToAim, List<String> useToAim, List<String> useToFirstPerson) {
-  private static final ItemPatternSet EMPTY = new ItemPatternSet(List.of(), List.of(), List.of());
+record ItemPatternSet(List<String> holdToAim, List<String> useToAim) {
+  private static final ItemPatternSet EMPTY = new ItemPatternSet(List.of(), List.of());
 
   ItemPatternSet {
     holdToAim = copy(holdToAim, "holdToAim");
     useToAim = copy(useToAim, "useToAim");
-    useToFirstPerson = copy(useToFirstPerson, "useToFirstPerson");
   }
 
   static ItemPatternSet empty() {
@@ -20,7 +18,7 @@ record ItemPatternSet(
   }
 
   int size() {
-    return holdToAim.size() + useToAim.size() + useToFirstPerson.size();
+    return holdToAim.size() + useToAim.size();
   }
 
   private static List<String> copy(Collection<String> patterns, String name) {

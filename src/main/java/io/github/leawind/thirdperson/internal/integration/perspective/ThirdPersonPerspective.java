@@ -8,7 +8,6 @@ import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
-import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -72,7 +71,6 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
 
     var rotation = new Quaternionf();
     if (!lookController.copyRotation(rotation)) {
-      applyLastSafePose(state);
       return;
     }
 
@@ -89,20 +87,13 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
                 state.getFovDeg(),
                 aspectRatio,
                 entity.isSwimming()
-                    || (entity instanceof LivingEntity livingEntity
-                        && livingEntity.isFallFlying()),
+                    || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying()),
                 frameDeltaSeconds())
             .orElse(null);
     if (frame == null) {
-      applyLastSafePose(state);
       return;
     }
-    runtime
-        .updateCamera(
-            frame,
-            (collisionPivot, desiredPosition) ->
-                MinecraftCameraCollision.resolve(entity, collisionPivot, desiredPosition))
-        .ifPresent(pose -> applyPose(state, pose));
+    runtime.updateCamera(frame).ifPresent(pose -> applyPose(state, pose));
   }
 
   @Override
@@ -117,10 +108,6 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     }
     CameraPose.tryCreate(state.position(), state.rotation(), state.getFovDeg())
         .ifPresent(runtime.session()::recordFinalCameraPose);
-  }
-
-  private void applyLastSafePose(PerspectiveState.Mutable state) {
-    runtime.session().lastSafeCameraPose().ifPresent(pose -> applyPose(state, pose));
   }
 
   private static void applyPose(PerspectiveState.Mutable state, CameraPose pose) {

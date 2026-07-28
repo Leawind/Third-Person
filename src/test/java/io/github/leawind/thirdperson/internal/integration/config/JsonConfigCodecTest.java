@@ -26,8 +26,7 @@ class JsonConfigCodecTest {
             .replace("\"distance\": 4.0", "\"distance\": 8.0")
             .replace("\"rotationMode\": \"auto\"", "\"rotationMode\": \"vanilla\"")
             .replace(
-                "\"normalMode\": \"interest_point\"",
-                "\"normalMode\": \"parallel_with_camera\"")
+                "\"normalMode\": \"interest_point\"", "\"normalMode\": \"parallel_with_camera\"")
             .replace("\"autoRotateInteracting\": true", "\"autoRotateInteracting\": false")
             .replace("\"reticle\": \"auto\"", "\"reticle\": \"on\"");
 
@@ -58,22 +57,32 @@ class JsonConfigCodecTest {
   }
 
   @Test
+  void ignoresRemovedSettingsFromExistingConfigs() {
+    JsonObject json =
+        JsonParser.parseString(JsonConfigCodec.encode(ThirdPersonConfig.defaults()))
+            .getAsJsonObject();
+    json.addProperty("enabled", false);
+    json.getAsJsonObject("aiming")
+        .add("useToFirstPersonItemPatterns", JsonParser.parseString("[\"minecraft:spyglass\"]"));
+
+    assertEquals(ThirdPersonConfig.defaults(), JsonConfigCodec.decode(json.toString()));
+  }
+
+  @Test
   void roundTripsCustomItemPredicates() {
     ThirdPersonConfig defaults = ThirdPersonConfig.defaults();
     ThirdPersonConfig config =
         new ThirdPersonConfig(
             defaults.schemaVersion(),
-            defaults.enabled(),
             defaults.camera(),
             new ThirdPersonConfig.AimingSettings(
-                true, java.util.List.of("#example:ranged"), java.util.List.of(), java.util.List.of()),
+                true, java.util.List.of("#example:ranged"), java.util.List.of()),
             defaults.player(),
             defaults.hud());
 
     ThirdPersonConfig decoded = JsonConfigCodec.decode(JsonConfigCodec.encode(config));
 
-    assertEquals(
-        java.util.List.of("#example:ranged"), decoded.aiming().holdToAimItemPatterns());
+    assertEquals(java.util.List.of("#example:ranged"), decoded.aiming().holdToAimItemPatterns());
   }
 
   @Test
@@ -102,7 +111,6 @@ class JsonConfigCodecTest {
 
     assertThrows(IllegalArgumentException.class, () -> JsonConfigCodec.decode(json));
     assertThrows(
-        IllegalArgumentException.class,
-        () -> JsonConfigCodec.decode("{\"is_mod_enabled\":true}"));
+        IllegalArgumentException.class, () -> JsonConfigCodec.decode("{\"is_mod_enabled\":true}"));
   }
 }

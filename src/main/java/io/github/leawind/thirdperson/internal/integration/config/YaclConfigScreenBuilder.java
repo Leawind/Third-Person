@@ -39,21 +39,6 @@ final class YaclConfigScreenBuilder {
             ConfigCategory.createBuilder()
                 .name(text("category.general"))
                 .tooltip(text("category.general.desc"))
-                .option(
-                    booleanOption(
-                        "enabled",
-                        defaults.enabled(),
-                        () -> draft.value().enabled(),
-                        draft::setEnabled))
-                .group(
-                    group("camera_behavior")
-                        .option(
-                            booleanOption(
-                                "tight_space",
-                                defaults.camera().temporaryFirstPersonInTightSpace(),
-                                () -> draft.value().camera().temporaryFirstPersonInTightSpace(),
-                                draft::setTemporaryFirstPersonInTightSpace))
-                        .build())
                 .group(
                     group("aiming")
                         .option(
@@ -127,12 +112,6 @@ final class YaclConfigScreenBuilder {
                         defaults.aiming().useToAimItemPatterns(),
                         () -> draft.value().aiming().useToAimItemPatterns(),
                         draft::setUseToAimItemPatterns))
-                .group(
-                    itemPatternOption(
-                        "use_to_first_person_item_patterns",
-                        defaults.aiming().useToFirstPersonItemPatterns(),
-                        () -> draft.value().aiming().useToFirstPersonItemPatterns(),
-                        draft::setUseToFirstPersonItemPatterns))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -165,74 +144,101 @@ final class YaclConfigScreenBuilder {
                             halfLifeOption(
                                 "adjusting_distance_half_life",
                                 defaults.camera().smoothing().adjustingDistanceHalfLife(),
-                                () -> draft.value().camera().smoothing().adjustingDistanceHalfLife(),
+                                () ->
+                                    draft.value().camera().smoothing().adjustingDistanceHalfLife(),
                                 draft::setAdjustingDistanceHalfLife))
                         .build())
                 .group(
                     group("normal_camera")
                         .option(
-                    halfLifeOption(
-                        "normal_pivot_horizontal_half_life",
-                        defaults.camera().smoothing().normal().horizontalPivotHalfLife(),
-                        () -> draft.value().camera().smoothing().normal().horizontalPivotHalfLife(),
-                        draft::setNormalHorizontalPivotHalfLife))
-                .option(
-                    halfLifeOption(
-                        "normal_pivot_vertical_half_life",
-                        defaults.camera().smoothing().normal().verticalPivotHalfLife(),
-                        () -> draft.value().camera().smoothing().normal().verticalPivotHalfLife(),
-                        draft::setNormalVerticalPivotHalfLife))
-                .option(
-                    halfLifeOption(
-                        "normal_offset_half_life",
-                        defaults.camera().smoothing().normal().offsetHalfLife(),
-                        () -> draft.value().camera().smoothing().normal().offsetHalfLife(),
-                        draft::setNormalOffsetHalfLife))
-                .option(
-                    halfLifeOption(
-                        "normal_distance_half_life",
-                        defaults.camera().smoothing().normal().distanceHalfLife(),
-                        () -> draft.value().camera().smoothing().normal().distanceHalfLife(),
-                        draft::setNormalDistanceHalfLife))
-                .option(
-                    halfLifeOption(
-                        "normal_fov_half_life",
-                        defaults.camera().smoothing().normal().fovHalfLife(),
-                        () -> draft.value().camera().smoothing().normal().fovHalfLife(),
-                        draft::setNormalFovHalfLife))
+                            halfLifeOption(
+                                "normal_pivot_horizontal_half_life",
+                                defaults.camera().smoothing().normal().horizontalPivotHalfLife(),
+                                () ->
+                                    draft
+                                        .value()
+                                        .camera()
+                                        .smoothing()
+                                        .normal()
+                                        .horizontalPivotHalfLife(),
+                                draft::setNormalHorizontalPivotHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "normal_pivot_vertical_half_life",
+                                defaults.camera().smoothing().normal().verticalPivotHalfLife(),
+                                () ->
+                                    draft
+                                        .value()
+                                        .camera()
+                                        .smoothing()
+                                        .normal()
+                                        .verticalPivotHalfLife(),
+                                draft::setNormalVerticalPivotHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "normal_offset_half_life",
+                                defaults.camera().smoothing().normal().offsetHalfLife(),
+                                () -> draft.value().camera().smoothing().normal().offsetHalfLife(),
+                                draft::setNormalOffsetHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "normal_distance_half_life",
+                                defaults.camera().smoothing().normal().distanceHalfLife(),
+                                () ->
+                                    draft.value().camera().smoothing().normal().distanceHalfLife(),
+                                draft::setNormalDistanceHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "normal_fov_half_life",
+                                defaults.camera().smoothing().normal().fovHalfLife(),
+                                () -> draft.value().camera().smoothing().normal().fovHalfLife(),
+                                draft::setNormalFovHalfLife))
                         .build())
                 .group(
                     group("aiming_camera")
                         .option(
-                    halfLifeOption(
-                        "aiming_pivot_horizontal_half_life",
-                        defaults.camera().smoothing().aiming().horizontalPivotHalfLife(),
-                        () -> draft.value().camera().smoothing().aiming().horizontalPivotHalfLife(),
-                        draft::setAimingHorizontalPivotHalfLife))
-                .option(
-                    halfLifeOption(
-                        "aiming_pivot_vertical_half_life",
-                        defaults.camera().smoothing().aiming().verticalPivotHalfLife(),
-                        () -> draft.value().camera().smoothing().aiming().verticalPivotHalfLife(),
-                        draft::setAimingVerticalPivotHalfLife))
-                .option(
-                    halfLifeOption(
-                        "aiming_offset_half_life",
-                        defaults.camera().smoothing().aiming().offsetHalfLife(),
-                        () -> draft.value().camera().smoothing().aiming().offsetHalfLife(),
-                        draft::setAimingOffsetHalfLife))
-                .option(
-                    halfLifeOption(
-                        "aiming_distance_half_life",
-                        defaults.camera().smoothing().aiming().distanceHalfLife(),
-                        () -> draft.value().camera().smoothing().aiming().distanceHalfLife(),
-                        draft::setAimingDistanceHalfLife))
-                .option(
-                    halfLifeOption(
-                        "aiming_fov_half_life",
-                        defaults.camera().smoothing().aiming().fovHalfLife(),
-                        () -> draft.value().camera().smoothing().aiming().fovHalfLife(),
-                        draft::setAimingFovHalfLife))
+                            halfLifeOption(
+                                "aiming_pivot_horizontal_half_life",
+                                defaults.camera().smoothing().aiming().horizontalPivotHalfLife(),
+                                () ->
+                                    draft
+                                        .value()
+                                        .camera()
+                                        .smoothing()
+                                        .aiming()
+                                        .horizontalPivotHalfLife(),
+                                draft::setAimingHorizontalPivotHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "aiming_pivot_vertical_half_life",
+                                defaults.camera().smoothing().aiming().verticalPivotHalfLife(),
+                                () ->
+                                    draft
+                                        .value()
+                                        .camera()
+                                        .smoothing()
+                                        .aiming()
+                                        .verticalPivotHalfLife(),
+                                draft::setAimingVerticalPivotHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "aiming_offset_half_life",
+                                defaults.camera().smoothing().aiming().offsetHalfLife(),
+                                () -> draft.value().camera().smoothing().aiming().offsetHalfLife(),
+                                draft::setAimingOffsetHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "aiming_distance_half_life",
+                                defaults.camera().smoothing().aiming().distanceHalfLife(),
+                                () ->
+                                    draft.value().camera().smoothing().aiming().distanceHalfLife(),
+                                draft::setAimingDistanceHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "aiming_fov_half_life",
+                                defaults.camera().smoothing().aiming().fovHalfLife(),
+                                () -> draft.value().camera().smoothing().aiming().fovHalfLife(),
+                                draft::setAimingFovHalfLife))
                         .build())
                 .build())
         .category(
@@ -242,93 +248,106 @@ final class YaclConfigScreenBuilder {
                 .group(
                     group("normal_camera")
                         .option(
-                    doubleOption(
-                        "normal_distance",
-                        defaults.camera().normal().distance(),
-                        () -> draft.value().camera().normal().distance(),
-                        value -> draft.updateNormal(profile -> profileWithDistance(profile, value)),
-                        0.0,
-                        16.0,
-                        0.05))
-                .option(
-                    doubleOption(
-                        "normal_offset_x",
-                        defaults.camera().normal().offsetX(),
-                        () -> draft.value().camera().normal().offsetX(),
-                        value -> draft.updateNormal(profile -> profileWithOffsetX(profile, value)),
-                        -1.0,
-                        1.0,
-                        0.01))
-                .option(
-                    doubleOption(
-                        "normal_offset_y",
-                        defaults.camera().normal().offsetY(),
-                        () -> draft.value().camera().normal().offsetY(),
-                        value -> draft.updateNormal(profile -> profileWithOffsetY(profile, value)),
-                        -1.0,
-                        1.0,
-                        0.01))
-                .option(
-                    doubleOption(
-                        "normal_centered_offset_y",
-                        defaults.camera().normal().centeredOffsetY(),
-                        () -> draft.value().camera().normal().centeredOffsetY(),
-                        value ->
-                            draft.updateNormal(
-                                profile -> profileWithCenteredOffsetY(profile, value)),
-                        -1.0,
-                        1.0,
-                        0.01))
+                            doubleOption(
+                                "normal_distance",
+                                defaults.camera().normal().distance(),
+                                () -> draft.value().camera().normal().distance(),
+                                value ->
+                                    draft.updateNormal(
+                                        profile -> profileWithDistance(profile, value)),
+                                0.0,
+                                16.0,
+                                0.05))
+                        .option(
+                            doubleOption(
+                                "normal_offset_x",
+                                defaults.camera().normal().offsetX(),
+                                () -> draft.value().camera().normal().offsetX(),
+                                value ->
+                                    draft.updateNormal(
+                                        profile -> profileWithOffsetX(profile, value)),
+                                -1.0,
+                                1.0,
+                                0.01))
+                        .option(
+                            doubleOption(
+                                "normal_offset_y",
+                                defaults.camera().normal().offsetY(),
+                                () -> draft.value().camera().normal().offsetY(),
+                                value ->
+                                    draft.updateNormal(
+                                        profile -> profileWithOffsetY(profile, value)),
+                                -1.0,
+                                1.0,
+                                0.01))
+                        .option(
+                            doubleOption(
+                                "normal_centered_offset_y",
+                                defaults.camera().normal().centeredOffsetY(),
+                                () -> draft.value().camera().normal().centeredOffsetY(),
+                                value ->
+                                    draft.updateNormal(
+                                        profile -> profileWithCenteredOffsetY(profile, value)),
+                                -1.0,
+                                1.0,
+                                0.01))
                         .build())
                 .group(
                     group("aiming_camera")
                         .option(
-                    doubleOption(
-                        "aiming_distance",
-                        defaults.camera().aiming().distance(),
-                        () -> draft.value().camera().aiming().distance(),
-                        value -> draft.updateAiming(profile -> profileWithDistance(profile, value)),
-                        0.0,
-                        16.0,
-                        0.05))
-                .option(
-                    doubleOption(
-                        "aiming_offset_x",
-                        defaults.camera().aiming().offsetX(),
-                        () -> draft.value().camera().aiming().offsetX(),
-                        value -> draft.updateAiming(profile -> profileWithOffsetX(profile, value)),
-                        -1.0,
-                        1.0,
-                        0.01))
-                .option(
-                    doubleOption(
-                        "aiming_offset_y",
-                        defaults.camera().aiming().offsetY(),
-                        () -> draft.value().camera().aiming().offsetY(),
-                        value -> draft.updateAiming(profile -> profileWithOffsetY(profile, value)),
-                        -1.0,
-                        1.0,
-                        0.01))
-                .option(
-                    doubleOption(
-                        "aiming_centered_offset_y",
-                        defaults.camera().aiming().centeredOffsetY(),
-                        () -> draft.value().camera().aiming().centeredOffsetY(),
-                        value ->
-                            draft.updateAiming(
-                                profile -> profileWithCenteredOffsetY(profile, value)),
-                        -1.0,
-                        1.0,
-                        0.01))
-                .option(
-                    doubleOption(
-                        "aiming_fov",
-                        defaults.camera().aiming().fovMultiplier(),
-                        () -> draft.value().camera().aiming().fovMultiplier(),
-                        value -> draft.updateAiming(profile -> profileWithFov(profile, value)),
-                        0.25,
-                        2.0,
-                        0.05))
+                            doubleOption(
+                                "aiming_distance",
+                                defaults.camera().aiming().distance(),
+                                () -> draft.value().camera().aiming().distance(),
+                                value ->
+                                    draft.updateAiming(
+                                        profile -> profileWithDistance(profile, value)),
+                                0.0,
+                                16.0,
+                                0.05))
+                        .option(
+                            doubleOption(
+                                "aiming_offset_x",
+                                defaults.camera().aiming().offsetX(),
+                                () -> draft.value().camera().aiming().offsetX(),
+                                value ->
+                                    draft.updateAiming(
+                                        profile -> profileWithOffsetX(profile, value)),
+                                -1.0,
+                                1.0,
+                                0.01))
+                        .option(
+                            doubleOption(
+                                "aiming_offset_y",
+                                defaults.camera().aiming().offsetY(),
+                                () -> draft.value().camera().aiming().offsetY(),
+                                value ->
+                                    draft.updateAiming(
+                                        profile -> profileWithOffsetY(profile, value)),
+                                -1.0,
+                                1.0,
+                                0.01))
+                        .option(
+                            doubleOption(
+                                "aiming_centered_offset_y",
+                                defaults.camera().aiming().centeredOffsetY(),
+                                () -> draft.value().camera().aiming().centeredOffsetY(),
+                                value ->
+                                    draft.updateAiming(
+                                        profile -> profileWithCenteredOffsetY(profile, value)),
+                                -1.0,
+                                1.0,
+                                0.01))
+                        .option(
+                            doubleOption(
+                                "aiming_fov",
+                                defaults.camera().aiming().fovMultiplier(),
+                                () -> draft.value().camera().aiming().fovMultiplier(),
+                                value ->
+                                    draft.updateAiming(profile -> profileWithFov(profile, value)),
+                                0.25,
+                                2.0,
+                                0.05))
                         .build())
                 .build())
         .build()
@@ -500,73 +519,31 @@ final class YaclConfigScreenBuilder {
       MinecraftConfigIntegration.saveNow(value);
     }
 
-    private void setEnabled(boolean enabled) {
-      value =
-          new ThirdPersonConfig(
-              value.schemaVersion(),
-              enabled,
-              value.camera(),
-              value.aiming(),
-              value.player(),
-              value.hud());
-    }
-
-    private void setTemporaryFirstPersonInTightSpace(boolean enabled) {
-      var camera = value.camera();
-      setCamera(
-          new ThirdPersonConfig.CameraSettings(
-              camera.normal(), camera.aiming(), camera.smoothing(), enabled));
-    }
-
     private void setSmartAiming(boolean enabled) {
       var aiming = value.aiming();
       setAiming(
           new ThirdPersonConfig.AimingSettings(
-              enabled,
-              aiming.holdToAimItemPatterns(),
-              aiming.useToAimItemPatterns(),
-              aiming.useToFirstPersonItemPatterns()));
+              enabled, aiming.holdToAimItemPatterns(), aiming.useToAimItemPatterns()));
     }
 
     private void setHoldToAimItemPatterns(List<String> patterns) {
       var aiming = value.aiming();
       setAiming(
           new ThirdPersonConfig.AimingSettings(
-              aiming.smartAiming(),
-              patterns,
-              aiming.useToAimItemPatterns(),
-              aiming.useToFirstPersonItemPatterns()));
+              aiming.smartAiming(), patterns, aiming.useToAimItemPatterns()));
     }
 
     private void setUseToAimItemPatterns(List<String> patterns) {
       var aiming = value.aiming();
       setAiming(
           new ThirdPersonConfig.AimingSettings(
-              aiming.smartAiming(),
-              aiming.holdToAimItemPatterns(),
-              patterns,
-              aiming.useToFirstPersonItemPatterns()));
-    }
-
-    private void setUseToFirstPersonItemPatterns(List<String> patterns) {
-      var aiming = value.aiming();
-      setAiming(
-          new ThirdPersonConfig.AimingSettings(
-              aiming.smartAiming(),
-              aiming.holdToAimItemPatterns(),
-              aiming.useToAimItemPatterns(),
-              patterns));
+              aiming.smartAiming(), aiming.holdToAimItemPatterns(), patterns));
     }
 
     private void setAiming(ThirdPersonConfig.AimingSettings aiming) {
       value =
           new ThirdPersonConfig(
-              value.schemaVersion(),
-              value.enabled(),
-              value.camera(),
-              aiming,
-              value.player(),
-              value.hud());
+              value.schemaVersion(), value.camera(), aiming, value.player(), value.hud());
     }
 
     private void setPlayerRotationMode(PlayerRotationMode mode) {
@@ -593,38 +570,26 @@ final class YaclConfigScreenBuilder {
       var player = value.player();
       setPlayer(
           new ThirdPersonConfig.PlayerSettings(
-              player.rotationMode(),
-              player.normalMode(),
-              enabled,
-              player.doNotRotateWhenEating()));
+              player.rotationMode(), player.normalMode(), enabled, player.doNotRotateWhenEating()));
     }
 
     private void setDoNotRotateWhenEating(boolean enabled) {
       var player = value.player();
       setPlayer(
           new ThirdPersonConfig.PlayerSettings(
-              player.rotationMode(),
-              player.normalMode(),
-              player.autoRotateInteracting(),
-              enabled));
+              player.rotationMode(), player.normalMode(), player.autoRotateInteracting(), enabled));
     }
 
     private void setPlayer(ThirdPersonConfig.PlayerSettings player) {
       value =
           new ThirdPersonConfig(
-              value.schemaVersion(),
-              value.enabled(),
-              value.camera(),
-              value.aiming(),
-              player,
-              value.hud());
+              value.schemaVersion(), value.camera(), value.aiming(), player, value.hud());
     }
 
     private void setReticleMode(ReticleMode mode) {
       value =
           new ThirdPersonConfig(
               value.schemaVersion(),
-              value.enabled(),
               value.camera(),
               value.aiming(),
               value.player(),
@@ -635,20 +600,14 @@ final class YaclConfigScreenBuilder {
       var camera = value.camera();
       setCamera(
           new ThirdPersonConfig.CameraSettings(
-              update.apply(camera.normal()),
-              camera.aiming(),
-              camera.smoothing(),
-              camera.temporaryFirstPersonInTightSpace()));
+              update.apply(camera.normal()), camera.aiming(), camera.smoothing()));
     }
 
     private void updateAiming(UnaryOperator<ThirdPersonConfig.CameraProfile> update) {
       var camera = value.camera();
       setCamera(
           new ThirdPersonConfig.CameraSettings(
-              camera.normal(),
-              update.apply(camera.aiming()),
-              camera.smoothing(),
-              camera.temporaryFirstPersonInTightSpace()));
+              camera.normal(), update.apply(camera.aiming()), camera.smoothing()));
     }
 
     private void setRotationHalfLife(double halfLife) {
@@ -837,21 +796,13 @@ final class YaclConfigScreenBuilder {
       var camera = value.camera();
       setCamera(
           new ThirdPersonConfig.CameraSettings(
-              camera.normal(),
-              camera.aiming(),
-              update.apply(camera.smoothing()),
-              camera.temporaryFirstPersonInTightSpace()));
+              camera.normal(), camera.aiming(), update.apply(camera.smoothing())));
     }
 
     private void setCamera(ThirdPersonConfig.CameraSettings camera) {
       value =
           new ThirdPersonConfig(
-              value.schemaVersion(),
-              value.enabled(),
-              camera,
-              value.aiming(),
-              value.player(),
-              value.hud());
+              value.schemaVersion(), camera, value.aiming(), value.player(), value.hud());
     }
   }
 }

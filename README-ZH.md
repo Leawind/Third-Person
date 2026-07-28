@@ -26,8 +26,6 @@
 - **普通与瞄准构图。** 弓、弩、长矛、手动绑定的瞄准键以及资源包规则都可以启用距离更近的瞄准相机。
 - **第三人称交互对齐。** 攻击、使用物品和选取方块前，会将玩家的权威视线与最终相机意图对齐，再调用原版选取，
   不会扩大交互距离。
-- **安全的相机碰撞。** 接近方块时相机会立即收缩，障碍消失后平滑展开；狭窄空间和使用望远镜期间会临时选择
-  Perspective API 的第一人称视角。
 - **平滑切换视角。** Perspective API 统一负责视角选择、过渡以及与其他 API 视角模组的协作。
 - **精简配置。** 始终可使用经过校验的 JSON 配置；安装 YACL 后可使用游戏内配置界面，Fabric 用户可从 Mod Menu 打开。
 
@@ -45,19 +43,18 @@
 
 ## 资源包瞄准规则
 
-其他模组的物品可以通过资源包启用瞄准或临时第一人称。将每条 JSON 规则分别放在
-`assets/<namespace>/leawind_third_person/aiming_rules/` 下：
+其他模组的物品可以通过资源包启用瞄准。每个 JSON 文件包含一组物品谓词表达式，语法与
+`/clear` 接受的物品参数相同。文件可分别放在以下目录：
+
+- `assets/<namespace>/item_patterns/hold_to_aim/`
+- `assets/<namespace>/item_patterns/use_to_aim/`
 
 ```json
-{
-  "items": ["example:rifle"],
-  "action": "aim_while_using",
-  "priority": 100
-}
+["example:rifle", "#example:ranged[example:mode=aim]"]
 ```
 
-可用动作包括 `aim_while_holding`、`aim_while_using` 和 `first_person_while_using`。匹配时优先级较高的规则
-生效；`smartAiming` 配置同时控制原版自动规则与资源包规则。
+模组的原版物品规则也通过同一资源机制提供。YACL 配置界面可以添加额外谓词；`smartAiming`
+配置控制所有自动物品谓词行为，手动瞄准按键不受影响。
 
 ## 贡献者
 

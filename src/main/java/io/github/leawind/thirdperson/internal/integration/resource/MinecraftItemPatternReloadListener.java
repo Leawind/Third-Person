@@ -16,7 +16,6 @@ final class MinecraftItemPatternReloadListener
   private static final String ROOT_DIRECTORY = "item_patterns";
   private static final String HOLD_TO_AIM = ROOT_DIRECTORY + "/hold_to_aim";
   private static final String USE_TO_AIM = ROOT_DIRECTORY + "/use_to_aim";
-  private static final String USE_TO_FIRST_PERSON = ROOT_DIRECTORY + "/use_to_first_person";
 
   private volatile ItemPatternSet snapshot = ItemPatternSet.empty();
 
@@ -42,9 +41,7 @@ final class MinecraftItemPatternReloadListener
   private ItemPatternSet load(ResourceManager resourceManager) {
     try {
       return new ItemPatternSet(
-          loadDirectory(resourceManager, HOLD_TO_AIM),
-          loadDirectory(resourceManager, USE_TO_AIM),
-          loadDirectory(resourceManager, USE_TO_FIRST_PERSON));
+          loadDirectory(resourceManager, HOLD_TO_AIM), loadDirectory(resourceManager, USE_TO_AIM));
     } catch (RuntimeException exception) {
       ThirdPerson.LOGGER.error(
           "Could not scan item-pattern resources; keeping previous rules", exception);

@@ -2,12 +2,11 @@ package io.github.leawind.thirdperson.internal.application;
 
 import io.github.leawind.thirdperson.internal.application.camera.CameraController;
 import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
-import io.github.leawind.thirdperson.internal.application.port.CameraCollisionPort;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
+import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -35,31 +34,25 @@ public final class ThirdPersonRuntime {
   }
 
   public boolean isCameraControlEnabled() {
-    return config.enabled() && session.isControllingCamera();
+    return session.isControllingCamera();
   }
 
   public ThirdPersonConfig.CameraProfile cameraProfile(boolean centered) {
     ThirdPersonConfig.CameraProfile profile =
-        session.compositionMode() == CameraMode.AIMING
-            ? config.camera().aiming()
-            : config.camera().normal();
+        session.mode() == CameraMode.AIMING ? config.camera().aiming() : config.camera().normal();
     return centered ? profile.withCentered(true) : profile;
   }
 
   public CameraSmoothingParameters cameraSmoothing(boolean flyingOrSwimming) {
     ThirdPersonConfig.SmoothingSettings smoothing = config.camera().smoothing();
     ThirdPersonConfig.ModeSmoothing modeSmoothing =
-        session.compositionMode() == CameraMode.AIMING
-            ? smoothing.aiming()
-            : smoothing.normal();
+        session.mode() == CameraMode.AIMING ? smoothing.aiming() : smoothing.normal();
     double horizontalPivotHalfLife =
         flyingOrSwimming
             ? smoothing.flyingPivotHalfLife()
             : modeSmoothing.horizontalPivotHalfLife();
     double verticalPivotHalfLife =
-        flyingOrSwimming
-            ? smoothing.flyingPivotHalfLife()
-            : modeSmoothing.verticalPivotHalfLife();
+        flyingOrSwimming ? smoothing.flyingPivotHalfLife() : modeSmoothing.verticalPivotHalfLife();
     boolean adjusting = session.cameraAdjustmentController().isAdjusting();
     double offsetHalfLife =
         adjusting ? smoothing.adjustingOffsetHalfLife() : modeSmoothing.offsetHalfLife();
@@ -74,20 +67,10 @@ public final class ThirdPersonRuntime {
         modeSmoothing.fovHalfLife());
   }
 
-  public Optional<CameraPose> updateCamera(
-      CameraFrameInput frame, CameraCollisionPort collision) {
+  public Optional<CameraPose> updateCamera(CameraFrameInput frame) {
     Objects.requireNonNull(frame, "frame");
     return cameraController.update(
-        frame,
-        cameraProfile(frame.flyingOrSwimming()),
-        cameraSmoothing(frame.flyingOrSwimming()),
-        collision);
-  }
-
-  public boolean updateTightSpace(CameraFrameInput frame, CameraCollisionPort collision) {
-    Objects.requireNonNull(frame, "frame");
-    return cameraController.updateTightSpace(
-        frame, cameraProfile(frame.flyingOrSwimming()), collision);
+        frame, cameraProfile(frame.flyingOrSwimming()), cameraSmoothing(frame.flyingOrSwimming()));
   }
 
   public boolean initialize() {
@@ -102,15 +85,10 @@ public final class ThirdPersonRuntime {
     if (!session.isPerspectiveActive()) {
       session.activatePerspective();
     }
-    if (!config.enabled()) {
-      session.setMode(CameraMode.BYPASS);
-    }
   }
 
   public void onPerspectiveDeactivated() {
-    if (!session.isTemporaryFirstPersonRequested()) {
-      session.reset();
-    }
+    session.reset();
   }
 
   public void onClientIdentityChanged(boolean perspectiveCurrent) {
@@ -122,18 +100,9 @@ public final class ThirdPersonRuntime {
 
   public void updateConfig(ThirdPersonConfig config) {
     this.config = Objects.requireNonNull(config, "config");
-    if (!session.isPerspectiveActive()) {
-      return;
-    }
-    if (!config.enabled()) {
-      session.setMode(CameraMode.BYPASS);
-    } else if (session.mode() == CameraMode.BYPASS) {
-      session.setMode(CameraMode.NORMAL);
-    }
   }
 
-  public ThirdPersonConfig updateNormalCameraProfile(
-      ThirdPersonConfig.CameraProfile profile) {
+  public ThirdPersonConfig updateNormalCameraProfile(ThirdPersonConfig.CameraProfile profile) {
     return updateCameraProfile(CameraProfileSlot.NORMAL, profile);
   }
 
@@ -146,12 +115,10 @@ public final class ThirdPersonRuntime {
     ThirdPersonConfig updated =
         new ThirdPersonConfig(
             previous.schemaVersion(),
-            previous.enabled(),
             new ThirdPersonConfig.CameraSettings(
                 slot == CameraProfileSlot.NORMAL ? profile : previousCamera.normal(),
                 slot == CameraProfileSlot.AIMING ? profile : previousCamera.aiming(),
-                previousCamera.smoothing(),
-                previousCamera.temporaryFirstPersonInTightSpace()),
+                previousCamera.smoothing()),
             previous.aiming(),
             previous.player(),
             previous.hud());
@@ -160,21 +127,9 @@ public final class ThirdPersonRuntime {
   }
 
   public void setAiming(boolean aiming) {
-    if (!session.isPerspectiveActive()
-        || !config.enabled()
-        || session.mode() == CameraMode.TEMP_FIRST_PERSON) {
+    if (!session.isPerspectiveActive()) {
       return;
     }
     session.setMode(aiming ? CameraMode.AIMING : CameraMode.NORMAL);
-  }
-
-  public void requestTemporaryFirstPerson(boolean requested) {
-    if (!session.isPerspectiveActive() || !config.enabled()) {
-      requested = false;
-    }
-    session.requestTemporaryFirstPerson(requested);
-    if (!config.enabled() && session.isPerspectiveActive()) {
-      session.setMode(CameraMode.BYPASS);
-    }
   }
 }

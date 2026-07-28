@@ -8,7 +8,6 @@ import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftHud
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftInputIntegration;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftInteractionIntegration;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
-import io.github.leawind.thirdperson.internal.integration.perspective.MinecraftTemporaryFirstPersonIntegration;
 import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
 
 /// Outermost composition root for loader entrypoints and Minecraft integrations.
@@ -26,6 +25,5 @@ public final class ModBootstrap {
     MinecraftInputIntegration.register();
     MinecraftHudIntegration.register();
     MinecraftInteractionIntegration.register();
-    MinecraftTemporaryFirstPersonIntegration.register();
   }
 }

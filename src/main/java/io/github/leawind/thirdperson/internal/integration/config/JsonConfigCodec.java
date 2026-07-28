@@ -112,11 +112,7 @@ final class JsonConfigCodec {
                           .forGetter(ThirdPersonConfig.CameraSettings::aiming),
                       SMOOTHING_SETTINGS_CODEC
                           .fieldOf("smoothing")
-                          .forGetter(ThirdPersonConfig.CameraSettings::smoothing),
-                      Codec.BOOL
-                          .fieldOf("temporaryFirstPersonInTightSpace")
-                          .forGetter(
-                              ThirdPersonConfig.CameraSettings::temporaryFirstPersonInTightSpace))
+                          .forGetter(ThirdPersonConfig.CameraSettings::smoothing))
                   .apply(instance, ThirdPersonConfig.CameraSettings::new));
 
   private static final Codec<ThirdPersonConfig.AimingSettings> AIMING_SETTINGS_CODEC =
@@ -134,11 +130,7 @@ final class JsonConfigCodec {
                       Codec.STRING
                           .listOf()
                           .optionalFieldOf("useToAimItemPatterns", List.of())
-                          .forGetter(ThirdPersonConfig.AimingSettings::useToAimItemPatterns),
-                      Codec.STRING
-                          .listOf()
-                          .optionalFieldOf("useToFirstPersonItemPatterns", List.of())
-                          .forGetter(ThirdPersonConfig.AimingSettings::useToFirstPersonItemPatterns))
+                          .forGetter(ThirdPersonConfig.AimingSettings::useToAimItemPatterns))
                   .apply(instance, ThirdPersonConfig.AimingSettings::new));
 
   private static final Codec<ThirdPersonConfig.PlayerSettings> PLAYER_SETTINGS_CODEC =
@@ -180,7 +172,6 @@ final class JsonConfigCodec {
                               ThirdPersonConfig.CURRENT_SCHEMA_VERSION)
                           .fieldOf("schemaVersion")
                           .forGetter(ThirdPersonConfig::schemaVersion),
-                      Codec.BOOL.fieldOf("enabled").forGetter(ThirdPersonConfig::enabled),
                       CAMERA_SETTINGS_CODEC.fieldOf("camera").forGetter(ThirdPersonConfig::camera),
                       AIMING_SETTINGS_CODEC.fieldOf("aiming").forGetter(ThirdPersonConfig::aiming),
                       PLAYER_SETTINGS_CODEC.fieldOf("player").forGetter(ThirdPersonConfig::player),
@@ -212,11 +203,8 @@ final class JsonConfigCodec {
         value -> value.name().toLowerCase(Locale.ROOT));
   }
 
-  private static <T> MapCodec<T> fieldWithDefault(
-      Codec<T> codec, String name, T defaultValue) {
-    return codec
-        .optionalFieldOf(name)
-        .xmap(value -> value.orElse(defaultValue), Optional::of);
+  private static <T> MapCodec<T> fieldWithDefault(Codec<T> codec, String name, T defaultValue) {
+    return codec.optionalFieldOf(name).xmap(value -> value.orElse(defaultValue), Optional::of);
   }
 
   private static <T> T requireResult(DataResult<T> result, String operation) {

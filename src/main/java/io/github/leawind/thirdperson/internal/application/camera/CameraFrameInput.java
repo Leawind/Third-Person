@@ -8,7 +8,7 @@ import org.joml.Quaternionfc;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
-/// Immutable Minecraft-independent input for one camera update or collision probe.
+/// Immutable Minecraft-independent input for one camera update.
 public final class CameraFrameInput {
   private static final float MIN_QUATERNION_LENGTH_SQUARED = 1.0e-12f;
 
@@ -59,12 +59,7 @@ public final class CameraFrameInput {
     }
     return Optional.of(
         new CameraFrameInput(
-            pivot,
-            rotation,
-            baseFovDegrees,
-            aspectRatio,
-            flyingOrSwimming,
-            deltaSeconds));
+            pivot, rotation, baseFovDegrees, aspectRatio, flyingOrSwimming, deltaSeconds));
   }
 
   public Vector3d copyPivot(Vector3d destination) {

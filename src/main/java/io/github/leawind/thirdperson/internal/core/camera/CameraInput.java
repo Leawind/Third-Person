@@ -8,7 +8,7 @@ import org.joml.Quaternionfc;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
-/// Immutable input to the camera rig before world-space collision resolution.
+/// Immutable input to the camera rig.
 public final class CameraInput {
   private static final float MIN_QUATERNION_LENGTH_SQUARED = 1.0e-12f;
 
@@ -18,10 +18,7 @@ public final class CameraInput {
   private final float fovDegrees;
 
   private CameraInput(
-      Vector3dc pivot,
-      Quaternionfc rotation,
-      CameraParameters parameters,
-      float fovDegrees) {
+      Vector3dc pivot, Quaternionfc rotation, CameraParameters parameters, float fovDegrees) {
     this.pivot = new Vector3d(pivot);
     this.rotation = new Quaternionf(rotation).normalize();
     this.parameters = parameters;
@@ -29,10 +26,7 @@ public final class CameraInput {
   }
 
   public static Optional<CameraInput> tryCreate(
-      Vector3dc pivot,
-      Quaternionfc rotation,
-      CameraParameters parameters,
-      float fovDegrees) {
+      Vector3dc pivot, Quaternionfc rotation, CameraParameters parameters, float fovDegrees) {
     Objects.requireNonNull(pivot, "pivot");
     Objects.requireNonNull(rotation, "rotation");
     Objects.requireNonNull(parameters, "parameters");

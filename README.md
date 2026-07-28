@@ -24,8 +24,6 @@ A practical, smooth, feature-rich third person mod for all Minecraft players.
   activate the closer aiming camera.
 - **Third-person interaction alignment.** Attacks, item use, and block picking align the player's authoritative look ray
   with the rendered camera intent, then reuse vanilla picking without increasing reach.
-- **Safe camera collision.** The camera contracts immediately near blocks and expands smoothly after the obstruction is
-  gone. Tight spaces and spyglass use temporarily select Perspective API's first-person view.
 - **Smooth perspective switching.** Perspective API owns perspective selection, transitions, and cooperation with other
   API-based camera mods.
 - **Focused configuration.** A small validated JSON config is always available. Install YACL for the optional in-game
@@ -50,7 +48,6 @@ syntax as the item argument accepted by `/clear`. Put files in one of these reso
 
 - `assets/<namespace>/item_patterns/hold_to_aim/`
 - `assets/<namespace>/item_patterns/use_to_aim/`
-- `assets/<namespace>/item_patterns/use_to_first_person/`
 
 ```json
 ["example:rifle", "#example:ranged[example:mode=aim]"]
