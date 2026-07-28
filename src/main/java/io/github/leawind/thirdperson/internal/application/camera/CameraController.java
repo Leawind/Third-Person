@@ -3,9 +3,9 @@ package io.github.leawind.thirdperson.internal.application.camera;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonSession;
 import io.github.leawind.thirdperson.internal.core.camera.CameraInput;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.core.camera.CameraRig;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.Objects;
 import java.util.Optional;
 import org.joml.Quaternionf;
@@ -20,9 +20,7 @@ public final class CameraController {
   }
 
   public Optional<CameraPose> update(
-      CameraFrameInput frame,
-      ThirdPersonConfig.CameraProfile profile,
-      CameraSmoothingParameters smoothing) {
+      CameraFrameInput frame, CameraProfile profile, CameraSmoothingParameters smoothing) {
     Objects.requireNonNull(frame, "frame");
     Objects.requireNonNull(profile, "profile");
     Objects.requireNonNull(smoothing, "smoothing");

@@ -1,7 +1,6 @@
 package io.github.leawind.thirdperson.internal.core.input;
 
-import io.github.leawind.thirdperson.internal.core.config.ConfigValidation;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -10,7 +9,7 @@ public final class CameraAdjustmentController {
   private static final double OFFSET_INPUT_SCALE = 0.0025;
   private static final double DISTANCE_SCROLL_FACTOR = 1.25;
 
-  private ThirdPersonConfig.CameraProfile profile;
+  private CameraProfile profile;
   private boolean adjusting;
   private boolean changed;
 
@@ -18,7 +17,7 @@ public final class CameraAdjustmentController {
     return adjusting;
   }
 
-  public void begin(ThirdPersonConfig.CameraProfile profile) {
+  public void begin(CameraProfile profile) {
     if (adjusting) {
       return;
     }
@@ -27,7 +26,7 @@ public final class CameraAdjustmentController {
     changed = false;
   }
 
-  public Optional<ThirdPersonConfig.CameraProfile> turn(double rawYaw, double rawPitch) {
+  public Optional<CameraProfile> turn(double rawYaw, double rawPitch) {
     if (!adjusting || !Double.isFinite(rawYaw) || !Double.isFinite(rawPitch)) {
       return Optional.empty();
     }
@@ -45,7 +44,7 @@ public final class CameraAdjustmentController {
         profile.centeredOffsetY());
   }
 
-  public Optional<ThirdPersonConfig.CameraProfile> scroll(double yOffset) {
+  public Optional<CameraProfile> scroll(double yOffset) {
     if (!adjusting || !Double.isFinite(yOffset) || yOffset == 0.0) {
       return Optional.empty();
     }
@@ -64,7 +63,7 @@ public final class CameraAdjustmentController {
         profile.centeredOffsetY());
   }
 
-  public Optional<ThirdPersonConfig.CameraProfile> finish() {
+  public Optional<CameraProfile> finish() {
     if (!adjusting) {
       return Optional.empty();
     }
@@ -78,14 +77,14 @@ public final class CameraAdjustmentController {
     profile = null;
   }
 
-  private Optional<ThirdPersonConfig.CameraProfile> replace(
+  private Optional<CameraProfile> replace(
       double distance, double offsetX, double offsetY, double centeredOffsetY) {
     var next =
-        new ThirdPersonConfig.CameraProfile(
-            ConfigValidation.finiteClamped(distance, 0.0, 16.0, profile.distance()),
-            ConfigValidation.finiteClamped(offsetX, -1.0, 1.0, profile.offsetX()),
-            ConfigValidation.finiteClamped(offsetY, -1.0, 1.0, profile.offsetY()),
-            ConfigValidation.finiteClamped(
+        new CameraProfile(
+            finiteClamped(distance, 0.0, 16.0, profile.distance()),
+            finiteClamped(offsetX, -1.0, 1.0, profile.offsetX()),
+            finiteClamped(offsetY, -1.0, 1.0, profile.offsetY()),
+            finiteClamped(
                 centeredOffsetY, -1.0, 1.0, profile.centeredOffsetY()),
             profile.fovMultiplier(),
             profile.centered());
@@ -95,5 +94,13 @@ public final class CameraAdjustmentController {
     profile = next;
     changed = true;
     return Optional.of(profile);
+  }
+
+  private static double finiteClamped(
+      double value, double minimum, double maximum, double fallback) {
+    if (!Double.isFinite(value)) {
+      return fallback;
+    }
+    return Math.max(minimum, Math.min(maximum, value));
   }
 }

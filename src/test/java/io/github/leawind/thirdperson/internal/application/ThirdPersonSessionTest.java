@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.github.leawind.thirdperson.internal.application.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
-import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfileSlot;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class ThirdPersonSessionTest {
     session.activatePerspective();
     session.setMode(CameraMode.AIMING);
     session.beginCameraAdjustment(
-        CameraProfileSlot.AIMING, ThirdPersonConfig.defaults().camera().aiming());
+        CameraProfileSlot.AIMING, CameraSettings.defaultAimingProfile());
     session.recordFinalCameraPose(
         CameraPose.tryCreate(new Vector3d(4.0, 5.0, 6.0), new Quaternionf(), 75.0f).orElseThrow());
     assertTrue(session.isPerspectiveActive());

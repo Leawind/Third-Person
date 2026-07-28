@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.internal.integration.minecraft;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.ReticleGateEvent;
-import io.github.leawind.thirdperson.internal.core.config.ReticlePolicy;
+import io.github.leawind.thirdperson.internal.core.hud.ReticlePolicy;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 
 public final class MinecraftHudIntegration {
@@ -25,6 +25,6 @@ public final class MinecraftHudIntegration {
         vanillaDecision,
         current,
         runtime.isCameraControlEnabled(),
-        runtime.config().hud().reticle());
+        runtime.hudSettings().reticleMode());
   }
 }

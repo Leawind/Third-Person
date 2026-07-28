@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.integration.config;
+package io.github.leawind.thirdperson.internal.configscreen;
 
 import net.minecraft.client.gui.screens.Screen;
 

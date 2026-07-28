@@ -4,8 +4,8 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
+import io.github.leawind.thirdperson.internal.application.aiming.AimingSettings;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,7 +31,7 @@ public final class MinecraftItemPredicateIntegration {
   /*? }*/
   private static ClientPacketListener compiledConnection;
   private static ItemPatternSet compiledResources;
-  private static ThirdPersonConfig.AimingSettings compiledConfig;
+  private static long compiledSettingsRevision = -1;
   private static CompiledPredicates predicates = CompiledPredicates.empty();
   private static volatile boolean automaticallyAiming;
   private static boolean registered;
@@ -69,19 +69,19 @@ public final class MinecraftItemPredicateIntegration {
     }
 
     ItemPatternSet resources = RELOAD_LISTENER.snapshot();
-    ThirdPersonConfig.AimingSettings config = ThirdPersonRuntime.getInstance().config().aiming();
+    AimingSettings settings = ThirdPersonRuntime.getInstance().aimingSettings();
     if (connection != compiledConnection
         || resources != compiledResources
-        || config != compiledConfig) {
+        || settings.revision() != compiledSettingsRevision) {
       try {
-        predicates = compile(connection, resources, config);
+        predicates = compile(connection, resources, settings);
       } catch (RuntimeException exception) {
         predicates = CompiledPredicates.empty();
         ThirdPerson.LOGGER.error("Could not initialize the item-predicate parser", exception);
       }
       compiledConnection = connection;
       compiledResources = resources;
-      compiledConfig = config;
+      compiledSettingsRevision = settings.revision();
     }
     automaticallyAiming = predicates.matches(player);
   }
@@ -102,13 +102,13 @@ public final class MinecraftItemPredicateIntegration {
   private static CompiledPredicates compile(
       ClientPacketListener connection,
       ItemPatternSet resources,
-      ThirdPersonConfig.AimingSettings config) {
+      AimingSettings settings) {
     ItemPredicateArgument parser =
         ItemPredicateArgument.itemPredicate(
             CommandBuildContext.simple(connection.registryAccess(), connection.enabledFeatures()));
     return new CompiledPredicates(
-        compilePatterns(parser, resources.holdToAim(), config.holdToAimItemPatterns()),
-        compilePatterns(parser, resources.useToAim(), config.useToAimItemPatterns()));
+        compilePatterns(parser, resources.holdToAim(), settings.holdToAimItemPatterns()),
+        compilePatterns(parser, resources.useToAim(), settings.useToAimItemPatterns()));
   }
 
   private static List<Predicate<ItemStack>> compilePatterns(

@@ -2,9 +2,9 @@ package io.github.leawind.thirdperson.internal.application;
 
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoother;
-import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import io.github.leawind.thirdperson.internal.core.input.CameraAdjustmentController;
 import io.github.leawind.thirdperson.internal.core.input.LookController;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationController;
@@ -55,8 +55,7 @@ public final class ThirdPersonSession {
     return Optional.ofNullable(cameraAdjustmentSlot);
   }
 
-  public void beginCameraAdjustment(
-      CameraProfileSlot slot, ThirdPersonConfig.CameraProfile profile) {
+  public void beginCameraAdjustment(CameraProfileSlot slot, CameraProfile profile) {
     if (cameraAdjustmentController.isAdjusting()) {
       return;
     }

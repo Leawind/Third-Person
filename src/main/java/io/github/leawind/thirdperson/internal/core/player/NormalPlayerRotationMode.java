@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.core.config;
+package io.github.leawind.thirdperson.internal.core.player;
 
 /// Rotation target used when no higher-priority aiming behavior is active.
 public enum NormalPlayerRotationMode {

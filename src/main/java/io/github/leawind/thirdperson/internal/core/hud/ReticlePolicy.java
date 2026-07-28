@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.core.config;
+package io.github.leawind.thirdperson.internal.core.hud;
 
 import java.util.Objects;
 

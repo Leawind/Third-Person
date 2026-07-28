@@ -1,14 +1,15 @@
 package io.github.leawind.thirdperson.internal.integration.minecraft;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
+import io.github.leawind.thirdperson.internal.application.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.core.aiming.AimModeResolver;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
-import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
-import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfigIntegration;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
+import io.github.leawind.thirdperson.internal.persistence.MinecraftStatePersistence;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -57,7 +58,7 @@ public final class MinecraftKeyIntegration {
         acceptsInput
             && AimModeResolver.shouldAim(
                 ThirdPersonKeyMappings.AIM.isDown(),
-                runtime.config().aiming().smartAiming(),
+                runtime.aimingSettings().smartAiming(),
                 MinecraftItemPredicateIntegration.isAutomaticallyAiming()));
 
     var session = runtime.session();
@@ -67,14 +68,11 @@ public final class MinecraftKeyIntegration {
           session.mode() == CameraMode.AIMING
               ? CameraProfileSlot.AIMING
               : CameraProfileSlot.NORMAL;
-      ThirdPersonConfig.CameraProfile profile =
-          slot == CameraProfileSlot.AIMING
-              ? runtime.config().camera().aiming()
-              : runtime.config().camera().normal();
+      CameraProfile profile = runtime.cameraSettings().profile(slot);
       session.beginCameraAdjustment(slot, profile);
     } else if (adjustment.isAdjusting()) {
       session.finishCameraAdjustment();
-      MinecraftConfigIntegration.flushScheduledSave();
+      MinecraftStatePersistence.flushScheduledSave();
     }
   }
 
@@ -100,34 +98,19 @@ public final class MinecraftKeyIntegration {
         session.mode() == CameraMode.AIMING
             ? CameraProfileSlot.AIMING
             : CameraProfileSlot.NORMAL;
-    ThirdPersonConfig.CameraProfile profile =
-        slot == CameraProfileSlot.AIMING
-            ? runtime.config().camera().aiming()
-            : runtime.config().camera().normal();
-    ThirdPersonConfig.CameraProfile updatedProfile;
+    CameraProfile profile = runtime.cameraSettings().profile(slot);
+    CameraProfile updatedProfile;
     if (centered) {
       updatedProfile = profile.withCentered(true);
     } else if (profile.centered()) {
       updatedProfile = profile.withCentered(false);
     } else {
-      updatedProfile = withOffsetX(profile, nextShoulderOffset(slot, profile.offsetX()));
+      updatedProfile = profile.withOffsetX(nextShoulderOffset(slot, profile.offsetX()));
     }
     if (updatedProfile.equals(profile)) {
       return;
     }
-    ThirdPersonConfig updated = runtime.updateCameraProfile(slot, updatedProfile);
-    MinecraftConfigIntegration.scheduleSave(updated);
-  }
-
-  private static ThirdPersonConfig.CameraProfile withOffsetX(
-      ThirdPersonConfig.CameraProfile profile, double offsetX) {
-    return new ThirdPersonConfig.CameraProfile(
-        profile.distance(),
-        offsetX,
-        profile.offsetY(),
-        profile.centeredOffsetY(),
-        profile.fovMultiplier(),
-        false);
+    runtime.updateCameraProfile(slot, updatedProfile);
   }
 
   private static double nextShoulderOffset(CameraProfileSlot slot, double currentOffset) {
@@ -135,8 +118,7 @@ public final class MinecraftKeyIntegration {
       return -currentOffset;
     }
     return slot == CameraProfileSlot.AIMING
-        ? ThirdPersonConfig.defaults().camera().aiming().offsetX()
-        : ThirdPersonConfig.defaults().camera().normal().offsetX();
+        ? CameraSettings.defaultAimingProfile().offsetX()
+        : CameraSettings.defaultNormalProfile().offsetX();
   }
-
 }

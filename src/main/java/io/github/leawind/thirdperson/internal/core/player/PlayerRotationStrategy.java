@@ -1,6 +1,5 @@
 package io.github.leawind.thirdperson.internal.core.player;
 
-import io.github.leawind.thirdperson.internal.core.config.NormalPlayerRotationMode;
 import java.util.Objects;
 
 /// Selects the same rotation behavior and priority as the legacy automatic strategy.

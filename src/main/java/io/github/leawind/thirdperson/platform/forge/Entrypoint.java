@@ -3,7 +3,7 @@ package io.github.leawind.thirdperson.platform.forge;
 /*? if forge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.bootstrap.ModBootstrap;
-import io.github.leawind.thirdperson.internal.integration.config.ConfigScreenManager;
+import io.github.leawind.thirdperson.internal.configscreen.ConfigScreenManager;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.ConfigScreenHandler;

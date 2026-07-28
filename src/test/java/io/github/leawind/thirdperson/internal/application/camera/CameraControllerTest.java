@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonSession;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
 class CameraControllerTest {
-  private static final ThirdPersonConfig.CameraProfile PROFILE =
-      new ThirdPersonConfig.CameraProfile(4.0, 0.0, 0.0, 0.0, 1.0, false);
+  private static final CameraProfile PROFILE =
+      new CameraProfile(4.0, 0.0, 0.0, 0.0, 1.0, false);
   private static final CameraSmoothingParameters IMMEDIATE =
       new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 

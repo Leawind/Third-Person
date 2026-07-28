@@ -1,12 +1,16 @@
 package io.github.leawind.thirdperson.internal.application;
 
+import io.github.leawind.thirdperson.internal.application.aiming.AimingSettings;
 import io.github.leawind.thirdperson.internal.application.camera.CameraController;
 import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
+import io.github.leawind.thirdperson.internal.application.camera.CameraSettings;
+import io.github.leawind.thirdperson.internal.application.hud.HudSettings;
+import io.github.leawind.thirdperson.internal.application.player.PlayerSettings;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.core.camera.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.core.config.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.core.config.ThirdPersonConfig;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,7 +20,10 @@ public final class ThirdPersonRuntime {
 
   private final ThirdPersonSession session = new ThirdPersonSession();
   private final CameraController cameraController = new CameraController(session);
-  private volatile ThirdPersonConfig config = ThirdPersonConfig.defaults();
+  private final CameraSettings cameraSettings = new CameraSettings();
+  private final AimingSettings aimingSettings = new AimingSettings();
+  private final PlayerSettings playerSettings = new PlayerSettings();
+  private final HudSettings hudSettings = new HudSettings();
   private boolean initialized;
 
   private ThirdPersonRuntime() {}
@@ -29,23 +36,37 @@ public final class ThirdPersonRuntime {
     return session;
   }
 
-  public ThirdPersonConfig config() {
-    return config;
+  public CameraSettings cameraSettings() {
+    return cameraSettings;
+  }
+
+  public AimingSettings aimingSettings() {
+    return aimingSettings;
+  }
+
+  public PlayerSettings playerSettings() {
+    return playerSettings;
+  }
+
+  public HudSettings hudSettings() {
+    return hudSettings;
   }
 
   public boolean isCameraControlEnabled() {
     return session.isControllingCamera();
   }
 
-  public ThirdPersonConfig.CameraProfile cameraProfile(boolean centered) {
-    ThirdPersonConfig.CameraProfile profile =
-        session.mode() == CameraMode.AIMING ? config.camera().aiming() : config.camera().normal();
+  public CameraProfile cameraProfile(boolean centered) {
+    CameraProfile profile =
+        session.mode() == CameraMode.AIMING
+            ? cameraSettings.aimingProfile()
+            : cameraSettings.normalProfile();
     return centered ? profile.withCentered(true) : profile;
   }
 
   public CameraSmoothingParameters cameraSmoothing(boolean flyingOrSwimming) {
-    ThirdPersonConfig.SmoothingSettings smoothing = config.camera().smoothing();
-    ThirdPersonConfig.ModeSmoothing modeSmoothing =
+    var smoothing = cameraSettings.smoothing();
+    var modeSmoothing =
         session.mode() == CameraMode.AIMING ? smoothing.aiming() : smoothing.normal();
     double horizontalPivotHalfLife =
         flyingOrSwimming
@@ -98,32 +119,15 @@ public final class ThirdPersonRuntime {
     }
   }
 
-  public void updateConfig(ThirdPersonConfig config) {
-    this.config = Objects.requireNonNull(config, "config");
-  }
-
-  public ThirdPersonConfig updateNormalCameraProfile(ThirdPersonConfig.CameraProfile profile) {
+  public CameraProfile updateNormalCameraProfile(CameraProfile profile) {
     return updateCameraProfile(CameraProfileSlot.NORMAL, profile);
   }
 
-  public ThirdPersonConfig updateCameraProfile(
-      CameraProfileSlot slot, ThirdPersonConfig.CameraProfile profile) {
+  public CameraProfile updateCameraProfile(CameraProfileSlot slot, CameraProfile profile) {
     Objects.requireNonNull(slot, "slot");
     Objects.requireNonNull(profile, "profile");
-    ThirdPersonConfig previous = config;
-    ThirdPersonConfig.CameraSettings previousCamera = previous.camera();
-    ThirdPersonConfig updated =
-        new ThirdPersonConfig(
-            previous.schemaVersion(),
-            new ThirdPersonConfig.CameraSettings(
-                slot == CameraProfileSlot.NORMAL ? profile : previousCamera.normal(),
-                slot == CameraProfileSlot.AIMING ? profile : previousCamera.aiming(),
-                previousCamera.smoothing()),
-            previous.aiming(),
-            previous.player(),
-            previous.hud());
-    updateConfig(updated);
-    return updated;
+    cameraSettings.setProfile(slot, profile);
+    return profile;
   }
 
   public void setAiming(boolean aiming) {

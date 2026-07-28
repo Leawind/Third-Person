@@ -1,6 +1,5 @@
 package io.github.leawind.thirdperson.internal.core.player;
 
-import io.github.leawind.thirdperson.internal.core.config.NormalPlayerRotationMode;
 import java.util.Objects;
 
 /// Minecraft-independent state considered when selecting how the local player should rotate.

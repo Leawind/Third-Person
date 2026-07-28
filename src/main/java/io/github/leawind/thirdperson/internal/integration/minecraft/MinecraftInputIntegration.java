@@ -6,7 +6,6 @@ import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImp
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
 import io.github.leawind.thirdperson.internal.core.movement.MovementDirection;
-import io.github.leawind.thirdperson.internal.integration.config.MinecraftConfigIntegration;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -38,13 +37,12 @@ public final class MinecraftInputIntegration {
     if (adjustment.isAdjusting()) {
       adjustment
           .turn(rawYaw, rawPitch)
-          .flatMap(
+          .ifPresent(
               profile ->
                   runtime
                       .session()
                       .cameraAdjustmentSlot()
-                      .map(slot -> runtime.updateCameraProfile(slot, profile)))
-          .ifPresent(MinecraftConfigIntegration::scheduleSave);
+                      .ifPresent(slot -> runtime.updateCameraProfile(slot, profile)));
       return Double.isFinite(rawYaw) && Double.isFinite(rawPitch);
     }
     return runtime.session().lookController().turn(rawYaw, rawPitch);
@@ -85,13 +83,12 @@ public final class MinecraftInputIntegration {
     }
     adjustment
         .scroll(yOffset)
-        .flatMap(
+        .ifPresent(
             profile ->
                 runtime
                     .session()
                     .cameraAdjustmentSlot()
-                    .map(slot -> runtime.updateCameraProfile(slot, profile)))
-        .ifPresent(MinecraftConfigIntegration::scheduleSave);
+                    .ifPresent(slot -> runtime.updateCameraProfile(slot, profile)));
     return Double.isFinite(xOffset) && Double.isFinite(yOffset) && yOffset != 0.0;
   }
 

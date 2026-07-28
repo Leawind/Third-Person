@@ -6,7 +6,6 @@ import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
 import io.github.leawind.thirdperson.internal.core.aiming.AimGeometry;
 import io.github.leawind.thirdperson.internal.core.aiming.LookRotation;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
-import io.github.leawind.thirdperson.internal.core.config.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.core.movement.MovementDirection;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationDecision;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationGeometry;
@@ -14,6 +13,7 @@ import io.github.leawind.thirdperson.internal.core.player.PlayerRotationState;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationStrategy;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationTarget;
+import io.github.leawind.thirdperson.internal.core.player.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
@@ -66,7 +66,7 @@ public final class MinecraftClientIntegration {
     if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
         || player == null
         || !runtime.isCameraControlEnabled()
-        || runtime.config().player().rotationMode() == PlayerRotationMode.VANILLA) {
+        || runtime.playerSettings().rotationMode() == PlayerRotationMode.VANILLA) {
       runtime.session().playerRotationController().reset();
       return;
     }
@@ -75,7 +75,7 @@ public final class MinecraftClientIntegration {
     if (!lookController.isInitialized()) {
       return;
     }
-    var playerSettings = runtime.config().player();
+    var playerSettings = runtime.playerSettings();
     boolean interacting =
         playerSettings.autoRotateInteracting()
             && (minecraft.options.keyUse.isDown()
@@ -111,7 +111,7 @@ public final class MinecraftClientIntegration {
     if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
         || player == null
         || !runtime.isCameraControlEnabled()
-        || runtime.config().player().rotationMode() == PlayerRotationMode.VANILLA) {
+        || runtime.playerSettings().rotationMode() == PlayerRotationMode.VANILLA) {
       previousRenderNanos = 0L;
       return;
     }
