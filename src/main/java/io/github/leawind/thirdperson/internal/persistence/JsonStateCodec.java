@@ -33,7 +33,7 @@ final class JsonStateCodec {
           instance ->
               instance
                   .group(
-                      DISTANCE_CODEC.fieldOf("distance").forGetter(CameraProfile::distance),
+                      DISTANCE_CODEC.fieldOf("distance").forGetter(CameraProfile::distanceFactor),
                       OFFSET_CODEC.fieldOf("offsetX").forGetter(CameraProfile::offsetX),
                       OFFSET_CODEC.fieldOf("offsetY").forGetter(CameraProfile::offsetY),
                       OFFSET_CODEC

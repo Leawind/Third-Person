@@ -24,7 +24,7 @@ class JsonStateCodecTest {
   void decodesValidEnumAndNumericValues() {
     String json =
         JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
-            .replace("\"distance\": 4.0", "\"distance\": 8.0")
+            .replace("\"distance\": 1.5625", "\"distance\": 3.0")
             .replace("\"rotationMode\": \"auto\"", "\"rotationMode\": \"vanilla\"")
             .replace(
                 "\"normalMode\": \"interest_point\"",
@@ -34,7 +34,7 @@ class JsonStateCodecTest {
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(json);
 
-    assertEquals(8.0, decoded.camera().normal().distance());
+    assertEquals(3.0, decoded.camera().normal().distanceFactor());
     assertEquals(PlayerRotationMode.VANILLA, decoded.player().rotationMode());
     assertEquals(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, decoded.player().normalMode());
     assertFalse(decoded.player().autoRotateInteracting());
@@ -42,7 +42,7 @@ class JsonStateCodecTest {
   }
 
   @Test
-  void oldSchemaTwoPlayerSettingsUseLegacyDefaultsForNewFields() {
+  void missingPlayerSettingsUseLegacyDefaults() {
     JsonObject json =
         JsonParser.parseString(JsonStateCodec.encode(ThirdPersonPersistentState.defaults()))
             .getAsJsonObject();
@@ -110,7 +110,7 @@ class JsonStateCodecTest {
   void rejectsOutOfRangeNumbers() {
     String json =
         JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
-            .replace("\"distance\": 4.0", "\"distance\": 100.0");
+            .replace("\"distance\": 1.5625", "\"distance\": 100.0");
 
     assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json));
   }
@@ -125,7 +125,7 @@ class JsonStateCodecTest {
   }
 
   @Test
-  void rejectsOtherSchemasWithoutMigrating() {
+  void rejectsUnsupportedSchemas() {
     String json =
         JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
             .replace("\"schemaVersion\": 2", "\"schemaVersion\": 1");

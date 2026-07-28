@@ -10,9 +10,9 @@ import java.util.function.UnaryOperator;
 /// Owns the camera values that survive client restarts.
 public final class CameraSettings {
   private static final CameraProfile DEFAULT_NORMAL_PROFILE =
-      new CameraProfile(4.0, -0.18, 0.12, 0.24, 1.0, false);
+      new CameraProfile(1.5625, -0.18, 0.12, 0.24, 1.0, false);
   private static final CameraProfile DEFAULT_AIMING_PROFILE =
-      new CameraProfile(2.4, -0.30, 0.16, 0.48, 0.9, false);
+      new CameraProfile(0.56, -0.30, 0.16, 0.48, 0.9, false);
   private static final CameraSmoothing DEFAULT_SMOOTHING =
       new CameraSmoothing(
           0.0,

@@ -20,9 +20,10 @@ class CameraAdjustmentControllerTest {
     assertEquals(-1.0, turned.offsetY());
 
     CameraProfile zoomedIn = controller.scroll(1.0).orElseThrow();
-    assertEquals(defaults.distance() / 1.25, zoomedIn.distance(), 1.0e-12);
+    assertEquals(
+        defaults.distanceFactor() / 1.25, zoomedIn.distanceFactor(), 1.0e-12);
     CameraProfile zoomedOut = controller.scroll(-1.0).orElseThrow();
-    assertEquals(defaults.distance(), zoomedOut.distance(), 1.0e-12);
+    assertEquals(defaults.distanceFactor(), zoomedOut.distanceFactor(), 1.0e-12);
     assertTrue(controller.finish().isPresent());
     assertFalse(controller.isAdjusting());
   }

@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.application.camera;
 
+import io.github.leawind.thirdperson.internal.core.camera.CameraSubjectDimensions;
 import io.github.leawind.thirdperson.internal.core.math.FiniteMath;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public final class CameraFrameInput {
   private final float baseFovDegrees;
   private final double aspectRatio;
   private final boolean flyingOrSwimming;
+  private final CameraSubjectDimensions subjectDimensions;
   private final double deltaSeconds;
 
   private CameraFrameInput(
@@ -25,12 +27,14 @@ public final class CameraFrameInput {
       float baseFovDegrees,
       double aspectRatio,
       boolean flyingOrSwimming,
+      CameraSubjectDimensions subjectDimensions,
       double deltaSeconds) {
     this.pivot = new Vector3d(pivot);
     this.rotation = new Quaternionf(rotation).normalize();
     this.baseFovDegrees = baseFovDegrees;
     this.aspectRatio = aspectRatio;
     this.flyingOrSwimming = flyingOrSwimming;
+    this.subjectDimensions = subjectDimensions;
     this.deltaSeconds = deltaSeconds;
   }
 
@@ -40,9 +44,11 @@ public final class CameraFrameInput {
       float baseFovDegrees,
       double aspectRatio,
       boolean flyingOrSwimming,
+      CameraSubjectDimensions subjectDimensions,
       double deltaSeconds) {
     Objects.requireNonNull(pivot, "pivot");
     Objects.requireNonNull(rotation, "rotation");
+    Objects.requireNonNull(subjectDimensions, "subjectDimensions");
     float rotationLengthSquared = rotation.lengthSquared();
     if (!FiniteMath.isFinite(pivot)
         || !FiniteMath.isFinite(rotation)
@@ -59,7 +65,13 @@ public final class CameraFrameInput {
     }
     return Optional.of(
         new CameraFrameInput(
-            pivot, rotation, baseFovDegrees, aspectRatio, flyingOrSwimming, deltaSeconds));
+            pivot,
+            rotation,
+            baseFovDegrees,
+            aspectRatio,
+            flyingOrSwimming,
+            subjectDimensions,
+            deltaSeconds));
   }
 
   public Vector3d copyPivot(Vector3d destination) {
@@ -80,6 +92,10 @@ public final class CameraFrameInput {
 
   public boolean flyingOrSwimming() {
     return flyingOrSwimming;
+  }
+
+  public CameraSubjectDimensions subjectDimensions() {
+    return subjectDimensions;
   }
 
   public double deltaSeconds() {

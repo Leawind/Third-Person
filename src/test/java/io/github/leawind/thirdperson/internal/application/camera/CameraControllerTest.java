@@ -7,6 +7,7 @@ import io.github.leawind.thirdperson.internal.application.ThirdPersonSession;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
+import io.github.leawind.thirdperson.internal.core.camera.CameraSubjectDimensions;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
@@ -31,13 +32,25 @@ class CameraControllerTest {
   void rejectsInvalidFrameBeforeItReachesTheController() {
     assertTrue(
         CameraFrameInput.tryCreate(
-                new Vector3d(), new Quaternionf(), Float.NaN, 16.0 / 9.0, false, 0.0)
+                new Vector3d(),
+                new Quaternionf(),
+                Float.NaN,
+                16.0 / 9.0,
+                false,
+                new CameraSubjectDimensions(0.0, 1.0),
+                0.0)
             .isEmpty());
   }
 
   private static CameraFrameInput frameAt(double pivotX) {
     return CameraFrameInput.tryCreate(
-            new Vector3d(pivotX, 0.0, 0.0), new Quaternionf(), 70.0f, 16.0 / 9.0, false, 0.0)
+            new Vector3d(pivotX, 0.0, 0.0),
+            new Quaternionf(),
+            70.0f,
+            16.0 / 9.0,
+            false,
+            new CameraSubjectDimensions(0.0, 1.0),
+            0.0)
         .orElseThrow();
   }
 }

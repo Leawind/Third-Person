@@ -32,13 +32,13 @@ public final class CameraAdjustmentController {
     }
     if (profile.centered()) {
       return replace(
-          profile.distance(),
+          profile.distanceFactor(),
           profile.offsetX(),
           profile.offsetY(),
           profile.centeredOffsetY() + rawPitch * OFFSET_INPUT_SCALE);
     }
     return replace(
-        profile.distance(),
+        profile.distanceFactor(),
         profile.offsetX() - rawYaw * OFFSET_INPUT_SCALE,
         profile.offsetY() + rawPitch * OFFSET_INPUT_SCALE,
         profile.centeredOffsetY());
@@ -49,15 +49,17 @@ public final class CameraAdjustmentController {
       return Optional.empty();
     }
     double factor = Math.pow(DISTANCE_SCROLL_FACTOR, Math.abs(yOffset));
-    double distance;
+    double distanceFactor;
     if (!Double.isFinite(factor)) {
-      distance = yOffset > 0.0 ? 0.0 : 16.0;
+      distanceFactor = yOffset > 0.0 ? 0.0 : 16.0;
     } else {
-      distance =
-          yOffset > 0.0 ? profile.distance() / factor : profile.distance() * factor;
+      distanceFactor =
+          yOffset > 0.0
+              ? profile.distanceFactor() / factor
+              : profile.distanceFactor() * factor;
     }
     return replace(
-        distance,
+        distanceFactor,
         profile.offsetX(),
         profile.offsetY(),
         profile.centeredOffsetY());
@@ -78,10 +80,10 @@ public final class CameraAdjustmentController {
   }
 
   private Optional<CameraProfile> replace(
-      double distance, double offsetX, double offsetY, double centeredOffsetY) {
+      double distanceFactor, double offsetX, double offsetY, double centeredOffsetY) {
     var next =
         new CameraProfile(
-            finiteClamped(distance, 0.0, 16.0, profile.distance()),
+            finiteClamped(distanceFactor, 0.0, 16.0, profile.distanceFactor()),
             finiteClamped(offsetX, -1.0, 1.0, profile.offsetX()),
             finiteClamped(offsetY, -1.0, 1.0, profile.offsetY()),
             finiteClamped(

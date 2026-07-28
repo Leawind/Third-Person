@@ -182,12 +182,12 @@ final class YaclConfigScreenBuilder {
                         .option(
                             doubleOption(
                                 "normal_distance",
-                                CameraSettings.defaultNormalProfile().distance(),
-                                () -> camera.normalProfile().distance(),
+                                CameraSettings.defaultNormalProfile().distanceFactor(),
+                                () -> camera.normalProfile().distanceFactor(),
                                 value ->
                                     camera.updateProfile(
                                         CameraProfileSlot.NORMAL,
-                                        profile -> profile.withDistance(value)),
+                                        profile -> profile.withDistanceFactor(value)),
                                 0.0,
                                 16.0,
                                 0.05))
@@ -197,12 +197,12 @@ final class YaclConfigScreenBuilder {
                         .option(
                             doubleOption(
                                 "aiming_distance",
-                                CameraSettings.defaultAimingProfile().distance(),
-                                () -> camera.aimingProfile().distance(),
+                                CameraSettings.defaultAimingProfile().distanceFactor(),
+                                () -> camera.aimingProfile().distanceFactor(),
                                 value ->
                                     camera.updateProfile(
                                         CameraProfileSlot.AIMING,
-                                        profile -> profile.withDistance(value)),
+                                        profile -> profile.withDistanceFactor(value)),
                                 0.0,
                                 16.0,
                                 0.05))

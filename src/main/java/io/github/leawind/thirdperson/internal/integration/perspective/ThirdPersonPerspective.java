@@ -79,6 +79,10 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     int windowHeight = minecraft.getWindow().getHeight();
     double aspectRatio =
         windowHeight > 0 ? (double) minecraft.getWindow().getWidth() / windowHeight : 1.0;
+    var subjectDimensions = MinecraftCameraSubjectDimensions.resolve(entity).orElse(null);
+    if (subjectDimensions == null) {
+      return;
+    }
 
     CameraFrameInput frame =
         CameraFrameInput.tryCreate(
@@ -88,6 +92,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
                 aspectRatio,
                 entity.isSwimming()
                     || (entity instanceof LivingEntity livingEntity && livingEntity.isFallFlying()),
+                subjectDimensions,
                 frameDeltaSeconds())
             .orElse(null);
     if (frame == null) {

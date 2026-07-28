@@ -29,7 +29,11 @@ public final class CameraController {
     Quaternionf rotation = frame.copyRotation(new Quaternionf());
     float targetFovDegrees = (float) (frame.baseFovDegrees() * profile.fovMultiplier());
     CameraInput targetInput =
-        CameraInput.tryCreate(pivot, rotation, profile.cameraParameters(), targetFovDegrees)
+        CameraInput.tryCreate(
+                pivot,
+                rotation,
+                profile.cameraParameters(frame.subjectDimensions()),
+                targetFovDegrees)
             .orElse(null);
     if (targetInput == null) {
       return Optional.empty();
