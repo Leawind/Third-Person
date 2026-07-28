@@ -88,6 +88,25 @@ class JsonStateCodecTest {
   }
 
   @Test
+  void roundTripsCameraOffsetsThatAreNotConfigScreenOptions() {
+    ThirdPersonPersistentState defaults = ThirdPersonPersistentState.defaults();
+    var state =
+        new ThirdPersonPersistentState(
+            defaults.schemaVersion(),
+            new ThirdPersonPersistentState.CameraState(
+                defaults.camera().normal().withOffsetX(0.42),
+                defaults.camera().aiming(),
+                defaults.camera().smoothing()),
+            defaults.aiming(),
+            defaults.player(),
+            defaults.hud());
+
+    ThirdPersonPersistentState decoded = JsonStateCodec.decode(JsonStateCodec.encode(state));
+
+    assertEquals(0.42, decoded.camera().normal().offsetX());
+  }
+
+  @Test
   void rejectsOutOfRangeNumbers() {
     String json =
         JsonStateCodec.encode(ThirdPersonPersistentState.defaults())

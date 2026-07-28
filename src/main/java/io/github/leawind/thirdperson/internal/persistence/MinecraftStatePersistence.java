@@ -39,10 +39,14 @@ public final class MinecraftStatePersistence {
     if (pendingSave == null && current.equals(observedState)) {
       return;
     }
-    pendingSave = null;
-    saveDelayTicks = 0;
-    save(current);
     observedState = current;
+    if (save(current)) {
+      pendingSave = null;
+      saveDelayTicks = 0;
+    } else {
+      pendingSave = current;
+      saveDelayTicks = SAVE_DELAY_TICKS;
+    }
   }
 
   private static void onClientTick() {
@@ -59,8 +63,11 @@ public final class MinecraftStatePersistence {
       saveDelayTicks = SAVE_DELAY_TICKS;
     } else if (pendingSave != null && saveDelayTicks > 0 && --saveDelayTicks == 0) {
       ThirdPersonPersistentState state = pendingSave;
-      pendingSave = null;
-      save(state);
+      if (save(state)) {
+        pendingSave = null;
+      } else {
+        saveDelayTicks = SAVE_DELAY_TICKS;
+      }
     }
   }
 
@@ -74,26 +81,36 @@ public final class MinecraftStatePersistence {
             .resolve(ThirdPerson.MOD_ID + ".json");
     statePath = path;
     ThirdPersonPersistentState state = ThirdPersonPersistentState.defaults();
+    boolean needsSave = false;
     try {
       if (Files.exists(path)) {
         state = STORE.load(path);
         ThirdPerson.LOGGER.info("Loaded state from {}", path);
       } else {
-        STORE.save(path, state);
-        ThirdPerson.LOGGER.info("Created state at {}", path);
+        needsSave = !save(state);
+        if (!needsSave) {
+          ThirdPerson.LOGGER.info("Created state at {}", path);
+        }
       }
     } catch (IOException | RuntimeException exception) {
       ThirdPerson.LOGGER.error("Failed to load state from {}; using defaults", path, exception);
+      needsSave = true;
     }
     state.applyTo(ThirdPersonRuntime.getInstance());
     observedState = ThirdPersonPersistentState.extract(ThirdPersonRuntime.getInstance());
+    if (needsSave) {
+      pendingSave = observedState;
+      saveDelayTicks = SAVE_DELAY_TICKS;
+    }
   }
 
-  private static void save(ThirdPersonPersistentState state) {
+  private static boolean save(ThirdPersonPersistentState state) {
     try {
       STORE.save(statePath, state);
+      return true;
     } catch (IOException exception) {
       ThirdPerson.LOGGER.error("Failed to save state to {}", statePath, exception);
+      return false;
     }
   }
 }
