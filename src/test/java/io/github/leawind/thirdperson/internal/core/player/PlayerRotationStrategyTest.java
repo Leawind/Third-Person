@@ -44,9 +44,11 @@ class PlayerRotationStrategyTest {
     assertEquals(
         PlayerRotationTarget.CAMERA_ROTATION,
         resolveNormal(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, false).target());
+    assertFalse(resolveNormal(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, false).immediate());
     assertEquals(
         PlayerRotationTarget.CURRENT_ROTATION,
         resolveNormal(NormalPlayerRotationMode.NONE, false).target());
+    assertFalse(resolveNormal(NormalPlayerRotationMode.NONE, false).immediate());
   }
 
   @Test
@@ -93,6 +95,7 @@ class PlayerRotationStrategyTest {
     assertEquals(0.15, nonLiving.halfLifeSeconds());
     assertEquals(PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION, living.target());
     assertEquals(0.1, living.halfLifeSeconds());
+    assertEquals(PlayerRotationSmoothing.FRAME_EXPONENTIAL, living.smoothing());
   }
 
   @Test
@@ -106,6 +109,7 @@ class PlayerRotationStrategyTest {
     assertEquals(
         PlayerRotationTarget.CAMERA_HIT_RESULT,
         resolve(false, true, true, false, true, true, false).target());
+    assertFalse(resolve(false, true, true, false, true, true, false).immediate());
     assertEquals(
         PlayerRotationTarget.CAMERA_ROTATION,
         resolve(false, true, true, true, true, true, false).target());

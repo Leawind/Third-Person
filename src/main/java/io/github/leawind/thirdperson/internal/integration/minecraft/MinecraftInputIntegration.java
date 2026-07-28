@@ -75,7 +75,7 @@ public final class MinecraftInputIntegration {
 
   private static boolean onScroll(double xOffset, double yOffset) {
     var runtime = ThirdPersonRuntime.getInstance();
-    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+    if (!PerspectiveGuard.isThirdPersonCurrent()
         || !runtime.isCameraControlEnabled()) {
       return false;
     }
@@ -98,6 +98,6 @@ public final class MinecraftInputIntegration {
   private static boolean canControl(LocalPlayer player) {
     return player == Minecraft.getInstance().player
         && !player.isPassenger()
-        && PerspectiveGuard.isThirdPersonCurrentForLocalPlayer();
+        && PerspectiveGuard.isThirdPersonCurrent();
   }
 }

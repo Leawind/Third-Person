@@ -123,6 +123,16 @@ public final class ThirdPersonSession {
     finalCameraPose = Objects.requireNonNull(pose, "pose");
   }
 
+  /// Clears state tied to the identity and previous poses of the camera entity.
+  public void resetCameraTracking() {
+    lookController.reset();
+    cameraSmoother.reset();
+    collisionRecovery.reset();
+    tightSpaceDetector.reset();
+    lastSafeCameraPose = null;
+    finalCameraPose = null;
+  }
+
   public void activatePerspective() {
     perspectiveActive = true;
     mode = CameraMode.NORMAL;
@@ -139,15 +149,10 @@ public final class ThirdPersonSession {
   public void reset() {
     perspectiveActive = false;
     mode = CameraMode.BYPASS;
-    lookController.reset();
+    resetCameraTracking();
     playerRotationController.reset();
-    cameraSmoother.reset();
-    collisionRecovery.reset();
     cameraAdjustmentController.reset();
-    tightSpaceDetector.reset();
     cameraAdjustmentSlot = null;
-    lastSafeCameraPose = null;
-    finalCameraPose = null;
     temporaryFirstPersonRequested = false;
     modeBeforeTemporaryFirstPerson = CameraMode.NORMAL;
   }

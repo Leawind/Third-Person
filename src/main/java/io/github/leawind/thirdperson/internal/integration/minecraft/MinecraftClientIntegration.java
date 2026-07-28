@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.integration.minecraft;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
 import io.github.leawind.thirdperson.internal.core.aiming.AimGeometry;
 import io.github.leawind.thirdperson.internal.core.aiming.LookRotation;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
@@ -11,6 +12,7 @@ import io.github.leawind.thirdperson.internal.core.player.PlayerRotationDecision
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationGeometry;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationState;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationStrategy;
+import io.github.leawind.thirdperson.internal.core.player.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.core.player.PlayerRotationTarget;
 import io.github.leawind.thirdperson.internal.integration.perspective.PerspectiveGuard;
 import java.util.Optional;
@@ -32,6 +34,7 @@ public final class MinecraftClientIntegration {
   private static boolean registered;
   private static ClientLevel previousLevel;
   private static LocalPlayer previousPlayer;
+  private static long previousRenderNanos;
 
   private MinecraftClientIntegration() {}
 
@@ -41,6 +44,7 @@ public final class MinecraftClientIntegration {
     }
     registered = true;
     ClientTickEvent.register(MinecraftClientIntegration::onClientTick);
+    RenderFrameEvent.register(MinecraftClientIntegration::beforeRenderFrame);
   }
 
   private static void onClientTick() {
@@ -94,12 +98,42 @@ public final class MinecraftClientIntegration {
     LookRotation current = new LookRotation(player.getYRot(), player.getXRot());
     LookRotation target =
         resolveTarget(minecraft, runtime, player, decision.target()).orElse(current);
-    LookRotation rotation =
-        runtime
-            .session()
-            .playerRotationController()
-            .update(current, target, CLIENT_TICK_SECONDS, decision);
-    setPlayerRotation(player, rotation);
+    runtime
+        .session()
+        .playerRotationController()
+        .update(current, target, CLIENT_TICK_SECONDS, decision);
+  }
+
+  private static void beforeRenderFrame(float partialTick) {
+    Minecraft minecraft = Minecraft.getInstance();
+    LocalPlayer player = minecraft.player;
+    var runtime = ThirdPersonRuntime.getInstance();
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || player == null
+        || !runtime.isCameraControlEnabled()
+        || runtime.config().player().rotationMode() == PlayerRotationMode.VANILLA) {
+      previousRenderNanos = 0L;
+      return;
+    }
+
+    var controller = runtime.session().playerRotationController();
+    var decision = controller.decision().orElse(null);
+    if (decision == null) {
+      return;
+    }
+    long renderNanos = System.nanoTime();
+    double frameDeltaSeconds =
+        previousRenderNanos == 0L ? 0.0 : (renderNanos - previousRenderNanos) * 1.0e-9;
+    previousRenderNanos = renderNanos;
+    Optional<LookRotation> rotation =
+        switch (decision.smoothing()) {
+          case IMMEDIATE -> resolveTarget(minecraft, runtime, player, decision.target());
+          case TICK_INTERPOLATED -> controller.sample(partialTick);
+          case FRAME_EXPONENTIAL ->
+              resolveTarget(minecraft, runtime, player, decision.target())
+                  .map(target -> controller.updateFrame(target, frameDeltaSeconds));
+        };
+    rotation.ifPresent(value -> setPlayerRotation(player, value));
   }
 
   private static Optional<LookRotation> resolveTarget(

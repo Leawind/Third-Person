@@ -39,7 +39,7 @@ public final class MinecraftKeyIntegration {
     Minecraft minecraft = Minecraft.getInstance();
     ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
     boolean acceptsInput =
-        PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        PerspectiveGuard.isThirdPersonCurrent()
             && runtime.isCameraControlEnabled()
             && minecraft.player != null
             && minecraft.level != null

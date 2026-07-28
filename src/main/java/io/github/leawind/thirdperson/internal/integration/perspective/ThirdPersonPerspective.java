@@ -11,6 +11,7 @@ import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec2;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -23,38 +24,44 @@ import org.jspecify.annotations.NonNull;
     nameKey = "perspective.leawind_third_person.third_person.name",
     descriptionKey = "perspective.leawind_third_person.third_person.description",
     priority = 10,
-    baseType = PerspectiveBehavior.BaseType.THIRD_PERSON_BACK,
-    switchable = true)
+    baseType = PerspectiveBehavior.BaseType.THIRD_PERSON_BACK)
 @SuppressWarnings("unused")
 public final class ThirdPersonPerspective implements PerspectiveBehavior {
   private long lastFrameNanos;
+  private Entity previousCameraEntity;
   private final ThirdPersonRuntime runtime = ThirdPersonRuntime.getInstance();
 
   @Override
   public void onActivate() {
     lastFrameNanos = 0L;
+    previousCameraEntity = null;
     runtime.onPerspectiveActivated();
   }
 
   @Override
   public void onDeactivate() {
     lastFrameNanos = 0L;
+    previousCameraEntity = null;
     runtime.onPerspectiveDeactivated();
   }
 
   @Override
   public void applyCameraState(
       PerspectiveState.@NonNull Mutable state, @NonNull PerspectiveContext context) {
-    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
-        || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return;
     }
 
     Minecraft minecraft = Minecraft.getInstance();
     Entity entity = context.entity();
-    var player = minecraft.player;
-    if (entity == null || entity != player || player == null) {
+    if (entity == null) {
       return;
+    }
+
+    if (entity != previousCameraEntity) {
+      previousCameraEntity = entity;
+      lastFrameNanos = 0L;
+      runtime.session().resetCameraTracking();
     }
 
     Vec2 entityRotation = entity.getRotationVector();
@@ -81,7 +88,9 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
                 rotation,
                 state.getFovDeg(),
                 aspectRatio,
-                player.isFallFlying() || player.isSwimming(),
+                entity.isSwimming()
+                    || (entity instanceof LivingEntity livingEntity
+                        && livingEntity.isFallFlying()),
                 frameDeltaSeconds())
             .orElse(null);
     if (frame == null) {
@@ -99,12 +108,11 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   @Override
   public void postApplyWhenActive(
       @NonNull PerspectiveState state, @NonNull PerspectiveContext context) {
-    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
-        || !runtime.isCameraControlEnabled()) {
+    if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return;
     }
     Entity entity = context.entity();
-    if (entity == null || entity != Minecraft.getInstance().player) {
+    if (entity == null) {
       return;
     }
     CameraPose.tryCreate(state.position(), state.rotation(), state.getFovDeg())

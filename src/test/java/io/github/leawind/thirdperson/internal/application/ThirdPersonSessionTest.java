@@ -54,6 +54,24 @@ class ThirdPersonSessionTest {
   }
 
   @Test
+  void resettingCameraTrackingPreservesTheActivePerspective() {
+    var session = new ThirdPersonSession();
+    session.activatePerspective();
+    session.lookController().initialize(15.0f, 30.0f);
+    session.recordSafeCameraPose(
+        CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
+    session.recordFinalCameraPose(
+        CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
+
+    session.resetCameraTracking();
+
+    assertTrue(session.isPerspectiveActive());
+    assertFalse(session.lookController().isInitialized());
+    assertTrue(session.lastSafeCameraPose().isEmpty());
+    assertTrue(session.finalCameraPose().isEmpty());
+  }
+
+  @Test
   void temporaryFirstPersonPreservesItsCompositionMode() {
     var session = new ThirdPersonSession();
     session.activatePerspective();

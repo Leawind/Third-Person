@@ -4,6 +4,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
+import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
@@ -44,56 +45,71 @@ final class YaclConfigScreenBuilder {
                         defaults.enabled(),
                         () -> draft.value().enabled(),
                         draft::setEnabled))
-                .option(
-                    booleanOption(
-                        "tight_space",
-                        defaults.camera().temporaryFirstPersonInTightSpace(),
-                        () -> draft.value().camera().temporaryFirstPersonInTightSpace(),
-                        draft::setTemporaryFirstPersonInTightSpace))
-                .option(
-                    booleanOption(
-                        "smart_aiming",
-                        defaults.aiming().smartAiming(),
-                        () -> draft.value().aiming().smartAiming(),
-                        draft::setSmartAiming))
-                .option(
-                    enumOption(
-                        "reticle",
-                        defaults.hud().reticle(),
-                        () -> draft.value().hud().reticle(),
-                        draft::setReticleMode,
-                        ReticleMode.class))
+                .group(
+                    group("camera_behavior")
+                        .option(
+                            booleanOption(
+                                "tight_space",
+                                defaults.camera().temporaryFirstPersonInTightSpace(),
+                                () -> draft.value().camera().temporaryFirstPersonInTightSpace(),
+                                draft::setTemporaryFirstPersonInTightSpace))
+                        .build())
+                .group(
+                    group("aiming")
+                        .option(
+                            booleanOption(
+                                "smart_aiming",
+                                defaults.aiming().smartAiming(),
+                                () -> draft.value().aiming().smartAiming(),
+                                draft::setSmartAiming))
+                        .build())
+                .group(
+                    group("hud")
+                        .option(
+                            enumOption(
+                                "reticle",
+                                defaults.hud().reticle(),
+                                () -> draft.value().hud().reticle(),
+                                draft::setReticleMode,
+                                ReticleMode.class))
+                        .build())
                 .build())
         .category(
             ConfigCategory.createBuilder()
                 .name(text("category.player_rotation"))
                 .tooltip(text("category.player_rotation.desc"))
-                .option(
-                    enumOption(
-                        "rotation_mode",
-                        defaults.player().rotationMode(),
-                        () -> draft.value().player().rotationMode(),
-                        draft::setPlayerRotationMode,
-                        PlayerRotationMode.class))
-                .option(
-                    enumOption(
-                        "normal_rotation_mode",
-                        defaults.player().normalMode(),
-                        () -> draft.value().player().normalMode(),
-                        draft::setNormalPlayerRotationMode,
-                        NormalPlayerRotationMode.class))
-                .option(
-                    booleanOption(
-                        "auto_rotate_interacting",
-                        defaults.player().autoRotateInteracting(),
-                        () -> draft.value().player().autoRotateInteracting(),
-                        draft::setAutoRotateInteracting))
-                .option(
-                    booleanOption(
-                        "do_not_rotate_when_eating",
-                        defaults.player().doNotRotateWhenEating(),
-                        () -> draft.value().player().doNotRotateWhenEating(),
-                        draft::setDoNotRotateWhenEating))
+                .group(
+                    group("normal_rotation")
+                        .option(
+                            enumOption(
+                                "rotation_mode",
+                                defaults.player().rotationMode(),
+                                () -> draft.value().player().rotationMode(),
+                                draft::setPlayerRotationMode,
+                                PlayerRotationMode.class))
+                        .option(
+                            enumOption(
+                                "normal_rotation_mode",
+                                defaults.player().normalMode(),
+                                () -> draft.value().player().normalMode(),
+                                draft::setNormalPlayerRotationMode,
+                                NormalPlayerRotationMode.class))
+                        .build())
+                .group(
+                    group("interaction_rotation")
+                        .option(
+                            booleanOption(
+                                "auto_rotate_interacting",
+                                defaults.player().autoRotateInteracting(),
+                                () -> draft.value().player().autoRotateInteracting(),
+                                draft::setAutoRotateInteracting))
+                        .option(
+                            booleanOption(
+                                "do_not_rotate_when_eating",
+                                defaults.player().doNotRotateWhenEating(),
+                                () -> draft.value().player().doNotRotateWhenEating(),
+                                draft::setDoNotRotateWhenEating))
+                        .build())
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -122,31 +138,39 @@ final class YaclConfigScreenBuilder {
             ConfigCategory.createBuilder()
                 .name(text("category.smoothing"))
                 .tooltip(text("category.smoothing.desc"))
-                .option(
-                    halfLifeOption(
-                        "rotation_half_life",
-                        defaults.camera().smoothing().rotationHalfLife(),
-                        () -> draft.value().camera().smoothing().rotationHalfLife(),
-                        draft::setRotationHalfLife))
-                .option(
-                    halfLifeOption(
-                        "flying_pivot_half_life",
-                        defaults.camera().smoothing().flyingPivotHalfLife(),
-                        () -> draft.value().camera().smoothing().flyingPivotHalfLife(),
-                        draft::setFlyingPivotHalfLife))
-                .option(
-                    halfLifeOption(
-                        "adjusting_offset_half_life",
-                        defaults.camera().smoothing().adjustingOffsetHalfLife(),
-                        () -> draft.value().camera().smoothing().adjustingOffsetHalfLife(),
-                        draft::setAdjustingOffsetHalfLife))
-                .option(
-                    halfLifeOption(
-                        "adjusting_distance_half_life",
-                        defaults.camera().smoothing().adjustingDistanceHalfLife(),
-                        () -> draft.value().camera().smoothing().adjustingDistanceHalfLife(),
-                        draft::setAdjustingDistanceHalfLife))
-                .option(
+                .group(
+                    group("rotation")
+                        .option(
+                            halfLifeOption(
+                                "rotation_half_life",
+                                defaults.camera().smoothing().rotationHalfLife(),
+                                () -> draft.value().camera().smoothing().rotationHalfLife(),
+                                draft::setRotationHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "flying_pivot_half_life",
+                                defaults.camera().smoothing().flyingPivotHalfLife(),
+                                () -> draft.value().camera().smoothing().flyingPivotHalfLife(),
+                                draft::setFlyingPivotHalfLife))
+                        .build())
+                .group(
+                    group("camera_adjustment")
+                        .option(
+                            halfLifeOption(
+                                "adjusting_offset_half_life",
+                                defaults.camera().smoothing().adjustingOffsetHalfLife(),
+                                () -> draft.value().camera().smoothing().adjustingOffsetHalfLife(),
+                                draft::setAdjustingOffsetHalfLife))
+                        .option(
+                            halfLifeOption(
+                                "adjusting_distance_half_life",
+                                defaults.camera().smoothing().adjustingDistanceHalfLife(),
+                                () -> draft.value().camera().smoothing().adjustingDistanceHalfLife(),
+                                draft::setAdjustingDistanceHalfLife))
+                        .build())
+                .group(
+                    group("normal_camera")
+                        .option(
                     halfLifeOption(
                         "normal_pivot_horizontal_half_life",
                         defaults.camera().smoothing().normal().horizontalPivotHalfLife(),
@@ -176,7 +200,10 @@ final class YaclConfigScreenBuilder {
                         defaults.camera().smoothing().normal().fovHalfLife(),
                         () -> draft.value().camera().smoothing().normal().fovHalfLife(),
                         draft::setNormalFovHalfLife))
-                .option(
+                        .build())
+                .group(
+                    group("aiming_camera")
+                        .option(
                     halfLifeOption(
                         "aiming_pivot_horizontal_half_life",
                         defaults.camera().smoothing().aiming().horizontalPivotHalfLife(),
@@ -206,12 +233,15 @@ final class YaclConfigScreenBuilder {
                         defaults.camera().smoothing().aiming().fovHalfLife(),
                         () -> draft.value().camera().smoothing().aiming().fovHalfLife(),
                         draft::setAimingFovHalfLife))
+                        .build())
                 .build())
         .category(
             ConfigCategory.createBuilder()
-                .name(text("category.normal_camera"))
-                .tooltip(text("category.normal_camera.desc"))
-                .option(
+                .name(text("category.camera"))
+                .tooltip(text("category.camera.desc"))
+                .group(
+                    group("normal_camera")
+                        .option(
                     doubleOption(
                         "normal_distance",
                         defaults.camera().normal().distance(),
@@ -249,12 +279,10 @@ final class YaclConfigScreenBuilder {
                         -1.0,
                         1.0,
                         0.01))
-                .build())
-        .category(
-            ConfigCategory.createBuilder()
-                .name(text("category.aiming_camera"))
-                .tooltip(text("category.aiming_camera.desc"))
-                .option(
+                        .build())
+                .group(
+                    group("aiming_camera")
+                        .option(
                     doubleOption(
                         "aiming_distance",
                         defaults.camera().aiming().distance(),
@@ -301,6 +329,7 @@ final class YaclConfigScreenBuilder {
                         0.25,
                         2.0,
                         0.05))
+                        .build())
                 .build())
         .build()
         .generateScreen(parent);
@@ -363,6 +392,12 @@ final class YaclConfigScreenBuilder {
         .insertEntriesAtEnd(true)
         .collapsed(false)
         .build();
+  }
+
+  private static OptionGroup.Builder group(String key) {
+    return OptionGroup.createBuilder()
+        .name(text("group." + key))
+        .description(OptionDescription.of(text("group." + key + ".desc")));
   }
 
   private static Option<Double> numberOption(

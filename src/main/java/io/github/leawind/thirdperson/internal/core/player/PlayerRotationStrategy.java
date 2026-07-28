@@ -17,10 +17,10 @@ public final class PlayerRotationStrategy {
         return immediate(PlayerRotationTarget.CAMERA_HIT_RESULT);
       }
       case PARALLEL_WITH_CAMERA -> {
-        return immediate(PlayerRotationTarget.CAMERA_ROTATION);
+        return smooth(PlayerRotationTarget.CAMERA_ROTATION, 0.0);
       }
       case NONE -> {
-        return immediate(PlayerRotationTarget.CURRENT_ROTATION);
+        return smooth(PlayerRotationTarget.CURRENT_ROTATION, 0.0);
       }
       case INTEREST_POINT, MOVING_DIRECTION -> {}
     }
@@ -28,7 +28,7 @@ public final class PlayerRotationStrategy {
       return immediate(PlayerRotationTarget.CAMERA_ROTATION);
     }
     if (state.interacting()) {
-      return immediate(PlayerRotationTarget.CAMERA_HIT_RESULT);
+      return smooth(PlayerRotationTarget.CAMERA_HIT_RESULT, 0.0);
     }
     if (state.swimming()) {
       return smooth(PlayerRotationTarget.IMPULSE_DIRECTION, 0.01);
@@ -38,7 +38,7 @@ public final class PlayerRotationStrategy {
     }
     if (state.passenger()) {
       return state.vehicleLivingEntity()
-          ? smooth(PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION, 0.1)
+          ? frameExponential(PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION, 0.1)
           : smooth(PlayerRotationTarget.INTEREST_POINT, 0.15);
     }
     if (state.normalMode() == NormalPlayerRotationMode.MOVING_DIRECTION) {
@@ -52,10 +52,17 @@ public final class PlayerRotationStrategy {
   }
 
   private static PlayerRotationDecision immediate(PlayerRotationTarget target) {
-    return new PlayerRotationDecision(target, 0.0, true);
+    return new PlayerRotationDecision(target, 0.0, PlayerRotationSmoothing.IMMEDIATE);
   }
 
   private static PlayerRotationDecision smooth(PlayerRotationTarget target, double halfLife) {
-    return new PlayerRotationDecision(target, halfLife, false);
+    return new PlayerRotationDecision(
+        target, halfLife, PlayerRotationSmoothing.TICK_INTERPOLATED);
+  }
+
+  private static PlayerRotationDecision frameExponential(
+      PlayerRotationTarget target, double halfLife) {
+    return new PlayerRotationDecision(
+        target, halfLife, PlayerRotationSmoothing.FRAME_EXPONENTIAL);
   }
 }

@@ -6,6 +6,7 @@
 	"refmap": "leawind_third_person.refmap.json",
 	"client": [
 		"EntityMixin",
+		"GameRendererMixin",
 		"GuiMixin",
 		"LocalPlayerMixin",
 		"MinecraftMixin",
