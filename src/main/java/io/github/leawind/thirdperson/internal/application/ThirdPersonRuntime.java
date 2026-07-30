@@ -6,6 +6,7 @@ import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInpu
 import io.github.leawind.thirdperson.internal.application.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.application.hud.HudSettings;
 import io.github.leawind.thirdperson.internal.application.player.PlayerSettings;
+import io.github.leawind.thirdperson.internal.application.port.CameraCollisionPort;
 import io.github.leawind.thirdperson.internal.core.camera.CameraMode;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
@@ -88,10 +89,14 @@ public final class ThirdPersonRuntime {
         modeSmoothing.fovHalfLife());
   }
 
-  public Optional<CameraPose> updateCamera(CameraFrameInput frame) {
+  public Optional<CameraPose> updateCamera(CameraFrameInput frame, CameraCollisionPort collision) {
     Objects.requireNonNull(frame, "frame");
+    Objects.requireNonNull(collision, "collision");
     return cameraController.update(
-        frame, cameraProfile(frame.flyingOrSwimming()), cameraSmoothing(frame.flyingOrSwimming()));
+        frame,
+        cameraProfile(frame.flyingOrSwimming()),
+        cameraSmoothing(frame.flyingOrSwimming()),
+        collision);
   }
 
   public boolean initialize() {

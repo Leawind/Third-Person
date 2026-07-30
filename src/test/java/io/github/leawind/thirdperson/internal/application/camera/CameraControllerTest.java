@@ -8,6 +8,7 @@ import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSmoothingParameters;
 import io.github.leawind.thirdperson.internal.core.camera.CameraSubjectDimensions;
+import java.util.Optional;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,31 @@ class CameraControllerTest {
     var controller = new CameraController(session);
     CameraFrameInput frame = frameAt(0.0);
 
-    CameraPose pose = controller.update(frame, PROFILE, IMMEDIATE).orElseThrow();
+    CameraPose pose =
+        controller
+            .update(
+                frame,
+                PROFILE,
+                IMMEDIATE,
+                (pivot, desired) -> Optional.of(new Vector3d(desired)))
+            .orElseThrow();
     assertEquals(new Vector3d(0.0, 0.0, -4.0), pose.copyPosition(new Vector3d()));
+  }
+
+  @Test
+  void appliesCollisionToTheIdealCameraPose() {
+    var controller = new CameraController(new ThirdPersonSession());
+
+    CameraPose pose =
+        controller
+            .update(
+                frameAt(0.0),
+                PROFILE,
+                IMMEDIATE,
+                (pivot, desired) -> Optional.of(new Vector3d(pivot).lerp(desired, 0.25)))
+            .orElseThrow();
+
+    assertEquals(new Vector3d(0.0, 0.0, -1.0), pose.copyPosition(new Vector3d()));
   }
 
   @Test

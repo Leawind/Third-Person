@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.application.camera;
 
 import io.github.leawind.thirdperson.internal.application.ThirdPersonSession;
+import io.github.leawind.thirdperson.internal.application.port.CameraCollisionPort;
 import io.github.leawind.thirdperson.internal.core.camera.CameraInput;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.camera.CameraProfile;
@@ -11,7 +12,7 @@ import java.util.Optional;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
-/// Coordinates the pure camera pipeline.
+/// Coordinates the pure camera pipeline and delegates world collision through a port.
 public final class CameraController {
   private final ThirdPersonSession session;
 
@@ -20,10 +21,14 @@ public final class CameraController {
   }
 
   public Optional<CameraPose> update(
-      CameraFrameInput frame, CameraProfile profile, CameraSmoothingParameters smoothing) {
+      CameraFrameInput frame,
+      CameraProfile profile,
+      CameraSmoothingParameters smoothing,
+      CameraCollisionPort collision) {
     Objects.requireNonNull(frame, "frame");
     Objects.requireNonNull(profile, "profile");
     Objects.requireNonNull(smoothing, "smoothing");
+    Objects.requireNonNull(collision, "collision");
 
     Vector3d pivot = frame.copyPivot(new Vector3d());
     Quaternionf rotation = frame.copyRotation(new Quaternionf());
@@ -45,9 +50,10 @@ public final class CameraController {
       return Optional.empty();
     }
 
+    Vector3d smoothedPivot = smoothedInput.copyPivot(new Vector3d());
     CameraPose idealPose =
         CameraRig.calculate(
-                smoothedInput.copyPivot(new Vector3d()),
+                smoothedPivot,
                 smoothedInput.copyRotation(new Quaternionf()),
                 smoothedInput.parameters(),
                 smoothedInput.fovDegrees(),
@@ -56,6 +62,11 @@ public final class CameraController {
     if (idealPose == null) {
       return Optional.empty();
     }
-    return Optional.of(idealPose);
+    Optional<Vector3d> resolvedPosition =
+        collision.resolve(smoothedPivot, idealPose.copyPosition(new Vector3d()));
+    if (resolvedPosition == null || resolvedPosition.isEmpty()) {
+      return Optional.empty();
+    }
+    return idealPose.withPosition(resolvedPosition.orElseThrow());
   }
 }

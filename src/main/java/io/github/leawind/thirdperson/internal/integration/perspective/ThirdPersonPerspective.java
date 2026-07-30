@@ -8,6 +8,7 @@ import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.application.ThirdPersonRuntime;
 import io.github.leawind.thirdperson.internal.application.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.core.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftCameraCollision;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -98,7 +99,12 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     if (frame == null) {
       return;
     }
-    runtime.updateCamera(frame).ifPresent(pose -> applyPose(state, pose));
+    runtime
+        .updateCamera(
+            frame,
+            (collisionPivot, desiredPosition) ->
+                MinecraftCameraCollision.resolve(entity, collisionPivot, desiredPosition))
+        .ifPresent(pose -> applyPose(state, pose));
   }
 
   @Override
