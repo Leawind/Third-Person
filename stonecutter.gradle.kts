@@ -18,34 +18,45 @@ val checkArchitecture by tasks.registering {
     inputs.dir(sourceRoot)
 
     doLast {
-        val corePrefix = "io/github/leawind/thirdperson/internal/core/"
-        val applicationPrefix = "io/github/leawind/thirdperson/internal/application/"
+        val basePrefix = "io/github/leawind/thirdperson/internal/base/"
+        val baseApiPrefix = "io/github/leawind/thirdperson/internal/base/api/"
+        val baseCorePrefix = "io/github/leawind/thirdperson/internal/base/core/"
+        val schedulerPrefix = "io/github/leawind/thirdperson/internal/scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
-        val integrationPrefix = "io/github/leawind/thirdperson/internal/integration/"
         val bootstrapPrefix = "io/github/leawind/thirdperson/internal/bootstrap/"
-        val ownApplicationPrefix = "io.github.leawind.thirdperson.internal.application."
-        val ownCorePrefix = "io.github.leawind.thirdperson.internal.core."
+        val basePackage = "io.github.leawind.thirdperson.internal.base."
+        val baseApiPackage = "io.github.leawind.thirdperson.internal.base.api."
+        val baseCorePackage = "io.github.leawind.thirdperson.internal.base.core."
+        val schedulerPackage = "io.github.leawind.thirdperson.internal.scheduler."
         val forbiddenBridgeImports = listOf(
             "io.github.leawind.thirdperson.api.",
-            "io.github.leawind.thirdperson.internal.application.",
+            basePackage,
             "io.github.leawind.thirdperson.internal.bootstrap.",
-            "io.github.leawind.thirdperson.internal.core.",
-            "io.github.leawind.thirdperson.internal.integration.",
+            schedulerPackage,
         )
         val violations = mutableListOf<String>()
 
         fileTree(sourceRoot).matching { include("**/*.java") }.files.sorted().forEach { source ->
             val relativePath = sourceRoot.asFile.toPath().relativize(source.toPath()).toString()
-            val isCore = relativePath.startsWith(corePrefix)
-            val isApplication = relativePath.startsWith(applicationPrefix)
+            val isBase = relativePath.startsWith(basePrefix)
+            val isBaseApi = relativePath.startsWith(baseApiPrefix)
+            val isBaseCore = relativePath.startsWith(baseCorePrefix)
+            val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
-            val isIntegration = relativePath.startsWith(integrationPrefix)
             val isBootstrap = relativePath.startsWith(bootstrapPrefix)
 
             source.readLines().forEachIndexed { index, line ->
-                if ((isCore || isApplication) && (line.contains("/*?") || line.contains("/^?"))) {
+                if ((isBaseApi || isBaseCore)
+                    && (line.contains("/*?") || line.contains("/^?"))
+                ) {
                     violations.add(
-                        "$relativePath:${index + 1}: core/application must not use Stonecutter macros"
+                        "$relativePath:${index + 1}: base api/core must not use Stonecutter macros"
+                    )
+                }
+
+                if (isBase && line.contains(schedulerPackage)) {
+                    violations.add(
+                        "$relativePath:${index + 1}: base must not reference the scheduling layer"
                     )
                 }
 
@@ -64,33 +75,34 @@ val checkArchitecture by tasks.registering {
                         .removePrefix("static ")
                         .trim()
 
-                if (isCore
+                if (isBaseCore
                     && !imported.startsWith("java.")
                     && !imported.startsWith("org.joml.")
-                    && !imported.startsWith(ownCorePrefix)
-                ) {
-                    violations.add("$relativePath:${index + 1}: core must not import $imported")
-                }
-                if (isApplication
-                    && !imported.startsWith("java.")
-                    && !imported.startsWith("org.joml.")
-                    && !imported.startsWith(ownApplicationPrefix)
-                    && !imported.startsWith(ownCorePrefix)
+                    && !imported.startsWith(baseApiPackage)
+                    && !imported.startsWith(baseCorePackage)
                 ) {
                     violations.add(
-                        "$relativePath:${index + 1}: application must not import $imported"
+                        "$relativePath:${index + 1}: base core must not import $imported"
+                    )
+                }
+                if (isBaseApi
+                    && !imported.startsWith("java.")
+                    && !imported.startsWith("org.joml.")
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: base api must not import $imported"
+                    )
+                }
+                if (isScheduler
+                    && imported.startsWith(basePackage)
+                    && !imported.startsWith(baseApiPackage)
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: scheduler may only import the base api, not $imported"
                     )
                 }
                 if (isBridge && forbiddenBridgeImports.any(imported::startsWith)) {
                     violations.add("$relativePath:${index + 1}: bridge must not import $imported")
-                }
-                if (isIntegration
-                    && (imported.startsWith("io.github.leawind.thirdperson.internal.bootstrap.")
-                        || imported.startsWith("io.github.leawind.thirdperson.platform."))
-                ) {
-                    violations.add(
-                        "$relativePath:${index + 1}: integration must not import $imported"
-                    )
                 }
                 if (isBootstrap && imported.startsWith("io.github.leawind.thirdperson.platform.")) {
                     violations.add("$relativePath:${index + 1}: bootstrap must not import $imported")

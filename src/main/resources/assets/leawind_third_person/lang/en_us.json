@@ -81,6 +81,8 @@
   "config.leawind_third_person.option.auto_rotate_interacting.desc": "Face the camera crosshair while using, attacking, or picking a block",
   "config.leawind_third_person.option.do_not_rotate_when_eating": "Do Not Rotate While Eating",
   "config.leawind_third_person.option.do_not_rotate_when_eating.desc": "Ignore interaction-triggered rotation while using food",
+  "config.leawind_third_person.option.raycast_origin": "Raycast Origin",
+  "config.leawind_third_person.option.raycast_origin.desc": "Start camera-directed probes at the camera or at the player's eyes",
   "config.leawind_third_person.option.reticle": "Third-Person Reticle",
   "config.leawind_third_person.option.reticle.desc": "Choose when the centered reticle is shown in this perspective",
   "config.leawind_third_person.option.normal_distance": "Distance Factor",
@@ -96,6 +98,8 @@
   "config.leawind_third_person.value.normal_rotation_mode.moving_direction": "Movement Direction",
   "config.leawind_third_person.value.normal_rotation_mode.parallel_with_camera": "Parallel with Camera",
   "config.leawind_third_person.value.normal_rotation_mode.none": "Keep Current Rotation",
+  "config.leawind_third_person.value.raycast_origin.player_eye": "Player Eyes",
+  "config.leawind_third_person.value.raycast_origin.camera": "Camera",
   "config.leawind_third_person.value.reticle.auto": "Automatic",
   "config.leawind_third_person.value.reticle.on": "Always On",
   "config.leawind_third_person.value.reticle.off": "Off"

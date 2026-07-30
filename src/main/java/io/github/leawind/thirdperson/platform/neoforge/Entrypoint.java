@@ -3,8 +3,8 @@ package io.github.leawind.thirdperson.platform.neoforge;
 /*? if neoforge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.bootstrap.ModBootstrap;
-import io.github.leawind.thirdperson.internal.integration.minecraft.MinecraftKeyIntegration;
-import io.github.leawind.thirdperson.internal.integration.resource.MinecraftItemPredicateIntegration;
+import io.github.leawind.thirdperson.internal.scheduler.integration.minecraft.MinecraftKeyIntegration;
+import io.github.leawind.thirdperson.internal.scheduler.integration.resource.MinecraftItemPredicateIntegration;
 import net.minecraft.resources.ResourceLocation;
 /^?   if >=1.21.11 {^/
 import net.neoforged.api.distmarker.Dist;
