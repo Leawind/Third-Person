@@ -31,6 +31,7 @@ class JsonStateCodecTest {
                 "\"normalMode\": \"interest_point\"",
                 "\"normalMode\": \"parallel_with_camera\"")
             .replace("\"autoRotateInteracting\": true", "\"autoRotateInteracting\": false")
+            .replace("\"raycastOrigin\": \"camera\"", "\"raycastOrigin\": \"player_eye\"")
             .replace("\"reticle\": \"auto\"", "\"reticle\": \"on\"");
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(json);
@@ -39,6 +40,7 @@ class JsonStateCodecTest {
     assertEquals(PlayerRotationMode.VANILLA, decoded.player().rotationMode());
     assertEquals(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, decoded.player().normalMode());
     assertFalse(decoded.player().autoRotateInteracting());
+    assertEquals(RaycastOrigin.PLAYER_EYE, decoded.player().raycastOrigin());
     assertEquals(ReticleMode.ON, decoded.hud().reticle());
   }
 

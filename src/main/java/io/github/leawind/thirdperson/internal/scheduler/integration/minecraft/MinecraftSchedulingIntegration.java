@@ -5,11 +5,11 @@ import io.github.leawind.thirdperson.internal.base.api.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.base.api.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.base.api.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
 import io.github.leawind.thirdperson.internal.scheduler.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.scheduler.player.PlayerRotationDecision;
 import io.github.leawind.thirdperson.internal.scheduler.player.PlayerRotationState;
 import io.github.leawind.thirdperson.internal.scheduler.player.PlayerRotationStrategy;
-import io.github.leawind.thirdperson.internal.scheduler.player.PlayerRotationTarget;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 /// Detects dynamic game state and schedules one complete base-layer parameter snapshot per tick.
 public final class MinecraftSchedulingIntegration {
   private static boolean registered;
+  private static boolean refreshPredictedTargetEachFrame;
 
   private MinecraftSchedulingIntegration() {}
 
@@ -30,6 +31,7 @@ public final class MinecraftSchedulingIntegration {
     }
     registered = true;
     ClientTickEvent.register(MinecraftSchedulingIntegration::onClientTick);
+    RenderFrameEvent.register(MinecraftSchedulingIntegration::beforeRenderFrame);
   }
 
   private static void onClientTick() {
@@ -37,6 +39,7 @@ public final class MinecraftSchedulingIntegration {
     LocalPlayer player = minecraft.player;
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     if (player == null || minecraft.level == null) {
+      refreshPredictedTargetEachFrame = false;
       runtime.session().reset();
       return;
     }
@@ -48,6 +51,7 @@ public final class MinecraftSchedulingIntegration {
 
   private static PlayerRotationParameters schedulePlayerRotation(
       Minecraft minecraft, SchedulerRuntime runtime, LocalPlayer player) {
+    refreshPredictedTargetEachFrame = false;
     var settings = runtime.playerSettings();
     if (!runtime.base().isControllingLocalPlayer()
         || settings.rotationMode()
@@ -86,17 +90,35 @@ public final class MinecraftSchedulingIntegration {
           mode(PlayerRotationMode.PARALLEL_WITH_CAMERA, decision);
       case CAMERA_HIT_RESULT ->
           mode(PlayerRotationMode.LOOK_AT_CAMERA_RAY_HIT, decision);
-      case PREDICTED_TARGET_ENTITY ->
-          custom(
-              runtime.base().resolvePredictedCameraTargetRotation(),
-              decision.halfLifeSeconds(),
-              decision.smoothing());
+      case PREDICTED_TARGET_ENTITY -> {
+        refreshPredictedTargetEachFrame = true;
+        yield custom(
+            runtime.base().resolvePredictedCameraTargetRotation(),
+            decision.halfLifeSeconds(),
+            decision.smoothing());
+      }
       case HORIZONTAL_IMPULSE_DIRECTION ->
           mode(PlayerRotationMode.MOVEMENT_DIRECTION, decision);
       case IMPULSE_DIRECTION ->
           mode(PlayerRotationMode.MOVEMENT_DIRECTION, decision)
               .withThreeDimensionalMovement(true);
     };
+  }
+
+  private static void beforeRenderFrame(float partialTick) {
+    if (!refreshPredictedTargetEachFrame) {
+      return;
+    }
+    SchedulerRuntime runtime = SchedulerRuntime.getInstance();
+    var base = runtime.base();
+    var current = base.parameters();
+    var rotation = current.playerRotation();
+    base.applyParameters(
+        current.withPlayerRotation(
+            custom(
+                base.resolvePredictedCameraTargetRotation(),
+                rotation.halfLifeSeconds(),
+                rotation.smoothing())));
   }
 
   private static PlayerRotationParameters mode(

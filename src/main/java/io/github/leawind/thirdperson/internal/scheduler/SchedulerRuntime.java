@@ -24,7 +24,7 @@ public final class SchedulerRuntime {
   private final HudSettings hudSettings = new HudSettings();
   private ThirdPersonBase base;
 
-  private SchedulerRuntime() {}
+  SchedulerRuntime() {}
 
   public static SchedulerRuntime getInstance() {
     return INSTANCE;

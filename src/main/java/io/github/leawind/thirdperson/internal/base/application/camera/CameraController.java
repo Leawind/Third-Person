@@ -5,9 +5,9 @@ import io.github.leawind.thirdperson.internal.base.api.CameraSmoothingParameters
 import io.github.leawind.thirdperson.internal.base.application.BaseSession;
 import io.github.leawind.thirdperson.internal.base.application.port.CameraCollisionPort;
 import io.github.leawind.thirdperson.internal.base.core.camera.CameraInput;
+import io.github.leawind.thirdperson.internal.base.core.camera.CameraParameters;
 import io.github.leawind.thirdperson.internal.base.core.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.base.core.camera.CameraRig;
-import io.github.leawind.thirdperson.internal.base.core.camera.CameraParameters;
 import java.util.Objects;
 import java.util.Optional;
 import org.joml.Quaternionf;
@@ -42,12 +42,7 @@ public final class CameraController {
             ? new CameraParameters(distance, 0.0, profile.centeredOffsetY())
             : new CameraParameters(distance, profile.offsetX(), profile.offsetY());
     CameraInput targetInput =
-        CameraInput.tryCreate(
-                pivot,
-                rotation,
-                parameters,
-                targetFovDegrees)
-            .orElse(null);
+        CameraInput.tryCreate(pivot, rotation, parameters, targetFovDegrees).orElse(null);
     if (targetInput == null) {
       return Optional.empty();
     }

@@ -3,11 +3,12 @@ package io.github.leawind.thirdperson.internal.base.integration.minecraft;
 import io.github.leawind.thirdperson.internal.base.api.LookRotation;
 import io.github.leawind.thirdperson.internal.base.api.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.base.application.BaseRuntime;
-import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
-import io.github.leawind.thirdperson.internal.base.core.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.base.core.math.FiniteMath;
+import io.github.leawind.thirdperson.internal.base.core.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.base.integration.perspective.PerspectiveGuard;
+import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -88,8 +89,7 @@ public final class MinecraftInteractionIntegration {
         .orElse(false);
   }
 
-  private static void setPlayerRotation(
-      net.minecraft.client.player.LocalPlayer player, LookRotation rotation) {
+  private static void setPlayerRotation(LocalPlayer player, LookRotation rotation) {
     player.setYRot(rotation.yawDegrees());
     player.setXRot(rotation.pitchDegrees());
   }

@@ -1,9 +1,7 @@
 package io.github.leawind.thirdperson.internal.base.integration.minecraft;
 
 import io.github.leawind.thirdperson.internal.base.api.LookRotation;
-import io.github.leawind.thirdperson.internal.base.api.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.base.api.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.base.api.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.base.application.BaseRuntime;
 import io.github.leawind.thirdperson.internal.base.core.movement.MovementDirection;
 import io.github.leawind.thirdperson.internal.base.integration.perspective.PerspectiveGuard;

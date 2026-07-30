@@ -27,4 +27,8 @@ public record BaseParameters(
   public static BaseParameters defaults() {
     return DEFAULTS;
   }
+
+  public BaseParameters withPlayerRotation(PlayerRotationParameters value) {
+    return new BaseParameters(camera, cameraSmoothing, raycastOrigin, value);
+  }
 }
