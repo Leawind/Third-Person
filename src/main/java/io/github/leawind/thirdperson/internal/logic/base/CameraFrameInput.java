@@ -1,7 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.CameraSubjectDimensions;
-import io.github.leawind.thirdperson.internal.logic.base.FiniteMath;
 import java.util.Objects;
 import java.util.Optional;
 import org.joml.Quaternionf;

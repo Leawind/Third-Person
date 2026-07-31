@@ -3,11 +3,6 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.leawind.thirdperson.internal.logic.base.BaseSession;
-import io.github.leawind.thirdperson.internal.logic.base.CameraPose;
-import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.base.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.logic.base.CameraSubjectDimensions;
 import java.util.Optional;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;

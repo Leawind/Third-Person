@@ -4,37 +4,19 @@ import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
-import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.PlayerRotationDecision;
-import io.github.leawind.thirdperson.internal.logic.scheduler.PlayerRotationState;
-import io.github.leawind.thirdperson.internal.logic.scheduler.PlayerRotationStrategy;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-/*? if >=1.20.5 {*/
-import net.minecraft.core.component.DataComponents;
-/*? }*/
 import net.minecraft.world.entity.LivingEntity;
 
 /// Detects dynamic game state and schedules one complete base-layer parameter snapshot per tick.
 public final class MinecraftSchedulingIntegration {
-  private static boolean registered;
   private static boolean refreshPredictedTargetEachFrame;
 
   private MinecraftSchedulingIntegration() {}
 
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    ClientTickEvent.register(MinecraftSchedulingIntegration::onClientTick);
-    RenderFrameEvent.register(MinecraftSchedulingIntegration::beforeRenderFrame);
-  }
-
-  private static void onClientTick() {
+  public static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();
     LocalPlayer player = minecraft.player;
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
@@ -65,7 +47,7 @@ public final class MinecraftSchedulingIntegration {
             && (minecraft.options.keyUse.isDown()
                 || minecraft.options.keyAttack.isDown()
                 || minecraft.options.keyPickItem.isDown())
-            && !(settings.doNotRotateWhenEating() && isEating(player));
+            && !(settings.doNotRotateWhenEating() && Bridge.isEating(player));
     PlayerRotationDecision decision =
         PlayerRotationStrategy.resolve(
             new PlayerRotationState(
@@ -106,20 +88,19 @@ public final class MinecraftSchedulingIntegration {
     };
   }
 
-  private static void beforeRenderFrame(float partialTick) {
+  public static void beforeRenderFrame(float partialTick) {
     if (!refreshPredictedTargetEachFrame) {
       return;
     }
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     var base = runtime.base();
-    var current = base.parameters();
+    var current = runtime.appliedParameters();
     var rotation = current.playerRotation();
-    base.applyParameters(
-        current.withPlayerRotation(
-            custom(
-                base.resolvePredictedCameraTargetRotation(),
-                rotation.halfLifeSeconds(),
-                rotation.smoothing())));
+    runtime.applyPlayerRotation(
+        custom(
+            base.resolvePredictedCameraTargetRotation(),
+            rotation.halfLifeSeconds(),
+            rotation.smoothing()));
   }
 
   private static PlayerRotationParameters mode(
@@ -144,18 +125,6 @@ public final class MinecraftSchedulingIntegration {
       PlayerRotationSmoothing smoothing) {
     return PlayerRotationParameters.custom(rotation, halfLifeSeconds, smoothing);
   }
-
-  private static boolean isEating(LocalPlayer player) {
-    if (!player.isUsingItem()) {
-      return false;
-    }
-    /*? if >=1.20.5 {*/
-    return player.getUseItem().get(DataComponents.FOOD) != null;
-    /*? } else {*/
-    /*return player.getUseItem().isEdible();
-    *//*? }*/
-  }
-
   private static boolean hasDirectionalImpulse(
       double leftImpulse, double forwardImpulse, double minimumMagnitude) {
     double lengthSquared = leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;

@@ -1,12 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
-import io.github.leawind.thirdperson.internal.logic.base.MovementDirection;
-import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;
-import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -17,23 +10,13 @@ public final class MinecraftClientIntegration {
   private static final double CLIENT_TICK_SECONDS = 0.05;
   private static final float HORIZONTAL_ROTATION_PITCH = 0.1f;
 
-  private static boolean registered;
   private static ClientLevel previousLevel;
   private static LocalPlayer previousPlayer;
   private static long previousRenderNanos;
 
   private MinecraftClientIntegration() {}
 
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    ClientTickEvent.register(MinecraftClientIntegration::onClientTick);
-    RenderFrameEvent.register(MinecraftClientIntegration::beforeRenderFrame);
-  }
-
-  private static void onClientTick() {
+  public static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();
     LocalPlayer player = minecraft.player;
     ClientLevel level = minecraft.level;
@@ -68,7 +51,7 @@ public final class MinecraftClientIntegration {
         .update(current, target, CLIENT_TICK_SECONDS, parameters);
   }
 
-  private static void beforeRenderFrame(float partialTick) {
+  public static void beforeRenderFrame(float partialTick) {
     Minecraft minecraft = Minecraft.getInstance();
     LocalPlayer player = minecraft.player;
     BaseRuntime runtime = BaseRuntime.getInstance();

@@ -2,28 +2,18 @@ package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import io.github.leawind.thirdperson.ThirdPerson;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
-/*? if >=1.21.11 {*/
-import net.minecraft.resources.Identifier;
-/*? }*/
 
 /// Loader-neutral definitions for this mod's key mappings.
 public final class ThirdPersonKeyMappings {
-  /*? if >=1.21.11 {*/
-  private static final KeyMapping.Category CATEGORY =
-      KeyMapping.Category.register(
-          Identifier.fromNamespaceAndPath(ThirdPerson.MOD_ID, "keybinds"));
-  /*? } else {*/
-  /*private static final String CATEGORY = "key.categories." + ThirdPerson.MOD_ID;
-  *//*? }*/
-
   public static final KeyMapping ADJUST_CAMERA =
-      new KeyMapping(key("adjust_camera"), InputConstants.KEY_Z, CATEGORY);
+      Bridge.createKeyMapping(key("adjust_camera"), InputConstants.KEY_Z);
   public static final KeyMapping SWITCH_SHOULDER =
-      new KeyMapping(key("switch_shoulder"), InputConstants.KEY_CAPSLOCK, CATEGORY);
+      Bridge.createKeyMapping(key("switch_shoulder"), InputConstants.KEY_CAPSLOCK);
   public static final KeyMapping AIM =
-      new KeyMapping(key("aim"), InputConstants.UNKNOWN.getValue(), CATEGORY);
+      Bridge.createKeyMapping(key("aim"), InputConstants.UNKNOWN.getValue());
 
   private ThirdPersonKeyMappings() {}
 

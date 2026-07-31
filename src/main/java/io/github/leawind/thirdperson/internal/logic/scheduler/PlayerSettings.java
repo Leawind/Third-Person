@@ -1,8 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.scheduler.NormalPlayerRotationMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.ConfiguredPlayerRotationMode;
 import java.util.Objects;
 
 /// Owns player-rotation preferences.

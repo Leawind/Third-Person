@@ -1,6 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
 import java.util.Optional;
 import java.util.OptionalDouble;
 

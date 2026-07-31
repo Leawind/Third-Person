@@ -1,9 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
-import io.github.leawind.thirdperson.internal.logic.base.ExponentialSmoothing;
 import java.util.Objects;
 import java.util.Optional;
 

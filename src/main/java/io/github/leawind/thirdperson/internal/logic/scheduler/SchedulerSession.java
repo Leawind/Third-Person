@@ -1,9 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraAdjustmentController;
 import java.util.Objects;
 import java.util.Optional;
 

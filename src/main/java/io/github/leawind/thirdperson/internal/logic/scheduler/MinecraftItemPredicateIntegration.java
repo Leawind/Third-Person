@@ -3,9 +3,7 @@ package io.github.leawind.thirdperson.internal.logic.scheduler;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.AimingSettings;
-import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,9 +13,6 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.arguments.item.ItemPredicateArgument;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-/*? if !neoforge {*/
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-/*? }*/
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,25 +21,12 @@ public final class MinecraftItemPredicateIntegration {
   private static final MinecraftItemPatternReloadListener RELOAD_LISTENER =
       new MinecraftItemPatternReloadListener();
 
-  /*? if !neoforge {*/
-  private static ReloadableResourceManager registeredResourceManager;
-  /*? }*/
   private static ClientPacketListener compiledConnection;
   private static ItemPatternSet compiledResources;
   private static long compiledSettingsRevision = -1;
   private static CompiledPredicates predicates = CompiledPredicates.empty();
   private static volatile boolean automaticallyAiming;
-  private static boolean registered;
-
   private MinecraftItemPredicateIntegration() {}
-
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    ClientTickEvent.register(MinecraftItemPredicateIntegration::onClientTick);
-  }
 
   public static boolean isAutomaticallyAiming() {
     return automaticallyAiming;
@@ -55,11 +37,10 @@ public final class MinecraftItemPredicateIntegration {
     return RELOAD_LISTENER;
   }
 
-  private static void onClientTick() {
+  public static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();
-    /*? if !neoforge {*/
-    registerReloadListener(minecraft);
-    /*? }*/
+    Bridge.registerReloadListener(
+        minecraft, RELOAD_LISTENER, RELOAD_LISTENER::loadImmediately);
 
     ClientPacketListener connection = minecraft.getConnection();
     Player player = minecraft.player;
@@ -85,19 +66,6 @@ public final class MinecraftItemPredicateIntegration {
     }
     automaticallyAiming = predicates.matches(player);
   }
-
-  /*? if !neoforge {*/
-  private static void registerReloadListener(Minecraft minecraft) {
-    var resourceManager = minecraft.getResourceManager();
-    if (resourceManager instanceof ReloadableResourceManager reloadable
-        && reloadable != registeredResourceManager) {
-      registeredResourceManager = reloadable;
-      reloadable.registerReloadListener(RELOAD_LISTENER);
-      RELOAD_LISTENER.loadImmediately(reloadable);
-    }
-  }
-
-  /*? }*/
 
   private static CompiledPredicates compile(
       ClientPacketListener connection,

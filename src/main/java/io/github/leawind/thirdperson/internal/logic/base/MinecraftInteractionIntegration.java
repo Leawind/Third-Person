@@ -1,16 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
-import io.github.leawind.thirdperson.internal.logic.base.FiniteMath;
-import io.github.leawind.thirdperson.internal.logic.base.LookGeometry;
-import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;
-import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -18,17 +10,7 @@ import org.joml.Vector3f;
 
 /// Aligns the authoritative player ray with the rendered camera intent before vanilla repicks.
 public final class MinecraftInteractionIntegration {
-  private static boolean registered;
-
   private MinecraftInteractionIntegration() {}
-
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    BeforeInteractionEvent.register(MinecraftInteractionIntegration::alignPlayerToCameraIntent);
-  }
 
   public static boolean alignPlayerToCameraIntent() {
     BaseRuntime runtime = BaseRuntime.getInstance();
@@ -60,7 +42,7 @@ public final class MinecraftInteractionIntegration {
     Vector3d cameraPosition = cameraPose.copyPosition(new Vector3d());
     Quaternionf cameraRotation = cameraPose.copyRotation(new Quaternionf());
     Vector3f cameraForward = cameraRotation.transform(new Vector3f(0.0f, 0.0f, 1.0f));
-    double reach = interactionRange(minecraft);
+    double reach = Bridge.interactionRange(minecraft);
     if (!FiniteMath.isFinite(cameraForward) || !Double.isFinite(reach) || reach <= 0.0) {
       return false;
     }
@@ -70,14 +52,9 @@ public final class MinecraftInteractionIntegration {
             .fma(reach, new Vector3d(cameraForward.x, cameraForward.y, cameraForward.z));
     Vec3 from = new Vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z);
     Vec3 to = new Vec3(cameraRayEnd.x, cameraRayEnd.y, cameraRayEnd.z);
-    HitResult blockIntent =
-        minecraft.level.clip(
-            new ClipContext(from, to, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-    Vector3d intentPoint = cameraRayEnd;
-    if (blockIntent.getType() != HitResult.Type.MISS) {
-      Vec3 location = blockIntent.getLocation();
-      intentPoint = new Vector3d(location.x, location.y, location.z);
-    }
+    Bridge.BlockHit blockIntent = Bridge.clipBlocks(player, from, to, false);
+    Vector3d intentPoint =
+        blockIntent.missed() ? cameraRayEnd : toVector3d(blockIntent.location());
 
     Vec3 eye = player.getEyePosition(1.0f);
     return LookGeometry.lookAt(new Vector3d(eye.x, eye.y, eye.z), intentPoint)
@@ -94,12 +71,7 @@ public final class MinecraftInteractionIntegration {
     player.setXRot(rotation.pitchDegrees());
   }
 
-  private static double interactionRange(Minecraft minecraft) {
-    /*? if >=1.20.5 {*/
-    return Math.max(
-        minecraft.player.blockInteractionRange(), minecraft.player.entityInteractionRange());
-    /*? } else {*/
-    /*return minecraft.gameMode.getPickRange();
-    *//*? }*/
+  private static Vector3d toVector3d(Vec3 value) {
+    return new Vector3d(value.x, value.y, value.z);
   }
 }

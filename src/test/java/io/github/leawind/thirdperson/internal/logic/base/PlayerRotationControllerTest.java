@@ -3,10 +3,6 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationMode;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
 import org.junit.jupiter.api.Test;
 
 class PlayerRotationControllerTest {

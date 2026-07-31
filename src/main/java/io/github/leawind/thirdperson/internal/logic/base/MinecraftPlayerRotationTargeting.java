@@ -1,20 +1,12 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationGeometry;
-import io.github.leawind.thirdperson.internal.logic.base.LookGeometry;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
@@ -68,40 +60,25 @@ public final class MinecraftPlayerRotationTargeting {
                       + player.getBbWidth() * 0.8660254037844386;
               Vec3 from = toVec3(rayStart);
               Vec3 to = toVec3(new Vector3d(rayStart).fma(rayLength, view.forward()));
-              HitResult blockHit =
-                  minecraft.level.clip(
-                      new ClipContext(
-                          from,
-                          to,
-                          useColliderBlocks
-                              ? ClipContext.Block.COLLIDER
-                              : ClipContext.Block.OUTLINE,
-                          ClipContext.Fluid.NONE,
-                          player));
-              double blockDistanceSquared = from.distanceToSqr(blockHit.getLocation());
+              Bridge.BlockHit blockHit =
+                  Bridge.clipBlocks(player, from, to, useColliderBlocks);
+              double blockDistanceSquared = from.distanceToSqr(blockHit.location());
               Vec3 entityRayEnd =
-                  blockHit.getType() == HitResult.Type.MISS
+                  blockHit.missed()
                       ? to
                       : from.add(
                           view.forward().x * (Math.sqrt(blockDistanceSquared) + 1.0),
                           view.forward().y * (Math.sqrt(blockDistanceSquared) + 1.0),
                           view.forward().z * (Math.sqrt(blockDistanceSquared) + 1.0));
-              EntityHitResult entityHit =
-                  ProjectileUtil.getEntityHitResult(
-                      player,
-                      from,
-                      entityRayEnd,
-                      new AABB(from, entityRayEnd),
-                      entity -> !entity.isSpectator() && entity.isPickable(),
-                      from.distanceToSqr(entityRayEnd));
-              if (entityHit != null
-                  && from.distanceToSqr(entityHit.getLocation()) < blockDistanceSquared) {
-                return new CameraHit(toVector(entityHit.getLocation()), false, false);
+              Optional<Vec3> entityHit =
+                  Bridge.pickEntity(
+                      player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
+              if (entityHit.isPresent()
+                  && from.distanceToSqr(entityHit.orElseThrow()) < blockDistanceSquared) {
+                return new CameraHit(toVector(entityHit.orElseThrow()), false, false);
               }
               return new CameraHit(
-                  toVector(blockHit.getLocation()),
-                  blockHit.getType() == HitResult.Type.BLOCK,
-                  blockHit.getType() == HitResult.Type.MISS);
+                  toVector(blockHit.location()), blockHit.blocked(), blockHit.missed());
             });
   }
 

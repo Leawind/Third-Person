@@ -18,39 +18,68 @@ val checkArchitecture by tasks.registering {
     inputs.dir(sourceRoot)
 
     doLast {
-        val basePrefix = "io/github/leawind/thirdperson/internal/base/"
-        val baseApiPrefix = "io/github/leawind/thirdperson/internal/base/api/"
-        val baseCorePrefix = "io/github/leawind/thirdperson/internal/base/core/"
-        val schedulerPrefix = "io/github/leawind/thirdperson/internal/scheduler/"
+        val apiPrefix = "io/github/leawind/thirdperson/api/"
+        val logicPrefix = "io/github/leawind/thirdperson/internal/logic/"
+        val basePrefix = "${logicPrefix}base/"
+        val schedulerPrefix = "${logicPrefix}scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
-        val bootstrapPrefix = "io/github/leawind/thirdperson/internal/bootstrap/"
-        val basePackage = "io.github.leawind.thirdperson.internal.base."
-        val baseApiPackage = "io.github.leawind.thirdperson.internal.base.api."
-        val baseCorePackage = "io.github.leawind.thirdperson.internal.base.core."
-        val schedulerPackage = "io.github.leawind.thirdperson.internal.scheduler."
+        val utilsPrefix = "io/github/leawind/thirdperson/internal/utils/"
+        val basePackage = "io.github.leawind.thirdperson.internal.logic.base."
+        val schedulerPackage = "io.github.leawind.thirdperson.internal.logic.scheduler."
+        val logicPackage = "io.github.leawind.thirdperson.internal.logic."
+        val internalPackage = "io.github.leawind.thirdperson.internal."
+        val allowedBaseImports = setOf(
+            "${basePackage}BaseParameters",
+            "${basePackage}CameraProfile",
+            "${basePackage}CameraSmoothingParameters",
+            "${basePackage}LookRotation",
+            "${basePackage}PlayerRotationMode",
+            "${basePackage}PlayerRotationParameters",
+            "${basePackage}PlayerRotationSmoothing",
+            "${basePackage}RaycastOrigin",
+            "${basePackage}ThirdPersonBase",
+        )
+        val legacyLayerPrefixes = listOf(
+            "io/github/leawind/thirdperson/internal/base/",
+            "io/github/leawind/thirdperson/internal/scheduler/",
+            "io/github/leawind/thirdperson/internal/core/",
+            "io/github/leawind/thirdperson/internal/application/",
+            "io/github/leawind/thirdperson/internal/integration/",
+            "io/github/leawind/thirdperson/internal/persistence/",
+            "io/github/leawind/thirdperson/internal/configscreen/",
+            "io/github/leawind/thirdperson/internal/bootstrap/",
+        )
         val forbiddenBridgeImports = listOf(
             "io.github.leawind.thirdperson.api.",
-            basePackage,
-            "io.github.leawind.thirdperson.internal.bootstrap.",
-            schedulerPackage,
+            logicPackage,
+            "io.github.leawind.thirdperson.platform.",
         )
         val violations = mutableListOf<String>()
 
         fileTree(sourceRoot).matching { include("**/*.java") }.files.sorted().forEach { source ->
             val relativePath = sourceRoot.asFile.toPath().relativize(source.toPath()).toString()
+            val isApi = relativePath.startsWith(apiPrefix)
+            val isLogic = relativePath.startsWith(logicPrefix)
             val isBase = relativePath.startsWith(basePrefix)
-            val isBaseApi = relativePath.startsWith(baseApiPrefix)
-            val isBaseCore = relativePath.startsWith(baseCorePrefix)
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
-            val isBootstrap = relativePath.startsWith(bootstrapPrefix)
+            val isUtils = relativePath.startsWith(utilsPrefix)
 
+            if (legacyLayerPrefixes.any(relativePath::startsWith)) {
+                violations.add("$relativePath: legacy business-layer package is forbidden")
+            }
+            if (isBase && relativePath.removePrefix(basePrefix).contains('/')) {
+                violations.add("$relativePath: base logic must stay in one package")
+            }
+            if (isScheduler && relativePath.removePrefix(schedulerPrefix).contains('/')) {
+                violations.add("$relativePath: scheduling logic must stay in one package")
+            }
             source.readLines().forEachIndexed { index, line ->
-                if ((isBaseApi || isBaseCore)
+                if ((isApi || isLogic)
                     && (line.contains("/*?") || line.contains("/^?"))
                 ) {
                     violations.add(
-                        "$relativePath:${index + 1}: base api/core must not use Stonecutter macros"
+                        "$relativePath:${index + 1}: api/logic must not use Stonecutter macros"
                     )
                 }
 
@@ -75,37 +104,24 @@ val checkArchitecture by tasks.registering {
                         .removePrefix("static ")
                         .trim()
 
-                if (isBaseCore
-                    && !imported.startsWith("java.")
-                    && !imported.startsWith("org.joml.")
-                    && !imported.startsWith(baseApiPackage)
-                    && !imported.startsWith(baseCorePackage)
-                ) {
+                if (isApi && imported.startsWith(internalPackage)) {
                     violations.add(
-                        "$relativePath:${index + 1}: base core must not import $imported"
-                    )
-                }
-                if (isBaseApi
-                    && !imported.startsWith("java.")
-                    && !imported.startsWith("org.joml.")
-                ) {
-                    violations.add(
-                        "$relativePath:${index + 1}: base api must not import $imported"
+                        "$relativePath:${index + 1}: public api must not import $imported"
                     )
                 }
                 if (isScheduler
                     && imported.startsWith(basePackage)
-                    && !imported.startsWith(baseApiPackage)
+                    && imported !in allowedBaseImports
                 ) {
                     violations.add(
-                        "$relativePath:${index + 1}: scheduler may only import the base api, not $imported"
+                        "$relativePath:${index + 1}: scheduler may not import base implementation $imported"
                     )
                 }
                 if (isBridge && forbiddenBridgeImports.any(imported::startsWith)) {
                     violations.add("$relativePath:${index + 1}: bridge must not import $imported")
                 }
-                if (isBootstrap && imported.startsWith("io.github.leawind.thirdperson.platform.")) {
-                    violations.add("$relativePath:${index + 1}: bootstrap must not import $imported")
+                if (isUtils && imported.startsWith("io.github.leawind.thirdperson.")) {
+                    violations.add("$relativePath:${index + 1}: utils must be business-neutral")
                 }
             }
         }

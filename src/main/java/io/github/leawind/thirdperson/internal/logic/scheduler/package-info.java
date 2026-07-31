@@ -1,2 +1,4 @@
-/// Dynamic policy, configuration, UI, resources, and persistence that schedule the base layer.
+/// All dynamic policy, configuration, UI, resource, and persistence logic.
+///
+/// This package may access only the published boundary types in `logic.base`.
 package io.github.leawind.thirdperson.internal.logic.scheduler;

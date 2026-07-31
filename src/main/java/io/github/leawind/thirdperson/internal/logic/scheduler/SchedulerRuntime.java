@@ -5,12 +5,6 @@ import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.base.CameraSmoothingParameters;
 import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
-import io.github.leawind.thirdperson.internal.logic.scheduler.AimingSettings;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraSettings;
-import io.github.leawind.thirdperson.internal.logic.scheduler.HudSettings;
-import io.github.leawind.thirdperson.internal.logic.scheduler.PlayerSettings;
 import java.util.Objects;
 
 /// Owns configuration and projects dynamic game state into instantaneous base parameters.
@@ -22,6 +16,7 @@ public final class SchedulerRuntime {
   private final AimingSettings aimingSettings = new AimingSettings();
   private final PlayerSettings playerSettings = new PlayerSettings();
   private final HudSettings hudSettings = new HudSettings();
+  private BaseParameters appliedParameters = BaseParameters.defaults();
   private ThirdPersonBase base;
 
   SchedulerRuntime() {}
@@ -107,12 +102,27 @@ public final class SchedulerRuntime {
 
   public void applyParameters(
       boolean flyingOrSwimming, PlayerRotationParameters playerRotation) {
-    base().applyParameters(
+    applyParameters(
         new BaseParameters(
             cameraProfile(flyingOrSwimming),
             cameraSmoothing(flyingOrSwimming),
             playerSettings.raycastOrigin(),
             Objects.requireNonNull(playerRotation, "playerRotation")));
+  }
+
+  public BaseParameters appliedParameters() {
+    return appliedParameters;
+  }
+
+  public void applyPlayerRotation(PlayerRotationParameters playerRotation) {
+    applyParameters(
+        appliedParameters.withPlayerRotation(
+            Objects.requireNonNull(playerRotation, "playerRotation")));
+  }
+
+  private void applyParameters(BaseParameters parameters) {
+    appliedParameters = Objects.requireNonNull(parameters, "parameters");
+    base().applyParameters(parameters);
   }
 
   public CameraProfile updateCameraProfile(CameraProfileSlot slot, CameraProfile profile) {

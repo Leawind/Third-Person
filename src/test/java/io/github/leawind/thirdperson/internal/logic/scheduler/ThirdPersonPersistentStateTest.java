@@ -2,8 +2,6 @@ package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraProfileSlot;
 import org.junit.jupiter.api.Test;
 
 class ThirdPersonPersistentStateTest {

@@ -1,6 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.scheduler.ReticleMode;
 import java.util.Objects;
 
 /// Owns HUD preferences.

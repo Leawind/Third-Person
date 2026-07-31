@@ -1,14 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.BaseParameters;
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
-import io.github.leawind.thirdperson.internal.logic.base.CameraController;
-import io.github.leawind.thirdperson.internal.logic.base.CameraFrameInput;
-import io.github.leawind.thirdperson.internal.logic.base.CameraCollisionPort;
-import io.github.leawind.thirdperson.internal.logic.base.CameraPose;
-import io.github.leawind.thirdperson.internal.logic.base.MinecraftPlayerRotationTargeting;
-import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -36,8 +27,7 @@ public final class BaseRuntime implements ThirdPersonBase {
     this.parameters = Objects.requireNonNull(parameters, "parameters");
   }
 
-  @Override
-  public BaseParameters parameters() {
+  BaseParameters parameters() {
     return parameters;
   }
 

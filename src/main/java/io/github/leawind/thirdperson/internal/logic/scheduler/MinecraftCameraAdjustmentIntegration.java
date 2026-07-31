@@ -1,27 +1,13 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 
 /// Owns the configuration-oriented camera adjustment gesture in the scheduling layer.
 public final class MinecraftCameraAdjustmentIntegration {
-  private static boolean registered;
-
   private MinecraftCameraAdjustmentIntegration() {}
 
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    LocalPlayerTurnEvent.register(MinecraftCameraAdjustmentIntegration::onTurn);
-    MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);
-  }
-
-  private static boolean onTurn(LocalPlayer player, double rawYaw, double rawPitch) {
+  public static boolean onTurn(LocalPlayer player, double rawYaw, double rawPitch) {
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     if (!canControl(player, runtime)) {
       return false;
@@ -42,7 +28,7 @@ public final class MinecraftCameraAdjustmentIntegration {
     return Double.isFinite(rawYaw) && Double.isFinite(rawPitch);
   }
 
-  private static boolean onScroll(double xOffset, double yOffset) {
+  public static boolean onScroll(double xOffset, double yOffset) {
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     LocalPlayer player = Minecraft.getInstance().player;
     if (player == null || !canControl(player, runtime)) {
@@ -73,6 +59,6 @@ public final class MinecraftCameraAdjustmentIntegration {
   private static void syncCamera(SchedulerRuntime runtime, LocalPlayer player) {
     runtime.applyParameters(
         player.isSwimming() || player.isFallFlying(),
-        runtime.base().parameters().playerRotation());
+        runtime.appliedParameters().playerRotation());
   }
 }

@@ -1,8 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,7 +11,6 @@ public final class MinecraftStatePersistence {
   private static final int SAVE_DELAY_TICKS = 20;
   private static final JsonStateStore STORE = new JsonStateStore();
 
-  private static boolean registered;
   private static boolean loaded;
   private static Path statePath;
   private static ThirdPersonPersistentState observedState;
@@ -21,14 +18,6 @@ public final class MinecraftStatePersistence {
   private static int saveDelayTicks;
 
   private MinecraftStatePersistence() {}
-
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    ClientTickEvent.register(MinecraftStatePersistence::onClientTick);
-  }
 
   public static void flushScheduledSave() {
     if (!loaded || statePath == null) {
@@ -49,7 +38,7 @@ public final class MinecraftStatePersistence {
     }
   }
 
-  private static void onClientTick() {
+  public static void onClientTick() {
     if (!loaded) {
       loadOnce();
       return;

@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.platform.forge;
 
 /*? if forge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.bootstrap.ModBootstrap;
+import io.github.leawind.thirdperson.internal.logic.ModEntrypoint;
 import io.github.leawind.thirdperson.internal.logic.scheduler.ConfigScreenManager;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftKeyIntegration;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -19,7 +19,7 @@ public class Entrypoint {
     if(FMLEnvironment.dist != Dist.CLIENT) {
       return;
     }
-    ModBootstrap.initialize();
+    ModEntrypoint.initialize();
     registerConfigScreen();
     context.getModEventBus().addListener(Entrypoint::registerKeyMappings);
   }

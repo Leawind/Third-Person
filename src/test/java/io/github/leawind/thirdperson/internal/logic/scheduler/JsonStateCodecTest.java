@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.scheduler.ReticleMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.NormalPlayerRotationMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.ConfiguredPlayerRotationMode;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

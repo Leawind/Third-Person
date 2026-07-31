@@ -59,11 +59,6 @@ class SchedulerRuntimeTest {
     }
 
     @Override
-    public BaseParameters parameters() {
-      return parameters;
-    }
-
-    @Override
     public boolean isCameraControlEnabled() {
       return true;
     }

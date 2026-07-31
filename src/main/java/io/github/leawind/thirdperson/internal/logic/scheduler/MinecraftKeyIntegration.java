@@ -1,14 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraSettings;
-import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
-import io.github.leawind.thirdperson.internal.logic.scheduler.AimModeResolver;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraMode;
 import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.scheduler.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftItemPredicateIntegration;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftStatePersistence;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -17,36 +10,23 @@ import net.minecraft.client.Minecraft;
 public final class MinecraftKeyIntegration {
   private static final int CENTER_HOLD_TICKS = 4;
 
-  private static boolean registered;
   private static boolean acceptsInputThisTick;
   private static KeyStateTracker shoulderKeyTracker;
 
   private MinecraftKeyIntegration() {}
 
-  public static void register() {
-    if (registered) {
-      return;
-    }
-    registered = true;
-    ClientTickEvent.register(MinecraftKeyIntegration::onClientTick);
-  }
-
   public static void registerKeyMappings(Consumer<KeyMapping> registrar) {
     ThirdPersonKeyMappings.all().forEach(registrar);
   }
 
-  private static void onClientTick() {
+  public static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     boolean acceptsInput =
         runtime.base().isCameraControlEnabled()
             && minecraft.player != null
             && minecraft.level != null
-            /*? if >=26.2 {*/
-            && minecraft.gui.screen() == null
-            /*? } else {*/
-            /*&& minecraft.screen == null
-            *//*? }*/
+            && !Bridge.isScreenOpen(minecraft)
             && minecraft.isWindowActive();
     acceptsInputThisTick = acceptsInput;
 

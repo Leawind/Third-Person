@@ -1,13 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.base.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.logic.base.BaseSession;
-import io.github.leawind.thirdperson.internal.logic.base.CameraCollisionPort;
-import io.github.leawind.thirdperson.internal.logic.base.CameraInput;
-import io.github.leawind.thirdperson.internal.logic.base.CameraParameters;
-import io.github.leawind.thirdperson.internal.logic.base.CameraPose;
-import io.github.leawind.thirdperson.internal.logic.base.CameraRig;
 import java.util.Objects;
 import java.util.Optional;
 import org.joml.Quaternionf;
