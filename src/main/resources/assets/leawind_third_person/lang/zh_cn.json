@@ -9,8 +9,6 @@
   "config.leawind_third_person.title": "Leawind 的第三人称",
   "config.leawind_third_person.category.general": "常规",
   "config.leawind_third_person.category.general.desc": "相机、瞄准与 HUD 的常规行为",
-  "config.leawind_third_person.category.player_rotation": "玩家转向",
-  "config.leawind_third_person.category.player_rotation.desc": "细分普通移动、交互及特殊状态下的玩家朝向行为",
   "config.leawind_third_person.category.item_predicates": "物品谓词",
   "config.leawind_third_person.category.item_predicates.desc": "添加与 /clear 物品参数语法相同的额外匹配规则；资源包也可以提供规则",
   "config.leawind_third_person.category.smoothing": "平滑",

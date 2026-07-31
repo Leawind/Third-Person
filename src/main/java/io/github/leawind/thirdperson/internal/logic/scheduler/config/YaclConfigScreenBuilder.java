@@ -59,11 +59,6 @@ final class YaclConfigScreenBuilder {
                                 hud::setReticleMode,
                                 ReticleMode.class))
                         .build())
-                .build())
-        .category(
-            ConfigCategory.createBuilder()
-                .name(text("category.player_rotation"))
-                .tooltip(text("category.player_rotation.desc"))
                 .group(
                     group("normal_rotation")
                         .option(
@@ -106,20 +101,50 @@ final class YaclConfigScreenBuilder {
                 .build())
         .category(
             ConfigCategory.createBuilder()
-                .name(text("category.item_predicates"))
-                .tooltip(text("category.item_predicates.desc"))
+                .name(text("category.camera"))
+                .tooltip(text("category.camera.desc"))
                 .group(
-                    itemPatternOption(
-                        "hold_to_aim_item_patterns",
-                        List.of(),
-                        aiming::holdToAimItemPatterns,
-                        aiming::setHoldToAimItemPatterns))
+                    group("normal_camera")
+                        .option(
+                            doubleOption(
+                                "normal_distance",
+                                CameraSettings.defaultNormalProfile().distanceFactor(),
+                                () -> camera.normalProfile().distanceFactor(),
+                                value ->
+                                    camera.updateProfile(
+                                        CameraProfileSlot.NORMAL,
+                                        profile -> profile.withDistanceFactor(value)),
+                                0.0,
+                                16.0,
+                                0.05))
+                        .build())
                 .group(
-                    itemPatternOption(
-                        "use_to_aim_item_patterns",
-                        List.of(),
-                        aiming::useToAimItemPatterns,
-                        aiming::setUseToAimItemPatterns))
+                    group("aiming_camera")
+                        .option(
+                            doubleOption(
+                                "aiming_distance",
+                                CameraSettings.defaultAimingProfile().distanceFactor(),
+                                () -> camera.aimingProfile().distanceFactor(),
+                                value ->
+                                    camera.updateProfile(
+                                        CameraProfileSlot.AIMING,
+                                        profile -> profile.withDistanceFactor(value)),
+                                0.0,
+                                16.0,
+                                0.05))
+                        .option(
+                            doubleOption(
+                                "aiming_fov",
+                                CameraSettings.defaultAimingProfile().fovMultiplier(),
+                                () -> camera.aimingProfile().fovMultiplier(),
+                                value ->
+                                    camera.updateProfile(
+                                        CameraProfileSlot.AIMING,
+                                        profile -> profile.withFovMultiplier(value)),
+                                0.25,
+                                2.0,
+                                0.05))
+                        .build())
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -180,50 +205,20 @@ final class YaclConfigScreenBuilder {
                 .build())
         .category(
             ConfigCategory.createBuilder()
-                .name(text("category.camera"))
-                .tooltip(text("category.camera.desc"))
+                .name(text("category.item_predicates"))
+                .tooltip(text("category.item_predicates.desc"))
                 .group(
-                    group("normal_camera")
-                        .option(
-                            doubleOption(
-                                "normal_distance",
-                                CameraSettings.defaultNormalProfile().distanceFactor(),
-                                () -> camera.normalProfile().distanceFactor(),
-                                value ->
-                                    camera.updateProfile(
-                                        CameraProfileSlot.NORMAL,
-                                        profile -> profile.withDistanceFactor(value)),
-                                0.0,
-                                16.0,
-                                0.05))
-                        .build())
+                    itemPatternOption(
+                        "hold_to_aim_item_patterns",
+                        List.of(),
+                        aiming::holdToAimItemPatterns,
+                        aiming::setHoldToAimItemPatterns))
                 .group(
-                    group("aiming_camera")
-                        .option(
-                            doubleOption(
-                                "aiming_distance",
-                                CameraSettings.defaultAimingProfile().distanceFactor(),
-                                () -> camera.aimingProfile().distanceFactor(),
-                                value ->
-                                    camera.updateProfile(
-                                        CameraProfileSlot.AIMING,
-                                        profile -> profile.withDistanceFactor(value)),
-                                0.0,
-                                16.0,
-                                0.05))
-                        .option(
-                            doubleOption(
-                                "aiming_fov",
-                                CameraSettings.defaultAimingProfile().fovMultiplier(),
-                                () -> camera.aimingProfile().fovMultiplier(),
-                                value ->
-                                    camera.updateProfile(
-                                        CameraProfileSlot.AIMING,
-                                        profile -> profile.withFovMultiplier(value)),
-                                0.25,
-                                2.0,
-                                0.05))
-                        .build())
+                    itemPatternOption(
+                        "use_to_aim_item_patterns",
+                        List.of(),
+                        aiming::useToAimItemPatterns,
+                        aiming::setUseToAimItemPatterns))
                 .build())
         .build()
         .generateScreen(parent);

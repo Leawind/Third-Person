@@ -9,8 +9,6 @@
   "config.leawind_third_person.title": "Leawind's Third Person",
   "config.leawind_third_person.category.general": "General",
   "config.leawind_third_person.category.general.desc": "General camera, aiming, and HUD behavior",
-  "config.leawind_third_person.category.player_rotation": "Player Rotation",
-  "config.leawind_third_person.category.player_rotation.desc": "Fine-grained facing behavior for normal movement, interaction, and special states",
   "config.leawind_third_person.category.item_predicates": "Item Predicates",
   "config.leawind_third_person.category.item_predicates.desc": "Add matching rules using the same item syntax as /clear; resource packs can also provide rules",
   "config.leawind_third_person.category.smoothing": "Smoothing",
