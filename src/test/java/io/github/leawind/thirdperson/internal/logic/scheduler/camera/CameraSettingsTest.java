@@ -19,8 +19,8 @@ class CameraSettingsTest {
     assertEquals(0.08, settings.smoothing().normal().verticalPivotHalfLife());
     assertEquals(0.08, settings.smoothing().normal().distanceHalfLife());
     assertEquals(0.08, settings.smoothing().aiming().distanceHalfLife());
-    assertEquals(0.0, settings.smoothing().normal().fovHalfLife());
-    assertEquals(0.0, settings.smoothing().aiming().fovHalfLife());
+    assertEquals(0.08, settings.smoothing().normal().fovHalfLife());
+    assertEquals(0.08, settings.smoothing().aiming().fovHalfLife());
     assertEquals(0.24, settings.normalProfile().centeredOffsetY());
     assertEquals(true, settings.normalProfile().withCentered(true).centered());
   }

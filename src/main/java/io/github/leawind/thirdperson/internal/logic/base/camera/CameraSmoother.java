@@ -14,12 +14,10 @@ public final class CameraSmoother {
   private double distance;
   private double offsetX;
   private double offsetY;
-  private float fovDegrees;
+  private double fovMultiplier;
 
   public Optional<CameraInput> update(
-      CameraInput target,
-      double deltaSeconds,
-      CameraSmoothingParameters smoothing) {
+      CameraInput target, double deltaSeconds, CameraSmoothingParameters smoothing) {
     Objects.requireNonNull(target, "target");
     Objects.requireNonNull(smoothing, "smoothing");
     if (!Double.isFinite(deltaSeconds) || deltaSeconds < 0.0) {
@@ -36,31 +34,26 @@ public final class CameraSmoother {
       distance = targetParameters.distance();
       offsetX = targetParameters.anchorNdcX();
       offsetY = targetParameters.anchorNdcY();
-      fovDegrees = target.fovDegrees();
+      fovMultiplier = target.fovMultiplier();
       initialized = true;
-      return snapshot();
+      return snapshot(target.baseFovDegrees());
     }
 
     double horizontalAlpha =
         ExponentialSmoothing.alpha(elapsed, smoothing.horizontalPivotHalfLife());
-    double verticalAlpha =
-        ExponentialSmoothing.alpha(elapsed, smoothing.verticalPivotHalfLife());
+    double verticalAlpha = ExponentialSmoothing.alpha(elapsed, smoothing.verticalPivotHalfLife());
     pivot.x += (targetPivot.x - pivot.x) * horizontalAlpha;
     pivot.y += (targetPivot.y - pivot.y) * verticalAlpha;
     pivot.z += (targetPivot.z - pivot.z) * horizontalAlpha;
 
-    double rotationAlpha =
-        ExponentialSmoothing.alpha(elapsed, smoothing.rotationHalfLife());
+    double rotationAlpha = ExponentialSmoothing.alpha(elapsed, smoothing.rotationHalfLife());
     if (rotationAlpha >= 1.0) {
       rotation.set(targetRotation);
     } else if (rotationAlpha > 0.0) {
       // q and -q represent the same rotation. Select the shortest-arc representation.
       if (rotation.dot(targetRotation) < 0.0f) {
         targetRotation.set(
-            -targetRotation.x(),
-            -targetRotation.y(),
-            -targetRotation.z(),
-            -targetRotation.w());
+            -targetRotation.x(), -targetRotation.y(), -targetRotation.z(), -targetRotation.w());
       }
       rotation.slerp(targetRotation, (float) rotationAlpha).normalize();
     }
@@ -71,8 +64,8 @@ public final class CameraSmoother {
     offsetX += (targetParameters.anchorNdcX() - offsetX) * offsetAlpha;
     offsetY += (targetParameters.anchorNdcY() - offsetY) * offsetAlpha;
     distance += (targetParameters.distance() - distance) * distanceAlpha;
-    fovDegrees += (target.fovDegrees() - fovDegrees) * fovAlpha;
-    return snapshot();
+    fovMultiplier += (target.fovMultiplier() - fovMultiplier) * fovAlpha;
+    return snapshot(target.baseFovDegrees());
   }
 
   public void reset() {
@@ -82,16 +75,16 @@ public final class CameraSmoother {
     distance = 0.0;
     offsetX = 0.0;
     offsetY = 0.0;
-    fovDegrees = 0.0f;
+    fovMultiplier = 0.0;
   }
 
-  private Optional<CameraInput> snapshot() {
+  private Optional<CameraInput> snapshot(float baseFovDegrees) {
     CameraParameters parameters;
     try {
       parameters = new CameraParameters(distance, offsetX, offsetY);
     } catch (IllegalArgumentException ignored) {
       return Optional.empty();
     }
-    return CameraInput.tryCreate(pivot, rotation, parameters, fovDegrees);
+    return CameraInput.tryCreate(pivot, rotation, parameters, baseFovDegrees, fovMultiplier);
   }
 }

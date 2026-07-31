@@ -25,16 +25,18 @@ public final class CameraController {
 
     Vector3d pivot = frame.copyPivot(new Vector3d());
     Quaternionf rotation = frame.copyRotation(new Quaternionf());
-    float targetFovDegrees = (float) (frame.baseFovDegrees() * profile.fovMultiplier());
     double distance =
-        frame.subjectDimensions().resolveDistance(
-            profile.distanceFactor(), profile.fovMultiplier());
+        frame
+            .subjectDimensions()
+            .resolveDistance(profile.distanceFactor(), profile.fovMultiplier());
     CameraParameters parameters =
         profile.centered()
             ? new CameraParameters(distance, 0.0, profile.centeredOffsetY())
             : new CameraParameters(distance, profile.offsetX(), profile.offsetY());
     CameraInput targetInput =
-        CameraInput.tryCreate(pivot, rotation, parameters, targetFovDegrees).orElse(null);
+        CameraInput.tryCreate(
+                pivot, rotation, parameters, frame.baseFovDegrees(), profile.fovMultiplier())
+            .orElse(null);
     if (targetInput == null) {
       return Optional.empty();
     }

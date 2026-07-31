@@ -13,6 +13,8 @@ class CameraControllerTest {
       new CameraProfile(4.0, 0.0, 0.0, 0.0, 1.0, false);
   private static final CameraSmoothingParameters IMMEDIATE =
       new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  private static final CameraSmoothingParameters SMOOTH_FOV =
+      new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.08, 0.08, 0.08);
 
   @Test
   void resolvesTheIdealCameraPose() {
@@ -44,6 +46,29 @@ class CameraControllerTest {
             .orElseThrow();
 
     assertEquals(new Vector3d(0.0, 0.0, -1.0), pose.copyPosition(new Vector3d()));
+  }
+
+  @Test
+  void compositionFovChangeDoesNotMoveCameraAtZeroElapsedTime() {
+    var controller = new CameraController(new CameraSmoother());
+    var shoulderProfile = new CameraProfile(4.0, -0.25, 0.1, 0.0, 1.0, false);
+    var aimingProfile = shoulderProfile.withFovMultiplier(0.8);
+    CameraCollisionPort noCollision =
+        (pivot, desired) -> Optional.of(new Vector3d(desired));
+
+    CameraPose before =
+        controller
+            .update(frameAt(0.0), shoulderProfile, SMOOTH_FOV, noCollision)
+            .orElseThrow();
+    CameraPose after =
+        controller
+            .update(frameAt(0.0), aimingProfile, SMOOTH_FOV, noCollision)
+            .orElseThrow();
+
+    assertEquals(
+        before.copyPosition(new Vector3d()),
+        after.copyPosition(new Vector3d()));
+    assertEquals(before.fovDegrees(), after.fovDegrees());
   }
 
   @Test

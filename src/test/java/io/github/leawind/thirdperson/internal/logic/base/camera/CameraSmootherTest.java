@@ -15,7 +15,14 @@ class CameraSmootherTest {
   void independentSmoothingIsFrameRateIndependent() {
     CameraInput start = input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f);
     CameraInput target =
-        input(10.0, new Quaternionf().rotationY(0.5f), 6.0, 0.5, -0.25, 90.0f);
+        input(
+            10.0,
+            new Quaternionf().rotationY(0.5f),
+            6.0,
+            0.5,
+            -0.25,
+            90.0f,
+            0.8);
     var oneFrame = new CameraSmoother();
     var twoFrames = new CameraSmoother();
     oneFrame.update(start, 0.0, BALANCED).orElseThrow();
@@ -84,22 +91,46 @@ class CameraSmootherTest {
   }
 
   @Test
-  void zeroFovHalfLifePreservesImmediateVanillaFovEffects() {
+  void vanillaFovEffectsRemainImmediateIndependentlyOfFovSmoothing() {
     var smoother = new CameraSmoother();
     smoother.update(
         input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
-    var immediateFov = new CameraSmoothingParameters(0.1, 0.1, 0.1, 0.1, 0.1, 0.0);
 
     CameraInput result =
         smoother
             .update(
                 input(0.0, new Quaternionf(), 6.0, 0.0, 0.0, 80.5f),
                 0.01,
-                immediateFov)
+                BALANCED)
             .orElseThrow();
 
     assertEquals(80.5f, result.fovDegrees());
     assertTrue(result.parameters().distance() < 6.0);
+  }
+
+  @Test
+  void compositionFovMultiplierUsesItsOwnSmoothingState() {
+    var smoother = new CameraSmoother();
+    smoother.update(
+        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+
+    CameraInput unchangedAtZeroElapsed =
+        smoother
+            .update(
+                input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f, 0.8),
+                0.0,
+                BALANCED)
+            .orElseThrow();
+    CameraInput halfway =
+        smoother
+            .update(
+                input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f, 0.8),
+                0.1,
+                BALANCED)
+            .orElseThrow();
+
+    assertEquals(1.0, unchangedAtZeroElapsed.fovMultiplier(), 1.0e-12);
+    assertEquals(0.9, halfway.fovMultiplier(), 1.0e-12);
   }
 
   @Test
@@ -134,7 +165,25 @@ class CameraSmootherTest {
             new Vector3d(pivotX, 0.0, 0.0),
             rotation,
             new CameraParameters(distance, offsetX, offsetY),
-            fovDegrees)
+            fovDegrees,
+            1.0)
+        .orElseThrow();
+  }
+
+  private static CameraInput input(
+      double pivotX,
+      Quaternionf rotation,
+      double distance,
+      double offsetX,
+      double offsetY,
+      float baseFovDegrees,
+      double fovMultiplier) {
+    return CameraInput.tryCreate(
+            new Vector3d(pivotX, 0.0, 0.0),
+            rotation,
+            new CameraParameters(distance, offsetX, offsetY),
+            baseFovDegrees,
+            fovMultiplier)
         .orElseThrow();
   }
 }

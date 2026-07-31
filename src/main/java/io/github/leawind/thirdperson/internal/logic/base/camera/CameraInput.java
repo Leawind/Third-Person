@@ -15,24 +15,38 @@ public final class CameraInput {
   private final Vector3d pivot;
   private final Quaternionf rotation;
   private final CameraParameters parameters;
-  private final float fovDegrees;
+  private final float baseFovDegrees;
+  private final double fovMultiplier;
 
   private CameraInput(
-      Vector3dc pivot, Quaternionfc rotation, CameraParameters parameters, float fovDegrees) {
+      Vector3dc pivot,
+      Quaternionfc rotation,
+      CameraParameters parameters,
+      float baseFovDegrees,
+      double fovMultiplier) {
     this.pivot = new Vector3d(pivot);
     this.rotation = new Quaternionf(rotation).normalize();
     this.parameters = parameters;
-    this.fovDegrees = fovDegrees;
+    this.baseFovDegrees = baseFovDegrees;
+    this.fovMultiplier = fovMultiplier;
   }
 
   public static Optional<CameraInput> tryCreate(
-      Vector3dc pivot, Quaternionfc rotation, CameraParameters parameters, float fovDegrees) {
+      Vector3dc pivot,
+      Quaternionfc rotation,
+      CameraParameters parameters,
+      float baseFovDegrees,
+      double fovMultiplier) {
     Objects.requireNonNull(pivot, "pivot");
     Objects.requireNonNull(rotation, "rotation");
     Objects.requireNonNull(parameters, "parameters");
+    double fovDegrees = baseFovDegrees * fovMultiplier;
     if (!FiniteMath.isFinite(pivot)
         || !FiniteMath.isFinite(rotation)
-        || !Float.isFinite(fovDegrees)
+        || !Float.isFinite(baseFovDegrees)
+        || !Double.isFinite(fovMultiplier)
+        || baseFovDegrees <= 0.0f
+        || fovMultiplier <= 0.0
         || fovDegrees <= 0.0f
         || fovDegrees >= 180.0f) {
       return Optional.empty();
@@ -41,7 +55,7 @@ public final class CameraInput {
     if (!Float.isFinite(lengthSquared) || lengthSquared <= MIN_QUATERNION_LENGTH_SQUARED) {
       return Optional.empty();
     }
-    return Optional.of(new CameraInput(pivot, rotation, parameters, fovDegrees));
+    return Optional.of(new CameraInput(pivot, rotation, parameters, baseFovDegrees, fovMultiplier));
   }
 
   public Vector3d copyPivot(Vector3d destination) {
@@ -56,7 +70,15 @@ public final class CameraInput {
     return parameters;
   }
 
+  public float baseFovDegrees() {
+    return baseFovDegrees;
+  }
+
+  public double fovMultiplier() {
+    return fovMultiplier;
+  }
+
   public float fovDegrees() {
-    return fovDegrees;
+    return (float) (baseFovDegrees * fovMultiplier);
   }
 }
