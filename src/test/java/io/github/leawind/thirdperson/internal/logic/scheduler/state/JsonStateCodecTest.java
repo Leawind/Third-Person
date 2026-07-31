@@ -23,18 +23,16 @@ class JsonStateCodecTest {
 
   @Test
   void decodesValidEnumAndNumericValues() {
-    String json =
-        JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
-            .replace("\"distance\": 1.5625", "\"distance\": 3.0")
-            .replace("\"rotationMode\": \"auto\"", "\"rotationMode\": \"vanilla\"")
-            .replace(
-                "\"normalMode\": \"interest_point\"",
-                "\"normalMode\": \"parallel_with_camera\"")
-            .replace("\"autoRotateInteracting\": true", "\"autoRotateInteracting\": false")
-            .replace("\"raycastOrigin\": \"camera\"", "\"raycastOrigin\": \"player_eye\"")
-            .replace("\"reticle\": \"auto\"", "\"reticle\": \"on\"");
+    JsonObject json = encodedDefaultsObject();
+    json.getAsJsonObject("camera").getAsJsonObject("normal").addProperty("distance", 3.0);
+    JsonObject player = json.getAsJsonObject("player");
+    player.addProperty("rotationMode", "vanilla");
+    player.addProperty("normalMode", "parallel_with_camera");
+    player.addProperty("autoRotateInteracting", false);
+    player.addProperty("raycastOrigin", "player_eye");
+    json.getAsJsonObject("hud").addProperty("reticle", "on");
 
-    ThirdPersonPersistentState decoded = JsonStateCodec.decode(json);
+    ThirdPersonPersistentState decoded = JsonStateCodec.decode(json.toString());
 
     assertEquals(3.0, decoded.camera().normal().distanceFactor());
     assertEquals(ConfiguredPlayerRotationMode.VANILLA, decoded.player().rotationMode());
@@ -46,9 +44,7 @@ class JsonStateCodecTest {
 
   @Test
   void missingPlayerSettingsUseLegacyDefaults() {
-    JsonObject json =
-        JsonParser.parseString(JsonStateCodec.encode(ThirdPersonPersistentState.defaults()))
-            .getAsJsonObject();
+    JsonObject json = encodedDefaultsObject();
     JsonObject player = json.getAsJsonObject("player");
     player.remove("normalMode");
     player.remove("autoRotateInteracting");
@@ -65,9 +61,7 @@ class JsonStateCodecTest {
 
   @Test
   void ignoresRemovedSettingsFromExistingFiles() {
-    JsonObject json =
-        JsonParser.parseString(JsonStateCodec.encode(ThirdPersonPersistentState.defaults()))
-            .getAsJsonObject();
+    JsonObject json = encodedDefaultsObject();
     json.addProperty("enabled", false);
     json.getAsJsonObject("aiming")
         .add("useToFirstPersonItemPatterns", JsonParser.parseString("[\"minecraft:spyglass\"]"));
@@ -82,8 +76,7 @@ class JsonStateCodecTest {
         new ThirdPersonPersistentState(
             defaults.schemaVersion(),
             defaults.camera(),
-            new ThirdPersonPersistentState.AimingState(
-                true, List.of("#example:ranged"), List.of()),
+            new ThirdPersonPersistentState.AimingState(true, List.of("#example:ranged"), List.of()),
             defaults.player(),
             defaults.hud());
 
@@ -113,30 +106,32 @@ class JsonStateCodecTest {
 
   @Test
   void rejectsOutOfRangeNumbers() {
-    String json =
-        JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
-            .replace("\"distance\": 1.5625", "\"distance\": 100.0");
+    JsonObject json = encodedDefaultsObject();
+    json.getAsJsonObject("camera").getAsJsonObject("normal").addProperty("distance", 100.0);
 
-    assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json));
+    assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json.toString()));
   }
 
   @Test
   void rejectsUnknownEnums() {
-    String json =
-        JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
-            .replace("\"rotationMode\": \"auto\"", "\"rotationMode\": \"unknown\"");
+    JsonObject json = encodedDefaultsObject();
+    json.getAsJsonObject("player").addProperty("rotationMode", "unknown");
 
-    assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json));
+    assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json.toString()));
   }
 
   @Test
   void rejectsUnsupportedSchemas() {
-    String json =
-        JsonStateCodec.encode(ThirdPersonPersistentState.defaults())
-            .replace("\"schemaVersion\": 2", "\"schemaVersion\": 1");
+    JsonObject json = encodedDefaultsObject();
+    json.addProperty("schemaVersion", ThirdPersonPersistentState.CURRENT_SCHEMA_VERSION - 1);
 
-    assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json));
+    assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json.toString()));
     assertThrows(
         IllegalArgumentException.class, () -> JsonStateCodec.decode("{\"is_mod_enabled\":true}"));
+  }
+
+  private static JsonObject encodedDefaultsObject() {
+    return JsonParser.parseString(JsonStateCodec.encode(ThirdPersonPersistentState.defaults()))
+        .getAsJsonObject();
   }
 }
