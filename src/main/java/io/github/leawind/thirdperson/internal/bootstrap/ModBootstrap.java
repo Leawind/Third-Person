@@ -1,17 +1,17 @@
 package io.github.leawind.thirdperson.internal.bootstrap;
 
 import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.base.application.BaseRuntime;
-import io.github.leawind.thirdperson.internal.base.integration.minecraft.MinecraftClientIntegration;
-import io.github.leawind.thirdperson.internal.scheduler.integration.minecraft.MinecraftHudIntegration;
-import io.github.leawind.thirdperson.internal.base.integration.minecraft.MinecraftInputIntegration;
-import io.github.leawind.thirdperson.internal.base.integration.minecraft.MinecraftInteractionIntegration;
-import io.github.leawind.thirdperson.internal.scheduler.integration.minecraft.MinecraftKeyIntegration;
-import io.github.leawind.thirdperson.internal.scheduler.integration.minecraft.MinecraftCameraAdjustmentIntegration;
-import io.github.leawind.thirdperson.internal.scheduler.integration.minecraft.MinecraftSchedulingIntegration;
-import io.github.leawind.thirdperson.internal.scheduler.integration.resource.MinecraftItemPredicateIntegration;
-import io.github.leawind.thirdperson.internal.scheduler.persistence.MinecraftStatePersistence;
-import io.github.leawind.thirdperson.internal.scheduler.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
+import io.github.leawind.thirdperson.internal.logic.base.MinecraftClientIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftHudIntegration;
+import io.github.leawind.thirdperson.internal.logic.base.MinecraftInputIntegration;
+import io.github.leawind.thirdperson.internal.logic.base.MinecraftInteractionIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftKeyIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftCameraAdjustmentIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftSchedulingIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftItemPredicateIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftStatePersistence;
+import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 
 /// Outermost composition root for loader entrypoints and Minecraft integrations.
 public final class ModBootstrap {
