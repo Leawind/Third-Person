@@ -1,30 +1,25 @@
 package io.github.leawind.thirdperson.internal.bridge.events;
 
-import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /// Neutral render-time query for the opacity selected by the base layer.
 public final class CameraEntityOpacityEvent {
-  private static final CopyOnWriteArrayList<Listener> LISTENERS = new CopyOnWriteArrayList<>();
+  private static final SingleEventHandler<Listener> HANDLER = new SingleEventHandler<>();
 
   private CameraEntityOpacityEvent() {}
 
   public static void register(Listener listener) {
-    LISTENERS.add(Objects.requireNonNull(listener, "listener"));
+    HANDLER.install(listener);
   }
 
   public static float emit(float partialTick) {
     if (!Float.isFinite(partialTick)) {
       return 1.0f;
     }
-    float opacity = 1.0f;
-    for (Listener listener : LISTENERS) {
-      float candidate = listener.cameraEntityOpacity(partialTick);
-      if (Float.isFinite(candidate)) {
-        opacity = Math.min(opacity, Math.max(0.0f, Math.min(1.0f, candidate)));
-      }
+    Listener listener = HANDLER.get();
+    if (listener == null) {
+      return 1.0f;
     }
-    return opacity;
+    float opacity = listener.cameraEntityOpacity(partialTick);
+    return Float.isFinite(opacity) ? Math.max(0.0f, Math.min(1.0f, opacity)) : 1.0f;
   }
 
   @FunctionalInterface

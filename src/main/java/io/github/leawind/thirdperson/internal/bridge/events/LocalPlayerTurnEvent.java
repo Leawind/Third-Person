@@ -1,27 +1,22 @@
 package io.github.leawind.thirdperson.internal.bridge.events;
 
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.player.LocalPlayer;
 
 /// Neutral bridge event emitted before the local player's vanilla turn handling.
 public final class LocalPlayerTurnEvent {
-  private static final CopyOnWriteArrayList<Listener> LISTENERS = new CopyOnWriteArrayList<>();
+  private static final SingleEventHandler<Listener> HANDLER = new SingleEventHandler<>();
 
   private LocalPlayerTurnEvent() {}
 
   public static void register(Listener listener) {
-    LISTENERS.add(Objects.requireNonNull(listener, "listener"));
+    HANDLER.install(listener);
   }
 
   public static boolean emit(LocalPlayer player, double rawYaw, double rawPitch) {
     Objects.requireNonNull(player, "player");
-    for (Listener listener : LISTENERS) {
-      if (listener.onTurn(player, rawYaw, rawPitch)) {
-        return true;
-      }
-    }
-    return false;
+    Listener listener = HANDLER.get();
+    return listener != null && listener.onTurn(player, rawYaw, rawPitch);
   }
 
   @FunctionalInterface

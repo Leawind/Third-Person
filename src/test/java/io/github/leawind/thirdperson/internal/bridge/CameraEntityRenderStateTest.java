@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
 class CameraEntityRenderStateTest {
   @Test
   void appliesTheCameraOpacityOnlyInsideItsRenderScope() {
-    CameraEntityOpacityEvent.register(partialTick -> 0.5f);
+    float[] selectedOpacity = {0.5f};
+    CameraEntityOpacityEvent.register(partialTick -> selectedOpacity[0]);
 
     assertFalse(CameraEntityRenderState.begin(1.0f));
     assertTrue(CameraEntityRenderState.isApplyingTransparency());
@@ -21,7 +22,7 @@ class CameraEntityRenderStateTest {
     assertFalse(CameraEntityRenderState.isApplyingTransparency());
     assertEquals(0xff336699, CameraEntityRenderState.applyOpacity(0xff336699));
 
-    CameraEntityOpacityEvent.register(partialTick -> 0.0f);
+    selectedOpacity[0] = 0.0f;
     assertTrue(CameraEntityRenderState.begin(1.0f));
     CameraEntityRenderState.end();
   }

@@ -1,17 +1,16 @@
 package io.github.leawind.thirdperson.internal.bridge.events;
 
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.player.LocalPlayer;
 
 /// Neutral bridge event for the directional-input condition used by vanilla sprinting.
 public final class LocalPlayerSprintImpulseEvent {
-  private static final CopyOnWriteArrayList<Listener> LISTENERS = new CopyOnWriteArrayList<>();
+  private static final SingleEventHandler<Listener> HANDLER = new SingleEventHandler<>();
 
   private LocalPlayerSprintImpulseEvent() {}
 
   public static void register(Listener listener) {
-    LISTENERS.add(Objects.requireNonNull(listener, "listener"));
+    HANDLER.install(listener);
   }
 
   public static boolean emit(
@@ -21,11 +20,11 @@ public final class LocalPlayerSprintImpulseEvent {
       double forwardImpulse,
       double minimumMagnitude) {
     Objects.requireNonNull(player, "player");
-    boolean result = vanillaResult;
-    for (Listener listener : LISTENERS) {
-      result = listener.modify(player, result, leftImpulse, forwardImpulse, minimumMagnitude);
-    }
-    return result;
+    Listener listener = HANDLER.get();
+    return listener == null
+        ? vanillaResult
+        : listener.modify(
+            player, vanillaResult, leftImpulse, forwardImpulse, minimumMagnitude);
   }
 
   @FunctionalInterface
