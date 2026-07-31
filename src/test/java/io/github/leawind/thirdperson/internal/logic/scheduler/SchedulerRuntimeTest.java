@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.leawind.thirdperson.internal.logic.base.BaseParameters;
+import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
+import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
-import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -24,9 +24,7 @@ class SchedulerRuntimeTest {
     scheduler.playerSettings().setRaycastOrigin(RaycastOrigin.PLAYER_EYE);
     PlayerRotationParameters rotation =
         PlayerRotationParameters.of(
-            PlayerRotationMode.PARALLEL_WITH_CAMERA,
-            0.0,
-            PlayerRotationSmoothing.IMMEDIATE);
+            PlayerRotationMode.PARALLEL_WITH_CAMERA, 0.0, PlayerRotationSmoothing.IMMEDIATE);
 
     scheduler.setAiming(false);
     scheduler.applyParameters(false, rotation);
@@ -40,8 +38,7 @@ class SchedulerRuntimeTest {
     scheduler.setAiming(true);
     scheduler.applyParameters(true, rotation);
     assertEquals(
-        scheduler.cameraSettings().aimingProfile().withCentered(true),
-        base.parameters.camera());
+        scheduler.cameraSettings().aimingProfile().withCentered(true), base.parameters.camera());
     assertEquals(
         scheduler.cameraSettings().smoothing().flyingPivotHalfLife(),
         base.parameters.cameraSmoothing().horizontalPivotHalfLife());
@@ -52,6 +49,7 @@ class SchedulerRuntimeTest {
 
   private static final class FakeBase implements ThirdPersonBase {
     private BaseParameters parameters = BaseParameters.defaults();
+    private double cameraEntityOpacityTarget = 1.0;
 
     @Override
     public void applyParameters(BaseParameters parameters) {
@@ -59,8 +57,18 @@ class SchedulerRuntimeTest {
     }
 
     @Override
+    public void setCameraEntityOpacityTarget(double opacity) {
+      cameraEntityOpacityTarget = opacity;
+    }
+
+    @Override
     public boolean isCameraControlEnabled() {
       return true;
+    }
+
+    @Override
+    public float cameraEntityOpacity(float partialTick) {
+      return (float) cameraEntityOpacityTarget;
     }
 
     @Override

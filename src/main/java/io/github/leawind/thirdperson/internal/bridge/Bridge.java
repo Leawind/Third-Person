@@ -70,6 +70,16 @@ public final class Bridge {
     *//*? }*/
   }
 
+  public static Vec3 cameraPosition(Minecraft minecraft) {
+    /*? if >=26.2 {*/
+    return minecraft.gameRenderer.mainCamera().position();
+    /*? } else if >=1.21.11 {*/
+    /*return minecraft.gameRenderer.getMainCamera().position();
+    *//*? } else {*/
+    /*return minecraft.gameRenderer.getMainCamera().getPosition();
+    *//*? }*/
+  }
+
   public static double blockInteractionRange(Minecraft minecraft) {
     /*? if >=1.20.5 {*/
     return minecraft.player.blockInteractionRange();

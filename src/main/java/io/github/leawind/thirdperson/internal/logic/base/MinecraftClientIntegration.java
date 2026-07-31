@@ -33,6 +33,10 @@ public final class MinecraftClientIntegration {
       runtime.onPerspectiveActivated();
     }
 
+    if (currentPerspective && player != null && level != null && runtime.isCameraControlEnabled()) {
+      runtime.updateCameraEntityOpacity(CLIENT_TICK_SECONDS);
+    }
+
     if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
         || player == null
         || !runtime.isCameraControlEnabled()) {

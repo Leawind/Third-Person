@@ -7,6 +7,9 @@ import java.util.Optional;
 public interface BaseView {
   boolean isCameraControlEnabled();
 
+  /// Samples the smoothed camera-entity opacity between the previous and current client ticks.
+  float cameraEntityOpacity(float partialTick);
+
   boolean isControllingLocalPlayer();
 
   boolean hasDirectionalMovementIntent(double minimumMagnitude);
