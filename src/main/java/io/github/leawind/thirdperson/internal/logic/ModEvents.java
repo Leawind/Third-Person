@@ -39,7 +39,7 @@ public final class ModEvents {
         MinecraftInputIntegration::modifySprintImpulseCondition);
     MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);
     ReticleGateEvent.register(MinecraftHudIntegration::shouldRenderReticle);
-    BeforeInteractionEvent.register(MinecraftInteractionIntegration::alignPlayerToCameraIntent);
+    BeforeInteractionEvent.register(MinecraftInteractionIntegration::prepareInteractionRaycast);
   }
 
   private static void onClientTick() {

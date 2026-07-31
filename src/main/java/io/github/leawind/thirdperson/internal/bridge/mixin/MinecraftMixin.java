@@ -25,36 +25,37 @@ abstract class MinecraftMixin {
 
   @Inject(method = "startAttack", at = @At("HEAD"))
   private void beforeStartAttack(CallbackInfoReturnable<Boolean> cir) {
-    alignAndRepick();
+    prepareInteraction();
   }
 
   @Inject(method = "startUseItem", at = @At("HEAD"))
   private void beforeStartUseItem(CallbackInfo ci) {
-    alignAndRepick();
+    prepareInteraction();
   }
 
   @Inject(method = "continueAttack", at = @At("HEAD"))
   private void beforeContinueAttack(boolean attacking, CallbackInfo ci) {
     if (attacking) {
-      alignAndRepick();
+      prepareInteraction();
     }
   }
 
   /*? if >=26.1 {*/
   @Inject(method = "pickBlockOrEntity", at = @At("HEAD"))
   private void beforePickBlockOrEntity(CallbackInfo ci) {
-    alignAndRepick();
+    prepareInteraction();
   }
   /*? } else {*/
   /*@Inject(method = "pickBlock", at = @At("HEAD"))
   private void beforePickBlock(CallbackInfo ci) {
-    alignAndRepick();
+    prepareInteraction();
   }
   *//*? }*/
 
   @Unique
-  private void alignAndRepick() {
-    if (!BeforeInteractionEvent.emit()) {
+  private void prepareInteraction() {
+    BeforeInteractionEvent.Result result = BeforeInteractionEvent.emit();
+    if (result != BeforeInteractionEvent.Result.REPICK) {
       return;
     }
     /*? if >=26.1 {*/

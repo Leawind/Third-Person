@@ -13,18 +13,25 @@ public final class BeforeInteractionEvent {
     LISTENERS.add(Objects.requireNonNull(listener, "listener"));
   }
 
-  /// Returns whether vanilla should repick after listeners have prepared interaction state.
-  public static boolean emit() {
+  /// Returns how vanilla should proceed after listeners have prepared interaction state.
+  public static Result emit() {
     for (Listener listener : LISTENERS) {
-      if (listener.beforeInteraction()) {
-        return true;
+      Result result = Objects.requireNonNull(listener.beforeInteraction(), "listener result");
+      if (result != Result.PASS) {
+        return result;
       }
     }
-    return false;
+    return Result.PASS;
   }
 
   @FunctionalInterface
   public interface Listener {
-    boolean beforeInteraction();
+    Result beforeInteraction();
+  }
+
+  public enum Result {
+    PASS,
+    REPICK,
+    APPLIED
   }
 }

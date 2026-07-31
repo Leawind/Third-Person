@@ -1,21 +1,24 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.logic.base.math.FiniteMath;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
-/// Aligns the authoritative player ray with the rendered camera intent before vanilla repicks.
+/// Prepares the authoritative interaction ray before vanilla consumes the current hit result.
 public final class MinecraftInteractionIntegration {
   private MinecraftInteractionIntegration() {}
 
-  public static boolean alignPlayerToCameraIntent() {
+  public static BeforeInteractionEvent.Result prepareInteractionRaycast() {
     BaseRuntime runtime = BaseRuntime.getInstance();
     Minecraft minecraft = Minecraft.getInstance();
     var player = minecraft.player;
@@ -23,50 +26,56 @@ public final class MinecraftInteractionIntegration {
         || !runtime.isCameraControlEnabled()
         || player == null
         || minecraft.level == null) {
-      return false;
-    }
-
-    // A player-eye probe is only authoritative if vanilla picks after the player has been aligned
-    // with the camera. This base-layer safety rule deliberately overrides every scheduled mode,
-    // including CUSTOM.
-    if (runtime.parameters().raycastOrigin() == RaycastOrigin.PLAYER_EYE) {
-      var look = runtime.session().lookController();
-      if (!look.isInitialized()) {
-        return false;
-      }
-      setPlayerRotation(player, new LookRotation(look.yawDegrees(), look.pitchDegrees()));
-      return true;
+      return BeforeInteractionEvent.Result.PASS;
     }
 
     var cameraPose = runtime.session().finalCameraPose().orElse(null);
     if (cameraPose == null) {
-      return false;
+      return BeforeInteractionEvent.Result.PASS;
     }
     Vector3d cameraPosition = cameraPose.copyPosition(new Vector3d());
     Quaternionf cameraRotation = cameraPose.copyRotation(new Quaternionf());
     Vector3f cameraForward = cameraRotation.transform(new Vector3f(0.0f, 0.0f, 1.0f));
-    double reach = Bridge.interactionRange(minecraft);
-    if (!FiniteMath.isFinite(cameraForward) || !Double.isFinite(reach) || reach <= 0.0) {
-      return false;
+    Vec3 eye = player.getEyePosition(1.0f);
+    Vec3 from = new Vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+    double blockRange = Bridge.blockInteractionRange(minecraft);
+    double entityRange = Bridge.entityInteractionRange(minecraft);
+    double candidateRange =
+        InteractionRaycastGeometry.candidateRange(
+            blockRange, entityRange, from.distanceTo(eye));
+    if (!FiniteMath.isFinite(cameraForward)
+        || !Double.isFinite(candidateRange)
+        || candidateRange <= 0.0) {
+      return BeforeInteractionEvent.Result.PASS;
     }
 
-    Vector3d cameraRayEnd =
-        new Vector3d(cameraPosition)
-            .fma(reach, new Vector3d(cameraForward.x, cameraForward.y, cameraForward.z));
-    Vec3 from = new Vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z);
-    Vec3 to = new Vec3(cameraRayEnd.x, cameraRayEnd.y, cameraRayEnd.z);
-    Bridge.BlockHit blockIntent = Bridge.clipBlocks(player, from, to, false);
-    Vector3d intentPoint =
-        blockIntent.missed() ? cameraRayEnd : toVector3d(blockIntent.location());
+    Vec3 direction = new Vec3(cameraForward.x, cameraForward.y, cameraForward.z).normalize();
+    HitResult cameraHit = Bridge.pickFrom(player, from, direction, candidateRange);
+    if (runtime.parameters().raycastOrigin() == RaycastOrigin.CAMERA) {
+      HitResult filtered = filterByPlayerReach(cameraHit, eye, blockRange, entityRange);
+      minecraft.hitResult = filtered;
+      minecraft.crosshairPickEntity =
+          filtered instanceof EntityHitResult entityHit ? entityHit.getEntity() : null;
+      return BeforeInteractionEvent.Result.APPLIED;
+    }
 
-    Vec3 eye = player.getEyePosition(1.0f);
+    Vector3d intentPoint = toVector3d(cameraHit.getLocation());
     return LookGeometry.lookAt(new Vector3d(eye.x, eye.y, eye.z), intentPoint)
         .map(
             rotation -> {
               setPlayerRotation(player, rotation);
-              return true;
+              return BeforeInteractionEvent.Result.REPICK;
             })
-        .orElse(false);
+        .orElse(BeforeInteractionEvent.Result.PASS);
+  }
+
+  private static HitResult filterByPlayerReach(
+      HitResult hit, Vec3 playerEye, double blockRange, double entityRange) {
+    double allowedRange = hit instanceof EntityHitResult ? entityRange : blockRange;
+    return InteractionRaycastGeometry.isWithinRange(
+            hit.getLocation().distanceToSqr(playerEye), allowedRange)
+        ? hit
+        : Bridge.missAt(hit.getLocation(), playerEye);
   }
 
   private static void setPlayerRotation(LocalPlayer player, LookRotation rotation) {

@@ -6,6 +6,8 @@ import java.util.Optional;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 /*? if >=1.20.5 {*/
 import net.minecraft.core.component.DataComponents;
 /*? }*/
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -67,12 +70,23 @@ public final class Bridge {
     *//*? }*/
   }
 
-  public static double interactionRange(Minecraft minecraft) {
+  public static double blockInteractionRange(Minecraft minecraft) {
     /*? if >=1.20.5 {*/
-    return Math.max(
-        minecraft.player.blockInteractionRange(), minecraft.player.entityInteractionRange());
-    /*? } else {*/
+    return minecraft.player.blockInteractionRange();
+    /*? } else if fabric {*/
     /*return minecraft.gameMode.getPickRange();
+    *//*? } else {*/
+    /*return minecraft.player.getBlockReach();
+    *//*? }*/
+  }
+
+  public static double entityInteractionRange(Minecraft minecraft) {
+    /*? if >=1.20.5 {*/
+    return minecraft.player.entityInteractionRange();
+    /*? } else if fabric {*/
+    /*return minecraft.gameMode.hasFarPickRange() ? 6.0 : 3.0;
+    *//*? } else {*/
+    /*return minecraft.player.getEntityReach();
     *//*? }*/
   }
 
@@ -139,6 +153,49 @@ public final class Bridge {
             entity -> !entity.isSpectator() && entity.isPickable(),
             maxDistanceSquared);
     return hit == null ? Optional.empty() : Optional.of(hit.getLocation());
+  }
+
+  /// Runs vanilla-style block/entity candidate selection along an arbitrary world-space ray.
+  ///
+  /// The caller is responsible for validating the selected hit against the player's actual
+  /// interaction ranges.
+  public static HitResult pickFrom(
+      Entity source, Vec3 from, Vec3 direction, double candidateRange) {
+    Vec3 rayEnd = from.add(direction.scale(candidateRange));
+    HitResult blockHit =
+        source
+            .level()
+            .clip(
+                new ClipContext(
+                    from,
+                    rayEnd,
+                    ClipContext.Block.OUTLINE,
+                    ClipContext.Fluid.NONE,
+                    source));
+    double blockDistanceSquared = blockHit.getLocation().distanceToSqr(from);
+    Vec3 entityRayEnd = blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockHit.getLocation();
+    EntityHitResult entityHit =
+        ProjectileUtil.getEntityHitResult(
+            source,
+            from,
+            entityRayEnd,
+            new AABB(from, entityRayEnd).inflate(1.0, 1.0, 1.0),
+            entity -> !entity.isSpectator() && entity.isPickable(),
+            blockDistanceSquared);
+    return entityHit != null
+            && entityHit.getLocation().distanceToSqr(from) < blockDistanceSquared
+        ? entityHit
+        : blockHit;
+  }
+
+  public static HitResult missAt(Vec3 location, Vec3 origin) {
+    Vec3 offset = location.subtract(origin);
+    /*? if >=1.21.11 {*/
+    Direction direction = Direction.getApproximateNearest(offset.x, offset.y, offset.z);
+    /*? } else {*/
+    /*Direction direction = Direction.getNearest(offset.x, offset.y, offset.z);
+    *//*? }*/
+    return BlockHitResult.miss(location, direction, BlockPos.containing(location));
   }
 
   public static CameraSubjectMeasurements measureCameraSubject(Entity cameraEntity) {
