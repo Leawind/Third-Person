@@ -1,11 +1,11 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
+import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,15 +13,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Minecraft.class)
 abstract class MinecraftMixin {
-  /*? if >=26.1 {*/
-  @Invoker("pick")
-  protected abstract void invokePick(float partialTicks);
-  /*? }*/
-
   @Inject(method = "tick", at = @At("TAIL"))
   private void afterClientTick(CallbackInfo ci) {
     ClientTickEvent.emit();
   }
+
+  /*? if >=26.1 {*/
+  @Inject(method = "pick", at = @At("RETURN"))
+  private void afterVanillaPick(float partialTick, CallbackInfo ci) {
+    AfterVanillaPickEvent.emit(partialTick);
+  }
+  /*? }*/
 
   @Inject(method = "startAttack", at = @At("HEAD"))
   private void beforeStartAttack(CallbackInfoReturnable<Boolean> cir) {
@@ -54,14 +56,6 @@ abstract class MinecraftMixin {
 
   @Unique
   private void prepareInteraction() {
-    BeforeInteractionEvent.Result result = BeforeInteractionEvent.emit();
-    if (result != BeforeInteractionEvent.Result.REPICK) {
-      return;
-    }
-    /*? if >=26.1 {*/
-    invokePick(1.0f);
-    /*? } else {*/
-    /*Minecraft.getInstance().gameRenderer.pick(1.0f);
-    *//*? }*/
+    BeforeInteractionEvent.emit();
   }
 }

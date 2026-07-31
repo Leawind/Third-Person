@@ -13,7 +13,7 @@ public final class BeforeInteractionEvent {
     LISTENERS.add(Objects.requireNonNull(listener, "listener"));
   }
 
-  /// Returns how vanilla should proceed after listeners have prepared interaction state.
+  /// Returns whether a listener prepared authoritative interaction state.
   public static Result emit() {
     for (Listener listener : LISTENERS) {
       Result result = Objects.requireNonNull(listener.beforeInteraction(), "listener result");
@@ -31,7 +31,6 @@ public final class BeforeInteractionEvent {
 
   public enum Result {
     PASS,
-    REPICK,
     APPLIED
   }
 }

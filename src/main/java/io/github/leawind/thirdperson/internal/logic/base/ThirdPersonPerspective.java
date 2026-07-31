@@ -5,6 +5,7 @@ import io.github.leawind.perspectiveapi.api.PerspectiveBehavior;
 import io.github.leawind.perspectiveapi.api.PerspectiveState;
 import io.github.leawind.perspectiveapi.api.context.PerspectiveContext;
 import io.github.leawind.thirdperson.ThirdPerson;
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.logic.base.camera.MinecraftCameraCollision;
@@ -115,7 +116,13 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
     CameraPose.tryCreate(state.position(), state.rotation(), state.getFovDeg())
-        .ifPresent(runtime.session()::recordFinalCameraPose);
+        .ifPresent(
+            pose -> {
+              runtime.session().recordFinalCameraPose(pose);
+              if (!Bridge.vanillaPickFollowsCameraUpdate()) {
+                MinecraftInteractionIntegration.refreshRaycast(context.partialTicks());
+              }
+            });
   }
 
   private static void applyPose(PerspectiveState.Mutable state, CameraPose pose) {

@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic;
 
+import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementYawEvent;
@@ -31,6 +32,7 @@ public final class ModEvents {
       return;
     }
     registered = true;
+    AfterVanillaPickEvent.register(MinecraftInteractionIntegration::refreshRaycast);
     ClientTickEvent.register(ModEvents::onClientTick);
     RenderFrameEvent.register(ModEvents::beforeRenderFrame);
     LocalPlayerTurnEvent.register(ModEvents::onLocalPlayerTurn);

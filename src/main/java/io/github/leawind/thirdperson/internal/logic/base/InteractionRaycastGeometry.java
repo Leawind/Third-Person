@@ -1,11 +1,11 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-/// Pure range calculations for camera-origin interaction raycasts.
+/// Pure range calculations for camera-directed interaction raycasts.
 public final class InteractionRaycastGeometry {
   private InteractionRaycastGeometry() {}
 
-  /// Extends only the candidate search ray so a camera behind the player can still cover every
-  /// point within the player's original interaction range.
+  /// Extends only the candidate search ray when its chosen origin is displaced from the player
+  /// eyes.
   public static double candidateRange(
       double blockInteractionRange,
       double entityInteractionRange,

@@ -14,6 +14,12 @@ class InteractionRaycastGeometryTest {
   }
 
   @Test
+  void playerEyeOriginDoesNotExtendCandidateRange() {
+    assertEquals(4.5, InteractionRaycastGeometry.candidateRange(4.5, 3.0, 0.0));
+    assertEquals(6.0, InteractionRaycastGeometry.candidateRange(4.5, 6.0, 0.0));
+  }
+
+  @Test
   void candidateRangeRejectsInvalidInputs() {
     assertTrue(Double.isNaN(InteractionRaycastGeometry.candidateRange(-1.0, 3.0, 4.0)));
     assertTrue(

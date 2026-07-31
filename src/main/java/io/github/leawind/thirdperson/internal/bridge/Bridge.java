@@ -90,6 +90,16 @@ public final class Bridge {
     *//*? }*/
   }
 
+  /// Whether the current version runs vanilla picking after applying the current frame's camera
+  /// state.
+  public static boolean vanillaPickFollowsCameraUpdate() {
+    /*? if >=26.2 {*/
+    return true;
+    /*? } else {*/
+    /*return false;
+    *//*? }*/
+  }
+
   public static void registerReloadListener(
       Minecraft minecraft,
       PreparableReloadListener listener,
