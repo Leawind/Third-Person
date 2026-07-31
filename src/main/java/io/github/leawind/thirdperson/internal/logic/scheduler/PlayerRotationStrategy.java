@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import java.util.Objects;
 
 /// Selects the same rotation behavior and priority as the legacy automatic strategy.

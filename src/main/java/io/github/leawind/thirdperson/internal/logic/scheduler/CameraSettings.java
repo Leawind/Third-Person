@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
 

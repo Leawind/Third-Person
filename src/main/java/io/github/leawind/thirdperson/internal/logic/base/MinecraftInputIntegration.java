@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 

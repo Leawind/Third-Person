@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.leawind.thirdperson.internal.logic.base.BaseParameters;
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationMode;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationMode;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
 import java.util.Optional;

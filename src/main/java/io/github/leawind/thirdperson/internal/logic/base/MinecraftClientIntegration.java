@@ -1,5 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementDirection;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

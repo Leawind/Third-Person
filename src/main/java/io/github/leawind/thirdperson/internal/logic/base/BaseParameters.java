@@ -1,5 +1,9 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoothingParameters;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import java.util.Objects;
 import java.util.Optional;
 

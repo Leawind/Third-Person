@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import java.util.Objects;
 
 /// Selected rotation target, timing model, and the half-life used to approach it.

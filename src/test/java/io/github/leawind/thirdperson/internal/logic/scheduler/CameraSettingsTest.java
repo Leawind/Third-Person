@@ -3,7 +3,7 @@ package io.github.leawind.thirdperson.internal.logic.scheduler;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import org.junit.jupiter.api.Test;
 
 class CameraSettingsTest {

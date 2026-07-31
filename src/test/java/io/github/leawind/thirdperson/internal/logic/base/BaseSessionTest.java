@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;

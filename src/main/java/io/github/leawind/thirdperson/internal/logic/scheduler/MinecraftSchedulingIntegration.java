@@ -1,9 +1,9 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.base.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationMode;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationSmoothing;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationMode;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;

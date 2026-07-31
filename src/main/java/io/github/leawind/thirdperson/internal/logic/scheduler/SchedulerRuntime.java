@@ -1,9 +1,9 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import io.github.leawind.thirdperson.internal.logic.base.BaseParameters;
-import io.github.leawind.thirdperson.internal.logic.base.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.base.CameraSmoothingParameters;
-import io.github.leawind.thirdperson.internal.logic.base.PlayerRotationParameters;
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoothingParameters;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
 import java.util.Objects;
 

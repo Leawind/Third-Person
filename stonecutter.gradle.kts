@@ -28,16 +28,19 @@ val checkArchitecture by tasks.registering {
         val schedulerPackage = "io.github.leawind.thirdperson.internal.logic.scheduler."
         val logicPackage = "io.github.leawind.thirdperson.internal.logic."
         val internalPackage = "io.github.leawind.thirdperson.internal."
+        val baseCategories = setOf("camera", "math", "rotation")
+        val schedulerCategories =
+            setOf("aiming", "camera", "config", "hud", "input", "rotation", "state")
         val allowedBaseImports = setOf(
             "${basePackage}BaseParameters",
-            "${basePackage}CameraProfile",
-            "${basePackage}CameraSmoothingParameters",
-            "${basePackage}LookRotation",
-            "${basePackage}PlayerRotationMode",
-            "${basePackage}PlayerRotationParameters",
-            "${basePackage}PlayerRotationSmoothing",
             "${basePackage}RaycastOrigin",
             "${basePackage}ThirdPersonBase",
+            "${basePackage}camera.CameraProfile",
+            "${basePackage}camera.CameraSmoothingParameters",
+            "${basePackage}rotation.LookRotation",
+            "${basePackage}rotation.PlayerRotationMode",
+            "${basePackage}rotation.PlayerRotationParameters",
+            "${basePackage}rotation.PlayerRotationSmoothing",
         )
         val legacyLayerPrefixes = listOf(
             "io/github/leawind/thirdperson/internal/base/",
@@ -68,11 +71,29 @@ val checkArchitecture by tasks.registering {
             if (legacyLayerPrefixes.any(relativePath::startsWith)) {
                 violations.add("$relativePath: legacy business-layer package is forbidden")
             }
-            if (isBase && relativePath.removePrefix(basePrefix).contains('/')) {
-                violations.add("$relativePath: base logic must stay in one package")
+            if (isBase) {
+                val pathWithinLayer = relativePath.removePrefix(basePrefix)
+                if (pathWithinLayer.contains('/')) {
+                    val category = pathWithinLayer.substringBefore('/')
+                    val pathWithinCategory = pathWithinLayer.substringAfter('/')
+                    if (category !in baseCategories || pathWithinCategory.contains('/')) {
+                        violations.add(
+                            "$relativePath: base logic must stay in its root or an approved category"
+                        )
+                    }
+                }
             }
-            if (isScheduler && relativePath.removePrefix(schedulerPrefix).contains('/')) {
-                violations.add("$relativePath: scheduling logic must stay in one package")
+            if (isScheduler) {
+                val pathWithinLayer = relativePath.removePrefix(schedulerPrefix)
+                if (pathWithinLayer.contains('/')) {
+                    val category = pathWithinLayer.substringBefore('/')
+                    val pathWithinCategory = pathWithinLayer.substringAfter('/')
+                    if (category !in schedulerCategories || pathWithinCategory.contains('/')) {
+                        violations.add(
+                            "$relativePath: scheduling logic must stay in its root or an approved category"
+                        )
+                    }
+                }
             }
             source.readLines().forEachIndexed { index, line ->
                 if ((isApi || isLogic)

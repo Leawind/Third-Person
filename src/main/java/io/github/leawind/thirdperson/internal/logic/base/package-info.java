@@ -1,4 +1,5 @@
-/// All mode-independent camera, raycast, movement, and player-control logic.
+/// Base-layer facades, runtime state, and Minecraft event coordination.
 ///
-/// This package must never reference the scheduling package.
+/// Feature implementations live only in this package's approved responsibility subpackages. The
+/// entire package tree must never reference the scheduling layer.
 package io.github.leawind.thirdperson.internal.logic.base;
