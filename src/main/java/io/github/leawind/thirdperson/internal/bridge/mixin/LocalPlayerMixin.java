@@ -31,6 +31,18 @@ abstract class LocalPlayerMixin {
     return modifyForwardImpulse(input, input.hasForwardImpulse(), MOVING_THRESHOLD);
   }
 
+  /// Keeps vanilla's pre-tick trigger history on the same predicate as start eligibility.
+  @Redirect(
+      method = "aiStep",
+      at =
+          @At(
+              value = "INVOKE",
+              target =
+                  "Lnet/minecraft/client/player/ClientInput;hasForwardImpulse()Z"))
+  private boolean useDirectionalSprintTriggerHistory(ClientInput input) {
+    return modifyForwardImpulse(input, input.hasForwardImpulse(), MOVING_THRESHOLD);
+  }
+
   private boolean modifyForwardImpulse(
       ClientInput input, boolean vanillaResult, double minimumMagnitude) {
     LocalPlayer player = (LocalPlayer) (Object) this;
