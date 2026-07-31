@@ -1,7 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementDirection;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
@@ -98,17 +97,21 @@ public final class MinecraftClientIntegration {
       case LOOK_AT_CAMERA_RAY_HIT ->
           MinecraftPlayerRotationTargeting.cameraRayHitRotation(runtime);
       case MOVEMENT_DIRECTION ->
-          parameters.threeDimensionalMovement()
-              ? MovementDirection.facingRotation(
-                  player.xxa,
-                  player.zza,
-                  lookController.yawDegrees(),
-                  lookController.pitchDegrees())
-              : MovementDirection.facingYawDegrees(
-                      player.xxa, player.zza, lookController.yawDegrees())
-                  .stream()
-                  .mapToObj(yaw -> new LookRotation((float) yaw, HORIZONTAL_ROTATION_PITCH))
-                  .findFirst();
+          runtime
+              .session()
+              .movementIntent()
+              .flatMap(
+                  intent ->
+                      parameters.threeDimensionalMovement()
+                          ? intent.facingRotation()
+                          : intent
+                              .facingYawDegrees()
+                              .stream()
+                              .mapToObj(
+                                  yaw ->
+                                      new LookRotation(
+                                          (float) yaw, HORIZONTAL_ROTATION_PITCH))
+                              .findFirst());
     };
   }
 

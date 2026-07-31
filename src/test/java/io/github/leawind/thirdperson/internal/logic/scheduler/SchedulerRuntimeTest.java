@@ -69,6 +69,11 @@ class SchedulerRuntimeTest {
     }
 
     @Override
+    public boolean hasDirectionalMovementIntent(double minimumMagnitude) {
+      return false;
+    }
+
+    @Override
     public Optional<LookRotation> resolveInterestPointRotation() {
       return Optional.empty();
     }

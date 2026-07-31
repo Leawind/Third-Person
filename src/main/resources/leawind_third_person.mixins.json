@@ -10,6 +10,7 @@
 		"GuiMixin",
 		"LocalPlayerMixin",
 		"MinecraftMixin",
+		"MovementInputAccessor",
 		"MouseHandlerMixin"
 	],
 	"mixins": [

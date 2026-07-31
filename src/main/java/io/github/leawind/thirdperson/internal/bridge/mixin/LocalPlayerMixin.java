@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
+import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
 /*? if >1.21 {*/
 import net.minecraft.client.player.ClientInput;
@@ -9,15 +10,58 @@ import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec2;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /// Adapts vanilla's forward-only sprint input check to camera-relative movement.
 @Mixin(LocalPlayer.class)
 abstract class LocalPlayerMixin {
   private static final double MOVING_THRESHOLD = 1.0e-5;
+
+  /*? if >1.21 {*/
+  @Shadow private ClientInput input;
+  /*? } else {*/
+  /*@Shadow public Input input;
+  *//*? }*/
+
+  /*? if >1.21 {*/
+  @Inject(
+      method = "aiStep",
+      at =
+          @At(
+              value = "INVOKE",
+              target = "Lnet/minecraft/client/player/ClientInput;tick()V",
+              shift = Shift.AFTER))
+  private void afterMovementInputUpdated(CallbackInfo ci) {
+    Vec2 movement = input.getMoveVector();
+    var modified =
+        LocalPlayerMovementInputEvent.emit(
+            (LocalPlayer) (Object) this, movement.x, movement.y);
+    ((MovementInputAccessor) input)
+        .setMoveVector(new Vec2(modified.leftImpulse(), modified.forwardImpulse()));
+  }
+  /*? } else {*/
+  /*@Inject(
+      method = "aiStep",
+      at =
+          @At(
+              value = "INVOKE",
+              target = "Lnet/minecraft/client/player/Input;tick(ZF)V",
+              shift = Shift.AFTER))
+  private void afterMovementInputUpdated(CallbackInfo ci) {
+    var modified =
+        LocalPlayerMovementInputEvent.emit(
+            (LocalPlayer) (Object) this, input.leftImpulse, input.forwardImpulse);
+    var accessor = (MovementInputAccessor) input;
+    accessor.setLeftImpulse(modified.leftImpulse());
+    accessor.setForwardImpulse(modified.forwardImpulse());
+  }
+  *//*? }*/
 
   /*? if >1.21 {*/
   @Redirect(

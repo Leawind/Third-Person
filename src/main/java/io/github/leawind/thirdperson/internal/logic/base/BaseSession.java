@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoother;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookController;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementIntent;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationController;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,6 +14,7 @@ public final class BaseSession {
   private final LookController lookController = new LookController();
   private final PlayerRotationController playerRotationController = new PlayerRotationController();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
+  private MovementIntent movementIntent;
   private CameraPose finalCameraPose;
 
   public boolean isPerspectiveActive() {
@@ -35,6 +37,18 @@ public final class BaseSession {
     return cameraSmoother;
   }
 
+  public Optional<MovementIntent> movementIntent() {
+    return Optional.ofNullable(movementIntent);
+  }
+
+  public void recordMovementIntent(MovementIntent value) {
+    movementIntent = Objects.requireNonNull(value, "value");
+  }
+
+  public void clearMovementIntent() {
+    movementIntent = null;
+  }
+
   public Optional<CameraPose> finalCameraPose() {
     return Optional.ofNullable(finalCameraPose);
   }
@@ -47,6 +61,7 @@ public final class BaseSession {
   public void resetCameraTracking() {
     lookController.reset();
     cameraSmoother.reset();
+    clearMovementIntent();
     finalCameraPose = null;
   }
 

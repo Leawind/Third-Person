@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementIntent;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ class BaseSessionTest {
     var session = new BaseSession();
     session.activatePerspective();
     session.lookController().initialize(15.0f, 30.0f);
+    session.recordMovementIntent(new MovementIntent(1.0f, 0.0f, 30.0f, 15.0f));
     session.recordFinalCameraPose(
         CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
 
@@ -42,6 +44,7 @@ class BaseSessionTest {
 
     assertTrue(session.isPerspectiveActive());
     assertFalse(session.lookController().isInitialized());
+    assertTrue(session.movementIntent().isEmpty());
     assertTrue(session.finalCameraPose().isEmpty());
   }
 }

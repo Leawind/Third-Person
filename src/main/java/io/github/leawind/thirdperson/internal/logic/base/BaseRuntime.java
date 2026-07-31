@@ -48,6 +48,14 @@ public final class BaseRuntime implements ThirdPersonBase {
   }
 
   @Override
+  public boolean hasDirectionalMovementIntent(double minimumMagnitude) {
+    return session
+        .movementIntent()
+        .map(intent -> intent.hasDirectionalImpulse(minimumMagnitude))
+        .orElse(false);
+  }
+
+  @Override
   public Optional<LookRotation> resolveInterestPointRotation() {
     return MinecraftPlayerRotationTargeting.interestPointRotation(this);
   }

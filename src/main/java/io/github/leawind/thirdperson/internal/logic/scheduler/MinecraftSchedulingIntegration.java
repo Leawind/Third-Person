@@ -62,7 +62,7 @@ public final class MinecraftSchedulingIntegration {
                 interacting,
                 player.isPassenger(),
                 player.getVehicle() instanceof LivingEntity,
-                hasDirectionalImpulse(player.xxa, player.zza, 1.0e-5)));
+                runtime.base().hasDirectionalMovementIntent(1.0e-5)));
 
     return switch (decision.target()) {
       case CURRENT_ROTATION ->
@@ -127,11 +127,5 @@ public final class MinecraftSchedulingIntegration {
       double halfLifeSeconds,
       PlayerRotationSmoothing smoothing) {
     return PlayerRotationParameters.custom(rotation, halfLifeSeconds, smoothing);
-  }
-  private static boolean hasDirectionalImpulse(
-      double leftImpulse, double forwardImpulse, double minimumMagnitude) {
-    double lengthSquared = leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;
-    return Double.isFinite(lengthSquared)
-        && lengthSquared >= minimumMagnitude * minimumMagnitude;
   }
 }

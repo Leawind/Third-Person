@@ -52,7 +52,6 @@ public final class MinecraftCameraAdjustmentIntegration {
 
   private static boolean canControl(LocalPlayer player, SchedulerRuntime runtime) {
     return player == Minecraft.getInstance().player
-        && !player.isPassenger()
         && runtime.base().isControllingLocalPlayer();
   }
 

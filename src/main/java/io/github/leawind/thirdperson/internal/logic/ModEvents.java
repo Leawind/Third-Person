@@ -3,7 +3,7 @@ package io.github.leawind.thirdperson.internal.logic;
 import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementYawEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
@@ -36,7 +36,7 @@ public final class ModEvents {
     ClientTickEvent.register(ModEvents::onClientTick);
     RenderFrameEvent.register(ModEvents::beforeRenderFrame);
     LocalPlayerTurnEvent.register(ModEvents::onLocalPlayerTurn);
-    LocalPlayerMovementYawEvent.register(MinecraftInputIntegration::modifyMovementYaw);
+    LocalPlayerMovementInputEvent.register(MinecraftInputIntegration::modifyMovementInput);
     LocalPlayerSprintImpulseEvent.register(
         MinecraftInputIntegration::modifySprintImpulseCondition);
     MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);

@@ -9,6 +9,8 @@ public interface BaseView {
 
   boolean isControllingLocalPlayer();
 
+  boolean hasDirectionalMovementIntent(double minimumMagnitude);
+
   Optional<LookRotation> resolveInterestPointRotation();
 
   Optional<LookRotation> resolvePredictedCameraTargetRotation();
