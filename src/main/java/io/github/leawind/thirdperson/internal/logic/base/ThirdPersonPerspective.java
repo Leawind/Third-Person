@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import com.google.auto.service.AutoService;
 import io.github.leawind.perspectiveapi.api.PerspectiveBehavior;
+import io.github.leawind.perspectiveapi.api.PerspectiveInfo;
 import io.github.leawind.perspectiveapi.api.PerspectiveState;
 import io.github.leawind.perspectiveapi.api.context.PerspectiveContext;
 import io.github.leawind.thirdperson.ThirdPerson;
@@ -19,10 +20,8 @@ import org.jspecify.annotations.NonNull;
 
 /// The single manually selectable perspective provided by this mod.
 @AutoService(PerspectiveBehavior.class)
-@PerspectiveBehavior.Info(
+@PerspectiveInfo.Declaration(
     id = ThirdPerson.PERSPECTIVE_ID,
-    nameKey = "perspective.leawind_third_person.third_person.name",
-    descriptionKey = "perspective.leawind_third_person.third_person.description",
     priority = 10,
     baseType = PerspectiveBehavior.BaseType.THIRD_PERSON_BACK)
 @SuppressWarnings("unused")
@@ -53,7 +52,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     }
 
     Minecraft minecraft = Minecraft.getInstance();
-    Entity entity = context.entity();
+    Entity entity = context.cameraEntity();
     if (entity == null) {
       return;
     }
@@ -106,12 +105,12 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   }
 
   @Override
-  public void postApplyWhenActive(
+  public void afterApplyCameraState(
       @NonNull PerspectiveState state, @NonNull PerspectiveContext context) {
     if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return;
     }
-    Entity entity = context.entity();
+    Entity entity = context.cameraEntity();
     if (entity == null) {
       return;
     }
