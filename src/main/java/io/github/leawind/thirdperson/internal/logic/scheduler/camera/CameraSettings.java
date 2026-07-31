@@ -7,17 +7,17 @@ import java.util.function.UnaryOperator;
 /// Owns the camera values that survive client restarts.
 public final class CameraSettings {
   private static final CameraProfile DEFAULT_NORMAL_PROFILE =
-      new CameraProfile(1.5625, -0.18, 0.12, 0.24, 1.0, false);
+      new CameraProfile(1.1, -0.2, -0.25, -0.254, 1.0, false);
   private static final CameraProfile DEFAULT_AIMING_PROFILE =
-      new CameraProfile(0.56, -0.30, 0.16, 0.48, 0.9, false);
+      new CameraProfile(0.448, -0.3, -0.41, -0.43, 0.9, false);
   private static final CameraSmoothing DEFAULT_SMOOTHING =
       new CameraSmoothing(
           0.0,
           0.07,
           0.05,
           0.05,
-          new ModeSmoothing(0.064, 0.08, 0.06, 0.08, 0.08),
-          new ModeSmoothing(0.02, 0.025, 0.025, 0.08, 0.08));
+          new ModeSmoothing(0.064, 0.08, 0.04, 0.08, 0.08),
+          new ModeSmoothing(0.02, 0.025, 0.025, 0.025, 0.036));
 
   private CameraProfile normalProfile = DEFAULT_NORMAL_PROFILE;
   private CameraProfile aimingProfile = DEFAULT_AIMING_PROFILE;

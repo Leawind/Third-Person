@@ -26,8 +26,7 @@ public record CameraProfile(
   }
 
   public CameraProfile withDistanceFactor(double value) {
-    return new CameraProfile(
-        value, offsetX, offsetY, centeredOffsetY, fovMultiplier, centered);
+    return new CameraProfile(value, offsetX, offsetY, centeredOffsetY, fovMultiplier, centered);
   }
 
   public CameraProfile withOffsetX(double value) {

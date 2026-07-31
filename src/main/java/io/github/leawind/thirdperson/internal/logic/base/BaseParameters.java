@@ -15,8 +15,8 @@ public record BaseParameters(
     PlayerRotationParameters playerRotation) {
   private static final BaseParameters DEFAULTS =
       new BaseParameters(
-          new CameraProfile(1.5625, -0.18, 0.12, 0.24, 1.0, false),
-          new CameraSmoothingParameters(0.064, 0.08, 0.0, 0.06, 0.08, 0.0),
+          new CameraProfile(1.5, -0.25, -0.25, -0.25, 1.0, false),
+          new CameraSmoothingParameters(0.064, 0.08, 0.0, 0.06, 0.08, 0.04),
           RaycastOrigin.CAMERA,
           PlayerRotationParameters.custom(
               Optional.empty(), 0.0, PlayerRotationSmoothing.IMMEDIATE));
