@@ -3,7 +3,7 @@ package io.github.leawind.thirdperson.platform.fabric;
 /*? if fabric {*/
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import io.github.leawind.thirdperson.internal.logic.scheduler.ConfigScreenManager;
+import io.github.leawind.thirdperson.internal.logic.scheduler.config.ConfigScreenManager;
 
 @SuppressWarnings("unused")
 public final class ModMenuEntry implements ModMenuApi {

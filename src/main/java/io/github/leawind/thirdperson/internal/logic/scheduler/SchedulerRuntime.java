@@ -5,6 +5,12 @@ import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoothingParameters;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
+import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.AimingSettings;
+import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.CameraMode;
+import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraProfileSlot;
+import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.HudSettings;
+import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerSettings;
 import java.util.Objects;
 
 /// Owns configuration and projects dynamic game state into instantaneous base parameters.

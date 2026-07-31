@@ -2,7 +2,7 @@
 package io.github.leawind.thirdperson.platform.fabric;
 
 import io.github.leawind.thirdperson.internal.logic.ModEntrypoint;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftKeyIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.input.MinecraftKeyIntegration;
 import net.fabricmc.api.ClientModInitializer;
 /*? if >=26.1 {*/
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;

@@ -13,10 +13,11 @@ import io.github.leawind.thirdperson.internal.logic.base.MinecraftInputIntegrati
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInteractionIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftCameraAdjustmentIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftHudIntegration;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftItemPredicateIntegration;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftKeyIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftSchedulingIntegration;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftStatePersistence;
+import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.MinecraftItemPredicateIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.input.MinecraftKeyIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.state.MinecraftStatePersistence;
 import net.minecraft.client.player.LocalPlayer;
 
 /// Registers one listener per bridge event and makes cross-layer execution order explicit.
@@ -43,7 +44,8 @@ public final class ModEvents {
 
   private static void onClientTick() {
     MinecraftStatePersistence.onClientTick();
-    MinecraftItemPredicateIntegration.onClientTick();
+    MinecraftItemPredicateIntegration.onClientTick(
+        SchedulerRuntime.getInstance().aimingSettings());
     MinecraftKeyIntegration.onClientTick();
     MinecraftSchedulingIntegration.onClientTick();
     MinecraftClientIntegration.onClientTick();

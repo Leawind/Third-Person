@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.platform.neoforge;
 
 /*? if neoforge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.logic.scheduler.ConfigScreenManager;
+import io.github.leawind.thirdperson.internal.logic.scheduler.config.ConfigScreenManager;
 import net.neoforged.fml.ModList;
 
 final class NeoForgeConfigScreenIntegration {

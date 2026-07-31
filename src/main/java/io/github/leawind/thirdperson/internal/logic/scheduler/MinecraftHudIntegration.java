@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.ReticlePolicy;
 public final class MinecraftHudIntegration {
   private MinecraftHudIntegration() {}
 

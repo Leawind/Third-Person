@@ -3,8 +3,8 @@ package io.github.leawind.thirdperson.platform.forge;
 /*? if forge {*/
 /*import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.logic.ModEntrypoint;
-import io.github.leawind.thirdperson.internal.logic.scheduler.ConfigScreenManager;
-import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftKeyIntegration;
+import io.github.leawind.thirdperson.internal.logic.scheduler.config.ConfigScreenManager;
+import io.github.leawind.thirdperson.internal.logic.scheduler.input.MinecraftKeyIntegration;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.api.distmarker.Dist;

@@ -5,6 +5,9 @@ import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotation
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationDecision;
+import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationState;
+import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationStrategy;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -37,7 +40,7 @@ public final class MinecraftSchedulingIntegration {
     var settings = runtime.playerSettings();
     if (!runtime.base().isControllingLocalPlayer()
         || settings.rotationMode()
-            == io.github.leawind.thirdperson.internal.logic.scheduler.ConfiguredPlayerRotationMode
+            == io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode
                 .VANILLA) {
       return customCurrent(player, 0.0, PlayerRotationSmoothing.IMMEDIATE);
     }
