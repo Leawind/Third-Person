@@ -1,7 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.input;
 
-import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.AimModeResolver;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.CameraMode;
@@ -50,9 +50,7 @@ public final class MinecraftKeyIntegration {
     var adjustment = session.cameraAdjustmentController();
     if (acceptsInput && ThirdPersonKeyMappings.ADJUST_CAMERA.isDown()) {
       CameraProfileSlot slot =
-          session.mode() == CameraMode.AIMING
-              ? CameraProfileSlot.AIMING
-              : CameraProfileSlot.NORMAL;
+          session.mode() == CameraMode.AIMING ? CameraProfileSlot.AIMING : CameraProfileSlot.NORMAL;
       CameraProfile profile = runtime.cameraSettings().profile(slot);
       session.beginCameraAdjustment(slot, profile);
     } else if (adjustment.isAdjusting()) {
@@ -80,9 +78,7 @@ public final class MinecraftKeyIntegration {
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     var session = runtime.session();
     CameraProfileSlot slot =
-        session.mode() == CameraMode.AIMING
-            ? CameraProfileSlot.AIMING
-            : CameraProfileSlot.NORMAL;
+        session.mode() == CameraMode.AIMING ? CameraProfileSlot.AIMING : CameraProfileSlot.NORMAL;
     CameraProfile profile = runtime.cameraSettings().profile(slot);
     CameraProfile updatedProfile;
     if (centered) {

@@ -37,8 +37,7 @@ public final class ModEvents {
     RenderFrameEvent.register(ModEvents::beforeRenderFrame);
     LocalPlayerTurnEvent.register(ModEvents::onLocalPlayerTurn);
     LocalPlayerMovementInputEvent.register(MinecraftInputIntegration::modifyMovementInput);
-    LocalPlayerSprintImpulseEvent.register(
-        MinecraftInputIntegration::modifySprintImpulseCondition);
+    LocalPlayerSprintImpulseEvent.register(MinecraftInputIntegration::modifySprintImpulseCondition);
     MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);
     ReticleGateEvent.register(MinecraftHudIntegration::shouldRenderReticle);
     BeforeInteractionEvent.register(MinecraftInteractionIntegration::prepareInteractionRaycast);
@@ -46,8 +45,7 @@ public final class ModEvents {
 
   private static void onClientTick() {
     MinecraftStatePersistence.onClientTick();
-    MinecraftItemPredicateIntegration.onClientTick(
-        SchedulerRuntime.getInstance().aimingSettings());
+    MinecraftItemPredicateIntegration.onClientTick(SchedulerRuntime.getInstance().aimingSettings());
     MinecraftKeyIntegration.onClientTick();
     MinecraftSchedulingIntegration.onClientTick();
     MinecraftClientIntegration.onClientTick();
@@ -58,8 +56,7 @@ public final class ModEvents {
     MinecraftClientIntegration.beforeRenderFrame(partialTick);
   }
 
-  private static boolean onLocalPlayerTurn(
-      LocalPlayer player, double rawYaw, double rawPitch) {
+  private static boolean onLocalPlayerTurn(LocalPlayer player, double rawYaw, double rawPitch) {
     return MinecraftCameraAdjustmentIntegration.onTurn(player, rawYaw, rawPitch)
         || MinecraftInputIntegration.onTurn(player, rawYaw, rawPitch);
   }

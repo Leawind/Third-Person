@@ -1,8 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.base.camera;
 
 /// Validated parameters for one camera composition profile.
-public record CameraParameters(
-    double distance, double anchorNdcX, double anchorNdcY) {
+public record CameraParameters(double distance, double anchorNdcX, double anchorNdcY) {
   public CameraParameters {
     if (!Double.isFinite(distance)
         || !Double.isFinite(anchorNdcX)

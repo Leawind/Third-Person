@@ -52,12 +52,9 @@ public final class AimingSettings {
   }
 
   public void restore(
-      boolean smartAiming,
-      List<String> holdToAimItemPatterns,
-      List<String> useToAimItemPatterns) {
+      boolean smartAiming, List<String> holdToAimItemPatterns, List<String> useToAimItemPatterns) {
     this.smartAiming = smartAiming;
-    this.holdToAimItemPatterns =
-        copyPatterns(holdToAimItemPatterns, "holdToAimItemPatterns");
+    this.holdToAimItemPatterns = copyPatterns(holdToAimItemPatterns, "holdToAimItemPatterns");
     this.useToAimItemPatterns = copyPatterns(useToAimItemPatterns, "useToAimItemPatterns");
     revision++;
   }

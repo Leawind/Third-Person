@@ -13,8 +13,7 @@ public final class BaseRuntime implements ThirdPersonBase {
   private static final BaseRuntime INSTANCE = new BaseRuntime();
 
   private final BaseSession session = new BaseSession();
-  private final CameraController cameraController =
-      new CameraController(session.cameraSmoother());
+  private final CameraController cameraController = new CameraController(session.cameraSmoother());
   private BaseParameters parameters = BaseParameters.defaults();
   private boolean initialized;
 
@@ -65,8 +64,7 @@ public final class BaseRuntime implements ThirdPersonBase {
     return MinecraftPlayerRotationTargeting.predictedCameraTargetRotation(this);
   }
 
-  public Optional<CameraPose> updateCamera(
-      CameraFrameInput frame, CameraCollisionPort collision) {
+  public Optional<CameraPose> updateCamera(CameraFrameInput frame, CameraCollisionPort collision) {
     Objects.requireNonNull(frame, "frame");
     Objects.requireNonNull(collision, "collision");
     return cameraController.update(

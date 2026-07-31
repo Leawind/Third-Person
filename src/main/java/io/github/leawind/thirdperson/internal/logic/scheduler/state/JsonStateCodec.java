@@ -63,9 +63,7 @@ final class JsonStateCodec {
                       HALF_LIFE_CODEC
                           .fieldOf("distanceHalfLife")
                           .forGetter(ModeSmoothing::distanceHalfLife),
-                      HALF_LIFE_CODEC
-                          .fieldOf("fovHalfLife")
-                          .forGetter(ModeSmoothing::fovHalfLife))
+                      HALF_LIFE_CODEC.fieldOf("fovHalfLife").forGetter(ModeSmoothing::fovHalfLife))
                   .apply(instance, ModeSmoothing::new));
 
   private static final Codec<CameraSmoothing> CAMERA_SMOOTHING_CODEC =
@@ -116,8 +114,7 @@ final class JsonStateCodec {
                       Codec.STRING
                           .listOf()
                           .optionalFieldOf("holdToAimItemPatterns", List.of())
-                          .forGetter(
-                              ThirdPersonPersistentState.AimingState::holdToAimItemPatterns),
+                          .forGetter(ThirdPersonPersistentState.AimingState::holdToAimItemPatterns),
                       Codec.STRING
                           .listOf()
                           .optionalFieldOf("useToAimItemPatterns", List.of())
@@ -138,15 +135,11 @@ final class JsonStateCodec {
                               NormalPlayerRotationMode.INTEREST_POINT)
                           .forGetter(ThirdPersonPersistentState.PlayerState::normalMode),
                       fieldWithDefault(Codec.BOOL, "autoRotateInteracting", true)
-                          .forGetter(
-                              ThirdPersonPersistentState.PlayerState::autoRotateInteracting),
+                          .forGetter(ThirdPersonPersistentState.PlayerState::autoRotateInteracting),
                       fieldWithDefault(Codec.BOOL, "doNotRotateWhenEating", true)
-                          .forGetter(
-                              ThirdPersonPersistentState.PlayerState::doNotRotateWhenEating),
+                          .forGetter(ThirdPersonPersistentState.PlayerState::doNotRotateWhenEating),
                       fieldWithDefault(
-                              enumCodec(RaycastOrigin.class),
-                              "raycastOrigin",
-                              RaycastOrigin.CAMERA)
+                              enumCodec(RaycastOrigin.class), "raycastOrigin", RaycastOrigin.CAMERA)
                           .forGetter(ThirdPersonPersistentState.PlayerState::raycastOrigin))
                   .apply(instance, ThirdPersonPersistentState.PlayerState::new));
 

@@ -9,15 +9,11 @@ public final class FiniteMath {
   private FiniteMath() {}
 
   public static boolean isFinite(Vector3dc value) {
-    return Double.isFinite(value.x())
-        && Double.isFinite(value.y())
-        && Double.isFinite(value.z());
+    return Double.isFinite(value.x()) && Double.isFinite(value.y()) && Double.isFinite(value.z());
   }
 
   public static boolean isFinite(Vector3fc value) {
-    return Float.isFinite(value.x())
-        && Float.isFinite(value.y())
-        && Float.isFinite(value.z());
+    return Float.isFinite(value.x()) && Float.isFinite(value.y()) && Float.isFinite(value.z());
   }
 
   public static boolean isFinite(Quaternionfc value) {

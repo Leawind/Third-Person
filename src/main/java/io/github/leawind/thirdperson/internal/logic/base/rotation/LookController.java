@@ -42,9 +42,7 @@ public final class LookController {
       return false;
     }
     destination.rotationYXZ(
-        (float) Math.toRadians(-yawDegrees),
-        (float) Math.toRadians(pitchDegrees),
-        0.0f);
+        (float) Math.toRadians(-yawDegrees), (float) Math.toRadians(pitchDegrees), 0.0f);
     return true;
   }
 

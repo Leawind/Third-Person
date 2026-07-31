@@ -13,11 +13,7 @@ import java.util.Objects;
 
 /// Serialized projection of runtime-owned state. This is not a live configuration object.
 public record ThirdPersonPersistentState(
-    int schemaVersion,
-    CameraState camera,
-    AimingState aiming,
-    PlayerState player,
-    HudState hud) {
+    int schemaVersion, CameraState camera, AimingState aiming, PlayerState player, HudState hud) {
   public static final int CURRENT_SCHEMA_VERSION = 2;
 
   public ThirdPersonPersistentState {
@@ -56,9 +52,7 @@ public record ThirdPersonPersistentState(
         CURRENT_SCHEMA_VERSION,
         new CameraState(camera.normalProfile(), camera.aimingProfile(), camera.smoothing()),
         new AimingState(
-            aiming.smartAiming(),
-            aiming.holdToAimItemPatterns(),
-            aiming.useToAimItemPatterns()),
+            aiming.smartAiming(), aiming.holdToAimItemPatterns(), aiming.useToAimItemPatterns()),
         new PlayerState(
             player.rotationMode(),
             player.normalMode(),
@@ -74,9 +68,7 @@ public record ThirdPersonPersistentState(
     runtime
         .aimingSettings()
         .restore(
-            aiming.smartAiming(),
-            aiming.holdToAimItemPatterns(),
-            aiming.useToAimItemPatterns());
+            aiming.smartAiming(), aiming.holdToAimItemPatterns(), aiming.useToAimItemPatterns());
     runtime
         .playerSettings()
         .restore(
@@ -88,8 +80,7 @@ public record ThirdPersonPersistentState(
     runtime.hudSettings().setReticleMode(hud.reticle());
   }
 
-  public record CameraState(
-      CameraProfile normal, CameraProfile aiming, CameraSmoothing smoothing) {
+  public record CameraState(CameraProfile normal, CameraProfile aiming, CameraSmoothing smoothing) {
     public CameraState {
       Objects.requireNonNull(normal, "normal");
       Objects.requireNonNull(aiming, "aiming");

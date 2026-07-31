@@ -27,6 +27,7 @@ public final class MinecraftItemPredicateIntegration {
   private static long compiledSettingsRevision = -1;
   private static CompiledPredicates predicates = CompiledPredicates.empty();
   private static volatile boolean automaticallyAiming;
+
   private MinecraftItemPredicateIntegration() {}
 
   public static boolean isAutomaticallyAiming() {
@@ -41,8 +42,7 @@ public final class MinecraftItemPredicateIntegration {
   public static void onClientTick(AimingSettings settings) {
     Objects.requireNonNull(settings, "settings");
     Minecraft minecraft = Minecraft.getInstance();
-    Bridge.registerReloadListener(
-        minecraft, RELOAD_LISTENER, RELOAD_LISTENER::loadImmediately);
+    Bridge.registerReloadListener(minecraft, RELOAD_LISTENER, RELOAD_LISTENER::loadImmediately);
 
     ClientPacketListener connection = minecraft.getConnection();
     Player player = minecraft.player;
@@ -69,9 +69,7 @@ public final class MinecraftItemPredicateIntegration {
   }
 
   private static CompiledPredicates compile(
-      ClientPacketListener connection,
-      ItemPatternSet resources,
-      AimingSettings settings) {
+      ClientPacketListener connection, ItemPatternSet resources, AimingSettings settings) {
     ItemPredicateArgument parser =
         ItemPredicateArgument.itemPredicate(
             CommandBuildContext.simple(connection.registryAccess(), connection.enabledFeatures()));

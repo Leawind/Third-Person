@@ -18,8 +18,7 @@ public final class MinecraftInputIntegration {
     return runtime.session().lookController().turn(rawYaw, rawPitch);
   }
 
-  public static MovementInput modifyMovementInput(
-      LocalPlayer player, MovementInput vanillaInput) {
+  public static MovementInput modifyMovementInput(LocalPlayer player, MovementInput vanillaInput) {
     var runtime = BaseRuntime.getInstance();
     if (!canControlCamera(player) || !runtime.isCameraControlEnabled()) {
       runtime.session().clearMovementIntent();
@@ -32,10 +31,7 @@ public final class MinecraftInputIntegration {
         lookController.isInitialized() ? lookController.pitchDegrees() : player.getXRot();
     var intent =
         MovementIntent.tryCreate(
-                vanillaInput.leftImpulse(),
-                vanillaInput.forwardImpulse(),
-                cameraYaw,
-                cameraPitch)
+                vanillaInput.leftImpulse(), vanillaInput.forwardImpulse(), cameraYaw, cameraPitch)
             .orElse(null);
     if (intent == null) {
       runtime.session().clearMovementIntent();
@@ -58,13 +54,11 @@ public final class MinecraftInputIntegration {
     if (!canModifyPlayerMovement(player) || !runtime.isCameraControlEnabled()) {
       return vanillaResult;
     }
-    return MovementDirection.hasDirectionalImpulse(
-        leftImpulse, forwardImpulse, minimumMagnitude);
+    return MovementDirection.hasDirectionalImpulse(leftImpulse, forwardImpulse, minimumMagnitude);
   }
 
   private static boolean canControlCamera(LocalPlayer player) {
-    return player == Minecraft.getInstance().player
-        && PerspectiveGuard.isThirdPersonCurrent();
+    return player == Minecraft.getInstance().player && PerspectiveGuard.isThirdPersonCurrent();
   }
 
   private static boolean canModifyPlayerMovement(LocalPlayer player) {

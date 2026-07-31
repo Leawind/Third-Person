@@ -9,8 +9,7 @@ public final class PerspectiveGuard {
   private PerspectiveGuard() {}
 
   public static boolean isThirdPersonCurrent() {
-    return PerspectiveAPI.isEnabled()
-        && PerspectiveAPI.isCurrent(ThirdPerson.PERSPECTIVE_ID);
+    return PerspectiveAPI.isEnabled() && PerspectiveAPI.isCurrent(ThirdPerson.PERSPECTIVE_ID);
   }
 
   public static boolean isThirdPersonCurrentForLocalPlayer() {

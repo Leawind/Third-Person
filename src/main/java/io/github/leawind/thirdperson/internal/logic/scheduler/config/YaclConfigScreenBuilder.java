@@ -47,10 +47,7 @@ final class YaclConfigScreenBuilder {
                     group("aiming")
                         .option(
                             booleanOption(
-                                "smart_aiming",
-                                true,
-                                aiming::smartAiming,
-                                aiming::setSmartAiming))
+                                "smart_aiming", true, aiming::smartAiming, aiming::setSmartAiming))
                         .build())
                 .group(
                     group("hud")
@@ -261,8 +258,7 @@ final class YaclConfigScreenBuilder {
                 defaults.offsetHalfLife(),
                 () -> camera.smoothingFor(slot).offsetHalfLife(),
                 value ->
-                    camera.updateModeSmoothing(
-                        slot, current -> current.withOffsetHalfLife(value))))
+                    camera.updateModeSmoothing(slot, current -> current.withOffsetHalfLife(value))))
         .option(
             halfLifeOption(
                 optionPrefix + "_distance_half_life",
@@ -277,8 +273,7 @@ final class YaclConfigScreenBuilder {
                 defaults.fovHalfLife(),
                 () -> camera.smoothingFor(slot).fovHalfLife(),
                 value ->
-                    camera.updateModeSmoothing(
-                        slot, current -> current.withFovHalfLife(value))))
+                    camera.updateModeSmoothing(slot, current -> current.withFovHalfLife(value))))
         .build();
   }
 

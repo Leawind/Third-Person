@@ -43,8 +43,7 @@ public final class MinecraftInteractionIntegration {
     Vector3f cameraForward = cameraRotation.transform(new Vector3f(0.0f, 0.0f, 1.0f));
     Vec3 eye = player.getEyePosition(partialTick);
     Vec3 cameraOrigin = new Vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z);
-    Vec3 from =
-        runtime.parameters().raycastOrigin() == RaycastOrigin.CAMERA ? cameraOrigin : eye;
+    Vec3 from = runtime.parameters().raycastOrigin() == RaycastOrigin.CAMERA ? cameraOrigin : eye;
     double blockRange = Bridge.blockInteractionRange(minecraft);
     double entityRange = Bridge.entityInteractionRange(minecraft);
     double originExtension =
@@ -52,8 +51,7 @@ public final class MinecraftInteractionIntegration {
             ? cameraOrigin.distanceTo(eye)
             : 0.0;
     double candidateRange =
-        InteractionRaycastGeometry.candidateRange(
-            blockRange, entityRange, originExtension);
+        InteractionRaycastGeometry.candidateRange(blockRange, entityRange, originExtension);
     if (!FiniteMath.isFinite(cameraForward)
         || !Double.isFinite(candidateRange)
         || candidateRange <= 0.0) {

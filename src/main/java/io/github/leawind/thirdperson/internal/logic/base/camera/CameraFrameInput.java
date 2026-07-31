@@ -60,12 +60,7 @@ public final class CameraFrameInput {
     }
     return Optional.of(
         new CameraFrameInput(
-            pivot,
-            rotation,
-            baseFovDegrees,
-            aspectRatio,
-            subjectDimensions,
-            deltaSeconds));
+            pivot, rotation, baseFovDegrees, aspectRatio, subjectDimensions, deltaSeconds));
   }
 
   public Vector3d copyPivot(Vector3d destination) {

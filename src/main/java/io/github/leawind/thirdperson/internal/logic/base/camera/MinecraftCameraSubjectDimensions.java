@@ -14,8 +14,7 @@ public final class MinecraftCameraSubjectDimensions {
     var measurements = Bridge.measureCameraSubject(cameraEntity);
     try {
       return Optional.of(
-          new CameraSubjectDimensions(
-              measurements.bodyRadius(), measurements.vehicleTotalSize()));
+          new CameraSubjectDimensions(measurements.bodyRadius(), measurements.vehicleTotalSize()));
     } catch (IllegalArgumentException ignored) {
       return Optional.empty();
     }

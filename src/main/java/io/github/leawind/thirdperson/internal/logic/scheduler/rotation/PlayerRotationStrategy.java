@@ -56,13 +56,11 @@ public final class PlayerRotationStrategy {
   }
 
   private static PlayerRotationDecision smooth(PlayerRotationTarget target, double halfLife) {
-    return new PlayerRotationDecision(
-        target, halfLife, PlayerRotationSmoothing.TICK_INTERPOLATED);
+    return new PlayerRotationDecision(target, halfLife, PlayerRotationSmoothing.TICK_INTERPOLATED);
   }
 
   private static PlayerRotationDecision frameExponential(
       PlayerRotationTarget target, double halfLife) {
-    return new PlayerRotationDecision(
-        target, halfLife, PlayerRotationSmoothing.FRAME_EXPONENTIAL);
+    return new PlayerRotationDecision(target, halfLife, PlayerRotationSmoothing.FRAME_EXPONENTIAL);
   }
 }

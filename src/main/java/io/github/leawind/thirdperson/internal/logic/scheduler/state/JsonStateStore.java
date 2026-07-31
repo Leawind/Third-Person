@@ -23,10 +23,7 @@ final class JsonStateStore {
       Files.writeString(temporary, JsonStateCodec.encode(state), StandardCharsets.UTF_8);
       try {
         Files.move(
-            temporary,
-            path,
-            StandardCopyOption.ATOMIC_MOVE,
-            StandardCopyOption.REPLACE_EXISTING);
+            temporary, path, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
       } catch (AtomicMoveNotSupportedException ignored) {
         Files.move(temporary, path, StandardCopyOption.REPLACE_EXISTING);
       }

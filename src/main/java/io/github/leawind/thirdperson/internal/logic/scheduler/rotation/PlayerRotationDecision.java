@@ -5,9 +5,7 @@ import java.util.Objects;
 
 /// Selected rotation target, timing model, and the half-life used to approach it.
 public record PlayerRotationDecision(
-    PlayerRotationTarget target,
-    double halfLifeSeconds,
-    PlayerRotationSmoothing smoothing) {
+    PlayerRotationTarget target, double halfLifeSeconds, PlayerRotationSmoothing smoothing) {
   public PlayerRotationDecision {
     Objects.requireNonNull(target, "target");
     Objects.requireNonNull(smoothing, "smoothing");

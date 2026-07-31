@@ -17,8 +17,7 @@ public final class MovementDirection {
         || minimumMagnitude < 0.0) {
       return false;
     }
-    double lengthSquared =
-        leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;
+    double lengthSquared = leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;
     return Double.isFinite(lengthSquared)
         && lengthSquared > 0.0
         && lengthSquared >= minimumMagnitude * minimumMagnitude;
@@ -31,8 +30,7 @@ public final class MovementDirection {
         || !Double.isFinite(cameraYawDegrees)) {
       return OptionalDouble.empty();
     }
-    double lengthSquared =
-        leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;
+    double lengthSquared = leftImpulse * leftImpulse + forwardImpulse * forwardImpulse;
     if (lengthSquared < MIN_INPUT_LENGTH_SQUARED) {
       return OptionalDouble.empty();
     }
@@ -43,9 +41,7 @@ public final class MovementDirection {
     double worldX = leftImpulse * cos - forwardImpulse * sin;
     double worldZ = forwardImpulse * cos + leftImpulse * sin;
     double facingYaw = Math.toDegrees(Math.atan2(-worldX, worldZ));
-    return Double.isFinite(facingYaw)
-        ? OptionalDouble.of(facingYaw)
-        : OptionalDouble.empty();
+    return Double.isFinite(facingYaw) ? OptionalDouble.of(facingYaw) : OptionalDouble.empty();
   }
 
   public static Optional<LookRotation> facingRotation(
@@ -68,12 +64,10 @@ public final class MovementDirection {
     double pitchRadians = Math.toRadians(cameraPitchDegrees);
     double cosPitch = Math.cos(pitchRadians);
     double worldX =
-        leftImpulse * Math.cos(yawRadians)
-            - forwardImpulse * Math.sin(yawRadians) * cosPitch;
+        leftImpulse * Math.cos(yawRadians) - forwardImpulse * Math.sin(yawRadians) * cosPitch;
     double worldY = -forwardImpulse * Math.sin(pitchRadians);
     double worldZ =
-        leftImpulse * Math.sin(yawRadians)
-            + forwardImpulse * Math.cos(yawRadians) * cosPitch;
+        leftImpulse * Math.sin(yawRadians) + forwardImpulse * Math.cos(yawRadians) * cosPitch;
     double horizontalLength = Math.hypot(worldX, worldZ);
     double yaw = Math.toDegrees(Math.atan2(-worldX, worldZ));
     double pitch = Math.toDegrees(Math.atan2(-worldY, horizontalLength));

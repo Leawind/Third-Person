@@ -85,17 +85,13 @@ public final class MinecraftClientIntegration {
   }
 
   private static Optional<LookRotation> resolveTarget(
-      BaseRuntime runtime,
-      LocalPlayer player,
-      PlayerRotationParameters parameters) {
+      BaseRuntime runtime, LocalPlayer player, PlayerRotationParameters parameters) {
     var lookController = runtime.session().lookController();
     return switch (parameters.mode()) {
       case CUSTOM -> parameters.customRotation();
       case PARALLEL_WITH_CAMERA ->
-          Optional.of(
-              new LookRotation(lookController.yawDegrees(), lookController.pitchDegrees()));
-      case LOOK_AT_CAMERA_RAY_HIT ->
-          MinecraftPlayerRotationTargeting.cameraRayHitRotation(runtime);
+          Optional.of(new LookRotation(lookController.yawDegrees(), lookController.pitchDegrees()));
+      case LOOK_AT_CAMERA_RAY_HIT -> MinecraftPlayerRotationTargeting.cameraRayHitRotation(runtime);
       case MOVEMENT_DIRECTION ->
           runtime
               .session()
@@ -104,13 +100,9 @@ public final class MinecraftClientIntegration {
                   intent ->
                       parameters.threeDimensionalMovement()
                           ? intent.facingRotation()
-                          : intent
-                              .facingYawDegrees()
-                              .stream()
+                          : intent.facingYawDegrees().stream()
                               .mapToObj(
-                                  yaw ->
-                                      new LookRotation(
-                                          (float) yaw, HORIZONTAL_ROTATION_PITCH))
+                                  yaw -> new LookRotation((float) yaw, HORIZONTAL_ROTATION_PITCH))
                               .findFirst());
     };
   }

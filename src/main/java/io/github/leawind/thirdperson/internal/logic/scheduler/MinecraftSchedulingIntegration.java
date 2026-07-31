@@ -1,10 +1,10 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
-import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationDecision;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationState;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationStrategy;
@@ -40,8 +40,8 @@ public final class MinecraftSchedulingIntegration {
     var settings = runtime.playerSettings();
     if (!runtime.base().isControllingLocalPlayer()
         || settings.rotationMode()
-            == io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode
-                .VANILLA) {
+            == io.github.leawind.thirdperson.internal.logic.scheduler.rotation
+                .ConfiguredPlayerRotationMode.VANILLA) {
       return customCurrent(player, 0.0, PlayerRotationSmoothing.IMMEDIATE);
     }
 
@@ -72,10 +72,8 @@ public final class MinecraftSchedulingIntegration {
               runtime.base().resolveInterestPointRotation(),
               decision.halfLifeSeconds(),
               decision.smoothing());
-      case CAMERA_ROTATION ->
-          mode(PlayerRotationMode.PARALLEL_WITH_CAMERA, decision);
-      case CAMERA_HIT_RESULT ->
-          mode(PlayerRotationMode.LOOK_AT_CAMERA_RAY_HIT, decision);
+      case CAMERA_ROTATION -> mode(PlayerRotationMode.PARALLEL_WITH_CAMERA, decision);
+      case CAMERA_HIT_RESULT -> mode(PlayerRotationMode.LOOK_AT_CAMERA_RAY_HIT, decision);
       case PREDICTED_TARGET_ENTITY -> {
         refreshPredictedTargetEachFrame = true;
         yield custom(
@@ -83,11 +81,9 @@ public final class MinecraftSchedulingIntegration {
             decision.halfLifeSeconds(),
             decision.smoothing());
       }
-      case HORIZONTAL_IMPULSE_DIRECTION ->
-          mode(PlayerRotationMode.MOVEMENT_DIRECTION, decision);
+      case HORIZONTAL_IMPULSE_DIRECTION -> mode(PlayerRotationMode.MOVEMENT_DIRECTION, decision);
       case IMPULSE_DIRECTION ->
-          mode(PlayerRotationMode.MOVEMENT_DIRECTION, decision)
-              .withThreeDimensionalMovement(true);
+          mode(PlayerRotationMode.MOVEMENT_DIRECTION, decision).withThreeDimensionalMovement(true);
     };
   }
 
@@ -108,14 +104,11 @@ public final class MinecraftSchedulingIntegration {
 
   private static PlayerRotationParameters mode(
       PlayerRotationMode mode, PlayerRotationDecision decision) {
-    return PlayerRotationParameters.of(
-        mode, decision.halfLifeSeconds(), decision.smoothing());
+    return PlayerRotationParameters.of(mode, decision.halfLifeSeconds(), decision.smoothing());
   }
 
   private static PlayerRotationParameters customCurrent(
-      LocalPlayer player,
-      double halfLifeSeconds,
-      PlayerRotationSmoothing smoothing) {
+      LocalPlayer player, double halfLifeSeconds, PlayerRotationSmoothing smoothing) {
     return custom(
         Optional.of(new LookRotation(player.getYRot(), player.getXRot())),
         halfLifeSeconds,
@@ -123,9 +116,7 @@ public final class MinecraftSchedulingIntegration {
   }
 
   private static PlayerRotationParameters custom(
-      Optional<LookRotation> rotation,
-      double halfLifeSeconds,
-      PlayerRotationSmoothing smoothing) {
+      Optional<LookRotation> rotation, double halfLifeSeconds, PlayerRotationSmoothing smoothing) {
     return PlayerRotationParameters.custom(rotation, halfLifeSeconds, smoothing);
   }
 }

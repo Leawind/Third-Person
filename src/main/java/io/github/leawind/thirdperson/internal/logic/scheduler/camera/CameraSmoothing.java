@@ -40,22 +40,12 @@ public record CameraSmoothing(
 
   public CameraSmoothing withAdjustingOffsetHalfLife(double value) {
     return new CameraSmoothing(
-        rotationHalfLife,
-        flyingPivotHalfLife,
-        value,
-        adjustingDistanceHalfLife,
-        normal,
-        aiming);
+        rotationHalfLife, flyingPivotHalfLife, value, adjustingDistanceHalfLife, normal, aiming);
   }
 
   public CameraSmoothing withAdjustingDistanceHalfLife(double value) {
     return new CameraSmoothing(
-        rotationHalfLife,
-        flyingPivotHalfLife,
-        adjustingOffsetHalfLife,
-        value,
-        normal,
-        aiming);
+        rotationHalfLife, flyingPivotHalfLife, adjustingOffsetHalfLife, value, normal, aiming);
   }
 
   private static void requireHalfLife(double value) {

@@ -5,10 +5,7 @@ import java.util.OptionalDouble;
 
 /// One raw camera-relative movement input together with the camera rotation that defined it.
 public record MovementIntent(
-    float leftImpulse,
-    float forwardImpulse,
-    float cameraYawDegrees,
-    float cameraPitchDegrees) {
+    float leftImpulse, float forwardImpulse, float cameraYawDegrees, float cameraPitchDegrees) {
   public MovementIntent {
     if (!Float.isFinite(leftImpulse)
         || !Float.isFinite(forwardImpulse)
@@ -19,27 +16,21 @@ public record MovementIntent(
   }
 
   public static Optional<MovementIntent> tryCreate(
-      float leftImpulse,
-      float forwardImpulse,
-      float cameraYawDegrees,
-      float cameraPitchDegrees) {
+      float leftImpulse, float forwardImpulse, float cameraYawDegrees, float cameraPitchDegrees) {
     try {
       return Optional.of(
-          new MovementIntent(
-              leftImpulse, forwardImpulse, cameraYawDegrees, cameraPitchDegrees));
+          new MovementIntent(leftImpulse, forwardImpulse, cameraYawDegrees, cameraPitchDegrees));
     } catch (IllegalArgumentException ignored) {
       return Optional.empty();
     }
   }
 
   public boolean hasDirectionalImpulse(double minimumMagnitude) {
-    return MovementDirection.hasDirectionalImpulse(
-        leftImpulse, forwardImpulse, minimumMagnitude);
+    return MovementDirection.hasDirectionalImpulse(leftImpulse, forwardImpulse, minimumMagnitude);
   }
 
   public OptionalDouble facingYawDegrees() {
-    return MovementDirection.facingYawDegrees(
-        leftImpulse, forwardImpulse, cameraYawDegrees);
+    return MovementDirection.facingYawDegrees(leftImpulse, forwardImpulse, cameraYawDegrees);
   }
 
   public Optional<LookRotation> facingRotation() {

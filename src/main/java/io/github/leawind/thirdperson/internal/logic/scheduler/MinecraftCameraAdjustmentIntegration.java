@@ -51,13 +51,11 @@ public final class MinecraftCameraAdjustmentIntegration {
   }
 
   private static boolean canControl(LocalPlayer player, SchedulerRuntime runtime) {
-    return player == Minecraft.getInstance().player
-        && runtime.base().isControllingLocalPlayer();
+    return player == Minecraft.getInstance().player && runtime.base().isControllingLocalPlayer();
   }
 
   private static void syncCamera(SchedulerRuntime runtime, LocalPlayer player) {
     runtime.applyParameters(
-        player.isSwimming() || player.isFallFlying(),
-        runtime.appliedParameters().playerRotation());
+        player.isSwimming() || player.isFallFlying(), runtime.appliedParameters().playerRotation());
   }
 }

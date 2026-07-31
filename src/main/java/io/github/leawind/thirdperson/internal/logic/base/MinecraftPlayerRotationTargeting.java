@@ -31,8 +31,7 @@ public final class MinecraftPlayerRotationTargeting {
             pose -> {
               Vector3d position = pose.copyPosition(new Vector3d());
               Vector3f forward =
-                  pose.copyRotation(new Quaternionf())
-                      .transform(new Vector3f(0.0f, 0.0f, 1.0f));
+                  pose.copyRotation(new Quaternionf()).transform(new Vector3f(0.0f, 0.0f, 1.0f));
               if (!Float.isFinite(forward.x)
                   || !Float.isFinite(forward.y)
                   || !Float.isFinite(forward.z)
@@ -63,8 +62,7 @@ public final class MinecraftPlayerRotationTargeting {
                       + player.getBbWidth() * 0.8660254037844386;
               Vec3 from = toVec3(rayStart);
               Vec3 to = toVec3(new Vector3d(rayStart).fma(rayLength, view.forward()));
-              Bridge.BlockHit blockHit =
-                  Bridge.clipBlocks(player, from, to, useColliderBlocks);
+              Bridge.BlockHit blockHit = Bridge.clipBlocks(player, from, to, useColliderBlocks);
               double blockDistanceSquared = from.distanceToSqr(blockHit.location());
               Vec3 entityRayEnd =
                   blockHit.missed()
@@ -74,8 +72,7 @@ public final class MinecraftPlayerRotationTargeting {
                           view.forward().y * (Math.sqrt(blockDistanceSquared) + 1.0),
                           view.forward().z * (Math.sqrt(blockDistanceSquared) + 1.0));
               Optional<Vec3> entityHit =
-                  Bridge.pickEntity(
-                      player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
+                  Bridge.pickEntity(player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
               if (entityHit.isPresent()
                   && from.distanceToSqr(entityHit.orElseThrow()) < blockDistanceSquared) {
                 return new CameraHit(toVector(entityHit.orElseThrow()), false, false);
@@ -99,8 +96,7 @@ public final class MinecraftPlayerRotationTargeting {
               double cameraPitch =
                   Math.toDegrees(
                       Math.atan2(
-                          -view.forward().y,
-                          Math.hypot(view.forward().x, view.forward().z)));
+                          -view.forward().y, Math.hypot(view.forward().x, view.forward().z)));
               AABB searchArea = player.getBoundingBox().inflate(CAMERA_RAY_TRACE_LENGTH);
               for (Entity candidate :
                   minecraft.level.getEntities(
@@ -145,10 +141,8 @@ public final class MinecraftPlayerRotationTargeting {
               if (best == null) {
                 return Optional.empty();
               }
-              double targetDistance =
-                  view.position().distance(toVector(best.getPosition(1.0f)));
-              return Optional.of(
-                  new Vector3d(view.position()).fma(targetDistance, view.forward()));
+              double targetDistance = view.position().distance(toVector(best.getPosition(1.0f)));
+              return Optional.of(new Vector3d(view.position()).fma(targetDistance, view.forward()));
             });
   }
 
@@ -209,15 +203,13 @@ public final class MinecraftPlayerRotationTargeting {
               if (hit.missed()) {
                 var lookController = runtime.session().lookController();
                 return Optional.of(
-                    new LookRotation(
-                        lookController.yawDegrees(), lookController.pitchDegrees()));
+                    new LookRotation(lookController.yawDegrees(), lookController.pitchDegrees()));
               }
               return lookAtPlayerEye(player, hit.location());
             });
   }
 
-  private static Optional<LookRotation> lookAtPlayerEye(
-      LocalPlayer player, Vector3d point) {
+  private static Optional<LookRotation> lookAtPlayerEye(LocalPlayer player, Vector3d point) {
     var eye = player.getEyePosition(1.0f);
     return LookGeometry.lookAt(new Vector3d(eye.x, eye.y, eye.z), point);
   }

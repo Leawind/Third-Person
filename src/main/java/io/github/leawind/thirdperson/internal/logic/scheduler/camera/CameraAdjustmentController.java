@@ -54,15 +54,9 @@ public final class CameraAdjustmentController {
       distanceFactor = yOffset > 0.0 ? 0.0 : 16.0;
     } else {
       distanceFactor =
-          yOffset > 0.0
-              ? profile.distanceFactor() / factor
-              : profile.distanceFactor() * factor;
+          yOffset > 0.0 ? profile.distanceFactor() / factor : profile.distanceFactor() * factor;
     }
-    return replace(
-        distanceFactor,
-        profile.offsetX(),
-        profile.offsetY(),
-        profile.centeredOffsetY());
+    return replace(distanceFactor, profile.offsetX(), profile.offsetY(), profile.centeredOffsetY());
   }
 
   public Optional<CameraProfile> finish() {
@@ -86,8 +80,7 @@ public final class CameraAdjustmentController {
             finiteClamped(distanceFactor, 0.0, 16.0, profile.distanceFactor()),
             finiteClamped(offsetX, -1.0, 1.0, profile.offsetX()),
             finiteClamped(offsetY, -1.0, 1.0, profile.offsetY()),
-            finiteClamped(
-                centeredOffsetY, -1.0, 1.0, profile.centeredOffsetY()),
+            finiteClamped(centeredOffsetY, -1.0, 1.0, profile.centeredOffsetY()),
             profile.fovMultiplier(),
             profile.centered());
     if (next.equals(profile)) {
