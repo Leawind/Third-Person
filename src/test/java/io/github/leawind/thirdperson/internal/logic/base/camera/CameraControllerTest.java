@@ -61,6 +61,32 @@ class CameraControllerTest {
   }
 
   @Test
+  void extremePitchCentersTheSmoothedCompositionBeforeResolvingThePose() {
+    var controller = new CameraController(new CameraSmoother());
+    var shoulderProfile = new CameraProfile(4.0, -0.4, 0.2, 0.0, 1.0, false);
+    var centeredProfile = new CameraProfile(4.0, 0.0, 0.0, 0.0, 1.0, false);
+    double pitchPastConfiguredEnd =
+        CameraOffsetSqueeze.CENTERED_PITCH_DEGREES
+            + (90.0 - CameraOffsetSqueeze.CENTERED_PITCH_DEGREES) * 0.5;
+    var nearVertical =
+        new Quaternionf().rotationX((float) Math.toRadians(pitchPastConfiguredEnd));
+    CameraCollisionPort noCollision = (pivot, desired) -> Optional.of(new Vector3d(desired));
+
+    CameraPose shoulderPose =
+        controller
+            .update(frameAt(0.0, nearVertical), shoulderProfile, IMMEDIATE, noCollision)
+            .orElseThrow();
+    controller = new CameraController(new CameraSmoother());
+    CameraPose centeredPose =
+        controller
+            .update(frameAt(0.0, nearVertical), centeredProfile, IMMEDIATE, noCollision)
+            .orElseThrow();
+
+    assertEquals(
+        centeredPose.copyPosition(new Vector3d()), shoulderPose.copyPosition(new Vector3d()));
+  }
+
+  @Test
   void rejectsInvalidFrameBeforeItReachesTheController() {
     assertTrue(
         CameraFrameInput.tryCreate(
@@ -74,9 +100,13 @@ class CameraControllerTest {
   }
 
   private static CameraFrameInput frameAt(double pivotX) {
+    return frameAt(pivotX, new Quaternionf());
+  }
+
+  private static CameraFrameInput frameAt(double pivotX, Quaternionf rotation) {
     return CameraFrameInput.tryCreate(
             new Vector3d(pivotX, 0.0, 0.0),
-            new Quaternionf(),
+            rotation,
             70.0f,
             16.0 / 9.0,
             new CameraSubjectDimensions(0.0, 1.0),

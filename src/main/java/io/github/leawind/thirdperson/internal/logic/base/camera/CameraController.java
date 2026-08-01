@@ -48,11 +48,14 @@ public final class CameraController {
     }
 
     Vector3d smoothedPivot = smoothedInput.copyPivot(new Vector3d());
+    Quaternionf smoothedRotation = smoothedInput.copyRotation(new Quaternionf());
+    CameraParameters effectiveParameters =
+        CameraOffsetSqueeze.apply(smoothedInput.parameters(), smoothedRotation);
     CameraPose idealPose =
         CameraRig.calculate(
                 smoothedPivot,
-                smoothedInput.copyRotation(new Quaternionf()),
-                smoothedInput.parameters(),
+                smoothedRotation,
+                effectiveParameters,
                 smoothedInput.fovDegrees(),
                 frame.aspectRatio())
             .orElse(null);
