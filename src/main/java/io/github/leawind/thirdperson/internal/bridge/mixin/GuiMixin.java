@@ -1,7 +1,7 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import io.github.leawind.thirdperson.internal.bridge.events.ReticleGateEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.CrosshairGateEvent;
 /*? if >=26.2 {*/
 import net.minecraft.client.gui.Hud;
 /*? } else {*/
@@ -26,7 +26,7 @@ abstract class GuiMixin {
           @At(
               value = "INVOKE",
               target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
-  private boolean modifyFirstPersonReticleGate(boolean vanillaDecision) {
-    return ReticleGateEvent.emit(vanillaDecision);
+  private boolean modifyFirstPersonCrosshairGate(boolean vanillaDecision) {
+    return CrosshairGateEvent.emit(vanillaDecision);
   }
 }

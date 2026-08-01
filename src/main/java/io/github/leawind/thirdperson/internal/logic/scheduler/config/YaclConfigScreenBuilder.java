@@ -15,7 +15,7 @@ import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.ReticleMode;
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
@@ -53,11 +53,11 @@ final class YaclConfigScreenBuilder {
                     group("hud")
                         .option(
                             enumOption(
-                                "reticle",
-                                ReticleMode.AUTO,
-                                hud::reticleMode,
-                                hud::setReticleMode,
-                                ReticleMode.class))
+                                "crosshair",
+                                CrosshairMode.AUTO,
+                                hud::crosshairMode,
+                                hud::setCrosshairMode,
+                                CrosshairMode.class))
                         .build())
                 .group(
                     group("normal_rotation")

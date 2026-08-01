@@ -1,10 +1,10 @@
 package io.github.leawind.thirdperson.internal.bridge.events;
 
-/// Neutral event for the first-person gate used by vanilla reticle rendering.
-public final class ReticleGateEvent {
+/// Neutral event for the first-person gate used by vanilla crosshair rendering.
+public final class CrosshairGateEvent {
   private static final SingleEventHandler<Listener> HANDLER = new SingleEventHandler<>();
 
-  private ReticleGateEvent() {}
+  private CrosshairGateEvent() {}
 
   public static void register(Listener listener) {
     HANDLER.install(listener);

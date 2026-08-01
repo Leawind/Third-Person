@@ -5,7 +5,7 @@ import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSmoothing;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.ReticleMode;
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
@@ -40,7 +40,7 @@ public record ThirdPersonPersistentState(
             true,
             true,
             RaycastOrigin.CAMERA),
-        new HudState(ReticleMode.AUTO));
+        new HudState(CrosshairMode.AUTO));
   }
 
   public static ThirdPersonPersistentState extract(SchedulerRuntime runtime) {
@@ -59,7 +59,7 @@ public record ThirdPersonPersistentState(
             player.autoRotateInteracting(),
             player.doNotRotateWhenEating(),
             player.raycastOrigin()),
-        new HudState(runtime.hudSettings().reticleMode()));
+        new HudState(runtime.hudSettings().crosshairMode()));
   }
 
   public void applyTo(SchedulerRuntime runtime) {
@@ -77,7 +77,7 @@ public record ThirdPersonPersistentState(
             player.autoRotateInteracting(),
             player.doNotRotateWhenEating(),
             player.raycastOrigin());
-    runtime.hudSettings().setReticleMode(hud.reticle());
+    runtime.hudSettings().setCrosshairMode(hud.crosshair());
   }
 
   public record CameraState(CameraProfile normal, CameraProfile aiming, CameraSmoothing smoothing) {
@@ -119,9 +119,9 @@ public record ThirdPersonPersistentState(
     }
   }
 
-  public record HudState(ReticleMode reticle) {
+  public record HudState(CrosshairMode crosshair) {
     public HudState {
-      Objects.requireNonNull(reticle, "reticle");
+      Objects.requireNonNull(crosshair, "crosshair");
     }
   }
 }

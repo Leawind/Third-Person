@@ -81,8 +81,8 @@
   "config.leawind_third_person.option.do_not_rotate_when_eating.desc": "使用食物时忽略交互键触发的自动转向",
   "config.leawind_third_person.option.raycast_origin": "探测起点",
   "config.leawind_third_person.option.raycast_origin.desc": "选择从相机或玩家眼睛发出沿相机方向的探测射线",
-  "config.leawind_third_person.option.reticle": "第三人称准星",
-  "config.leawind_third_person.option.reticle.desc": "选择本视角何时显示屏幕中央准星",
+  "config.leawind_third_person.option.crosshair": "第三人称准星",
+  "config.leawind_third_person.option.crosshair.desc": "选择本视角何时显示屏幕中央准星",
   "config.leawind_third_person.option.normal_distance": "距离系数",
   "config.leawind_third_person.option.normal_distance.desc": "根据实体及其载具大小计算相机距离",
   "config.leawind_third_person.option.aiming_distance": "距离系数",
@@ -98,7 +98,7 @@
   "config.leawind_third_person.value.normal_rotation_mode.none": "保持当前朝向",
   "config.leawind_third_person.value.raycast_origin.player_eye": "玩家眼睛",
   "config.leawind_third_person.value.raycast_origin.camera": "相机",
-  "config.leawind_third_person.value.reticle.auto": "自动",
-  "config.leawind_third_person.value.reticle.on": "始终显示",
-  "config.leawind_third_person.value.reticle.off": "关闭"
+  "config.leawind_third_person.value.crosshair.auto": "自动",
+  "config.leawind_third_person.value.crosshair.on": "始终显示",
+  "config.leawind_third_person.value.crosshair.off": "关闭"
 }

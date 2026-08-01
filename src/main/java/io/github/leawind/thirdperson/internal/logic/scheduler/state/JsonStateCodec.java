@@ -13,7 +13,7 @@ import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSmoothing;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.ModeSmoothing;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.ReticleMode;
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
@@ -148,9 +148,9 @@ final class JsonStateCodec {
           instance ->
               instance
                   .group(
-                      enumCodec(ReticleMode.class)
-                          .fieldOf("reticle")
-                          .forGetter(ThirdPersonPersistentState.HudState::reticle))
+                      enumCodec(CrosshairMode.class)
+                          .fieldOf("crosshair")
+                          .forGetter(ThirdPersonPersistentState.HudState::crosshair))
                   .apply(instance, ThirdPersonPersistentState.HudState::new));
 
   private static final Codec<ThirdPersonPersistentState> STATE_CODEC =

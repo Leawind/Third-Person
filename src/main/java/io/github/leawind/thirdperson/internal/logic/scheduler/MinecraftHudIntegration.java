@@ -1,17 +1,17 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.ReticlePolicy;
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairPolicy;
 
 public final class MinecraftHudIntegration {
   private MinecraftHudIntegration() {}
 
-  public static boolean shouldRenderReticle(boolean vanillaDecision) {
+  public static boolean shouldRenderCrosshair(boolean vanillaDecision) {
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     boolean current = runtime.base().isCameraControlEnabled();
-    return ReticlePolicy.shouldRender(
+    return CrosshairPolicy.shouldRender(
         vanillaDecision,
         current,
         runtime.base().isCameraControlEnabled(),
-        runtime.hudSettings().reticleMode());
+        runtime.hudSettings().crosshairMode());
   }
 }

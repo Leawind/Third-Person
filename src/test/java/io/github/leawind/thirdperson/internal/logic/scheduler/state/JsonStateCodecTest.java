@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.ReticleMode;
+import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
@@ -30,7 +30,7 @@ class JsonStateCodecTest {
     player.addProperty("normalMode", "parallel_with_camera");
     player.addProperty("autoRotateInteracting", false);
     player.addProperty("raycastOrigin", "player_eye");
-    json.getAsJsonObject("hud").addProperty("reticle", "on");
+    json.getAsJsonObject("hud").addProperty("crosshair", "on");
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(json.toString());
 
@@ -39,7 +39,7 @@ class JsonStateCodecTest {
     assertEquals(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, decoded.player().normalMode());
     assertFalse(decoded.player().autoRotateInteracting());
     assertEquals(RaycastOrigin.PLAYER_EYE, decoded.player().raycastOrigin());
-    assertEquals(ReticleMode.ON, decoded.hud().reticle());
+    assertEquals(CrosshairMode.ON, decoded.hud().crosshair());
   }
 
   @Test

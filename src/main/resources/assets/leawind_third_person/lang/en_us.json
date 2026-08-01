@@ -81,8 +81,8 @@
   "config.leawind_third_person.option.do_not_rotate_when_eating.desc": "Ignore interaction-triggered rotation while using food",
   "config.leawind_third_person.option.raycast_origin": "Raycast Origin",
   "config.leawind_third_person.option.raycast_origin.desc": "Start camera-directed probes at the camera or at the player's eyes",
-  "config.leawind_third_person.option.reticle": "Third-Person Reticle",
-  "config.leawind_third_person.option.reticle.desc": "Choose when the centered reticle is shown in this perspective",
+  "config.leawind_third_person.option.crosshair": "Third-Person Crosshair",
+  "config.leawind_third_person.option.crosshair.desc": "Choose when the centered crosshair is shown in this perspective",
   "config.leawind_third_person.option.normal_distance": "Distance Factor",
   "config.leawind_third_person.option.normal_distance.desc": "Camera distance relative to the size of the entity and its vehicle",
   "config.leawind_third_person.option.aiming_distance": "Distance Factor",
@@ -98,7 +98,7 @@
   "config.leawind_third_person.value.normal_rotation_mode.none": "Keep Current Rotation",
   "config.leawind_third_person.value.raycast_origin.player_eye": "Player Eyes",
   "config.leawind_third_person.value.raycast_origin.camera": "Camera",
-  "config.leawind_third_person.value.reticle.auto": "Automatic",
-  "config.leawind_third_person.value.reticle.on": "Always On",
-  "config.leawind_third_person.value.reticle.off": "Off"
+  "config.leawind_third_person.value.crosshair.auto": "Automatic",
+  "config.leawind_third_person.value.crosshair.on": "Always On",
+  "config.leawind_third_person.value.crosshair.off": "Off"
 }

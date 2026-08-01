@@ -4,13 +4,13 @@ import java.util.Objects;
 
 /// Owns HUD preferences.
 public final class HudSettings {
-  private ReticleMode reticleMode = ReticleMode.AUTO;
+  private CrosshairMode crosshairMode = CrosshairMode.AUTO;
 
-  public ReticleMode reticleMode() {
-    return reticleMode;
+  public CrosshairMode crosshairMode() {
+    return crosshairMode;
   }
 
-  public void setReticleMode(ReticleMode reticleMode) {
-    this.reticleMode = Objects.requireNonNull(reticleMode, "reticleMode");
+  public void setCrosshairMode(CrosshairMode crosshairMode) {
+    this.crosshairMode = Objects.requireNonNull(crosshairMode, "crosshairMode");
   }
 }

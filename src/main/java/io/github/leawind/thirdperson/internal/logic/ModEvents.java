@@ -9,7 +9,7 @@ import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImp
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.ReticleGateEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.CrosshairGateEvent;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftClientIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInputIntegration;
@@ -42,7 +42,7 @@ public final class ModEvents {
     LocalPlayerMovementInputEvent.register(MinecraftInputIntegration::modifyMovementInput);
     LocalPlayerSprintImpulseEvent.register(MinecraftInputIntegration::modifySprintImpulseCondition);
     MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);
-    ReticleGateEvent.register(MinecraftHudIntegration::shouldRenderReticle);
+    CrosshairGateEvent.register(MinecraftHudIntegration::shouldRenderCrosshair);
     BeforeInteractionEvent.register(MinecraftInteractionIntegration::prepareInteractionRaycast);
   }
 
