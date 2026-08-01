@@ -33,6 +33,7 @@ final class YaclConfigScreenBuilder {
     SchedulerRuntime runtime = SchedulerRuntime.getInstance();
     var aiming = runtime.aimingSettings();
     var player = runtime.playerSettings();
+    var sound = runtime.soundSettings();
     var hud = runtime.hudSettings();
     var camera = runtime.cameraSettings();
     var defaultSmoothing = CameraSettings.defaultSmoothing();
@@ -58,6 +59,15 @@ final class YaclConfigScreenBuilder {
                                 hud::crosshairMode,
                                 hud::setCrosshairMode,
                                 CrosshairMode.class))
+                        .build())
+                .group(
+                    group("sound")
+                        .option(
+                            booleanOption(
+                                "center_camera_entity_sounds",
+                                false,
+                                sound::centerCameraEntitySounds,
+                                sound::setCenterCameraEntitySounds))
                         .build())
                 .group(
                     group("normal_rotation")

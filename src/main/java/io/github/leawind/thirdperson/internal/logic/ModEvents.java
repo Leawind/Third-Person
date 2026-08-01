@@ -3,15 +3,17 @@ package io.github.leawind.thirdperson.internal.logic;
 import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.CrosshairGateEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.CrosshairGateEvent;
+import io.github.leawind.thirdperson.internal.bridge.events.SoundSourcePositionEvent;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftClientIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInputIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInteractionIntegration;
+import io.github.leawind.thirdperson.internal.logic.base.MinecraftSoundIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftCameraAdjustmentIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftHudIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftSchedulingIntegration;
@@ -41,6 +43,7 @@ public final class ModEvents {
     MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);
     CrosshairGateEvent.register(MinecraftHudIntegration::shouldRenderCrosshair);
     BeforeInteractionEvent.register(MinecraftInteractionIntegration::prepareInteractionRaycast);
+    SoundSourcePositionEvent.register(MinecraftSoundIntegration::adjustCameraEntitySoundPosition);
   }
 
   private static void onClientTick() {

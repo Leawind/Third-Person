@@ -143,6 +143,17 @@ final class JsonStateCodec {
                           .forGetter(ThirdPersonPersistentState.PlayerState::raycastOrigin))
                   .apply(instance, ThirdPersonPersistentState.PlayerState::new));
 
+  private static final Codec<ThirdPersonPersistentState.SoundState> SOUND_STATE_CODEC =
+      RecordCodecBuilder.create(
+          instance ->
+              instance
+                  .group(
+                      Codec.BOOL
+                          .fieldOf("centerCameraEntitySounds")
+                          .forGetter(
+                              ThirdPersonPersistentState.SoundState::centerCameraEntitySounds))
+                  .apply(instance, ThirdPersonPersistentState.SoundState::new));
+
   private static final Codec<ThirdPersonPersistentState.HudState> HUD_STATE_CODEC =
       RecordCodecBuilder.create(
           instance ->
@@ -172,6 +183,9 @@ final class JsonStateCodec {
                       PLAYER_STATE_CODEC
                           .fieldOf("player")
                           .forGetter(ThirdPersonPersistentState::player),
+                      SOUND_STATE_CODEC
+                          .fieldOf("sound")
+                          .forGetter(ThirdPersonPersistentState::sound),
                       HUD_STATE_CODEC.fieldOf("hud").forGetter(ThirdPersonPersistentState::hud))
                   .apply(instance, ThirdPersonPersistentState::new));
 

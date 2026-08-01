@@ -28,7 +28,7 @@ val checkArchitecture by tasks.registering {
         val internalPackage = "io.github.leawind.thirdperson.internal."
         val baseCategories = setOf("camera", "math", "rotation")
         val schedulerCategories =
-            setOf("aiming", "camera", "config", "hud", "input", "rotation", "state")
+            setOf("aiming", "camera", "config", "hud", "input", "rotation", "sound", "state")
         val allowedBaseImports = setOf(
             "${basePackage}BaseParameters",
             "${basePackage}RaycastOrigin",

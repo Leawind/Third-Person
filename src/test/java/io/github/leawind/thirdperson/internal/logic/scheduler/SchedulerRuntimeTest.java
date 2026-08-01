@@ -22,6 +22,7 @@ class SchedulerRuntimeTest {
     assertTrue(scheduler.initialize(base));
     assertFalse(scheduler.initialize(base));
     scheduler.playerSettings().setRaycastOrigin(RaycastOrigin.PLAYER_EYE);
+    scheduler.soundSettings().setCenterCameraEntitySounds(true);
     PlayerRotationParameters rotation =
         PlayerRotationParameters.of(
             PlayerRotationMode.PARALLEL_WITH_CAMERA, 0.0, PlayerRotationSmoothing.IMMEDIATE);
@@ -33,6 +34,7 @@ class SchedulerRuntimeTest {
         scheduler.cameraSettings().smoothing().normal().horizontalPivotHalfLife(),
         base.parameters.cameraSmoothing().horizontalPivotHalfLife());
     assertEquals(RaycastOrigin.PLAYER_EYE, base.parameters.raycastOrigin());
+    assertTrue(base.parameters.centerCameraEntitySounds());
     assertEquals(rotation, base.parameters.playerRotation());
 
     scheduler.setAiming(true);
@@ -49,6 +51,7 @@ class SchedulerRuntimeTest {
 
   private static final class FakeBase implements ThirdPersonBase {
     private BaseParameters parameters = BaseParameters.defaults();
+
     @Override
     public void applyParameters(BaseParameters parameters) {
       this.parameters = parameters;

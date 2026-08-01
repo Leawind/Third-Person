@@ -11,6 +11,7 @@ import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraProfi
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.hud.HudSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerSettings;
+import io.github.leawind.thirdperson.internal.logic.scheduler.sound.SoundSettings;
 import java.util.Objects;
 
 /// Owns configuration and projects dynamic game state into instantaneous base parameters.
@@ -22,6 +23,7 @@ public final class SchedulerRuntime {
   private final AimingSettings aimingSettings = new AimingSettings();
   private final PlayerSettings playerSettings = new PlayerSettings();
   private final HudSettings hudSettings = new HudSettings();
+  private final SoundSettings soundSettings = new SoundSettings();
   private BaseParameters appliedParameters = BaseParameters.defaults();
   private ThirdPersonBase base;
 
@@ -64,6 +66,10 @@ public final class SchedulerRuntime {
 
   public HudSettings hudSettings() {
     return hudSettings;
+  }
+
+  public SoundSettings soundSettings() {
+    return soundSettings;
   }
 
   public boolean isAiming() {
@@ -112,6 +118,7 @@ public final class SchedulerRuntime {
             cameraProfile(flyingOrSwimming),
             cameraSmoothing(flyingOrSwimming),
             playerSettings.raycastOrigin(),
+            soundSettings.centerCameraEntitySounds(),
             Objects.requireNonNull(playerRotation, "playerRotation")));
   }
 

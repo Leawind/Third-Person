@@ -11,7 +11,9 @@
     "LocalPlayerMixin",
     "MinecraftMixin",
     "MovementInputAccessor",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "sound.EntitySoundPositionMixin",
+    "sound.LocalSoundPlaybackMixin"
   ],
   "mixins": [],
   "injectors": {

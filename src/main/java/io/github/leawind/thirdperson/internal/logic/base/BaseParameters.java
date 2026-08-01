@@ -12,12 +12,14 @@ public record BaseParameters(
     CameraProfile camera,
     CameraSmoothingParameters cameraSmoothing,
     RaycastOrigin raycastOrigin,
+    boolean centerCameraEntitySounds,
     PlayerRotationParameters playerRotation) {
   private static final BaseParameters DEFAULTS =
       new BaseParameters(
           new CameraProfile(1.5, -0.25, -0.25, -0.25, 1.0, false),
           new CameraSmoothingParameters(0.064, 0.08, 0.0, 0.06, 0.08, 0.04),
           RaycastOrigin.CAMERA,
+          false,
           PlayerRotationParameters.custom(
               Optional.empty(), 0.0, PlayerRotationSmoothing.IMMEDIATE));
 
@@ -33,6 +35,7 @@ public record BaseParameters(
   }
 
   public BaseParameters withPlayerRotation(PlayerRotationParameters value) {
-    return new BaseParameters(camera, cameraSmoothing, raycastOrigin, value);
+    return new BaseParameters(
+        camera, cameraSmoothing, raycastOrigin, centerCameraEntitySounds, value);
   }
 }

@@ -17,6 +17,7 @@ class ThirdPersonPersistentStateTest {
           .cameraSettings()
           .updateProfile(CameraProfileSlot.NORMAL, profile -> profile.withOffsetX(0.42));
       runtime.aimingSettings().setSmartAiming(false);
+      runtime.soundSettings().setCenterCameraEntitySounds(true);
 
       ThirdPersonPersistentState extracted = ThirdPersonPersistentState.extract(runtime);
       defaults.applyTo(runtime);
@@ -24,6 +25,7 @@ class ThirdPersonPersistentStateTest {
 
       assertEquals(0.42, runtime.cameraSettings().normalProfile().offsetX());
       assertEquals(false, runtime.aimingSettings().smartAiming());
+      assertEquals(true, runtime.soundSettings().centerCameraEntitySounds());
     } finally {
       defaults.applyTo(runtime);
     }

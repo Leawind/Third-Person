@@ -13,7 +13,12 @@ import java.util.Objects;
 
 /// Serialized projection of runtime-owned state. This is not a live configuration object.
 public record ThirdPersonPersistentState(
-    int schemaVersion, CameraState camera, AimingState aiming, PlayerState player, HudState hud) {
+    int schemaVersion,
+    CameraState camera,
+    AimingState aiming,
+    PlayerState player,
+    SoundState sound,
+    HudState hud) {
   public static final int CURRENT_SCHEMA_VERSION = 2;
 
   public ThirdPersonPersistentState {
@@ -23,6 +28,7 @@ public record ThirdPersonPersistentState(
     Objects.requireNonNull(camera, "camera");
     Objects.requireNonNull(aiming, "aiming");
     Objects.requireNonNull(player, "player");
+    Objects.requireNonNull(sound, "sound");
     Objects.requireNonNull(hud, "hud");
   }
 
@@ -40,6 +46,7 @@ public record ThirdPersonPersistentState(
             true,
             true,
             RaycastOrigin.CAMERA),
+        new SoundState(false),
         new HudState(CrosshairMode.AUTO));
   }
 
@@ -48,6 +55,7 @@ public record ThirdPersonPersistentState(
     var camera = runtime.cameraSettings();
     var aiming = runtime.aimingSettings();
     var player = runtime.playerSettings();
+    var sound = runtime.soundSettings();
     return new ThirdPersonPersistentState(
         CURRENT_SCHEMA_VERSION,
         new CameraState(camera.normalProfile(), camera.aimingProfile(), camera.smoothing()),
@@ -59,6 +67,7 @@ public record ThirdPersonPersistentState(
             player.autoRotateInteracting(),
             player.doNotRotateWhenEating(),
             player.raycastOrigin()),
+        new SoundState(sound.centerCameraEntitySounds()),
         new HudState(runtime.hudSettings().crosshairMode()));
   }
 
@@ -77,6 +86,7 @@ public record ThirdPersonPersistentState(
             player.autoRotateInteracting(),
             player.doNotRotateWhenEating(),
             player.raycastOrigin());
+    runtime.soundSettings().setCenterCameraEntitySounds(sound.centerCameraEntitySounds());
     runtime.hudSettings().setCrosshairMode(hud.crosshair());
   }
 
@@ -118,6 +128,8 @@ public record ThirdPersonPersistentState(
       Objects.requireNonNull(raycastOrigin, "raycastOrigin");
     }
   }
+
+  public record SoundState(boolean centerCameraEntitySounds) {}
 
   public record HudState(CrosshairMode crosshair) {
     public HudState {

@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.logic.scheduler.state;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -30,6 +31,7 @@ class JsonStateCodecTest {
     player.addProperty("normalMode", "parallel_with_camera");
     player.addProperty("autoRotateInteracting", false);
     player.addProperty("raycastOrigin", "player_eye");
+    json.getAsJsonObject("sound").addProperty("centerCameraEntitySounds", true);
     json.getAsJsonObject("hud").addProperty("crosshair", "on");
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(json.toString());
@@ -39,6 +41,7 @@ class JsonStateCodecTest {
     assertEquals(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, decoded.player().normalMode());
     assertFalse(decoded.player().autoRotateInteracting());
     assertEquals(RaycastOrigin.PLAYER_EYE, decoded.player().raycastOrigin());
+    assertTrue(decoded.sound().centerCameraEntitySounds());
     assertEquals(CrosshairMode.ON, decoded.hud().crosshair());
   }
 
@@ -78,6 +81,7 @@ class JsonStateCodecTest {
             defaults.camera(),
             new ThirdPersonPersistentState.AimingState(true, List.of("#example:ranged"), List.of()),
             defaults.player(),
+            defaults.sound(),
             defaults.hud());
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(JsonStateCodec.encode(state));
@@ -97,6 +101,7 @@ class JsonStateCodecTest {
                 defaults.camera().smoothing()),
             defaults.aiming(),
             defaults.player(),
+            defaults.sound(),
             defaults.hud());
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(JsonStateCodec.encode(state));
