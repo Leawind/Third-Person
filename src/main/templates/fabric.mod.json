@@ -21,7 +21,7 @@
   "depends": {
     "fabricloader": "*",
     "fabric-api": "*",
-    "perspective_api": "*",
+    "perspective_api": ">=${perspectiveApiVersion}",
     "minecraft": "${mc}"
   },
   "recommends": {

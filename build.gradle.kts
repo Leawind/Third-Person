@@ -17,6 +17,7 @@ val modDescriptionValue = requiredProp("mod.description")
 val modAuthorValue = requiredProp("mod.author")
 val modLicenseValue = requiredProp("mod.license")
 val modSourceUrlValue = requiredProp("mod.source_url")
+val perspectiveApiVersion = requiredProp("mod.perspective_api_version")
 val minecraftDependency = requiredProp("meta.mcDep")
 
 val isFabric = modstitch.isLoom
@@ -92,6 +93,7 @@ modstitch {
         replacementProperties.put("github", modSourceUrlValue.removePrefix("https://github.com/"))
         replacementProperties.put("mc", minecraftDependency)
         replacementProperties.put("loaderVersion", "*")
+        replacementProperties.put("perspectiveApiVersion", perspectiveApiVersion)
     }
 
     mixin {
@@ -141,7 +143,7 @@ if (isForge || (isNeoforge && stonecutter.current.parsed < "1.21")) {
 
 dependencies {
     // Perspective API (required)
-    modstitchModImplementation("maven.modrinth:LIqveQm1:${property("mod.perspective_api_version")}+${loader}-$mcVersion")
+    modstitchModImplementation("maven.modrinth:LIqveQm1:$perspectiveApiVersion+${loader}-$mcVersion")
 
     // Fabric API
     optionalProp("deps.fabricApi") { modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:$it") }
