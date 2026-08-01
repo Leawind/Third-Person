@@ -1,11 +1,10 @@
 {
-	"required": true,
-	"package": "io.github.leawind.thirdperson.platform.forge.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"minVersion": "0.8",
-	"client": [
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "io.github.leawind.thirdperson.platform.forge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
