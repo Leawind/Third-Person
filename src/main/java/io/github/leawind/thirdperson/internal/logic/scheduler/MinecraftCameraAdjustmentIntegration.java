@@ -51,7 +51,9 @@ public final class MinecraftCameraAdjustmentIntegration {
   }
 
   private static boolean canControl(LocalPlayer player, SchedulerRuntime runtime) {
-    return player == Minecraft.getInstance().player && runtime.base().isControllingLocalPlayer();
+    // Vanilla sends mouse turning through the local player even when a spectator is attached to a
+    // different camera entity. Camera adjustment belongs to the active camera, not player control.
+    return player == Minecraft.getInstance().player && runtime.base().isCameraControlEnabled();
   }
 
   private static void syncCamera(SchedulerRuntime runtime, LocalPlayer player) {
