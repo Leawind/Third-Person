@@ -2,7 +2,6 @@ package io.github.leawind.thirdperson.internal.logic;
 
 import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.CameraEntityOpacityEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
@@ -10,7 +9,6 @@ import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerTurnEvent
 import io.github.leawind.thirdperson.internal.bridge.events.MouseScrollEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.CrosshairGateEvent;
-import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftClientIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInputIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInteractionIntegration;
@@ -35,7 +33,6 @@ public final class ModEvents {
     }
     registered = true;
     AfterVanillaPickEvent.register(MinecraftInteractionIntegration::refreshRaycast);
-    CameraEntityOpacityEvent.register(BaseRuntime.getInstance()::cameraEntityOpacity);
     ClientTickEvent.register(ModEvents::onClientTick);
     RenderFrameEvent.register(ModEvents::beforeRenderFrame);
     LocalPlayerTurnEvent.register(ModEvents::onLocalPlayerTurn);

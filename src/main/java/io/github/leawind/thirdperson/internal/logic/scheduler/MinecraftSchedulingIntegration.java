@@ -11,7 +11,6 @@ import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRot
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 /// Detects dynamic game state and schedules one complete base-layer parameter snapshot per tick.
@@ -27,28 +26,12 @@ public final class MinecraftSchedulingIntegration {
     if (player == null || minecraft.level == null) {
       refreshPredictedTargetEachFrame = false;
       runtime.session().reset();
-      runtime.base().setCameraEntityOpacityTarget(1.0);
       return;
     }
 
-    scheduleCameraEntityOpacity(minecraft, runtime);
     boolean flyingOrSwimming = player.isFallFlying() || player.isSwimming();
     PlayerRotationParameters rotation = schedulePlayerRotation(minecraft, runtime, player);
     runtime.applyParameters(flyingOrSwimming, rotation);
-  }
-
-  private static void scheduleCameraEntityOpacity(
-      Minecraft minecraft, SchedulerRuntime runtime) {
-    double targetOpacity = 1.0;
-    Entity cameraEntity = minecraft.getCameraEntity();
-    if (runtime.base().isCameraControlEnabled()
-        && cameraEntity != null
-        && !cameraEntity.isSpectator()) {
-      double distanceToBounds =
-          Math.sqrt(cameraEntity.getBoundingBox().distanceToSqr(Bridge.cameraPosition(minecraft)));
-      targetOpacity = CameraEntityOpacityPolicy.targetOpacity(distanceToBounds);
-    }
-    runtime.base().setCameraEntityOpacityTarget(targetOpacity);
   }
 
   private static PlayerRotationParameters schedulePlayerRotation(

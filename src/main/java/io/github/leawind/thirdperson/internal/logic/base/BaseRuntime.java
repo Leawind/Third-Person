@@ -10,7 +10,6 @@ import java.util.Optional;
 
 /// Process-wide owner of the mode-independent camera and player-control implementation.
 public final class BaseRuntime implements ThirdPersonBase {
-  private static final double CAMERA_ENTITY_OPACITY_HALF_LIFE_SECONDS = 0.0625;
   private static final BaseRuntime INSTANCE = new BaseRuntime();
 
   private final BaseSession session = new BaseSession();
@@ -33,11 +32,6 @@ public final class BaseRuntime implements ThirdPersonBase {
     this.parameters = Objects.requireNonNull(parameters, "parameters");
   }
 
-  @Override
-  public void setCameraEntityOpacityTarget(double opacity) {
-    session.cameraEntityOpacity().setTarget(opacity);
-  }
-
   BaseParameters parameters() {
     return parameters;
   }
@@ -45,11 +39,6 @@ public final class BaseRuntime implements ThirdPersonBase {
   @Override
   public boolean isCameraControlEnabled() {
     return session.isControllingCamera();
-  }
-
-  @Override
-  public float cameraEntityOpacity(float partialTick) {
-    return session.isControllingCamera() ? session.cameraEntityOpacity().sample(partialTick) : 1.0f;
   }
 
   @Override
@@ -80,10 +69,6 @@ public final class BaseRuntime implements ThirdPersonBase {
     Objects.requireNonNull(collision, "collision");
     return cameraController.update(
         frame, parameters.camera(), parameters.cameraSmoothing(), collision);
-  }
-
-  void updateCameraEntityOpacity(double deltaSeconds) {
-    session.cameraEntityOpacity().update(deltaSeconds, CAMERA_ENTITY_OPACITY_HALF_LIFE_SECONDS);
   }
 
   public boolean initialize() {

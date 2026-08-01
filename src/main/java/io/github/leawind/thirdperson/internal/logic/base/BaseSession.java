@@ -14,7 +14,6 @@ public final class BaseSession {
   private final LookController lookController = new LookController();
   private final PlayerRotationController playerRotationController = new PlayerRotationController();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
-  private final CameraEntityOpacity cameraEntityOpacity = new CameraEntityOpacity();
   private MovementIntent movementIntent;
   private CameraPose finalCameraPose;
 
@@ -36,10 +35,6 @@ public final class BaseSession {
 
   public CameraSmoother cameraSmoother() {
     return cameraSmoother;
-  }
-
-  public CameraEntityOpacity cameraEntityOpacity() {
-    return cameraEntityOpacity;
   }
 
   public Optional<MovementIntent> movementIntent() {
@@ -66,7 +61,6 @@ public final class BaseSession {
   public void resetCameraTracking() {
     lookController.reset();
     cameraSmoother.reset();
-    cameraEntityOpacity.reset();
     clearMovementIntent();
     finalCameraPose = null;
   }

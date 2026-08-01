@@ -49,26 +49,14 @@ class SchedulerRuntimeTest {
 
   private static final class FakeBase implements ThirdPersonBase {
     private BaseParameters parameters = BaseParameters.defaults();
-    private double cameraEntityOpacityTarget = 1.0;
-
     @Override
     public void applyParameters(BaseParameters parameters) {
       this.parameters = parameters;
     }
 
     @Override
-    public void setCameraEntityOpacityTarget(double opacity) {
-      cameraEntityOpacityTarget = opacity;
-    }
-
-    @Override
     public boolean isCameraControlEnabled() {
       return true;
-    }
-
-    @Override
-    public float cameraEntityOpacity(float partialTick) {
-      return (float) cameraEntityOpacityTarget;
     }
 
     @Override

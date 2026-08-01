@@ -1,6 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,8 +38,6 @@ class BaseSessionTest {
     session.recordMovementIntent(new MovementIntent(1.0f, 0.0f, 30.0f, 15.0f));
     session.recordFinalCameraPose(
         CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
-    session.cameraEntityOpacity().setTarget(0.0);
-    session.cameraEntityOpacity().update(0.0, 0.0);
 
     session.resetCameraTracking();
 
@@ -48,6 +45,5 @@ class BaseSessionTest {
     assertFalse(session.lookController().isInitialized());
     assertTrue(session.movementIntent().isEmpty());
     assertTrue(session.finalCameraPose().isEmpty());
-    assertEquals(1.0f, session.cameraEntityOpacity().sample(1.0f));
   }
 }
