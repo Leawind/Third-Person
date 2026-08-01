@@ -2,9 +2,9 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import com.google.auto.service.AutoService;
 import io.github.leawind.perspectiveapi.api.PerspectiveBehavior;
+import io.github.leawind.perspectiveapi.api.PerspectiveContext;
 import io.github.leawind.perspectiveapi.api.PerspectiveInfo;
 import io.github.leawind.perspectiveapi.api.PerspectiveState;
-import io.github.leawind.perspectiveapi.api.context.PerspectiveContext;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraFrameInput;
