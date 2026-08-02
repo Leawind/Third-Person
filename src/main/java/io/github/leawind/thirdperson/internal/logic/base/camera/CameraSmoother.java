@@ -6,9 +6,8 @@ import java.util.Optional;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
-/// Smooths independent camera-rig inputs without mixing mouse rotation into world position.
+/// Smooths frame-updated camera-rig inputs; the world-space pivot is smoothed on client ticks.
 public final class CameraSmoother {
-  private final Vector3d pivot = new Vector3d();
   private final Quaternionf rotation = new Quaternionf();
   private boolean initialized;
   private double distance;
@@ -29,22 +28,14 @@ public final class CameraSmoother {
     var targetRotation = target.copyRotation(new Quaternionf());
     CameraParameters targetParameters = target.parameters();
     if (!initialized) {
-      pivot.set(targetPivot);
       rotation.set(targetRotation);
       distance = targetParameters.distance();
       offsetX = targetParameters.anchorNdcX();
       offsetY = targetParameters.anchorNdcY();
       fovMultiplier = target.fovMultiplier();
       initialized = true;
-      return snapshot(target.baseFovDegrees());
+      return snapshot(targetPivot, target.baseFovDegrees());
     }
-
-    double horizontalAlpha =
-        ExponentialSmoothing.alpha(elapsed, smoothing.horizontalPivotHalfLife());
-    double verticalAlpha = ExponentialSmoothing.alpha(elapsed, smoothing.verticalPivotHalfLife());
-    pivot.x += (targetPivot.x - pivot.x) * horizontalAlpha;
-    pivot.y += (targetPivot.y - pivot.y) * verticalAlpha;
-    pivot.z += (targetPivot.z - pivot.z) * horizontalAlpha;
 
     double rotationAlpha = ExponentialSmoothing.alpha(elapsed, smoothing.rotationHalfLife());
     if (rotationAlpha >= 1.0) {
@@ -65,12 +56,11 @@ public final class CameraSmoother {
     offsetY += (targetParameters.anchorNdcY() - offsetY) * offsetAlpha;
     distance += (targetParameters.distance() - distance) * distanceAlpha;
     fovMultiplier += (target.fovMultiplier() - fovMultiplier) * fovAlpha;
-    return snapshot(target.baseFovDegrees());
+    return snapshot(targetPivot, target.baseFovDegrees());
   }
 
   public void reset() {
     initialized = false;
-    pivot.zero();
     rotation.identity();
     distance = 0.0;
     offsetX = 0.0;
@@ -78,7 +68,7 @@ public final class CameraSmoother {
     fovMultiplier = 0.0;
   }
 
-  private Optional<CameraInput> snapshot(float baseFovDegrees) {
+  private Optional<CameraInput> snapshot(Vector3d pivot, float baseFovDegrees) {
     CameraParameters parameters;
     try {
       parameters = new CameraParameters(distance, offsetX, offsetY);

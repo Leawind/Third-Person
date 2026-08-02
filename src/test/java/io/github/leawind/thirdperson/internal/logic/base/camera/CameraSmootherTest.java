@@ -15,14 +15,7 @@ class CameraSmootherTest {
   void independentSmoothingIsFrameRateIndependent() {
     CameraInput start = input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f);
     CameraInput target =
-        input(
-            10.0,
-            new Quaternionf().rotationY(0.5f),
-            6.0,
-            0.5,
-            -0.25,
-            90.0f,
-            0.8);
+        input(10.0, new Quaternionf().rotationY(0.5f), 6.0, 0.5, -0.25, 90.0f, 0.8);
     var oneFrame = new CameraSmoother();
     var twoFrames = new CameraSmoother();
     oneFrame.update(start, 0.0, BALANCED).orElseThrow();
@@ -32,10 +25,7 @@ class CameraSmootherTest {
     twoFrames.update(target, 0.05, BALANCED).orElseThrow();
     CameraInput second = twoFrames.update(target, 0.05, BALANCED).orElseThrow();
 
-    assertEquals(
-        first.copyPivot(new Vector3d()).x,
-        second.copyPivot(new Vector3d()).x,
-        1.0e-9);
+    assertEquals(first.copyPivot(new Vector3d()).x, second.copyPivot(new Vector3d()).x, 1.0e-9);
     assertEquals(first.parameters().distance(), second.parameters().distance(), 1.0e-9);
     assertEquals(first.parameters().anchorNdcX(), second.parameters().anchorNdcX(), 1.0e-9);
     assertEquals(first.fovDegrees(), second.fovDegrees(), 1.0e-5f);
@@ -44,19 +34,12 @@ class CameraSmootherTest {
   @Test
   void equivalentNegativeQuaternionUsesTheShortestArc() {
     var smoother = new CameraSmoother();
-    smoother.update(
-        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
 
     CameraInput result =
         smoother
             .update(
-                input(
-                    0.0,
-                    new Quaternionf(0.0f, 0.0f, 0.0f, -1.0f),
-                    2.0,
-                    0.0,
-                    0.0,
-                    70.0f),
+                input(0.0, new Quaternionf(0.0f, 0.0f, 0.0f, -1.0f), 2.0, 0.0, 0.0, 70.0f),
                 0.05,
                 BALANCED)
             .orElseThrow();
@@ -71,37 +54,41 @@ class CameraSmootherTest {
   @Test
   void zeroRotationHalfLifeAppliesMouseRotationImmediately() {
     var smoother = new CameraSmoother();
-    smoother.update(
-        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
     var targetRotation = new Quaternionf().rotationYXZ(0.8f, -0.3f, 0.0f);
-    var immediateRotation =
-        new CameraSmoothingParameters(0.25, 0.25, 0.0, 0.25, 0.25, 0.25);
+    var immediateRotation = new CameraSmoothingParameters(0.25, 0.25, 0.0, 0.25, 0.25, 0.25);
 
     CameraInput result =
         smoother
-            .update(
-                input(10.0, targetRotation, 6.0, 0.5, -0.25, 90.0f),
-                0.01,
-                immediateRotation)
+            .update(input(10.0, targetRotation, 6.0, 0.5, -0.25, 90.0f), 0.01, immediateRotation)
             .orElseThrow();
 
     Quaternionf actual = result.copyRotation(new Quaternionf());
     assertEquals(1.0f, Math.abs(actual.dot(targetRotation)), 1.0e-6f);
-    assertTrue(result.copyPivot(new Vector3d()).x < 10.0);
+    assertEquals(10.0, result.copyPivot(new Vector3d()).x);
+  }
+
+  @Test
+  void acceptsTheTickSmoothedPivotWithoutApplyingFrameSmoothingAgain() {
+    var smoother = new CameraSmoother();
+    smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+
+    CameraInput result =
+        smoother
+            .update(input(10.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.001, BALANCED)
+            .orElseThrow();
+
+    assertEquals(10.0, result.copyPivot(new Vector3d()).x);
   }
 
   @Test
   void vanillaFovEffectsRemainImmediateIndependentlyOfFovSmoothing() {
     var smoother = new CameraSmoother();
-    smoother.update(
-        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
 
     CameraInput result =
         smoother
-            .update(
-                input(0.0, new Quaternionf(), 6.0, 0.0, 0.0, 80.5f),
-                0.01,
-                BALANCED)
+            .update(input(0.0, new Quaternionf(), 6.0, 0.0, 0.0, 80.5f), 0.01, BALANCED)
             .orElseThrow();
 
     assertEquals(80.5f, result.fovDegrees());
@@ -111,22 +98,15 @@ class CameraSmootherTest {
   @Test
   void compositionFovMultiplierUsesItsOwnSmoothingState() {
     var smoother = new CameraSmoother();
-    smoother.update(
-        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
 
     CameraInput unchangedAtZeroElapsed =
         smoother
-            .update(
-                input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f, 0.8),
-                0.0,
-                BALANCED)
+            .update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f, 0.8), 0.0, BALANCED)
             .orElseThrow();
     CameraInput halfway =
         smoother
-            .update(
-                input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f, 0.8),
-                0.1,
-                BALANCED)
+            .update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f, 0.8), 0.1, BALANCED)
             .orElseThrow();
 
     assertEquals(1.0, unchangedAtZeroElapsed.fovMultiplier(), 1.0e-12);
@@ -136,8 +116,7 @@ class CameraSmootherTest {
   @Test
   void zeroHalfLivesApplyEveryTargetImmediately() {
     var smoother = new CameraSmoother();
-    smoother.update(
-        input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
+    smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
     var immediate = new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     CameraInput result =

@@ -75,7 +75,17 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     }
 
     var eyePosition = entity.getEyePosition(context.partialTicks());
-    var pivot = new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z);
+    var interpolatedPivot = new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z);
+    var pivot =
+        runtime
+            .session()
+            .cameraPivotSmoother()
+            .sample(
+                interpolatedPivot, context.partialTicks(), runtime.parameters().cameraSmoothing())
+            .orElse(null);
+    if (pivot == null) {
+      return;
+    }
     int windowHeight = minecraft.getWindow().getHeight();
     double aspectRatio =
         windowHeight > 0 ? (double) minecraft.getWindow().getWidth() / windowHeight : 1.0;

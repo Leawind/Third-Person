@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPivotSmoother;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoother;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookController;
@@ -13,6 +14,7 @@ public final class BaseSession {
   private boolean perspectiveActive;
   private final LookController lookController = new LookController();
   private final PlayerRotationController playerRotationController = new PlayerRotationController();
+  private final CameraPivotSmoother cameraPivotSmoother = new CameraPivotSmoother();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
   private MovementIntent movementIntent;
   private CameraPose finalCameraPose;
@@ -35,6 +37,10 @@ public final class BaseSession {
 
   public CameraSmoother cameraSmoother() {
     return cameraSmoother;
+  }
+
+  public CameraPivotSmoother cameraPivotSmoother() {
+    return cameraPivotSmoother;
   }
 
   public Optional<MovementIntent> movementIntent() {
@@ -60,6 +66,7 @@ public final class BaseSession {
   /// Clears state tied to the identity and previous poses of the camera entity.
   public void resetCameraTracking() {
     lookController.reset();
+    cameraPivotSmoother.reset();
     cameraSmoother.reset();
     clearMovementIntent();
     finalCameraPose = null;
