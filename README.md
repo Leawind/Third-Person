@@ -1,10 +1,11 @@
-# Leawind's Third Person Documentation
+# Leawind's Third Person Documentation (deprecated)
 
-## Build scripts
+The documentation formerly published at
+<https://leawind.github.io/Third-Person/> has moved:
 
-| name                | script                                  |   |
-| ------------------- | --------------------------------------- | - |
-| `docs:dev`          | `vitepress dev docs`                    |   |
-| `docs:build`        | `vitepress build docs`                  |   |
-| `docs:preview`      | `vitepress preview docs`                |   |
-| `gen-mc-vers-table` | `node scripts/gen_mc_version_table.mjs` |   |
+- [简体中文](https://leawind.github.io/zh_cn/Third-Person/)
+- [English](https://leawind.github.io/en_us/Third-Person/)
+
+This branch now publishes a small redirect site so that existing links continue
+to lead readers to the current documentation. Run `deno task check` to validate
+and build it into `dist/`.

@@ -26,11 +26,8 @@ jobs:
         with:
           deno-version: v2.7.x
 
-      - name: Prebuild
-        run: deno task gen-mc-vers-table
-
-      - name: Build documentation
-        run: deno task docs:build
+      - name: Build redirect site
+        run: deno task build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
