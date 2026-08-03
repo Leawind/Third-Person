@@ -59,7 +59,7 @@ public final class MinecraftInteractionIntegration {
     }
 
     Vec3 direction = new Vec3(cameraForward.x, cameraForward.y, cameraForward.z).normalize();
-    HitResult cameraHit = Bridge.pickFrom(player, from, direction, candidateRange);
+    Bridge.SpatialHit cameraHit = Bridge.pickFrom(player, from, direction, candidateRange);
     HitResult filtered = filterByPlayerReach(cameraHit, eye, blockRange, entityRange);
     minecraft.hitResult = filtered;
     minecraft.crosshairPickEntity =
@@ -68,11 +68,12 @@ public final class MinecraftInteractionIntegration {
   }
 
   private static HitResult filterByPlayerReach(
-      HitResult hit, Vec3 playerEye, double blockRange, double entityRange) {
+      Bridge.SpatialHit spatialHit, Vec3 playerEye, double blockRange, double entityRange) {
+    HitResult hit = spatialHit.rawHit();
     double allowedRange = hit instanceof EntityHitResult ? entityRange : blockRange;
     return InteractionRaycastGeometry.isWithinRange(
-            hit.getLocation().distanceToSqr(playerEye), allowedRange)
+            spatialHit.worldLocation().distanceToSqr(playerEye), allowedRange)
         ? hit
-        : Bridge.missAt(hit.getLocation(), playerEye);
+        : Bridge.missAt(spatialHit.worldLocation(), playerEye);
   }
 }

@@ -63,7 +63,7 @@ public final class MinecraftPlayerRotationTargeting {
               Vec3 from = toVec3(rayStart);
               Vec3 to = toVec3(new Vector3d(rayStart).fma(rayLength, view.forward()));
               Bridge.BlockHit blockHit = Bridge.clipBlocks(player, from, to, useColliderBlocks);
-              double blockDistanceSquared = from.distanceToSqr(blockHit.location());
+              double blockDistanceSquared = from.distanceToSqr(blockHit.worldLocation());
               Vec3 entityRayEnd =
                   blockHit.missed()
                       ? to
@@ -78,7 +78,7 @@ public final class MinecraftPlayerRotationTargeting {
                 return new CameraHit(toVector(entityHit.orElseThrow()), false, false);
               }
               return new CameraHit(
-                  toVector(blockHit.location()), blockHit.blocked(), blockHit.missed());
+                  toVector(blockHit.worldLocation()), blockHit.blocked(), blockHit.missed());
             });
   }
 

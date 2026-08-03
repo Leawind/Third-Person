@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.bridge;
 
 import io.github.leawind.thirdperson.ThirdPerson;
+import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import java.util.function.Consumer;
 import java.util.Optional;
 import net.minecraft.client.KeyMapping;
@@ -129,7 +130,8 @@ public final class Bridge {
                     entity));
     return hit.getType() == HitResult.Type.MISS
         ? Optional.empty()
-        : Optional.of(toVector3d(hit.getLocation()));
+        : Optional.of(
+            toVector3d(SableCompatibility.projectToWorld(entity.level(), hit.getLocation())));
   }
 
   public static BlockHit clipBlocks(
@@ -146,10 +148,12 @@ public final class Bridge {
                         : ClipContext.Block.OUTLINE,
                     ClipContext.Fluid.NONE,
                     entity));
-    return new BlockHit(
-        hit.getLocation(),
-        hit.getType() == HitResult.Type.BLOCK,
-        hit.getType() == HitResult.Type.MISS);
+    boolean blocked = hit.getType() == HitResult.Type.BLOCK;
+    Vec3 worldLocation =
+        blocked
+            ? SableCompatibility.projectToWorld(entity.level(), hit.getLocation())
+            : hit.getLocation();
+    return new BlockHit(worldLocation, blocked, hit.getType() == HitResult.Type.MISS);
   }
 
   public static Optional<Vec3> pickEntity(
@@ -162,14 +166,19 @@ public final class Bridge {
             new AABB(from, to),
             entity -> !entity.isSpectator() && entity.isPickable(),
             maxDistanceSquared);
-    return hit == null ? Optional.empty() : Optional.of(hit.getLocation());
+    return hit == null
+        ? Optional.empty()
+        : Optional.of(SableCompatibility.projectToWorld(source.level(), hit.getLocation()));
   }
 
   /// Runs vanilla-style block/entity candidate selection along an arbitrary world-space ray.
   ///
+  /// The raw hit remains in the coordinate space expected by vanilla/Sable interaction code;
+  /// [SpatialHit#worldLocation()] is the corresponding point for distance calculations.
+  ///
   /// The caller is responsible for validating the selected hit against the player's actual
   /// interaction ranges.
-  public static HitResult pickFrom(
+  public static SpatialHit pickFrom(
       Entity source, Vec3 from, Vec3 direction, double candidateRange) {
     Vec3 rayEnd = from.add(direction.scale(candidateRange));
     HitResult blockHit =
@@ -182,8 +191,13 @@ public final class Bridge {
                     ClipContext.Block.OUTLINE,
                     ClipContext.Fluid.NONE,
                     source));
-    double blockDistanceSquared = blockHit.getLocation().distanceToSqr(from);
-    Vec3 entityRayEnd = blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockHit.getLocation();
+    Vec3 blockWorldLocation =
+        blockHit.getType() == HitResult.Type.BLOCK
+            ? SableCompatibility.projectToWorld(source.level(), blockHit.getLocation())
+            : blockHit.getLocation();
+    double blockDistanceSquared = blockWorldLocation.distanceToSqr(from);
+    Vec3 entityRayEnd =
+        blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockWorldLocation;
     EntityHitResult entityHit =
         ProjectileUtil.getEntityHitResult(
             source,
@@ -192,10 +206,14 @@ public final class Bridge {
             new AABB(from, entityRayEnd).inflate(1.0, 1.0, 1.0),
             entity -> !entity.isSpectator() && entity.isPickable(),
             blockDistanceSquared);
-    return entityHit != null
-            && entityHit.getLocation().distanceToSqr(from) < blockDistanceSquared
-        ? entityHit
-        : blockHit;
+    if (entityHit == null) {
+      return new SpatialHit(blockHit, blockWorldLocation);
+    }
+    Vec3 entityWorldLocation =
+        SableCompatibility.projectToWorld(source.level(), entityHit.getLocation());
+    return entityWorldLocation.distanceToSqr(from) < blockDistanceSquared
+        ? new SpatialHit(entityHit, entityWorldLocation)
+        : new SpatialHit(blockHit, blockWorldLocation);
   }
 
   public static HitResult missAt(Vec3 location, Vec3 origin) {
@@ -232,7 +250,10 @@ public final class Bridge {
     return new Vector3d(value.x, value.y, value.z);
   }
 
-  public record BlockHit(Vec3 location, boolean blocked, boolean missed) {}
+  public record BlockHit(Vec3 worldLocation, boolean blocked, boolean missed) {}
+
+  /// A raw vanilla/Sable hit paired with its world-space position for spatial calculations.
+  public record SpatialHit(HitResult rawHit, Vec3 worldLocation) {}
 
   public record CameraSubjectMeasurements(double bodyRadius, double vehicleTotalSize) {}
 }

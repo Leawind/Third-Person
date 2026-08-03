@@ -26,6 +26,8 @@ val checkArchitecture by tasks.registering {
         val schedulerPackage = "io.github.leawind.thirdperson.internal.logic.scheduler."
         val logicPackage = "io.github.leawind.thirdperson.internal.logic."
         val internalPackage = "io.github.leawind.thirdperson.internal."
+        val platformPackage = "io.github.leawind.thirdperson.platform."
+        val platformApiPackage = "${platformPackage}api."
         val baseCategories = setOf("camera", "math", "rotation")
         val schedulerCategories =
             setOf("aiming", "camera", "config", "hud", "input", "rotation", "sound", "state")
@@ -53,7 +55,6 @@ val checkArchitecture by tasks.registering {
         val forbiddenBridgeImports = listOf(
             "io.github.leawind.thirdperson.api.",
             logicPackage,
-            "io.github.leawind.thirdperson.platform.",
         )
         val violations = mutableListOf<String>()
 
@@ -139,6 +140,14 @@ val checkArchitecture by tasks.registering {
                 if (isBridge && forbiddenBridgeImports.any(imported::startsWith)) {
                     violations.add("$relativePath:${index + 1}: bridge must not import $imported")
                 }
+                if (isBridge
+                    && imported.startsWith(platformPackage)
+                    && !imported.startsWith(platformApiPackage)
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: bridge may only import the platform API, not $imported"
+                    )
+                }
                 if (isUtils && imported.startsWith("io.github.leawind.thirdperson.")) {
                     violations.add("$relativePath:${index + 1}: utils must be business-neutral")
                 }
@@ -178,6 +187,10 @@ allprojects {
         exclusiveContent {
             forRepository { maven("https://maven.isxander.dev/releases") }
             filter { includeGroup("dev.isxander") }
+        }
+        exclusiveContent {
+            forRepository { maven("https://maven.ryanhcode.dev/releases") }
+            filter { includeGroup("dev.ryanhcode.sable-companion") }
         }
         exclusiveContent {
             forRepository { maven("https://maven.quiltmc.org/repository/release") }

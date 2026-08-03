@@ -19,6 +19,7 @@ val modLicenseValue = requiredProp("mod.license")
 val modLogoFile = requiredProp("mod.logo_file")
 val modSourceUrlValue = requiredProp("mod.source_url")
 val perspectiveApiVersion = requiredProp("mod.perspective_api_version")
+val sableCompanionVersion = requiredProp("mod.sable_companion_version")
 val minecraftDependency = requiredProp("meta.mcDep")
 
 val isFabric = modstitch.isLoom
@@ -147,6 +148,14 @@ if (isForge || (isNeoforge && stonecutter.current.parsed < "1.21")) {
 dependencies {
     // Perspective API (required)
     modstitchModImplementation("maven.modrinth:LIqveQm1:$perspectiveApiVersion+${loader}-$mcVersion")
+
+    // Sable Companion is embedded by Sable itself. Its 1.21.1 artifact cannot be bundled into
+    // variants that still support Minecraft 1.21, so only compile against its optional API.
+    if (stonecutter.current.parsed >= "1.21" && stonecutter.current.parsed < "1.21.11") {
+        compileOnly(
+            "dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:$sableCompanionVersion"
+        )
+    }
 
     // Fabric API
     optionalProp("deps.fabricApi") { modstitchModImplementation("net.fabricmc.fabric-api:fabric-api:$it") }

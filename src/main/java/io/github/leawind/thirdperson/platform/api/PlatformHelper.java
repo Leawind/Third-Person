@@ -18,4 +18,7 @@ public interface PlatformHelper {
 
   /// Returns {@code true} if the game is running in a development environment.
   boolean isDevelopmentEnvironment();
+
+  /// Returns {@code true} if a mod with the given ID is loaded.
+  boolean isModLoaded(String modId);
 }
