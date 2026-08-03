@@ -10,7 +10,7 @@ stonecutter active "26.2-fabric"
 
 val checkArchitecture by tasks.registering {
     group = "verification"
-    description = "Checks source package dependency boundaries."
+    description = "Checks source architecture and Mixin compatibility constraints."
 
     val sourceRoot = layout.projectDirectory.dir("src/main/java")
     inputs.dir(sourceRoot)
@@ -95,6 +95,12 @@ val checkArchitecture by tasks.registering {
                 }
             }
             source.readLines().forEachIndexed { index, line ->
+                if (line.contains("@Redirect") || line.contains(".injection.Redirect")) {
+                    violations.add(
+                        "$relativePath:${index + 1}: Mixin @Redirect is forbidden; use a composable injector"
+                    )
+                }
+
                 if ((isApi || isLogic)
                     && (line.contains("/*?") || line.contains("/^?"))
                 ) {

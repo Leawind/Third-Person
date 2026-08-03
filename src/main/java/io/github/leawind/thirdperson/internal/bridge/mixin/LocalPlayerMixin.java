@@ -1,5 +1,7 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
 /*? if >1.21 {*/
@@ -14,9 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /// Adapts vanilla's forward-only sprint input check to camera-relative movement.
 @Mixin(LocalPlayer.class)
@@ -64,27 +64,27 @@ abstract class LocalPlayerMixin {
   *//*? }*/
 
   /*? if >1.21 {*/
-  @Redirect(
+  @ModifyExpressionValue(
       method = {"canStartSprinting", "shouldStopRunSprinting", "shouldStopSwimSprinting"},
       at =
           @At(
               value = "INVOKE",
               target =
                   "Lnet/minecraft/client/player/ClientInput;hasForwardImpulse()Z"))
-  private boolean useDirectionalSprintInput(ClientInput input) {
-    return modifyForwardImpulse(input, input.hasForwardImpulse(), MOVING_THRESHOLD);
+  private boolean useDirectionalSprintInput(boolean vanillaResult) {
+    return modifyForwardImpulse(input, vanillaResult, MOVING_THRESHOLD);
   }
 
   /// Keeps vanilla's pre-tick trigger history on the same predicate as start eligibility.
-  @Redirect(
+  @ModifyExpressionValue(
       method = "aiStep",
       at =
           @At(
               value = "INVOKE",
               target =
                   "Lnet/minecraft/client/player/ClientInput;hasForwardImpulse()Z"))
-  private boolean useDirectionalSprintTriggerHistory(ClientInput input) {
-    return modifyForwardImpulse(input, input.hasForwardImpulse(), MOVING_THRESHOLD);
+  private boolean useDirectionalSprintTriggerHistory(boolean vanillaResult) {
+    return modifyForwardImpulse(input, vanillaResult, MOVING_THRESHOLD);
   }
 
   private boolean modifyForwardImpulse(
@@ -95,33 +95,31 @@ abstract class LocalPlayerMixin {
         player, vanillaResult, movement.x, movement.y, minimumMagnitude);
   }
   /*? } else {*/
-  /*@Inject(
+  /*@ModifyReturnValue(
       method = "hasEnoughImpulseToStartSprinting",
-      at = @At("HEAD"),
-      cancellable = true)
-  private void useDirectionalStartingImpulse(CallbackInfoReturnable<Boolean> cir) {
+      at = @At("RETURN"))
+  private boolean useDirectionalStartingImpulse(boolean vanillaResult) {
     LocalPlayer player = (LocalPlayer) (Object) this;
-    Input input = player.input;
-    Vec2 movement = input.getMoveVector();
     double minimumMagnitude = player.isUnderWater() ? MOVING_THRESHOLD : 0.8;
-    if (LocalPlayerSprintImpulseEvent.emit(
-        player, false, movement.x, movement.y, minimumMagnitude)) {
-      cir.setReturnValue(true);
-    }
+    return modifyForwardImpulse(input, vanillaResult, minimumMagnitude);
   }
 
-  @Redirect(
+  @ModifyExpressionValue(
       method = "aiStep",
       at =
           @At(
               value = "INVOKE",
               target = "Lnet/minecraft/client/player/Input;hasForwardImpulse()Z"))
-  private boolean keepSprintingWithDirectionalInput(Input input) {
+  private boolean keepSprintingWithDirectionalInput(boolean vanillaResult) {
+    return modifyForwardImpulse(input, vanillaResult, MOVING_THRESHOLD);
+  }
+
+  private boolean modifyForwardImpulse(
+      Input input, boolean vanillaResult, double minimumMagnitude) {
     LocalPlayer player = (LocalPlayer) (Object) this;
-    boolean vanillaResult = input.hasForwardImpulse();
     Vec2 movement = input.getMoveVector();
     return LocalPlayerSprintImpulseEvent.emit(
-        player, vanillaResult, movement.x, movement.y, MOVING_THRESHOLD);
+        player, vanillaResult, movement.x, movement.y, minimumMagnitude);
   }
   *//*? }*/
 }
