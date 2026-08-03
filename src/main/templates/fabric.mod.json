@@ -12,7 +12,7 @@
     "email": "leawind@yeah.net"
   },
   "license": "${mod_license}",
-  "icon": "assets/${mod_id}/logo.png",
+  "icon": "${logo_file}",
   "environment": "client",
   "entrypoints": {
     "client": ["${mod_group}.platform.fabric.Entrypoint"],

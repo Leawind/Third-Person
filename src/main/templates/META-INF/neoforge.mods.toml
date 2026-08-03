@@ -9,7 +9,7 @@ version = "${mod_version}"
 displayName = "${mod_name}"
 description = "${mod_description}"
 authors = "${mod_author}"
-logoFile = "assets/${mod_id}/logo.png"
+logoFile = "${logo_file}"
 displayURL = "https://github.com/${github}"
 logoBlur = false
 

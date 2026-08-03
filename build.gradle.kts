@@ -16,6 +16,7 @@ val modNameValue = requiredProp("mod.name")
 val modDescriptionValue = requiredProp("mod.description")
 val modAuthorValue = requiredProp("mod.author")
 val modLicenseValue = requiredProp("mod.license")
+val modLogoFile = requiredProp("mod.logo_file")
 val modSourceUrlValue = requiredProp("mod.source_url")
 val perspectiveApiVersion = requiredProp("mod.perspective_api_version")
 val minecraftDependency = requiredProp("meta.mcDep")
@@ -90,9 +91,11 @@ modstitch {
         modLicense = modLicenseValue
         modAuthor = modAuthorValue
 
+
         replacementProperties.put("github", modSourceUrlValue.removePrefix("https://github.com/"))
         replacementProperties.put("mc", minecraftDependency)
         replacementProperties.put("loaderVersion", "*")
+        replacementProperties.put("logo_file", modLogoFile)
         replacementProperties.put("perspectiveApiVersion", perspectiveApiVersion)
     }
 
