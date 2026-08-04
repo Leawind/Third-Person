@@ -29,4 +29,45 @@ public final class InteractionRaycastGeometry {
         && interactionRange >= 0.0
         && distanceSquared < interactionRange * interactionRange;
   }
+
+  /// Extends item attack candidate discovery for forward movement and a displaced ray origin.
+  /// Neither extension changes the item's configured reach eligibility.
+  public static double attackCandidateRange(
+      double maximumRange, double forwardMovement, double originExtension) {
+    if (!Double.isFinite(maximumRange)
+        || !Double.isFinite(forwardMovement)
+        || !Double.isFinite(originExtension)
+        || maximumRange < 0.0
+        || forwardMovement < 0.0
+        || originExtension < 0.0) {
+      return Double.NaN;
+    }
+    return maximumRange + forwardMovement + originExtension;
+  }
+
+  /// Preserves vanilla item attack eligibility while testing a world-space candidate location.
+  /// The hitbox margin expands both boundaries; forward movement expands only the far boundary.
+  public static boolean isWithinAttackRange(
+      double distanceSquared,
+      double minimumRange,
+      double maximumRange,
+      double hitboxMargin,
+      double forwardMovement) {
+    if (!Double.isFinite(distanceSquared)
+        || !Double.isFinite(minimumRange)
+        || !Double.isFinite(maximumRange)
+        || !Double.isFinite(hitboxMargin)
+        || !Double.isFinite(forwardMovement)
+        || distanceSquared < 0.0
+        || minimumRange < 0.0
+        || maximumRange < minimumRange
+        || hitboxMargin < 0.0
+        || forwardMovement < 0.0) {
+      return false;
+    }
+    double minimumDistance = Math.max(0.0, minimumRange - hitboxMargin);
+    double maximumDistance = maximumRange + hitboxMargin + forwardMovement;
+    return distanceSquared >= minimumDistance * minimumDistance
+        && distanceSquared <= maximumDistance * maximumDistance;
+  }
 }

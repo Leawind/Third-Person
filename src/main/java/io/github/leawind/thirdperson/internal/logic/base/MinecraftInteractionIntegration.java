@@ -1,9 +1,12 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import io.github.leawind.thirdperson.internal.logic.base.math.FiniteMath;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -59,12 +62,71 @@ public final class MinecraftInteractionIntegration {
     }
 
     Vec3 direction = new Vec3(cameraForward.x, cameraForward.y, cameraForward.z).normalize();
-    Bridge.SpatialHit cameraHit = Bridge.pickFrom(player, from, direction, candidateRange);
-    HitResult filtered = filterByPlayerReach(cameraHit, eye, blockRange, entityRange);
+    var attackRangeHit =
+        pickWithActiveAttackRange(player, eye, from, direction, originExtension, blockRange);
+    HitResult filtered =
+        attackRangeHit
+            .filter(hit -> hit.getType() != HitResult.Type.MISS)
+            .orElseGet(
+                () ->
+                    filterByPlayerReach(
+                        Bridge.pickFrom(player, from, direction, candidateRange),
+                        eye,
+                        blockRange,
+                        entityRange));
     minecraft.hitResult = filtered;
     minecraft.crosshairPickEntity =
         filtered instanceof EntityHitResult entityHit ? entityHit.getEntity() : null;
     return true;
+  }
+
+  private static Optional<HitResult> pickWithActiveAttackRange(
+      LocalPlayer player,
+      Vec3 playerEye,
+      Vec3 from,
+      Vec3 direction,
+      double originExtension,
+      double blockRange) {
+    var parameters = MinecraftAttackRangePicking.parameters(player, direction).orElse(null);
+    if (parameters == null) {
+      return Optional.empty();
+    }
+    double candidateRange =
+        InteractionRaycastGeometry.attackCandidateRange(
+            parameters.maximumRange(), parameters.forwardMovement(), originExtension);
+    if (!Double.isFinite(candidateRange) || candidateRange <= 0.0) {
+      return Optional.of(Bridge.missAt(from, from));
+    }
+
+    var candidates =
+        MinecraftAttackRangePicking.collectCandidates(
+            player,
+            from,
+            direction,
+            originExtension == 0.0 ? parameters.minimumRange() : 0.0,
+            candidateRange,
+            parameters.hitboxMargin());
+    Bridge.SpatialHit closestHit = null;
+    double closestDistanceSquared = Double.POSITIVE_INFINITY;
+    for (Bridge.SpatialHit candidate : candidates.entityHits()) {
+      if (!InteractionRaycastGeometry.isWithinAttackRange(
+          candidate.worldLocation().distanceToSqr(playerEye),
+          parameters.minimumRange(),
+          parameters.maximumRange(),
+          parameters.hitboxMargin(),
+          parameters.forwardMovement())) {
+        continue;
+      }
+      double distanceSquared = candidate.worldLocation().distanceToSqr(from);
+      if (distanceSquared < closestDistanceSquared) {
+        closestHit = candidate;
+        closestDistanceSquared = distanceSquared;
+      }
+    }
+    return Optional.of(
+        closestHit == null
+            ? filterAttackRangeHit(candidates.blockHit(), playerEye, blockRange)
+            : closestHit.rawHit());
   }
 
   private static HitResult filterByPlayerReach(
@@ -73,6 +135,18 @@ public final class MinecraftInteractionIntegration {
     double allowedRange = hit instanceof EntityHitResult ? entityRange : blockRange;
     return InteractionRaycastGeometry.isWithinRange(
             spatialHit.worldLocation().distanceToSqr(playerEye), allowedRange)
+        ? hit
+        : Bridge.missAt(spatialHit.worldLocation(), playerEye);
+  }
+
+  private static HitResult filterAttackRangeHit(
+      Bridge.SpatialHit spatialHit, Vec3 playerEye, double blockRange) {
+    HitResult hit = spatialHit.rawHit();
+    if (hit instanceof EntityHitResult) {
+      return hit;
+    }
+    return InteractionRaycastGeometry.isWithinRange(
+            spatialHit.worldLocation().distanceToSqr(playerEye), blockRange)
         ? hit
         : Bridge.missAt(spatialHit.worldLocation(), playerEye);
   }
