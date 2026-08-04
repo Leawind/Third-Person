@@ -55,10 +55,16 @@ final class YaclConfigScreenBuilder {
                         .option(
                             enumOption(
                                 "crosshair",
-                                CrosshairMode.AUTO,
+                                CrosshairMode.ALWAYS,
                                 hud::crosshairMode,
                                 hud::setCrosshairMode,
                                 CrosshairMode.class))
+                        .option(
+                            booleanOption(
+                                "hide_crosshair_when_fall_flying_and_not_aiming",
+                                true,
+                                hud::hideCrosshairWhenFallFlyingAndNotAiming,
+                                hud::setHideCrosshairWhenFallFlyingAndNotAiming))
                         .build())
                 .group(
                     group("sound")

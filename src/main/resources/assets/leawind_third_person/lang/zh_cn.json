@@ -85,6 +85,8 @@
   "config.leawind_third_person.option.raycast_origin.desc": "选择从相机或玩家眼睛发出沿相机方向的探测射线",
   "config.leawind_third_person.option.crosshair": "第三人称准星",
   "config.leawind_third_person.option.crosshair.desc": "选择本视角何时显示屏幕中央准星",
+  "config.leawind_third_person.option.hide_crosshair_when_fall_flying_and_not_aiming": "鞘翅飞行时隐藏准星",
+  "config.leawind_third_person.option.hide_crosshair_when_fall_flying_and_not_aiming.desc": "未处于瞄准模式并使用鞘翅飞行时隐藏准星",
   "config.leawind_third_person.option.center_camera_entity_sounds": "居中相机实体声音",
   "config.leawind_third_person.option.center_camera_entity_sounds.desc": "启用本视角时，消除相机实体所发声音的左右偏移",
   "config.leawind_third_person.option.normal_distance": "距离系数",
@@ -102,7 +104,8 @@
   "config.leawind_third_person.value.normal_rotation_mode.none": "保持当前朝向",
   "config.leawind_third_person.value.raycast_origin.player_eye": "玩家眼睛",
   "config.leawind_third_person.value.raycast_origin.camera": "相机",
-  "config.leawind_third_person.value.crosshair.auto": "自动",
-  "config.leawind_third_person.value.crosshair.on": "始终显示",
+  "config.leawind_third_person.value.crosshair.always": "始终显示",
+  "config.leawind_third_person.value.crosshair.aiming": "仅瞄准时显示",
+  "config.leawind_third_person.value.crosshair.not_aiming": "仅未瞄准时显示",
   "config.leawind_third_person.value.crosshair.off": "关闭"
 }

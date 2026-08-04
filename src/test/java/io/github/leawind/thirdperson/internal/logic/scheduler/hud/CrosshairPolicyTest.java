@@ -8,15 +8,30 @@ import org.junit.jupiter.api.Test;
 class CrosshairPolicyTest {
   @Test
   void neverChangesOtherPerspectives() {
-    assertTrue(CrosshairPolicy.shouldRender(true, false, true, CrosshairMode.OFF));
-    assertFalse(CrosshairPolicy.shouldRender(false, false, true, CrosshairMode.ON));
+    assertTrue(CrosshairPolicy.shouldRender(true, false, false, true, CrosshairMode.OFF, true));
+    assertFalse(
+        CrosshairPolicy.shouldRender(false, false, true, false, CrosshairMode.ALWAYS, false));
   }
 
   @Test
-  void followsModeOnlyWhileThisPerspectiveControlsTheCamera() {
-    assertTrue(CrosshairPolicy.shouldRender(false, true, true, CrosshairMode.AUTO));
-    assertTrue(CrosshairPolicy.shouldRender(false, true, true, CrosshairMode.ON));
-    assertFalse(CrosshairPolicy.shouldRender(true, true, true, CrosshairMode.OFF));
-    assertFalse(CrosshairPolicy.shouldRender(false, true, false, CrosshairMode.ON));
+  void followsConfiguredModeWhileThisPerspectiveControlsTheCamera() {
+    assertTrue(
+        CrosshairPolicy.shouldRender(false, true, false, false, CrosshairMode.ALWAYS, false));
+    assertTrue(CrosshairPolicy.shouldRender(false, true, true, false, CrosshairMode.ALWAYS, false));
+    assertFalse(
+        CrosshairPolicy.shouldRender(false, true, false, false, CrosshairMode.AIMING, false));
+    assertTrue(CrosshairPolicy.shouldRender(false, true, true, false, CrosshairMode.AIMING, false));
+    assertTrue(
+        CrosshairPolicy.shouldRender(false, true, false, false, CrosshairMode.NOT_AIMING, false));
+    assertFalse(
+        CrosshairPolicy.shouldRender(false, true, true, false, CrosshairMode.NOT_AIMING, false));
+    assertFalse(CrosshairPolicy.shouldRender(true, true, true, false, CrosshairMode.OFF, false));
+  }
+
+  @Test
+  void optionallyHidesCrosshairWhenFallFlyingOutsideAimingMode() {
+    assertFalse(CrosshairPolicy.shouldRender(false, true, false, true, CrosshairMode.ALWAYS, true));
+    assertTrue(CrosshairPolicy.shouldRender(false, true, true, true, CrosshairMode.ALWAYS, true));
+    assertTrue(CrosshairPolicy.shouldRender(false, true, false, true, CrosshairMode.ALWAYS, false));
   }
 }

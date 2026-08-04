@@ -85,6 +85,8 @@
   "config.leawind_third_person.option.raycast_origin.desc": "Start camera-directed probes at the camera or at the player's eyes",
   "config.leawind_third_person.option.crosshair": "Third-Person Crosshair",
   "config.leawind_third_person.option.crosshair.desc": "Choose when the centered crosshair is shown in this perspective",
+  "config.leawind_third_person.option.hide_crosshair_when_fall_flying_and_not_aiming": "Hide While Fall Flying",
+  "config.leawind_third_person.option.hide_crosshair_when_fall_flying_and_not_aiming.desc": "Hide the crosshair while fall flying outside aiming mode",
   "config.leawind_third_person.option.center_camera_entity_sounds": "Center Camera Entity Sounds",
   "config.leawind_third_person.option.center_camera_entity_sounds.desc": "Remove left-right offset from sounds emitted at the camera entity while this perspective is active",
   "config.leawind_third_person.option.normal_distance": "Distance Factor",
@@ -102,7 +104,8 @@
   "config.leawind_third_person.value.normal_rotation_mode.none": "Keep Current Rotation",
   "config.leawind_third_person.value.raycast_origin.player_eye": "Player Eyes",
   "config.leawind_third_person.value.raycast_origin.camera": "Camera",
-  "config.leawind_third_person.value.crosshair.auto": "Automatic",
-  "config.leawind_third_person.value.crosshair.on": "Always On",
+  "config.leawind_third_person.value.crosshair.always": "Always On",
+  "config.leawind_third_person.value.crosshair.aiming": "While Aiming",
+  "config.leawind_third_person.value.crosshair.not_aiming": "While Not Aiming",
   "config.leawind_third_person.value.crosshair.off": "Off"
 }

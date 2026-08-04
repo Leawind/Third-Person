@@ -47,7 +47,7 @@ public record ThirdPersonPersistentState(
             true,
             RaycastOrigin.CAMERA),
         new SoundState(false),
-        new HudState(CrosshairMode.AUTO));
+        new HudState(CrosshairMode.ALWAYS, true));
   }
 
   public static ThirdPersonPersistentState extract(SchedulerRuntime runtime) {
@@ -68,7 +68,9 @@ public record ThirdPersonPersistentState(
             player.doNotRotateWhenEating(),
             player.raycastOrigin()),
         new SoundState(sound.centerCameraEntitySounds()),
-        new HudState(runtime.hudSettings().crosshairMode()));
+        new HudState(
+            runtime.hudSettings().crosshairMode(),
+            runtime.hudSettings().hideCrosshairWhenFallFlyingAndNotAiming()));
   }
 
   public void applyTo(SchedulerRuntime runtime) {
@@ -87,7 +89,7 @@ public record ThirdPersonPersistentState(
             player.doNotRotateWhenEating(),
             player.raycastOrigin());
     runtime.soundSettings().setCenterCameraEntitySounds(sound.centerCameraEntitySounds());
-    runtime.hudSettings().setCrosshairMode(hud.crosshair());
+    runtime.hudSettings().restore(hud.crosshair(), hud.hideCrosshairWhenFallFlyingAndNotAiming());
   }
 
   public record CameraState(CameraProfile normal, CameraProfile aiming, CameraSmoothing smoothing) {
@@ -131,7 +133,7 @@ public record ThirdPersonPersistentState(
 
   public record SoundState(boolean centerCameraEntitySounds) {}
 
-  public record HudState(CrosshairMode crosshair) {
+  public record HudState(CrosshairMode crosshair, boolean hideCrosshairWhenFallFlyingAndNotAiming) {
     public HudState {
       Objects.requireNonNull(crosshair, "crosshair");
     }

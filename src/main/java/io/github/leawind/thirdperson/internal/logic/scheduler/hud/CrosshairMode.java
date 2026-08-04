@@ -1,7 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.hud;
 
 public enum CrosshairMode {
-  AUTO,
-  ON,
+  ALWAYS,
+  AIMING,
+  NOT_AIMING,
   OFF,
 }

@@ -161,7 +161,12 @@ final class JsonStateCodec {
                   .group(
                       enumCodec(CrosshairMode.class)
                           .fieldOf("crosshair")
-                          .forGetter(ThirdPersonPersistentState.HudState::crosshair))
+                          .forGetter(ThirdPersonPersistentState.HudState::crosshair),
+                      Codec.BOOL
+                          .fieldOf("hideCrosshairWhenFallFlyingAndNotAiming")
+                          .forGetter(
+                              ThirdPersonPersistentState.HudState::
+                                  hideCrosshairWhenFallFlyingAndNotAiming))
                   .apply(instance, ThirdPersonPersistentState.HudState::new));
 
   private static final Codec<ThirdPersonPersistentState> STATE_CODEC =

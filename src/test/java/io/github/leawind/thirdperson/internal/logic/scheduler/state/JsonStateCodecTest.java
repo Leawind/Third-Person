@@ -32,7 +32,9 @@ class JsonStateCodecTest {
     player.addProperty("autoRotateInteracting", false);
     player.addProperty("raycastOrigin", "player_eye");
     json.getAsJsonObject("sound").addProperty("centerCameraEntitySounds", true);
-    json.getAsJsonObject("hud").addProperty("crosshair", "on");
+    JsonObject hud = json.getAsJsonObject("hud");
+    hud.addProperty("crosshair", "not_aiming");
+    hud.addProperty("hideCrosshairWhenFallFlyingAndNotAiming", false);
 
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(json.toString());
 
@@ -42,7 +44,8 @@ class JsonStateCodecTest {
     assertFalse(decoded.player().autoRotateInteracting());
     assertEquals(RaycastOrigin.PLAYER_EYE, decoded.player().raycastOrigin());
     assertTrue(decoded.sound().centerCameraEntitySounds());
-    assertEquals(CrosshairMode.ON, decoded.hud().crosshair());
+    assertEquals(CrosshairMode.NOT_AIMING, decoded.hud().crosshair());
+    assertFalse(decoded.hud().hideCrosshairWhenFallFlyingAndNotAiming());
   }
 
   @Test
