@@ -22,6 +22,7 @@ import org.jspecify.annotations.NonNull;
 @AutoService(PerspectiveBehavior.class)
 @PerspectiveInfo.Declaration(
     id = ThirdPerson.PERSPECTIVE_ID,
+    icon = ThirdPerson.MOD_ID + ":textures/perspective/third_person.png",
     priority = 10,
     baseType = PerspectiveBehavior.BaseType.THIRD_PERSON_BACK)
 @SuppressWarnings("unused")
