@@ -171,16 +171,13 @@ dependencies {
     // Compile only
     compileOnly("org.jspecify:jspecify:1.0.0")
     compileOnly("org.jetbrains:annotations:24.0.1")
-    // Forge does not provide MixinExtras. Its annotation processor emits production mappings,
-    // while the loader-specific artifact initializes MixinExtras at runtime.
+    // Forge does not provide MixinExtras. Its annotation processor emits production mappings.
+    // Perspective API embeds and initializes the Forge runtime artifact.
     val mixinExtrasVersion = "0.5.4"
     val mixinExtrasCommon = "io.github.llamalad7:mixinextras-common:$mixinExtrasVersion"
     compileOnly(mixinExtrasCommon)
     if (isForge) {
         annotationProcessor(mixinExtrasCommon)
-        val mixinExtrasForge = "io.github.llamalad7:mixinextras-forge:$mixinExtrasVersion"
-        implementation(mixinExtrasForge)
-        modstitchJiJ(mixinExtrasForge)
     }
     compileOnly("com.google.auto.service:auto-service-annotations:1.1.1")
     annotationProcessor("com.google.auto.service:auto-service:1.1.1")
