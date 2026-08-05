@@ -194,6 +194,31 @@ dependencies {
 }
 // endregion
 
+// region Fabric client gametest
+// Client gametests are currently maintained only for the latest Fabric target. They use a
+// dedicated test mod so test-only entrypoints and resources can never be packaged with the mod.
+if (isFabric && mcVersion == "26.2") {
+    val fabricApi = the<net.fabricmc.loom.api.fabricapi.FabricApiExtension>()
+
+    fabricApi.configureTests {
+        createSourceSet.set(true)
+        modId.set("${modIdValue}_gametest")
+        enableGameTests.set(false)
+        enableClientGameTests.set(true)
+        eula.set(true)
+    }
+
+    dependencies {
+        modstitchModImplementation(
+            fabricApi.module(
+                "fabric-client-gametest-api-v1",
+                requiredProp("deps.fabricApi"),
+            ),
+        )
+    }
+}
+// endregion
+
 // region Tasks
 
 tasks.withType<JavaExec>().configureEach {

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "leawind_third_person_gametest",
+  "version": "1.0.0",
+  "name": "Leawind's Third Person Client Game Tests",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": []
+  }
+}
