@@ -12,8 +12,7 @@ class InteractionRaycastGeometryTest {
   @Test
   void playerEyeRayConvergesOnCameraIntentPoint() {
     WorldRay cameraRay =
-        WorldRay.tryCreate(new Vector3d(-4.0, 2.0, 0.0), new Vector3d(0.0, 0.0, 1.0))
-            .orElseThrow();
+        WorldRay.tryCreate(new Vector3d(-4.0, 2.0, 0.0), new Vector3d(0.0, 0.0, 1.0)).orElseThrow();
     Vector3d playerEye = new Vector3d(0.0, 1.0, 0.0);
     Vector3d intentPoint = cameraRay.pointAt(10.0).orElseThrow();
 
@@ -24,8 +23,7 @@ class InteractionRaycastGeometryTest {
 
     assertEquals(playerEye, interactionRay.copyOrigin(new Vector3d()));
     assertEquals(
-        intentPoint,
-        interactionRay.pointAt(playerEye.distance(intentPoint)).orElseThrow());
+        intentPoint, interactionRay.pointAt(playerEye.distance(intentPoint)).orElseThrow());
     assertFalse(
         interactionRay
                 .copyDirection(new Vector3d())
@@ -36,8 +34,7 @@ class InteractionRaycastGeometryTest {
   @Test
   void cameraOriginKeepsTheOriginalCameraRay() {
     WorldRay cameraRay =
-        WorldRay.tryCreate(new Vector3d(-4.0, 2.0, 0.0), new Vector3d(0.0, 0.0, 1.0))
-            .orElseThrow();
+        WorldRay.tryCreate(new Vector3d(-4.0, 2.0, 0.0), new Vector3d(0.0, 0.0, 1.0)).orElseThrow();
 
     WorldRay interactionRay =
         InteractionRaycastGeometry.selectInteractionRay(
@@ -53,8 +50,7 @@ class InteractionRaycastGeometryTest {
   @Test
   void coincidentCameraAndEyeOriginsProduceTheSameRay() {
     Vector3d origin = new Vector3d(1.0, 2.0, 3.0);
-    WorldRay cameraRay =
-        WorldRay.tryCreate(origin, new Vector3d(0.0, 0.0, 1.0)).orElseThrow();
+    WorldRay cameraRay = WorldRay.tryCreate(origin, new Vector3d(0.0, 0.0, 1.0)).orElseThrow();
     Vector3d intentPoint = cameraRay.pointAt(8.0).orElseThrow();
 
     WorldRay eyeRay =
@@ -78,10 +74,7 @@ class InteractionRaycastGeometryTest {
             .isEmpty());
     assertTrue(
         InteractionRaycastGeometry.selectInteractionRay(
-                RaycastOrigin.PLAYER_EYE,
-                cameraRay,
-                playerEye,
-                new Vector3d(Double.NaN, 0.0, 0.0))
+                RaycastOrigin.PLAYER_EYE, cameraRay, playerEye, new Vector3d(Double.NaN, 0.0, 0.0))
             .isEmpty());
     assertTrue(
         InteractionRaycastGeometry.selectInteractionRay(
@@ -105,12 +98,27 @@ class InteractionRaycastGeometryTest {
   }
 
   @Test
+  void candidateOriginExtensionCapsStaleCameraDistance() {
+    assertEquals(4.0, InteractionRaycastGeometry.capCandidateOriginExtension(4.0));
+    assertEquals(
+        InteractionRaycastGeometry.MAX_CANDIDATE_ORIGIN_EXTENSION,
+        InteractionRaycastGeometry.capCandidateOriginExtension(28_000_000.0));
+    assertEquals(
+        517.0,
+        InteractionRaycastGeometry.attackCandidateRange(
+            4.5, 0.5, InteractionRaycastGeometry.capCandidateOriginExtension(28_000_000.0)));
+    assertTrue(Double.isNaN(InteractionRaycastGeometry.capCandidateOriginExtension(-1.0)));
+    assertTrue(
+        Double.isNaN(
+            InteractionRaycastGeometry.capCandidateOriginExtension(Double.POSITIVE_INFINITY)));
+  }
+
+  @Test
   void candidateRangeRejectsInvalidInputs() {
     assertTrue(Double.isNaN(InteractionRaycastGeometry.candidateRange(-1.0, 3.0, 4.0)));
     assertTrue(
         Double.isNaN(
-            InteractionRaycastGeometry.candidateRange(
-                4.5, Double.POSITIVE_INFINITY, 4.0)));
+            InteractionRaycastGeometry.candidateRange(4.5, Double.POSITIVE_INFINITY, 4.0)));
   }
 
   @Test
@@ -128,36 +136,24 @@ class InteractionRaycastGeometryTest {
 
   @Test
   void attackCandidateRangeRejectsInvalidInputs() {
-    assertTrue(
-        Double.isNaN(InteractionRaycastGeometry.attackCandidateRange(4.5, -0.1, 0.0)));
+    assertTrue(Double.isNaN(InteractionRaycastGeometry.attackCandidateRange(4.5, -0.1, 0.0)));
     assertTrue(
         Double.isNaN(
-            InteractionRaycastGeometry.attackCandidateRange(
-                Double.POSITIVE_INFINITY, 0.0, 0.0)));
+            InteractionRaycastGeometry.attackCandidateRange(Double.POSITIVE_INFINITY, 0.0, 0.0)));
   }
 
   @Test
   void attackRangeIncludesHitboxMarginAndForwardMovement() {
-    assertTrue(
-        InteractionRaycastGeometry.isWithinAttackRange(
-            1.75 * 1.75, 2.0, 4.5, 0.25, 0.5));
-    assertTrue(
-        InteractionRaycastGeometry.isWithinAttackRange(
-            5.25 * 5.25, 2.0, 4.5, 0.25, 0.5));
-    assertFalse(
-        InteractionRaycastGeometry.isWithinAttackRange(
-            1.749 * 1.749, 2.0, 4.5, 0.25, 0.5));
-    assertFalse(
-        InteractionRaycastGeometry.isWithinAttackRange(
-            5.251 * 5.251, 2.0, 4.5, 0.25, 0.5));
+    assertTrue(InteractionRaycastGeometry.isWithinAttackRange(1.75 * 1.75, 2.0, 4.5, 0.25, 0.5));
+    assertTrue(InteractionRaycastGeometry.isWithinAttackRange(5.25 * 5.25, 2.0, 4.5, 0.25, 0.5));
+    assertFalse(InteractionRaycastGeometry.isWithinAttackRange(1.749 * 1.749, 2.0, 4.5, 0.25, 0.5));
+    assertFalse(InteractionRaycastGeometry.isWithinAttackRange(5.251 * 5.251, 2.0, 4.5, 0.25, 0.5));
   }
 
   @Test
   void displacedOriginExtendsDiscoveryButNotAttackEligibility() {
     assertEquals(8.5, InteractionRaycastGeometry.attackCandidateRange(4.5, 0.0, 4.0));
-    assertFalse(
-        InteractionRaycastGeometry.isWithinAttackRange(
-            8.0 * 8.0, 0.0, 4.5, 0.25, 0.0));
+    assertFalse(InteractionRaycastGeometry.isWithinAttackRange(8.0 * 8.0, 0.0, 4.5, 0.25, 0.0));
   }
 
   @Test

@@ -42,10 +42,14 @@ public final class WorldRay {
     return tryCreate(origin, new Vector3d(target).sub(origin));
   }
 
+  /// @deprecated TODO: simplify usage with `Vector3dc`
+  @Deprecated
   public Vector3d copyOrigin(Vector3d destination) {
     return Objects.requireNonNull(destination, "destination").set(origin);
   }
 
+  /// @deprecated TODO: simplify usage with `Vector3dc`
+  @Deprecated
   public Vector3d copyDirection(Vector3d destination) {
     return Objects.requireNonNull(destination, "destination").set(direction);
   }

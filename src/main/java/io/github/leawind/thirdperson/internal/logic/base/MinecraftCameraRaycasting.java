@@ -17,6 +17,7 @@ public final class MinecraftCameraRaycasting {
 
   private MinecraftCameraRaycasting() {}
 
+  /// Ray starts from camera, towards the forward direction of camera.
   static Optional<WorldRay> cameraRay(BaseSession session) {
     return session
         .finalCameraPose()
@@ -65,8 +66,7 @@ public final class MinecraftCameraRaycasting {
                   Bridge.pickEntity(player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
               if (entityHit.isPresent()
                   && from.distanceToSqr(entityHit.orElseThrow()) < blockDistanceSquared) {
-                return Optional.of(
-                    new CameraHit(toVector(entityHit.orElseThrow()), false, false));
+                return Optional.of(new CameraHit(toVector(entityHit.orElseThrow()), false, false));
               }
               return Optional.of(
                   new CameraHit(

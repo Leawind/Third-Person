@@ -75,14 +75,11 @@ public final class MinecraftInteractionIntegration {
   }
 
   private static Optional<Bridge.SpatialHit> pickAlongRay(
-      LocalPlayer player,
-      Vec3 playerEye,
-      WorldRay ray,
-      double blockRange,
-      double entityRange) {
+      LocalPlayer player, Vec3 playerEye, WorldRay ray, double blockRange, double entityRange) {
     Vec3 from = toVec3(ray.copyOrigin(new Vector3d()));
     Vec3 direction = toVec3(ray.copyDirection(new Vector3d()));
-    double originExtension = from.distanceTo(playerEye);
+    double originExtension =
+        InteractionRaycastGeometry.capCandidateOriginExtension(from.distanceTo(playerEye));
     double candidateRange =
         InteractionRaycastGeometry.candidateRange(blockRange, entityRange, originExtension);
     if (!Double.isFinite(candidateRange) || candidateRange <= 0.0) {
@@ -99,11 +96,7 @@ public final class MinecraftInteractionIntegration {
   }
 
   private static Optional<Bridge.SpatialHit> pickWithActiveAttackRange(
-      LocalPlayer player,
-      Vec3 playerEye,
-      Vec3 from,
-      Vec3 direction,
-      double originExtension) {
+      LocalPlayer player, Vec3 playerEye, Vec3 from, Vec3 direction, double originExtension) {
     var parameters = MinecraftAttackRangePicking.parameters(player, direction).orElse(null);
     if (parameters == null) {
       return Optional.empty();
