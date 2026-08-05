@@ -5,6 +5,8 @@
   "name": "Leawind's Third Person Client Game Tests",
   "environment": "client",
   "entrypoints": {
-    "fabric-client-gametest": []
+    "fabric-client-gametest": [
+      "io.github.leawind.thirdperson.gametest.PerspectiveLifecycleClientGameTest"
+    ]
   }
 }
