@@ -56,6 +56,10 @@ val checkArchitecture by tasks.registering {
             "io.github.leawind.thirdperson.api.",
             logicPackage,
         )
+        val interactionOriginIndependentFiles = setOf(
+            "io/github/leawind/thirdperson/internal/logic/base/MinecraftCameraRaycasting.java",
+            "io/github/leawind/thirdperson/internal/logic/base/MinecraftPlayerRotationTargeting.java",
+        )
         val violations = mutableListOf<String>()
 
         fileTree(sourceRoot).matching { include("**/*.java") }.files.sorted().forEach { source ->
@@ -66,6 +70,7 @@ val checkArchitecture by tasks.registering {
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
             val isUtils = relativePath.startsWith(utilsPrefix)
+            val mustIgnoreInteractionOrigin = relativePath in interactionOriginIndependentFiles
 
             if (legacyLayerPrefixes.any(relativePath::startsWith)) {
                 violations.add("$relativePath: legacy business-layer package is forbidden")
@@ -120,6 +125,11 @@ val checkArchitecture by tasks.registering {
                 if (isBase && line.contains(schedulerPackage)) {
                     violations.add(
                         "$relativePath:${index + 1}: base must not reference the scheduling layer"
+                    )
+                }
+                if (mustIgnoreInteractionOrigin && line.contains("raycastOrigin(")) {
+                    violations.add(
+                        "$relativePath:${index + 1}: camera intent and rotation targeting must not read RaycastOrigin"
                     )
                 }
 

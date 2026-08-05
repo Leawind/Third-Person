@@ -2,11 +2,96 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
 class InteractionRaycastGeometryTest {
+  @Test
+  void playerEyeRayConvergesOnCameraIntentPoint() {
+    WorldRay cameraRay =
+        WorldRay.tryCreate(new Vector3d(-4.0, 2.0, 0.0), new Vector3d(0.0, 0.0, 1.0))
+            .orElseThrow();
+    Vector3d playerEye = new Vector3d(0.0, 1.0, 0.0);
+    Vector3d intentPoint = cameraRay.pointAt(10.0).orElseThrow();
+
+    WorldRay interactionRay =
+        InteractionRaycastGeometry.selectInteractionRay(
+                RaycastOrigin.PLAYER_EYE, cameraRay, playerEye, intentPoint)
+            .orElseThrow();
+
+    assertEquals(playerEye, interactionRay.copyOrigin(new Vector3d()));
+    assertEquals(
+        intentPoint,
+        interactionRay.pointAt(playerEye.distance(intentPoint)).orElseThrow());
+    assertFalse(
+        interactionRay
+                .copyDirection(new Vector3d())
+                .distanceSquared(cameraRay.copyDirection(new Vector3d()))
+            < 1.0e-12);
+  }
+
+  @Test
+  void cameraOriginKeepsTheOriginalCameraRay() {
+    WorldRay cameraRay =
+        WorldRay.tryCreate(new Vector3d(-4.0, 2.0, 0.0), new Vector3d(0.0, 0.0, 1.0))
+            .orElseThrow();
+
+    WorldRay interactionRay =
+        InteractionRaycastGeometry.selectInteractionRay(
+                RaycastOrigin.CAMERA,
+                cameraRay,
+                new Vector3d(0.0, 1.0, 0.0),
+                new Vector3d(-4.0, 2.0, 10.0))
+            .orElseThrow();
+
+    assertSame(cameraRay, interactionRay);
+  }
+
+  @Test
+  void coincidentCameraAndEyeOriginsProduceTheSameRay() {
+    Vector3d origin = new Vector3d(1.0, 2.0, 3.0);
+    WorldRay cameraRay =
+        WorldRay.tryCreate(origin, new Vector3d(0.0, 0.0, 1.0)).orElseThrow();
+    Vector3d intentPoint = cameraRay.pointAt(8.0).orElseThrow();
+
+    WorldRay eyeRay =
+        InteractionRaycastGeometry.selectInteractionRay(
+                RaycastOrigin.PLAYER_EYE, cameraRay, origin, intentPoint)
+            .orElseThrow();
+
+    assertEquals(cameraRay.copyOrigin(new Vector3d()), eyeRay.copyOrigin(new Vector3d()));
+    assertEquals(cameraRay.copyDirection(new Vector3d()), eyeRay.copyDirection(new Vector3d()));
+  }
+
+  @Test
+  void interactionRayRejectsInvalidOrCoincidentIntentGeometry() {
+    WorldRay cameraRay =
+        WorldRay.tryCreate(new Vector3d(), new Vector3d(0.0, 0.0, 1.0)).orElseThrow();
+    Vector3d playerEye = new Vector3d(1.0, 2.0, 3.0);
+
+    assertTrue(
+        InteractionRaycastGeometry.selectInteractionRay(
+                RaycastOrigin.PLAYER_EYE, cameraRay, playerEye, playerEye)
+            .isEmpty());
+    assertTrue(
+        InteractionRaycastGeometry.selectInteractionRay(
+                RaycastOrigin.PLAYER_EYE,
+                cameraRay,
+                playerEye,
+                new Vector3d(Double.NaN, 0.0, 0.0))
+            .isEmpty());
+    assertTrue(
+        InteractionRaycastGeometry.selectInteractionRay(
+                RaycastOrigin.CAMERA,
+                cameraRay,
+                playerEye,
+                new Vector3d(0.0, 0.0, Double.POSITIVE_INFINITY))
+            .isEmpty());
+  }
+
   @Test
   void candidateRangeIncludesCameraToEyeDistance() {
     assertEquals(8.5, InteractionRaycastGeometry.candidateRange(4.5, 3.0, 4.0));

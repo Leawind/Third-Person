@@ -1,6 +1,5 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationGeometry;
@@ -11,98 +10,42 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 
 /// Resolves the camera-space points used by the legacy player-rotation targets.
 public final class MinecraftPlayerRotationTargeting {
-  private static final double CAMERA_RAY_TRACE_LENGTH = 512.0;
   private static final double TARGET_PREDICTION_DEGREES_LIMIT = 30.0;
   private static final float VANILLA_HEAD_ROTATION_LIMIT_DEGREES = 50.0f;
 
   private MinecraftPlayerRotationTargeting() {}
 
-  static Optional<CameraView> cameraView(BaseRuntime runtime) {
-    return runtime
-        .session()
-        .finalCameraPose()
-        .flatMap(
-            pose -> {
-              Vector3d position = pose.copyPosition(new Vector3d());
-              Vector3f forward =
-                  pose.copyRotation(new Quaternionf()).transform(new Vector3f(0.0f, 0.0f, 1.0f));
-              if (!Float.isFinite(forward.x)
-                  || !Float.isFinite(forward.y)
-                  || !Float.isFinite(forward.z)
-                  || forward.lengthSquared() <= 1.0e-12f) {
-                return Optional.empty();
-              }
-              forward.normalize();
-              return Optional.of(new CameraView(position, new Vector3d(forward)));
-            });
-  }
-
-  static Optional<CameraHit> cameraHit(
-      Minecraft minecraft, BaseRuntime runtime, boolean useColliderBlocks) {
-    LocalPlayer player = minecraft.player;
-    if (player == null || minecraft.level == null) {
-      return Optional.empty();
-    }
-    return cameraView(runtime)
-        .map(
-            view -> {
-              Vector3d rayStart =
-                  runtime.parameters().raycastOrigin() == RaycastOrigin.PLAYER_EYE
-                      ? toVector(player.getEyePosition(1.0f))
-                      : view.position();
-              double rayLength =
-                  CAMERA_RAY_TRACE_LENGTH
-                      + rayStart.distance(toVector(player.getEyePosition(1.0f)))
-                      + player.getBbWidth() * 0.8660254037844386;
-              Vec3 from = toVec3(rayStart);
-              Vec3 to = toVec3(new Vector3d(rayStart).fma(rayLength, view.forward()));
-              Bridge.BlockHit blockHit = Bridge.clipBlocks(player, from, to, useColliderBlocks);
-              double blockDistanceSquared = from.distanceToSqr(blockHit.worldLocation());
-              Vec3 entityRayEnd =
-                  blockHit.missed()
-                      ? to
-                      : from.add(
-                          view.forward().x * (Math.sqrt(blockDistanceSquared) + 1.0),
-                          view.forward().y * (Math.sqrt(blockDistanceSquared) + 1.0),
-                          view.forward().z * (Math.sqrt(blockDistanceSquared) + 1.0));
-              Optional<Vec3> entityHit =
-                  Bridge.pickEntity(player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
-              if (entityHit.isPresent()
-                  && from.distanceToSqr(entityHit.orElseThrow()) < blockDistanceSquared) {
-                return new CameraHit(toVector(entityHit.orElseThrow()), false, false);
-              }
-              return new CameraHit(
-                  toVector(blockHit.worldLocation()), blockHit.blocked(), blockHit.missed());
-            });
-  }
-
   static Optional<Vector3d> predictedTargetPoint(
-      Minecraft minecraft, BaseRuntime runtime, CameraHit cameraHit) {
+      Minecraft minecraft,
+      BaseRuntime runtime,
+      MinecraftCameraRaycasting.CameraHit cameraHit) {
     LocalPlayer player = minecraft.player;
     if (player == null || minecraft.level == null || cameraHit.blocked()) {
       return Optional.empty();
     }
-    return cameraView(runtime)
+    return MinecraftCameraRaycasting.cameraRay(runtime.session())
         .flatMap(
-            view -> {
+            cameraRay -> {
+              Vector3d cameraPosition = cameraRay.copyOrigin(new Vector3d());
+              Vector3d cameraForward = cameraRay.copyDirection(new Vector3d());
               Entity best = null;
               double bestCost = Double.POSITIVE_INFINITY;
               double cameraPitch =
                   Math.toDegrees(
                       Math.atan2(
-                          -view.forward().y, Math.hypot(view.forward().x, view.forward().z)));
-              AABB searchArea = player.getBoundingBox().inflate(CAMERA_RAY_TRACE_LENGTH);
+                          -cameraForward.y, Math.hypot(cameraForward.x, cameraForward.z)));
+              AABB searchArea =
+                  player.getBoundingBox().inflate(MinecraftCameraRaycasting.TRACE_LENGTH);
               for (Entity candidate :
                   minecraft.level.getEntities(
                       player, searchArea, entity -> entity instanceof LivingEntity)) {
                 double playerDistance = candidate.distanceTo(player);
-                if (playerDistance < 2.0 || playerDistance > CAMERA_RAY_TRACE_LENGTH) {
+                if (playerDistance < 2.0
+                    || playerDistance > MinecraftCameraRaycasting.TRACE_LENGTH) {
                   continue;
                 }
                 Vec3 candidatePosition = candidate.getPosition(1.0f);
@@ -120,13 +63,13 @@ public final class MinecraftPlayerRotationTargeting {
                 }
 
                 Vector3d cameraToTarget =
-                    toVector(candidatePosition).sub(view.position(), new Vector3d());
+                    toVector(candidatePosition).sub(cameraPosition, new Vector3d());
                 double distance = cameraToTarget.length();
                 if (!Double.isFinite(distance) || distance <= 1.0e-5) {
                   continue;
                 }
                 cameraToTarget.div(distance);
-                double dot = Math.max(-1.0, Math.min(1.0, view.forward().dot(cameraToTarget)));
+                double dot = Math.max(-1.0, Math.min(1.0, cameraForward.dot(cameraToTarget)));
                 double angleDegrees = Math.toDegrees(Math.acos(dot));
                 if (!Double.isFinite(angleDegrees)
                     || angleDegrees >= TARGET_PREDICTION_DEGREES_LIMIT) {
@@ -141,8 +84,8 @@ public final class MinecraftPlayerRotationTargeting {
               if (best == null) {
                 return Optional.empty();
               }
-              double targetDistance = view.position().distance(toVector(best.getPosition(1.0f)));
-              return Optional.of(new Vector3d(view.position()).fma(targetDistance, view.forward()));
+              double targetDistance = cameraPosition.distance(toVector(best.getPosition(1.0f)));
+              return cameraRay.pointAt(targetDistance);
             });
   }
 
@@ -160,8 +103,8 @@ public final class MinecraftPlayerRotationTargeting {
     if (player == null) {
       return Optional.empty();
     }
-    var cameraView = cameraView(runtime).orElse(null);
-    if (cameraView == null) {
+    var cameraRay = MinecraftCameraRaycasting.cameraRay(runtime.session()).orElse(null);
+    if (cameraRay == null) {
       return Optional.empty();
     }
     float cameraYaw = runtime.session().lookController().yawDegrees();
@@ -169,8 +112,9 @@ public final class MinecraftPlayerRotationTargeting {
         Math.abs(PlayerRotationGeometry.shortestDifference(cameraYaw, player.yBodyRot)) < 90.0f;
     Optional<Vector3d> point =
         cameraBehindPlayer
-            ? cameraHit(minecraft, runtime, false).map(CameraHit::location)
-            : Optional.of(cameraView.position());
+            ? MinecraftCameraRaycasting.cameraHit(minecraft, runtime, false)
+                .map(MinecraftCameraRaycasting.CameraHit::location)
+            : Optional.of(cameraRay.copyOrigin(new Vector3d()));
     return point
         .flatMap(target -> lookAtPlayerEye(player, target))
         .map(
@@ -190,7 +134,7 @@ public final class MinecraftPlayerRotationTargeting {
     if (player == null) {
       return Optional.empty();
     }
-    return cameraHit(minecraft, runtime, predictTargetEntity)
+    return MinecraftCameraRaycasting.cameraHit(minecraft, runtime, predictTargetEntity)
         .flatMap(
             hit -> {
               Optional<Vector3d> predicted =
@@ -214,15 +158,7 @@ public final class MinecraftPlayerRotationTargeting {
     return LookGeometry.lookAt(new Vector3d(eye.x, eye.y, eye.z), point);
   }
 
-  private static Vec3 toVec3(Vector3d vector) {
-    return new Vec3(vector.x, vector.y, vector.z);
-  }
-
   private static Vector3d toVector(Vec3 vector) {
     return new Vector3d(vector.x, vector.y, vector.z);
   }
-
-  record CameraView(Vector3d position, Vector3d forward) {}
-
-  record CameraHit(Vector3d location, boolean blocked, boolean missed) {}
 }

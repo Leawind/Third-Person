@@ -1,8 +1,34 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.logic.base.math.FiniteMath;
+import java.util.Objects;
+import java.util.Optional;
+import org.joml.Vector3dc;
+
 /// Pure range calculations for camera-directed interaction raycasts.
 public final class InteractionRaycastGeometry {
   private InteractionRaycastGeometry() {}
+
+  /// Chooses the final interaction ray without changing the camera's intent point.
+  ///
+  /// The configured origin affects only this final ray: camera-origin interaction keeps the
+  /// camera ray, while player-eye interaction converges from the eyes onto the camera intent.
+  public static Optional<WorldRay> selectInteractionRay(
+      RaycastOrigin origin,
+      WorldRay cameraRay,
+      Vector3dc playerEye,
+      Vector3dc cameraIntentPoint) {
+    Objects.requireNonNull(origin, "origin");
+    Objects.requireNonNull(cameraRay, "cameraRay");
+    Objects.requireNonNull(playerEye, "playerEye");
+    Objects.requireNonNull(cameraIntentPoint, "cameraIntentPoint");
+    if (!FiniteMath.isFinite(playerEye) || !FiniteMath.isFinite(cameraIntentPoint)) {
+      return Optional.empty();
+    }
+    return origin == RaycastOrigin.CAMERA
+        ? Optional.of(cameraRay)
+        : WorldRay.toward(playerEye, cameraIntentPoint);
+  }
 
   /// Extends only the candidate search ray when its chosen origin is displaced from the player
   /// eyes.
