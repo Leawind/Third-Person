@@ -82,7 +82,7 @@
   "config.leawind_third_person.option.do_not_rotate_when_eating": "进食时不因交互转向",
   "config.leawind_third_person.option.do_not_rotate_when_eating.desc": "使用食物时忽略交互键触发的自动转向",
   "config.leawind_third_person.option.raycast_origin": "探测起点",
-  "config.leawind_third_person.option.raycast_origin.desc": "选择从相机或玩家眼睛发出沿相机方向的探测射线",
+  "config.leawind_third_person.option.raycast_origin.desc": "选择从相机或玩家眼睛发出沿相机方向的探测射线；生存和冒险模式下始终使用玩家眼睛",
   "config.leawind_third_person.option.crosshair": "第三人称准星",
   "config.leawind_third_person.option.crosshair.desc": "选择本视角何时显示屏幕中央准星",
   "config.leawind_third_person.option.hide_crosshair_when_fall_flying_and_not_aiming": "鞘翅飞行时隐藏准星",

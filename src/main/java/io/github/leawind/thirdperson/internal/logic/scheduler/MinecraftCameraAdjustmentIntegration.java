@@ -58,6 +58,8 @@ public final class MinecraftCameraAdjustmentIntegration {
 
   private static void syncCamera(SchedulerRuntime runtime, LocalPlayer player) {
     runtime.applyParameters(
-        player.isSwimming() || player.isFallFlying(), runtime.appliedParameters().playerRotation());
+        player.isSwimming() || player.isFallFlying(),
+        MinecraftSchedulingIntegration.isCameraRaycastOriginAllowed(Minecraft.getInstance()),
+        runtime.appliedParameters().playerRotation());
   }
 }

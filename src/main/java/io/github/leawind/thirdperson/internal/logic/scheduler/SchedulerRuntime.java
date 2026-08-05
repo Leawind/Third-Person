@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
 import io.github.leawind.thirdperson.internal.logic.base.BaseParameters;
+import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoothingParameters;
@@ -112,12 +113,17 @@ public final class SchedulerRuntime {
         modeSmoothing.fovHalfLife());
   }
 
-  public void applyParameters(boolean flyingOrSwimming, PlayerRotationParameters playerRotation) {
+  public void applyParameters(
+      boolean flyingOrSwimming,
+      boolean cameraRaycastOriginAllowed,
+      PlayerRotationParameters playerRotation) {
     applyParameters(
         new BaseParameters(
             cameraProfile(flyingOrSwimming),
             cameraSmoothing(flyingOrSwimming),
-            playerSettings.raycastOrigin(),
+            cameraRaycastOriginAllowed
+                ? playerSettings.raycastOrigin()
+                : RaycastOrigin.PLAYER_EYE,
             soundSettings.centerCameraEntitySounds(),
             Objects.requireNonNull(playerRotation, "playerRotation")));
   }

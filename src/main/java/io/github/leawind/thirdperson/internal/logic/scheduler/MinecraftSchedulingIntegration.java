@@ -12,6 +12,7 @@ import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.GameType;
 
 /// Detects dynamic game state and schedules one complete base-layer parameter snapshot per tick.
 public final class MinecraftSchedulingIntegration {
@@ -31,7 +32,12 @@ public final class MinecraftSchedulingIntegration {
 
     boolean flyingOrSwimming = player.isFallFlying() || player.isSwimming();
     PlayerRotationParameters rotation = schedulePlayerRotation(minecraft, runtime, player);
-    runtime.applyParameters(flyingOrSwimming, rotation);
+    runtime.applyParameters(flyingOrSwimming, isCameraRaycastOriginAllowed(minecraft), rotation);
+  }
+
+  static boolean isCameraRaycastOriginAllowed(Minecraft minecraft) {
+    GameType gameType = minecraft.gameMode.getPlayerMode();
+    return gameType != GameType.SURVIVAL && gameType != GameType.ADVENTURE;
   }
 
   private static PlayerRotationParameters schedulePlayerRotation(

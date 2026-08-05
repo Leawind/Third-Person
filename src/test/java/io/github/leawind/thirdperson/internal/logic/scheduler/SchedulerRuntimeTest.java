@@ -28,7 +28,7 @@ class SchedulerRuntimeTest {
             PlayerRotationMode.PARALLEL_WITH_CAMERA, 0.0, PlayerRotationSmoothing.IMMEDIATE);
 
     scheduler.setAiming(false);
-    scheduler.applyParameters(false, rotation);
+    scheduler.applyParameters(false, true, rotation);
     assertEquals(scheduler.cameraSettings().normalProfile(), base.parameters.camera());
     assertEquals(
         scheduler.cameraSettings().smoothing().normal().horizontalPivotHalfLife(),
@@ -38,7 +38,7 @@ class SchedulerRuntimeTest {
     assertEquals(rotation, base.parameters.playerRotation());
 
     scheduler.setAiming(true);
-    scheduler.applyParameters(true, rotation);
+    scheduler.applyParameters(true, true, rotation);
     assertEquals(
         scheduler.cameraSettings().aimingProfile().withCentered(true), base.parameters.camera());
     assertEquals(
@@ -47,6 +47,23 @@ class SchedulerRuntimeTest {
     assertEquals(
         scheduler.cameraSettings().smoothing().flyingPivotHalfLife(),
         base.parameters.cameraSmoothing().verticalPivotHalfLife());
+  }
+
+  @Test
+  void forcesPlayerEyeRaycastOriginWhenCameraOriginIsNotAllowed() {
+    var base = new FakeBase();
+    var scheduler = new SchedulerRuntime();
+    assertTrue(scheduler.initialize(base));
+    scheduler.playerSettings().setRaycastOrigin(RaycastOrigin.CAMERA);
+
+    scheduler.applyParameters(false, false, BaseParameters.defaults().playerRotation());
+
+    assertEquals(RaycastOrigin.PLAYER_EYE, base.parameters.raycastOrigin());
+    assertEquals(RaycastOrigin.CAMERA, scheduler.playerSettings().raycastOrigin());
+
+    scheduler.applyParameters(false, true, BaseParameters.defaults().playerRotation());
+
+    assertEquals(RaycastOrigin.CAMERA, base.parameters.raycastOrigin());
   }
 
   private static final class FakeBase implements ThirdPersonBase {

@@ -82,7 +82,7 @@
   "config.leawind_third_person.option.do_not_rotate_when_eating": "Do Not Rotate While Eating",
   "config.leawind_third_person.option.do_not_rotate_when_eating.desc": "Ignore interaction-triggered rotation while using food",
   "config.leawind_third_person.option.raycast_origin": "Raycast Origin",
-  "config.leawind_third_person.option.raycast_origin.desc": "Start camera-directed probes at the camera or at the player's eyes",
+  "config.leawind_third_person.option.raycast_origin.desc": "Start camera-directed probes at the camera or at the player's eyes; survival and adventure modes always use the player's eyes",
   "config.leawind_third_person.option.crosshair": "Third-Person Crosshair",
   "config.leawind_third_person.option.crosshair.desc": "Choose when the centered crosshair is shown in this perspective",
   "config.leawind_third_person.option.hide_crosshair_when_fall_flying_and_not_aiming": "Hide While Fall Flying",
