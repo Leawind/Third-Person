@@ -100,6 +100,14 @@ val checkArchitecture by tasks.registering {
                         "$relativePath:${index + 1}: Mixin @Redirect is forbidden; use a composable injector"
                     )
                 }
+                if (line.contains("@ModifyArgs")
+                    || line.contains(".injection.ModifyArgs")
+                    || line.contains(".injection.invoke.arg.Args")
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: Mixin @ModifyArgs is incompatible with Forge 1.20.1; use an injector that does not generate synthetic Args classes"
+                    )
+                }
 
                 if ((isApi || isLogic)
                     && (line.contains("/*?") || line.contains("/^?"))
