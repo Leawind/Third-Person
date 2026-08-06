@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /// Resolves the camera-space points used by the legacy player-rotation targets.
 public final class MinecraftPlayerRotationTargeting {
@@ -30,14 +31,14 @@ public final class MinecraftPlayerRotationTargeting {
     return MinecraftCameraRaycasting.cameraRay(runtime.session())
         .flatMap(
             cameraRay -> {
-              Vector3d cameraPosition = cameraRay.origin();
-              Vector3d cameraForward = cameraRay.direction();
+              Vector3dc cameraPosition = cameraRay.origin();
+              Vector3dc cameraForward = cameraRay.direction();
               Entity best = null;
               double bestCost = Double.POSITIVE_INFINITY;
               double cameraPitch =
                   Math.toDegrees(
                       Math.atan2(
-                          -cameraForward.y, Math.hypot(cameraForward.x, cameraForward.z)));
+                          -cameraForward.y(), Math.hypot(cameraForward.x(), cameraForward.z())));
               AABB searchArea =
                   player.getBoundingBox().inflate(MinecraftCameraRaycasting.TRACE_LENGTH);
               for (Entity candidate :
@@ -110,7 +111,7 @@ public final class MinecraftPlayerRotationTargeting {
     float cameraYaw = runtime.session().lookController().yawDegrees();
     boolean cameraBehindPlayer =
         Math.abs(PlayerRotationGeometry.shortestDifference(cameraYaw, player.yBodyRot)) < 90.0f;
-    Optional<Vector3d> point =
+    Optional<Vector3dc> point =
         cameraBehindPlayer
             ? MinecraftCameraRaycasting.cameraHit(minecraft, runtime, false)
                 .map(MinecraftCameraRaycasting.CameraHit::location)
@@ -153,7 +154,7 @@ public final class MinecraftPlayerRotationTargeting {
             });
   }
 
-  private static Optional<LookRotation> lookAtPlayerEye(LocalPlayer player, Vector3d point) {
+  private static Optional<LookRotation> lookAtPlayerEye(LocalPlayer player, Vector3dc point) {
     var eye = player.getEyePosition(1.0f);
     return LookGeometry.lookAt(new Vector3d(eye.x, eye.y, eye.z), point);
   }

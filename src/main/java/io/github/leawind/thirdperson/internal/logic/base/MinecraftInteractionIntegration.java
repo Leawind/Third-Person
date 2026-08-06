@@ -10,6 +10,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 /// Maintains the authoritative camera-directed hit result used by rendering and interaction.
 public final class MinecraftInteractionIntegration {
@@ -162,8 +163,8 @@ public final class MinecraftInteractionIntegration {
     return valid ? hit : MinecraftRaycasting.missAt(selected.worldLocation(), playerEye);
   }
 
-  private static Vec3 toVec3(Vector3d vector) {
-    return new Vec3(vector.x, vector.y, vector.z);
+  private static Vec3 toVec3(Vector3dc vector) {
+    return new Vec3(vector.x(), vector.y(), vector.z());
   }
 
   private static Vector3d toVector(Vec3 vector) {

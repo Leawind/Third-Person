@@ -8,12 +8,12 @@ import org.joml.Vector3dc;
 
 /// An immutable, Minecraft-independent ray in world space.
 ///
-/// Mutable JOML values are copied on both input and output.
+/// Mutable JOML values are copied on input and exposed through `Vector3dc` views.
 public final class WorldRay {
   private static final double MIN_DIRECTION_LENGTH_SQUARED = 1.0e-12;
 
-  private final Vector3d origin;
-  private final Vector3d direction;
+  private final Vector3dc origin;
+  private final Vector3dc direction;
 
   private WorldRay(Vector3dc origin, Vector3dc direction) {
     this.origin = new Vector3d(origin);
@@ -42,14 +42,12 @@ public final class WorldRay {
     return tryCreate(origin, new Vector3d(target).sub(origin));
   }
 
-  /// Returns a defensive copy of this ray's origin.
-  public Vector3d origin() {
-    return new Vector3d(origin);
+  public Vector3dc origin() {
+    return origin;
   }
 
-  /// Returns a defensive copy of this ray's normalized direction.
-  public Vector3d direction() {
-    return new Vector3d(direction);
+  public Vector3dc direction() {
+    return direction;
   }
 
   public Optional<Vector3d> pointAt(double distance) {

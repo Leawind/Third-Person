@@ -8,20 +8,20 @@ import org.junit.jupiter.api.Test;
 
 class WorldRayTest {
   @Test
-  void createsNormalizedDefensiveCopies() {
+  void createsNormalizedInputCopies() {
     var origin = new Vector3d(1.0, 2.0, 3.0);
     var direction = new Vector3d(0.0, 0.0, 4.0);
     WorldRay ray = WorldRay.tryCreate(origin, direction).orElseThrow();
 
     origin.set(Double.NaN);
     direction.zero();
-    Vector3d copiedOrigin = ray.origin();
-    Vector3d copiedDirection = ray.direction();
-    copiedOrigin.zero();
-    copiedDirection.set(Double.NaN);
 
-    assertEquals(new Vector3d(1.0, 2.0, 3.0), ray.origin());
-    assertEquals(new Vector3d(0.0, 0.0, 1.0), ray.direction());
+    assertEquals(1.0, ray.origin().x());
+    assertEquals(2.0, ray.origin().y());
+    assertEquals(3.0, ray.origin().z());
+    assertEquals(0.0, ray.direction().x());
+    assertEquals(0.0, ray.direction().y());
+    assertEquals(1.0, ray.direction().z());
     assertEquals(new Vector3d(1.0, 2.0, 8.0), ray.pointAt(5.0).orElseThrow());
   }
 

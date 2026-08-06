@@ -7,6 +7,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
+import org.joml.Vector3dc;
 import org.joml.Vector3f;
 
 /// Creates and probes the ray that represents the final camera pose's intent.
@@ -39,9 +40,10 @@ public final class MinecraftCameraRaycasting {
     return cameraRay(runtime.session())
         .flatMap(
             ray -> {
-              Vector3d origin = ray.origin();
-              Vector3d direction = ray.direction();
+              Vector3dc origin = ray.origin();
+              Vector3dc direction = ray.direction();
               Vec3 eye = player.getEyePosition(1.0f);
+              Vec3 from = toVec3(origin);
               double cameraToPlayerEyeDistance =
                   InteractionRaycastGeometry.capCameraOriginExtension(
                       origin.distance(new Vector3d(eye.x, eye.y, eye.z)));
@@ -54,7 +56,6 @@ public final class MinecraftCameraRaycasting {
                 return Optional.empty();
               }
 
-              Vec3 from = toVec3(origin);
               Vec3 to = toVec3(endpoint);
               MinecraftRaycasting.BlockHit blockHit =
                   MinecraftRaycasting.clipBlocks(player, from, to, useColliderBlocks);
@@ -63,9 +64,9 @@ public final class MinecraftCameraRaycasting {
                   blockHit.missed()
                       ? to
                       : from.add(
-                          direction.x * (Math.sqrt(blockDistanceSquared) + 1.0),
-                          direction.y * (Math.sqrt(blockDistanceSquared) + 1.0),
-                          direction.z * (Math.sqrt(blockDistanceSquared) + 1.0));
+                          direction.x() * (Math.sqrt(blockDistanceSquared) + 1.0),
+                          direction.y() * (Math.sqrt(blockDistanceSquared) + 1.0),
+                          direction.z() * (Math.sqrt(blockDistanceSquared) + 1.0));
               Optional<Vec3> entityHit =
                   MinecraftRaycasting.pickEntity(
                       player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
@@ -79,8 +80,8 @@ public final class MinecraftCameraRaycasting {
             });
   }
 
-  private static Vec3 toVec3(Vector3d vector) {
-    return new Vec3(vector.x, vector.y, vector.z);
+  private static Vec3 toVec3(Vector3dc vector) {
+    return new Vec3(vector.x(), vector.y(), vector.z());
   }
 
   private static Vector3d toVector(Vec3 vector) {

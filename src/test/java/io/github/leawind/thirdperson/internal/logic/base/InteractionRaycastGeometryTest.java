@@ -21,7 +21,7 @@ class InteractionRaycastGeometryTest {
                 RaycastOrigin.PLAYER_EYE, cameraRay, playerEye, intentPoint)
             .orElseThrow();
 
-    assertEquals(playerEye, interactionRay.origin());
+    assertEquals(playerEye, new Vector3d(interactionRay.origin()));
     assertEquals(
         intentPoint, interactionRay.pointAt(playerEye.distance(intentPoint)).orElseThrow());
     assertFalse(
@@ -58,8 +58,8 @@ class InteractionRaycastGeometryTest {
                 RaycastOrigin.PLAYER_EYE, cameraRay, origin, intentPoint)
             .orElseThrow();
 
-    assertEquals(cameraRay.origin(), eyeRay.origin());
-    assertEquals(cameraRay.direction(), eyeRay.direction());
+    assertEquals(new Vector3d(cameraRay.origin()), new Vector3d(eyeRay.origin()));
+    assertEquals(new Vector3d(cameraRay.direction()), new Vector3d(eyeRay.direction()));
   }
 
   @Test
