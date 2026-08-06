@@ -90,7 +90,7 @@ public final class MinecraftSchedulingIntegration {
     };
   }
 
-  public static void beforeRenderFrame(float partialTick) {
+  public static void beforeRenderFrame() {
     if (!refreshPredictedTargetEachFrame) {
       return;
     }

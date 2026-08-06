@@ -55,7 +55,7 @@ public final class ModEvents {
   }
 
   private static void beforeRenderFrame(float partialTick) {
-    MinecraftSchedulingIntegration.beforeRenderFrame(partialTick);
+    MinecraftSchedulingIntegration.beforeRenderFrame();
     MinecraftClientIntegration.beforeRenderFrame(partialTick);
   }
 
