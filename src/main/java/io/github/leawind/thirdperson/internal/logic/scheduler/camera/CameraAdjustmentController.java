@@ -11,7 +11,6 @@ public final class CameraAdjustmentController {
 
   private CameraProfile profile;
   private boolean adjusting;
-  private boolean changed;
 
   public boolean isAdjusting() {
     return adjusting;
@@ -23,7 +22,6 @@ public final class CameraAdjustmentController {
     }
     this.profile = Objects.requireNonNull(profile, "profile");
     adjusting = true;
-    changed = false;
   }
 
   public Optional<CameraProfile> turn(double rawYaw, double rawPitch) {
@@ -59,17 +57,15 @@ public final class CameraAdjustmentController {
     return replace(distanceFactor, profile.offsetX(), profile.offsetY(), profile.centeredOffsetY());
   }
 
-  public Optional<CameraProfile> finish() {
+  public void finish() {
     if (!adjusting) {
-      return Optional.empty();
+      return;
     }
     adjusting = false;
-    return changed ? Optional.of(profile) : Optional.empty();
   }
 
   public void reset() {
     adjusting = false;
-    changed = false;
     profile = null;
   }
 
@@ -87,7 +83,6 @@ public final class CameraAdjustmentController {
       return Optional.empty();
     }
     profile = next;
-    changed = true;
     return Optional.of(profile);
   }
 

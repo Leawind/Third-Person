@@ -23,7 +23,7 @@ class CameraAdjustmentControllerTest {
         defaults.distanceFactor() / 1.25, zoomedIn.distanceFactor(), 1.0e-12);
     CameraProfile zoomedOut = controller.scroll(-1.0).orElseThrow();
     assertEquals(defaults.distanceFactor(), zoomedOut.distanceFactor(), 1.0e-12);
-    assertTrue(controller.finish().isPresent());
+    controller.finish();
     assertFalse(controller.isAdjusting());
   }
 
@@ -33,7 +33,8 @@ class CameraAdjustmentControllerTest {
 
     assertTrue(controller.turn(1.0, 1.0).isEmpty());
     assertTrue(controller.scroll(1.0).isEmpty());
-    assertTrue(controller.finish().isEmpty());
+    controller.finish();
+    assertFalse(controller.isAdjusting());
   }
 
   @Test
@@ -51,11 +52,12 @@ class CameraAdjustmentControllerTest {
   }
 
   @Test
-  void unchangedGestureDoesNotRequestACommit() {
+  void finishesAnUnchangedGesture() {
     var controller = new CameraAdjustmentController();
     controller.begin(CameraSettings.defaultNormalProfile());
 
     assertTrue(controller.turn(0.0, 0.0).isEmpty());
-    assertTrue(controller.finish().isEmpty());
+    controller.finish();
+    assertFalse(controller.isAdjusting());
   }
 }
