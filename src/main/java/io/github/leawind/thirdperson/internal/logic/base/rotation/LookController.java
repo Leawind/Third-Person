@@ -19,8 +19,8 @@ public final class LookController {
       reset();
       return;
     }
-    this.pitchDegrees = clampPitch(pitchDegrees);
-    this.yawDegrees = wrapDegrees(yawDegrees);
+    this.pitchDegrees = PlayerRotationGeometry.clampPitch(pitchDegrees);
+    this.yawDegrees = PlayerRotationGeometry.wrapDegrees(yawDegrees);
     initialized = true;
   }
 
@@ -32,8 +32,8 @@ public final class LookController {
     if (!initialized || !Double.isFinite(rawYaw) || !Double.isFinite(rawPitch)) {
       return false;
     }
-    yawDegrees = wrapDegrees(yawDegrees + (float) rawYaw * TURN_SCALE);
-    pitchDegrees = clampPitch(pitchDegrees + (float) rawPitch * TURN_SCALE);
+    yawDegrees = PlayerRotationGeometry.wrapDegrees(yawDegrees + (float) rawYaw * TURN_SCALE);
+    pitchDegrees = PlayerRotationGeometry.clampPitch(pitchDegrees + (float) rawPitch * TURN_SCALE);
     return true;
   }
 
@@ -58,19 +58,5 @@ public final class LookController {
     initialized = false;
     pitchDegrees = 0.0f;
     yawDegrees = 0.0f;
-  }
-
-  private static float clampPitch(float value) {
-    return Math.max(-90.0f, Math.min(90.0f, value));
-  }
-
-  private static float wrapDegrees(float value) {
-    float wrapped = value % 360.0f;
-    if (wrapped >= 180.0f) {
-      wrapped -= 360.0f;
-    } else if (wrapped < -180.0f) {
-      wrapped += 360.0f;
-    }
-    return wrapped;
   }
 }

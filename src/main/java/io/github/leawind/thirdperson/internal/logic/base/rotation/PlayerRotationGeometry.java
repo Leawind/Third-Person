@@ -21,6 +21,10 @@ public final class PlayerRotationGeometry {
     return wrapDegrees(yaw - referenceYaw);
   }
 
+  public static float clampPitch(float value) {
+    return Math.max(-90.0f, Math.min(90.0f, value));
+  }
+
   public static float wrapDegrees(float value) {
     float wrapped = value % 360.0f;
     if (wrapped >= 180.0f) {

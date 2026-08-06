@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.logic.base.rotation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,21 @@ class PlayerRotationGeometryTest {
   void clampsCorrectlyAcrossTheWrappedAngleBoundary() {
     assertEquals(-140.0f, PlayerRotationGeometry.clampYawAround(-100.0f, 170.0f, 50.0f));
     assertEquals(120.0f, PlayerRotationGeometry.clampYawAround(80.0f, 170.0f, 50.0f));
+  }
+
+  @Test
+  void preservesTheNegativeOneEightyYawConvention() {
+    assertEquals(-180.0f, PlayerRotationGeometry.wrapDegrees(180.0f));
+    assertEquals(-180.0f, PlayerRotationGeometry.wrapDegrees(-180.0f));
+    assertEquals(-179.0f, PlayerRotationGeometry.wrapDegrees(181.0f));
+    assertEquals(179.0f, PlayerRotationGeometry.wrapDegrees(-181.0f));
+  }
+
+  @Test
+  void clampsPitchWithTheExistingNonFiniteBehavior() {
+    assertEquals(-90.0f, PlayerRotationGeometry.clampPitch(-91.0f));
+    assertEquals(90.0f, PlayerRotationGeometry.clampPitch(91.0f));
+    assertTrue(Float.isNaN(PlayerRotationGeometry.clampPitch(Float.NaN)));
   }
 
   @Test

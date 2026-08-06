@@ -43,10 +43,14 @@ public final class PlayerRotationController {
             ? 1.0
             : ExponentialSmoothing.alpha(deltaSeconds, parameters.halfLifeSeconds());
     yawDegrees =
-        wrapDegrees(
-            yawDegrees + (float) (shortestDegrees(target.yawDegrees() - yawDegrees) * alpha));
+        PlayerRotationGeometry.wrapDegrees(
+            yawDegrees
+                + (float)
+                    (PlayerRotationGeometry.shortestDifference(target.yawDegrees(), yawDegrees)
+                        * alpha));
     pitchDegrees =
-        clampPitch(pitchDegrees + (float) ((target.pitchDegrees() - pitchDegrees) * alpha));
+        PlayerRotationGeometry.clampPitch(
+            pitchDegrees + (float) ((target.pitchDegrees() - pitchDegrees) * alpha));
     return new LookRotation(yawDegrees, pitchDegrees);
   }
 
@@ -63,10 +67,14 @@ public final class PlayerRotationController {
     }
     double alpha = ExponentialSmoothing.alpha(deltaSeconds, parameters.halfLifeSeconds());
     yawDegrees =
-        wrapDegrees(
-            yawDegrees + (float) (shortestDegrees(target.yawDegrees() - yawDegrees) * alpha));
+        PlayerRotationGeometry.wrapDegrees(
+            yawDegrees
+                + (float)
+                    (PlayerRotationGeometry.shortestDifference(target.yawDegrees(), yawDegrees)
+                        * alpha));
     pitchDegrees =
-        clampPitch(pitchDegrees + (float) ((target.pitchDegrees() - pitchDegrees) * alpha));
+        PlayerRotationGeometry.clampPitch(
+            pitchDegrees + (float) ((target.pitchDegrees() - pitchDegrees) * alpha));
     return new LookRotation(yawDegrees, pitchDegrees);
   }
 
@@ -80,11 +88,13 @@ public final class PlayerRotationController {
     }
     double interpolation = Math.max(0.0, Math.min(1.0, partialTick));
     float yaw =
-        wrapDegrees(
+        PlayerRotationGeometry.wrapDegrees(
             previousYawDegrees
-                + (float) (shortestDegrees(yawDegrees - previousYawDegrees) * interpolation));
+                + (float)
+                    (PlayerRotationGeometry.shortestDifference(yawDegrees, previousYawDegrees)
+                        * interpolation));
     float pitch =
-        clampPitch(
+        PlayerRotationGeometry.clampPitch(
             previousPitchDegrees + (float) ((pitchDegrees - previousPitchDegrees) * interpolation));
     return Optional.of(new LookRotation(yaw, pitch));
   }
@@ -100,23 +110,5 @@ public final class PlayerRotationController {
     yawDegrees = 0.0f;
     pitchDegrees = 0.0f;
     parameters = null;
-  }
-
-  private static float shortestDegrees(float degrees) {
-    return wrapDegrees(degrees);
-  }
-
-  private static float clampPitch(float value) {
-    return Math.max(-90.0f, Math.min(90.0f, value));
-  }
-
-  private static float wrapDegrees(float value) {
-    float wrapped = value % 360.0f;
-    if (wrapped >= 180.0f) {
-      wrapped -= 360.0f;
-    } else if (wrapped < -180.0f) {
-      wrapped += 360.0f;
-    }
-    return wrapped;
   }
 }
