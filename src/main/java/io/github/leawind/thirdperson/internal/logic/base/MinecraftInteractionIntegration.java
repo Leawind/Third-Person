@@ -3,7 +3,6 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftRaycasting;
-import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -16,10 +15,8 @@ import org.joml.Vector3d;
 public final class MinecraftInteractionIntegration {
   private MinecraftInteractionIntegration() {}
 
-  public static BeforeInteractionEvent.Result prepareInteractionRaycast() {
-    return refreshRaycast(1.0f)
-        ? BeforeInteractionEvent.Result.APPLIED
-        : BeforeInteractionEvent.Result.PASS;
+  public static void prepareInteractionRaycast() {
+    refreshRaycast(1.0f);
   }
 
   /// Replaces vanilla's current hit result with the configured camera-directed raycast.
