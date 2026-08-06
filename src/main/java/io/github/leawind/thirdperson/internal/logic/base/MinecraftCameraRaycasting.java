@@ -39,8 +39,8 @@ public final class MinecraftCameraRaycasting {
     return cameraRay(runtime.session())
         .flatMap(
             ray -> {
-              Vector3d origin = ray.copyOrigin(new Vector3d());
-              Vector3d direction = ray.copyDirection(new Vector3d());
+              Vector3d origin = ray.origin();
+              Vector3d direction = ray.direction();
               Vec3 eye = player.getEyePosition(1.0f);
               double cameraToPlayerEyeDistance =
                   InteractionRaycastGeometry.capCameraOriginExtension(

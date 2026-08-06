@@ -30,8 +30,8 @@ public final class MinecraftPlayerRotationTargeting {
     return MinecraftCameraRaycasting.cameraRay(runtime.session())
         .flatMap(
             cameraRay -> {
-              Vector3d cameraPosition = cameraRay.copyOrigin(new Vector3d());
-              Vector3d cameraForward = cameraRay.copyDirection(new Vector3d());
+              Vector3d cameraPosition = cameraRay.origin();
+              Vector3d cameraForward = cameraRay.direction();
               Entity best = null;
               double bestCost = Double.POSITIVE_INFINITY;
               double cameraPitch =
@@ -114,7 +114,7 @@ public final class MinecraftPlayerRotationTargeting {
         cameraBehindPlayer
             ? MinecraftCameraRaycasting.cameraHit(minecraft, runtime, false)
                 .map(MinecraftCameraRaycasting.CameraHit::location)
-            : Optional.of(cameraRay.copyOrigin(new Vector3d()));
+            : Optional.of(cameraRay.origin());
     return point
         .flatMap(target -> lookAtPlayerEye(player, target))
         .map(

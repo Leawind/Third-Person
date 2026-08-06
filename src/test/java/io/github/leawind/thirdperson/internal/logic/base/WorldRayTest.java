@@ -15,13 +15,13 @@ class WorldRayTest {
 
     origin.set(Double.NaN);
     direction.zero();
-    Vector3d copiedOrigin = ray.copyOrigin(new Vector3d());
-    Vector3d copiedDirection = ray.copyDirection(new Vector3d());
+    Vector3d copiedOrigin = ray.origin();
+    Vector3d copiedDirection = ray.direction();
     copiedOrigin.zero();
     copiedDirection.set(Double.NaN);
 
-    assertEquals(new Vector3d(1.0, 2.0, 3.0), ray.copyOrigin(new Vector3d()));
-    assertEquals(new Vector3d(0.0, 0.0, 1.0), ray.copyDirection(new Vector3d()));
+    assertEquals(new Vector3d(1.0, 2.0, 3.0), ray.origin());
+    assertEquals(new Vector3d(0.0, 0.0, 1.0), ray.direction());
     assertEquals(new Vector3d(1.0, 2.0, 8.0), ray.pointAt(5.0).orElseThrow());
   }
 

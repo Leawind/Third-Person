@@ -21,10 +21,10 @@ class MinecraftCameraRaycastingTest {
 
     WorldRay ray = MinecraftCameraRaycasting.cameraRay(session).orElseThrow();
 
-    assertEquals(new Vector3d(3.0, 4.0, 5.0), ray.copyOrigin(new Vector3d()));
-    assertEquals(1.0, ray.copyDirection(new Vector3d()).x, 1.0e-6);
-    assertEquals(0.0, ray.copyDirection(new Vector3d()).y, 1.0e-6);
-    assertEquals(0.0, ray.copyDirection(new Vector3d()).z, 1.0e-6);
+    assertEquals(new Vector3d(3.0, 4.0, 5.0), ray.origin());
+    assertEquals(1.0, ray.direction().x, 1.0e-6);
+    assertEquals(0.0, ray.direction().y, 1.0e-6);
+    assertEquals(0.0, ray.direction().z, 1.0e-6);
   }
 
   @Test

@@ -74,8 +74,8 @@ public final class MinecraftInteractionIntegration {
 
   private static Optional<MinecraftRaycasting.SpatialHit> pickAlongRay(
       LocalPlayer player, Vec3 playerEye, WorldRay ray, double blockRange, double entityRange) {
-    Vec3 from = toVec3(ray.copyOrigin(new Vector3d()));
-    Vec3 direction = toVec3(ray.copyDirection(new Vector3d()));
+    Vec3 from = toVec3(ray.origin());
+    Vec3 direction = toVec3(ray.direction());
     double originExtension =
         InteractionRaycastGeometry.capCameraOriginExtension(from.distanceTo(playerEye));
     double candidateRange =
@@ -145,7 +145,7 @@ public final class MinecraftInteractionIntegration {
     double distanceSquared = selected.worldLocation().distanceToSqr(playerEye);
     boolean valid;
     if (hit instanceof EntityHitResult) {
-      Vec3 direction = toVec3(ray.copyDirection(new Vector3d()));
+      Vec3 direction = toVec3(ray.direction());
       var attackRange = MinecraftAttackRangePicking.parameters(player, direction).orElse(null);
       valid =
           attackRange == null

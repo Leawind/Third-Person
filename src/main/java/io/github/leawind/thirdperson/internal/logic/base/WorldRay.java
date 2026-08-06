@@ -42,16 +42,14 @@ public final class WorldRay {
     return tryCreate(origin, new Vector3d(target).sub(origin));
   }
 
-  /// @deprecated TODO: simplify usage with `Vector3dc`
-  @Deprecated
-  public Vector3d copyOrigin(Vector3d destination) {
-    return Objects.requireNonNull(destination, "destination").set(origin);
+  /// Returns a defensive copy of this ray's origin.
+  public Vector3d origin() {
+    return new Vector3d(origin);
   }
 
-  /// @deprecated TODO: simplify usage with `Vector3dc`
-  @Deprecated
-  public Vector3d copyDirection(Vector3d destination) {
-    return Objects.requireNonNull(destination, "destination").set(direction);
+  /// Returns a defensive copy of this ray's normalized direction.
+  public Vector3d direction() {
+    return new Vector3d(direction);
   }
 
   public Optional<Vector3d> pointAt(double distance) {
