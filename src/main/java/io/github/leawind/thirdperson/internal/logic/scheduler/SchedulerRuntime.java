@@ -143,10 +143,9 @@ public final class SchedulerRuntime {
     base().applyParameters(parameters);
   }
 
-  public CameraProfile updateCameraProfile(CameraProfileSlot slot, CameraProfile profile) {
+  public void updateCameraProfile(CameraProfileSlot slot, CameraProfile profile) {
     Objects.requireNonNull(slot, "slot");
     Objects.requireNonNull(profile, "profile");
     cameraSettings.setProfile(slot, profile);
-    return profile;
   }
 }
