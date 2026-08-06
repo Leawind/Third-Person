@@ -104,7 +104,7 @@ class InteractionRaycastGeometryTest {
         InteractionRaycastGeometry.MAX_CAMERA_ORIGIN_EXTENSION,
         InteractionRaycastGeometry.capCameraOriginExtension(28_000_000.0));
     assertEquals(
-        517.0,
+        261.0,
         InteractionRaycastGeometry.attackCandidateRange(
             4.5, 0.5, InteractionRaycastGeometry.capCameraOriginExtension(28_000_000.0)));
     assertTrue(Double.isNaN(InteractionRaycastGeometry.capCameraOriginExtension(-1.0)));

@@ -7,7 +7,7 @@ import org.joml.Vector3dc;
 
 /// Pure range calculations for camera-directed interaction raycasts.
 public final class InteractionRaycastGeometry {
-  static final double MAX_CAMERA_ORIGIN_EXTENSION = 512.0;
+  static final double MAX_CAMERA_ORIGIN_EXTENSION = 256.0;
 
   private InteractionRaycastGeometry() {}
 

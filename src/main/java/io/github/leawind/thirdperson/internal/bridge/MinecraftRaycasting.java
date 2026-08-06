@@ -17,21 +17,22 @@ import org.joml.Vector3dc;
 
 /// Version-sensitive vanilla raycasting, block clipping, and hit adaptation.
 public final class MinecraftRaycasting {
-  private static final double MAX_FALLBACK_RAY_LENGTH = 4096.0;
+  private static final double MAX_FALLBACK_RAY_LENGTH = 768.0;
   private static final double MAX_FALLBACK_RAY_LENGTH_SQUARED =
       MAX_FALLBACK_RAY_LENGTH * MAX_FALLBACK_RAY_LENGTH;
 
   private MinecraftRaycasting() {}
 
-  public static Optional<Vector3d> clipVisualBlocks(
-      Entity entity, Vector3dc from, Vector3dc to) {
+  public static Optional<Vector3d> clipVisualBlocks(Entity entity, Vector3dc from, Vector3dc to) {
+    Vec3 effectiveFrom = toVec3(from);
+    Vec3 effectiveTo = limitRayEnd(effectiveFrom, toVec3(to));
     HitResult hit =
         entity
             .level()
             .clip(
                 new ClipContext(
-                    toVec3(from),
-                    toVec3(to),
+                    effectiveFrom,
+                    effectiveTo,
                     ClipContext.Block.VISUAL,
                     ClipContext.Fluid.NONE,
                     entity));
@@ -41,8 +42,7 @@ public final class MinecraftRaycasting {
             toVector3d(SableCompatibility.projectToWorld(entity.level(), hit.getLocation())));
   }
 
-  public static BlockHit clipBlocks(
-      Entity entity, Vec3 from, Vec3 to, boolean useColliderBlocks) {
+  public static BlockHit clipBlocks(Entity entity, Vec3 from, Vec3 to, boolean useColliderBlocks) {
     Vec3 effectiveTo = limitRayEnd(from, to);
     HitResult hit =
         entity
@@ -51,9 +51,7 @@ public final class MinecraftRaycasting {
                 new ClipContext(
                     from,
                     effectiveTo,
-                    useColliderBlocks
-                        ? ClipContext.Block.COLLIDER
-                        : ClipContext.Block.OUTLINE,
+                    useColliderBlocks ? ClipContext.Block.COLLIDER : ClipContext.Block.OUTLINE,
                     ClipContext.Fluid.NONE,
                     entity));
     boolean blocked = hit.getType() == HitResult.Type.BLOCK;
@@ -94,24 +92,19 @@ public final class MinecraftRaycasting {
   /// interaction ranges.
   public static SpatialHit pickFrom(
       Entity source, Vec3 from, Vec3 direction, double candidateRange) {
-    Vec3 rayEnd = from.add(direction.scale(candidateRange));
+    Vec3 rayEnd = limitRayEnd(from, from.add(direction.scale(candidateRange)));
     HitResult blockHit =
         source
             .level()
             .clip(
                 new ClipContext(
-                    from,
-                    rayEnd,
-                    ClipContext.Block.OUTLINE,
-                    ClipContext.Fluid.NONE,
-                    source));
+                    from, rayEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, source));
     Vec3 blockWorldLocation =
         blockHit.getType() == HitResult.Type.BLOCK
             ? SableCompatibility.projectToWorld(source.level(), blockHit.getLocation())
             : blockHit.getLocation();
     double blockDistanceSquared = blockWorldLocation.distanceToSqr(from);
-    Vec3 entityRayEnd =
-        blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockWorldLocation;
+    Vec3 entityRayEnd = blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockWorldLocation;
     EntityHitResult entityHit =
         ProjectileUtil.getEntityHitResult(
             source,
@@ -136,7 +129,7 @@ public final class MinecraftRaycasting {
     Direction direction = Direction.getApproximateNearest(offset.x, offset.y, offset.z);
     /*? } else {*/
     /*Direction direction = Direction.getNearest(offset.x, offset.y, offset.z);
-    *//*? }*/
+     *//*? }*/
     return BlockHitResult.miss(location, direction, BlockPos.containing(location));
   }
 

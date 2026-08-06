@@ -13,10 +13,9 @@ class MinecraftRaycastingTest {
     assertEquals(
         new Vec3(5.0, 2.0, 3.0), MinecraftRaycasting.limitRayEnd(from, new Vec3(5.0, 2.0, 3.0)));
     assertEquals(
-        new Vec3(4097.0, 2.0, 3.0),
+        new Vec3(769.0, 2.0, 3.0),
         MinecraftRaycasting.limitRayEnd(from, new Vec3(8193.0, 2.0, 3.0)));
     assertEquals(
-        from,
-        MinecraftRaycasting.limitRayEnd(from, new Vec3(Double.POSITIVE_INFINITY, 2.0, 3.0)));
+        from, MinecraftRaycasting.limitRayEnd(from, new Vec3(Double.POSITIVE_INFINITY, 2.0, 3.0)));
   }
 }
