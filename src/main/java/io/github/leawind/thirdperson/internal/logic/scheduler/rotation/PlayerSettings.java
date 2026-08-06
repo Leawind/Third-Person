@@ -5,19 +5,10 @@ import java.util.Objects;
 
 /// Owns player-rotation preferences.
 public final class PlayerSettings {
-  private ConfiguredPlayerRotationMode rotationMode = ConfiguredPlayerRotationMode.AUTO;
   private NormalPlayerRotationMode normalMode = NormalPlayerRotationMode.INTEREST_POINT;
   private boolean autoRotateInteracting = true;
   private boolean doNotRotateWhenEating = true;
   private RaycastOrigin raycastOrigin = RaycastOrigin.CAMERA;
-
-  public ConfiguredPlayerRotationMode rotationMode() {
-    return rotationMode;
-  }
-
-  public void setRotationMode(ConfiguredPlayerRotationMode rotationMode) {
-    this.rotationMode = Objects.requireNonNull(rotationMode, "rotationMode");
-  }
 
   public NormalPlayerRotationMode normalMode() {
     return normalMode;
@@ -52,12 +43,10 @@ public final class PlayerSettings {
   }
 
   public void restore(
-      ConfiguredPlayerRotationMode rotationMode,
       NormalPlayerRotationMode normalMode,
       boolean autoRotateInteracting,
       boolean doNotRotateWhenEating,
       RaycastOrigin raycastOrigin) {
-    this.rotationMode = Objects.requireNonNull(rotationMode, "rotationMode");
     this.normalMode = Objects.requireNonNull(normalMode, "normalMode");
     this.autoRotateInteracting = autoRotateInteracting;
     this.doNotRotateWhenEating = doNotRotateWhenEating;

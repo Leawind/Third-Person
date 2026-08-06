@@ -6,7 +6,6 @@ import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSmoothing;
 import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import java.util.Objects;
@@ -40,12 +39,7 @@ public record ThirdPersonPersistentState(
             CameraSettings.defaultAimingProfile(),
             CameraSettings.defaultSmoothing()),
         new AimingState(true, List.of(), List.of()),
-        new PlayerState(
-            ConfiguredPlayerRotationMode.AUTO,
-            NormalPlayerRotationMode.INTEREST_POINT,
-            true,
-            true,
-            RaycastOrigin.CAMERA),
+        new PlayerState(NormalPlayerRotationMode.INTEREST_POINT, true, true, RaycastOrigin.CAMERA),
         new SoundState(false),
         new HudState(CrosshairMode.ALWAYS, true));
   }
@@ -62,7 +56,6 @@ public record ThirdPersonPersistentState(
         new AimingState(
             aiming.smartAiming(), aiming.holdToAimItemPatterns(), aiming.useToAimItemPatterns()),
         new PlayerState(
-            player.rotationMode(),
             player.normalMode(),
             player.autoRotateInteracting(),
             player.doNotRotateWhenEating(),
@@ -83,7 +76,6 @@ public record ThirdPersonPersistentState(
     runtime
         .playerSettings()
         .restore(
-            player.rotationMode(),
             player.normalMode(),
             player.autoRotateInteracting(),
             player.doNotRotateWhenEating(),
@@ -119,13 +111,11 @@ public record ThirdPersonPersistentState(
   }
 
   public record PlayerState(
-      ConfiguredPlayerRotationMode rotationMode,
       NormalPlayerRotationMode normalMode,
       boolean autoRotateInteracting,
       boolean doNotRotateWhenEating,
       RaycastOrigin raycastOrigin) {
     public PlayerState {
-      Objects.requireNonNull(rotationMode, "rotationMode");
       Objects.requireNonNull(normalMode, "normalMode");
       Objects.requireNonNull(raycastOrigin, "raycastOrigin");
     }

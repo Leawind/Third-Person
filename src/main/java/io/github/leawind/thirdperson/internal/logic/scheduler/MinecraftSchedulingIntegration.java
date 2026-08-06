@@ -44,10 +44,7 @@ public final class MinecraftSchedulingIntegration {
       Minecraft minecraft, SchedulerRuntime runtime, LocalPlayer player) {
     refreshPredictedTargetEachFrame = false;
     var settings = runtime.playerSettings();
-    if (!runtime.base().isControllingLocalPlayer()
-        || settings.rotationMode()
-            == io.github.leawind.thirdperson.internal.logic.scheduler.rotation
-                .ConfiguredPlayerRotationMode.VANILLA) {
+    if (!runtime.base().isControllingLocalPlayer()) {
       return customCurrent(player, 0.0, PlayerRotationSmoothing.IMMEDIATE);
     }
 

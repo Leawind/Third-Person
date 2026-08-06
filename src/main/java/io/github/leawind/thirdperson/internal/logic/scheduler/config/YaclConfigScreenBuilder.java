@@ -16,7 +16,6 @@ import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraProfileSlot;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import java.util.Locale;
@@ -77,13 +76,6 @@ final class YaclConfigScreenBuilder {
                         .build())
                 .group(
                     group("normal_rotation")
-                        .option(
-                            enumOption(
-                                "rotation_mode",
-                                ConfiguredPlayerRotationMode.AUTO,
-                                player::rotationMode,
-                                player::setRotationMode,
-                                ConfiguredPlayerRotationMode.class))
                         .option(
                             enumOption(
                                 "normal_rotation_mode",

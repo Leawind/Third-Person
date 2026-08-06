@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -18,8 +17,10 @@ class JsonStateCodecTest {
   @Test
   void roundTripsDefaults() {
     ThirdPersonPersistentState state = ThirdPersonPersistentState.defaults();
+    JsonObject encoded = encodedDefaultsObject();
 
-    assertEquals(state, JsonStateCodec.decode(JsonStateCodec.encode(state)));
+    assertFalse(encoded.getAsJsonObject("player").has("rotationMode"));
+    assertEquals(state, JsonStateCodec.decode(encoded.toString()));
   }
 
   @Test
@@ -27,7 +28,6 @@ class JsonStateCodecTest {
     JsonObject json = encodedDefaultsObject();
     json.getAsJsonObject("camera").getAsJsonObject("normal").addProperty("distance", 3.0);
     JsonObject player = json.getAsJsonObject("player");
-    player.addProperty("rotationMode", "vanilla");
     player.addProperty("normalMode", "parallel_with_camera");
     player.addProperty("autoRotateInteracting", false);
     player.addProperty("raycastOrigin", "player_eye");
@@ -39,7 +39,6 @@ class JsonStateCodecTest {
     ThirdPersonPersistentState decoded = JsonStateCodec.decode(json.toString());
 
     assertEquals(3.0, decoded.camera().normal().distanceFactor());
-    assertEquals(ConfiguredPlayerRotationMode.VANILLA, decoded.player().rotationMode());
     assertEquals(NormalPlayerRotationMode.PARALLEL_WITH_CAMERA, decoded.player().normalMode());
     assertFalse(decoded.player().autoRotateInteracting());
     assertEquals(RaycastOrigin.PLAYER_EYE, decoded.player().raycastOrigin());
@@ -69,6 +68,7 @@ class JsonStateCodecTest {
   void ignoresRemovedSettingsFromExistingFiles() {
     JsonObject json = encodedDefaultsObject();
     json.addProperty("enabled", false);
+    json.getAsJsonObject("player").addProperty("rotationMode", "vanilla");
     json.getAsJsonObject("aiming")
         .add("useToFirstPersonItemPatterns", JsonParser.parseString("[\"minecraft:spyglass\"]"));
 
@@ -123,7 +123,7 @@ class JsonStateCodecTest {
   @Test
   void rejectsUnknownEnums() {
     JsonObject json = encodedDefaultsObject();
-    json.getAsJsonObject("player").addProperty("rotationMode", "unknown");
+    json.getAsJsonObject("hud").addProperty("crosshair", "unknown");
 
     assertThrows(IllegalArgumentException.class, () -> JsonStateCodec.decode(json.toString()));
   }

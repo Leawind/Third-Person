@@ -14,7 +14,6 @@ import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSmoothing;
 import io.github.leawind.thirdperson.internal.logic.scheduler.camera.ModeSmoothing;
 import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.ConfiguredPlayerRotationMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import java.util.Locale;
@@ -126,9 +125,6 @@ final class JsonStateCodec {
           instance ->
               instance
                   .group(
-                      enumCodec(ConfiguredPlayerRotationMode.class)
-                          .fieldOf("rotationMode")
-                          .forGetter(ThirdPersonPersistentState.PlayerState::rotationMode),
                       fieldWithDefault(
                               enumCodec(NormalPlayerRotationMode.class),
                               "normalMode",
@@ -165,8 +161,8 @@ final class JsonStateCodec {
                       Codec.BOOL
                           .fieldOf("hideCrosshairWhenFallFlyingAndNotAiming")
                           .forGetter(
-                              ThirdPersonPersistentState.HudState::
-                                  hideCrosshairWhenFallFlyingAndNotAiming))
+                              ThirdPersonPersistentState.HudState
+                                  ::hideCrosshairWhenFallFlyingAndNotAiming))
                   .apply(instance, ThirdPersonPersistentState.HudState::new));
 
   private static final Codec<ThirdPersonPersistentState> STATE_CODEC =
