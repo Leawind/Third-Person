@@ -70,13 +70,13 @@ public final class MinecraftAttackRangePicking {
     if (blockHit.getType() != HitResult.Type.MISS
         && blockHit.getLocation().distanceToSqr(from) < entityRayStart.distanceToSqr(from)) {
       return new Candidates(
-          new Bridge.SpatialHit(blockHit, blockWorldLocation), List.of());
+          new MinecraftRaycasting.SpatialHit(blockHit, blockWorldLocation), List.of());
     }
     AABB searchArea =
         AABB.ofSize(entityRayStart, hitboxMargin, hitboxMargin, hitboxMargin)
             .expandTowards(entityRayEnd.subtract(entityRayStart))
             .inflate(1.0);
-    List<Bridge.SpatialHit> entityHits = new ArrayList<>();
+    List<MinecraftRaycasting.SpatialHit> entityHits = new ArrayList<>();
     for (EntityHitResult candidate :
         ProjectileUtil.getManyEntityHitResult(
             player.level(),
@@ -90,13 +90,13 @@ public final class MinecraftAttackRangePicking {
             true)) {
       Vec3 worldLocation =
           SableCompatibility.projectToWorld(player.level(), candidate.getLocation());
-      entityHits.add(new Bridge.SpatialHit(candidate, worldLocation));
+      entityHits.add(new MinecraftRaycasting.SpatialHit(candidate, worldLocation));
     }
     return new Candidates(
-        new Bridge.SpatialHit(blockHit, blockWorldLocation), List.copyOf(entityHits));
+        new MinecraftRaycasting.SpatialHit(blockHit, blockWorldLocation), List.copyOf(entityHits));
     /*? } else {*/
     /*return new Candidates(
-        new Bridge.SpatialHit(Bridge.missAt(from, from), from), List.of());
+        new MinecraftRaycasting.SpatialHit(MinecraftRaycasting.missAt(from, from), from), List.of());
     *//*? }*/
   }
 
@@ -106,5 +106,6 @@ public final class MinecraftAttackRangePicking {
       double hitboxMargin,
       double forwardMovement) {}
 
-  public record Candidates(Bridge.SpatialHit blockHit, List<Bridge.SpatialHit> entityHits) {}
+  public record Candidates(
+      MinecraftRaycasting.SpatialHit blockHit, List<MinecraftRaycasting.SpatialHit> entityHits) {}
 }

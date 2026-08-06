@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
+import io.github.leawind.thirdperson.internal.bridge.MinecraftRaycasting;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
@@ -42,7 +43,7 @@ public final class MinecraftInteractionIntegration {
     Vector3d playerEye = toVector(eye);
     double blockRange = Bridge.blockInteractionRange(minecraft);
     double entityRange = Bridge.entityInteractionRange(minecraft);
-    Bridge.SpatialHit cameraIntent =
+    MinecraftRaycasting.SpatialHit cameraIntent =
         pickAlongRay(player, eye, cameraRay, blockRange, entityRange).orElse(null);
     if (cameraIntent == null) {
       return false;
@@ -58,7 +59,7 @@ public final class MinecraftInteractionIntegration {
     if (interactionRay == null) {
       return false;
     }
-    Bridge.SpatialHit selected =
+    MinecraftRaycasting.SpatialHit selected =
         interactionRay == cameraRay
             ? cameraIntent
             : pickAlongRay(player, eye, interactionRay, blockRange, entityRange).orElse(null);
@@ -74,12 +75,12 @@ public final class MinecraftInteractionIntegration {
     return true;
   }
 
-  private static Optional<Bridge.SpatialHit> pickAlongRay(
+  private static Optional<MinecraftRaycasting.SpatialHit> pickAlongRay(
       LocalPlayer player, Vec3 playerEye, WorldRay ray, double blockRange, double entityRange) {
     Vec3 from = toVec3(ray.copyOrigin(new Vector3d()));
     Vec3 direction = toVec3(ray.copyDirection(new Vector3d()));
     double originExtension =
-        InteractionRaycastGeometry.capCandidateOriginExtension(from.distanceTo(playerEye));
+        InteractionRaycastGeometry.capCameraOriginExtension(from.distanceTo(playerEye));
     double candidateRange =
         InteractionRaycastGeometry.candidateRange(blockRange, entityRange, originExtension);
     if (!Double.isFinite(candidateRange) || candidateRange <= 0.0) {
@@ -92,10 +93,10 @@ public final class MinecraftInteractionIntegration {
         && attackRangeHit.orElseThrow().rawHit().getType() != HitResult.Type.MISS) {
       return attackRangeHit;
     }
-    return Optional.of(Bridge.pickFrom(player, from, direction, candidateRange));
+    return Optional.of(MinecraftRaycasting.pickFrom(player, from, direction, candidateRange));
   }
 
-  private static Optional<Bridge.SpatialHit> pickWithActiveAttackRange(
+  private static Optional<MinecraftRaycasting.SpatialHit> pickWithActiveAttackRange(
       LocalPlayer player, Vec3 playerEye, Vec3 from, Vec3 direction, double originExtension) {
     var parameters = MinecraftAttackRangePicking.parameters(player, direction).orElse(null);
     if (parameters == null) {
@@ -116,9 +117,9 @@ public final class MinecraftInteractionIntegration {
             originExtension == 0.0 ? parameters.minimumRange() : 0.0,
             candidateRange,
             parameters.hitboxMargin());
-    Bridge.SpatialHit closestHit = null;
+    MinecraftRaycasting.SpatialHit closestHit = null;
     double closestDistanceSquared = Double.POSITIVE_INFINITY;
-    for (Bridge.SpatialHit candidate : candidates.entityHits()) {
+    for (MinecraftRaycasting.SpatialHit candidate : candidates.entityHits()) {
       if (!InteractionRaycastGeometry.isWithinAttackRange(
           candidate.worldLocation().distanceToSqr(playerEye),
           parameters.minimumRange(),
@@ -140,7 +141,7 @@ public final class MinecraftInteractionIntegration {
       LocalPlayer player,
       Vec3 playerEye,
       WorldRay ray,
-      Bridge.SpatialHit selected,
+      MinecraftRaycasting.SpatialHit selected,
       double blockRange,
       double entityRange) {
     HitResult hit = selected.rawHit();
@@ -161,7 +162,7 @@ public final class MinecraftInteractionIntegration {
     } else {
       valid = InteractionRaycastGeometry.isWithinRange(distanceSquared, blockRange);
     }
-    return valid ? hit : Bridge.missAt(selected.worldLocation(), playerEye);
+    return valid ? hit : MinecraftRaycasting.missAt(selected.worldLocation(), playerEye);
   }
 
   private static Vec3 toVec3(Vector3d vector) {

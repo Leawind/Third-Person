@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.bridge.MinecraftRaycasting;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -42,9 +42,12 @@ public final class MinecraftCameraRaycasting {
               Vector3d origin = ray.copyOrigin(new Vector3d());
               Vector3d direction = ray.copyDirection(new Vector3d());
               Vec3 eye = player.getEyePosition(1.0f);
+              double cameraToPlayerEyeDistance =
+                  InteractionRaycastGeometry.capCameraOriginExtension(
+                      origin.distance(new Vector3d(eye.x, eye.y, eye.z)));
               double rayLength =
                   TRACE_LENGTH
-                      + origin.distance(new Vector3d(eye.x, eye.y, eye.z))
+                      + cameraToPlayerEyeDistance
                       + player.getBbWidth() * 0.8660254037844386;
               Vector3d endpoint = ray.pointAt(rayLength).orElse(null);
               if (endpoint == null) {
@@ -53,7 +56,8 @@ public final class MinecraftCameraRaycasting {
 
               Vec3 from = toVec3(origin);
               Vec3 to = toVec3(endpoint);
-              Bridge.BlockHit blockHit = Bridge.clipBlocks(player, from, to, useColliderBlocks);
+              MinecraftRaycasting.BlockHit blockHit =
+                  MinecraftRaycasting.clipBlocks(player, from, to, useColliderBlocks);
               double blockDistanceSquared = from.distanceToSqr(blockHit.worldLocation());
               Vec3 entityRayEnd =
                   blockHit.missed()
@@ -63,7 +67,8 @@ public final class MinecraftCameraRaycasting {
                           direction.y * (Math.sqrt(blockDistanceSquared) + 1.0),
                           direction.z * (Math.sqrt(blockDistanceSquared) + 1.0));
               Optional<Vec3> entityHit =
-                  Bridge.pickEntity(player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
+                  MinecraftRaycasting.pickEntity(
+                      player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
               if (entityHit.isPresent()
                   && from.distanceToSqr(entityHit.orElseThrow()) < blockDistanceSquared) {
                 return Optional.of(new CameraHit(toVector(entityHit.orElseThrow()), false, false));

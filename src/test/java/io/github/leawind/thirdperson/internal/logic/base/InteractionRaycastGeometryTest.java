@@ -98,19 +98,19 @@ class InteractionRaycastGeometryTest {
   }
 
   @Test
-  void candidateOriginExtensionCapsStaleCameraDistance() {
-    assertEquals(4.0, InteractionRaycastGeometry.capCandidateOriginExtension(4.0));
+  void cameraOriginExtensionCapsStaleCameraDistance() {
+    assertEquals(4.0, InteractionRaycastGeometry.capCameraOriginExtension(4.0));
     assertEquals(
-        InteractionRaycastGeometry.MAX_CANDIDATE_ORIGIN_EXTENSION,
-        InteractionRaycastGeometry.capCandidateOriginExtension(28_000_000.0));
+        InteractionRaycastGeometry.MAX_CAMERA_ORIGIN_EXTENSION,
+        InteractionRaycastGeometry.capCameraOriginExtension(28_000_000.0));
     assertEquals(
         517.0,
         InteractionRaycastGeometry.attackCandidateRange(
-            4.5, 0.5, InteractionRaycastGeometry.capCandidateOriginExtension(28_000_000.0)));
-    assertTrue(Double.isNaN(InteractionRaycastGeometry.capCandidateOriginExtension(-1.0)));
+            4.5, 0.5, InteractionRaycastGeometry.capCameraOriginExtension(28_000_000.0)));
+    assertTrue(Double.isNaN(InteractionRaycastGeometry.capCameraOriginExtension(-1.0)));
     assertTrue(
         Double.isNaN(
-            InteractionRaycastGeometry.capCandidateOriginExtension(Double.POSITIVE_INFINITY)));
+            InteractionRaycastGeometry.capCameraOriginExtension(Double.POSITIVE_INFINITY)));
   }
 
   @Test

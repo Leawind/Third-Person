@@ -7,7 +7,7 @@ import org.joml.Vector3dc;
 
 /// Pure range calculations for camera-directed interaction raycasts.
 public final class InteractionRaycastGeometry {
-  static final double MAX_CANDIDATE_ORIGIN_EXTENSION = 512.0;
+  static final double MAX_CAMERA_ORIGIN_EXTENSION = 512.0;
 
   private InteractionRaycastGeometry() {}
 
@@ -46,15 +46,15 @@ public final class InteractionRaycastGeometry {
     return Math.max(blockInteractionRange, entityInteractionRange) + cameraToPlayerEyeDistance;
   }
 
-  /// Bounds the camera-origin compensation used only while discovering interaction candidates.
+  /// Bounds the camera-origin compensation used while constructing world-space ray queries.
   ///
   /// A smoothed camera can temporarily remain far from its subject after a teleport. That
   /// distance must not become an unbounded entity-search ray.
-  static double capCandidateOriginExtension(double originExtension) {
+  static double capCameraOriginExtension(double originExtension) {
     if (!Double.isFinite(originExtension) || originExtension < 0.0) {
       return Double.NaN;
     }
-    return Math.min(originExtension, MAX_CANDIDATE_ORIGIN_EXTENSION);
+    return Math.min(originExtension, MAX_CAMERA_ORIGIN_EXTENSION);
   }
 
   /// Matches vanilla's strict `closerThan` range check without taking a square root.
