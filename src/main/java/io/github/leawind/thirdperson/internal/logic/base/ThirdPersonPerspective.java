@@ -46,7 +46,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   }
 
   @Override
-  public void applyCameraState(
+  public void computeCameraState(
       PerspectiveState.@NonNull Mutable state, @NonNull PerspectiveContext context) {
     if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return;
@@ -116,7 +116,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
   }
 
   @Override
-  public void afterApplyCameraState(
+  public void afterCameraStateResolved(
       @NonNull PerspectiveState state, @NonNull PerspectiveContext context) {
     if (!PerspectiveGuard.isThirdPersonCurrent() || !runtime.isCameraControlEnabled()) {
       return;
