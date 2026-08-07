@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
-import io.github.leawind.thirdperson.internal.bridge.MinecraftRaycasting;
+import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,7 +41,7 @@ public final class MinecraftInteractionIntegration {
     Vector3d playerEye = toVector(eye);
     double blockRange = Bridge.blockInteractionRange(minecraft);
     double entityRange = Bridge.entityInteractionRange(minecraft);
-    MinecraftRaycasting.SpatialHit cameraIntent =
+    MinecraftSpatialQuerying.SpatialHit cameraIntent =
         pickAlongRay(player, eye, cameraRay, blockRange, entityRange).orElse(null);
     if (cameraIntent == null) {
       return false;
@@ -57,7 +57,7 @@ public final class MinecraftInteractionIntegration {
     if (interactionRay == null) {
       return false;
     }
-    MinecraftRaycasting.SpatialHit selected =
+    MinecraftSpatialQuerying.SpatialHit selected =
         interactionRay == cameraRay
             ? cameraIntent
             : pickAlongRay(player, eye, interactionRay, blockRange, entityRange).orElse(null);
@@ -73,7 +73,7 @@ public final class MinecraftInteractionIntegration {
     return true;
   }
 
-  private static Optional<MinecraftRaycasting.SpatialHit> pickAlongRay(
+  private static Optional<MinecraftSpatialQuerying.SpatialHit> pickAlongRay(
       LocalPlayer player, Vec3 playerEye, WorldRay ray, double blockRange, double entityRange) {
     Vec3 from = toVec3(ray.origin());
     Vec3 direction = toVec3(ray.direction());
@@ -91,10 +91,10 @@ public final class MinecraftInteractionIntegration {
         && attackRangeHit.orElseThrow().rawHit().getType() != HitResult.Type.MISS) {
       return attackRangeHit;
     }
-    return Optional.of(MinecraftRaycasting.pickFrom(player, from, direction, candidateRange));
+    return Optional.of(MinecraftSpatialQuerying.pickFrom(player, from, direction, candidateRange));
   }
 
-  private static Optional<MinecraftRaycasting.SpatialHit> pickWithActiveAttackRange(
+  private static Optional<MinecraftSpatialQuerying.SpatialHit> pickWithActiveAttackRange(
       LocalPlayer player, Vec3 playerEye, Vec3 from, Vec3 direction, double originExtension) {
     var parameters = MinecraftAttackRangePicking.parameters(player, direction).orElse(null);
     if (parameters == null) {
@@ -108,16 +108,16 @@ public final class MinecraftInteractionIntegration {
     }
 
     var candidates =
-        MinecraftAttackRangePicking.collectCandidates(
+        MinecraftSpatialQuerying.collectCandidates(
             player,
             from,
             direction,
             originExtension == 0.0 ? parameters.minimumRange() : 0.0,
             candidateRange,
             parameters.hitboxMargin());
-    MinecraftRaycasting.SpatialHit closestHit = null;
+    MinecraftSpatialQuerying.SpatialHit closestHit = null;
     double closestDistanceSquared = Double.POSITIVE_INFINITY;
-    for (MinecraftRaycasting.SpatialHit candidate : candidates.entityHits()) {
+    for (MinecraftSpatialQuerying.SpatialHit candidate : candidates.entityHits()) {
       if (!InteractionRaycastGeometry.isWithinAttackRange(
           candidate.worldLocation().distanceToSqr(playerEye),
           parameters.minimumRange(),
@@ -139,7 +139,7 @@ public final class MinecraftInteractionIntegration {
       LocalPlayer player,
       Vec3 playerEye,
       WorldRay ray,
-      MinecraftRaycasting.SpatialHit selected,
+      MinecraftSpatialQuerying.SpatialHit selected,
       double blockRange,
       double entityRange) {
     HitResult hit = selected.rawHit();
@@ -160,7 +160,7 @@ public final class MinecraftInteractionIntegration {
     } else {
       valid = InteractionRaycastGeometry.isWithinRange(distanceSquared, blockRange);
     }
-    return valid ? hit : MinecraftRaycasting.missAt(selected.worldLocation(), playerEye);
+    return valid ? hit : MinecraftSpatialQuerying.missAt(selected.worldLocation(), playerEye);
   }
 
   private static Vec3 toVec3(Vector3dc vector) {

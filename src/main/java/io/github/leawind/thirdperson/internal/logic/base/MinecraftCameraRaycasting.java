@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.bridge.MinecraftRaycasting;
+import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -57,8 +57,8 @@ public final class MinecraftCameraRaycasting {
               }
 
               Vec3 to = toVec3(endpoint);
-              MinecraftRaycasting.BlockHit blockHit =
-                  MinecraftRaycasting.clipBlocks(player, from, to, useColliderBlocks);
+              MinecraftSpatialQuerying.BlockHit blockHit =
+                  MinecraftSpatialQuerying.clipBlocks(player, from, to, useColliderBlocks);
               double blockDistanceSquared = from.distanceToSqr(blockHit.worldLocation());
               Vec3 entityRayEnd =
                   blockHit.missed()
@@ -68,7 +68,7 @@ public final class MinecraftCameraRaycasting {
                           direction.y() * (Math.sqrt(blockDistanceSquared) + 1.0),
                           direction.z() * (Math.sqrt(blockDistanceSquared) + 1.0));
               Optional<Vec3> entityHit =
-                  MinecraftRaycasting.pickEntity(
+                  MinecraftSpatialQuerying.pickEntity(
                       player, from, entityRayEnd, from.distanceToSqr(entityRayEnd));
               if (entityHit.isPresent()
                   && from.distanceToSqr(entityHit.orElseThrow()) < blockDistanceSquared) {

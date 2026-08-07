@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationGeometry;
@@ -8,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
@@ -21,9 +21,7 @@ public final class MinecraftPlayerRotationTargeting {
   private MinecraftPlayerRotationTargeting() {}
 
   static Optional<Vector3d> predictedTargetPoint(
-      Minecraft minecraft,
-      BaseRuntime runtime,
-      MinecraftCameraRaycasting.CameraHit cameraHit) {
+      Minecraft minecraft, BaseRuntime runtime, MinecraftCameraRaycasting.CameraHit cameraHit) {
     LocalPlayer player = minecraft.player;
     if (player == null || minecraft.level == null || cameraHit.blocked()) {
       return Optional.empty();
@@ -39,11 +37,11 @@ public final class MinecraftPlayerRotationTargeting {
                   Math.toDegrees(
                       Math.atan2(
                           -cameraForward.y(), Math.hypot(cameraForward.x(), cameraForward.z())));
-              AABB searchArea =
-                  player.getBoundingBox().inflate(MinecraftCameraRaycasting.TRACE_LENGTH);
               for (Entity candidate :
-                  minecraft.level.getEntities(
-                      player, searchArea, entity -> entity instanceof LivingEntity)) {
+                  MinecraftSpatialQuerying.entitiesInInflatedBounds(
+                      player,
+                      MinecraftCameraRaycasting.TRACE_LENGTH,
+                      entity -> entity instanceof LivingEntity)) {
                 double playerDistance = candidate.distanceTo(player);
                 if (playerDistance < 2.0
                     || playerDistance > MinecraftCameraRaycasting.TRACE_LENGTH) {

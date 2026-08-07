@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base.camera;
 
-import io.github.leawind.thirdperson.internal.bridge.MinecraftRaycasting;
+import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +15,8 @@ public final class MinecraftCameraCollision {
       Entity entity, Vector3dc pivot, Vector3dc desiredCamera) {
     Objects.requireNonNull(entity, "entity");
     return CameraCollisionResolver.resolve(
-        pivot, desiredCamera, (from, to) -> MinecraftRaycasting.clipVisualBlocks(entity, from, to));
+        pivot,
+        desiredCamera,
+        (from, to) -> MinecraftSpatialQuerying.clipVisualBlocks(entity, from, to));
   }
 }
