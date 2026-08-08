@@ -33,6 +33,12 @@ public final class BaseRuntime implements ThirdPersonBase {
     this.parameters = Objects.requireNonNull(parameters, "parameters");
   }
 
+  @Override
+  public void commitInteractionRotation(LookRotation rotation) {
+    MinecraftClientIntegration.commitInteractionRotation(
+        this, Objects.requireNonNull(rotation, "rotation"));
+  }
+
   BaseParameters parameters() {
     return parameters;
   }

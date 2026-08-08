@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 /*? if >=1.20.5 {*/
 import net.minecraft.core.component.DataComponents;
 /*? }*/
@@ -77,6 +78,22 @@ public final class Bridge {
     /*return minecraft.gameMode.hasFarPickRange() ? 6.0 : 3.0;
     *//*? } else {*/
     /*return minecraft.player.getEntityReach();
+    *//*? }*/
+  }
+
+  /// Sends the player's current rotation before an interaction packet can consume it.
+  public static void sendPlayerRotation(LocalPlayer player) {
+    /*? if >=1.21.11 {*/
+    player.connection.send(
+        new ServerboundMovePlayerPacket.Rot(
+            player.getYRot(),
+            player.getXRot(),
+            player.onGround(),
+            player.horizontalCollision));
+    /*? } else {*/
+    /*player.connection.send(
+        new ServerboundMovePlayerPacket.Rot(
+            player.getYRot(), player.getXRot(), player.onGround()));
     *//*? }*/
   }
 

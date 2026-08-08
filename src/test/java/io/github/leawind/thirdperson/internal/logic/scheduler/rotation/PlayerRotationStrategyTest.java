@@ -19,8 +19,7 @@ class PlayerRotationStrategyTest {
 
   @Test
   void legacyInterestPointModeFacesMovementWhileDirectionalInputIsPresent() {
-    PlayerRotationDecision moving =
-        resolveNormal(NormalPlayerRotationMode.INTEREST_POINT, true);
+    PlayerRotationDecision moving = resolveNormal(NormalPlayerRotationMode.INTEREST_POINT, true);
     PlayerRotationDecision stationary =
         resolveNormal(NormalPlayerRotationMode.INTEREST_POINT, false);
 
@@ -36,8 +35,7 @@ class PlayerRotationStrategyTest {
         PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION,
         resolveNormal(NormalPlayerRotationMode.MOVING_DIRECTION, false).target());
     assertEquals(
-        0.06,
-        resolveNormal(NormalPlayerRotationMode.MOVING_DIRECTION, false).halfLifeSeconds());
+        0.06, resolveNormal(NormalPlayerRotationMode.MOVING_DIRECTION, false).halfLifeSeconds());
     assertEquals(
         PlayerRotationTarget.CAMERA_HIT_RESULT,
         resolveNormal(NormalPlayerRotationMode.CAMERA_CROSSHAIR, false).target());
@@ -52,44 +50,25 @@ class PlayerRotationStrategyTest {
   }
 
   @Test
-  void explicitNormalTargetsOverrideExceptionalStatesButNotAiming() {
+  void interactionOverridesExplicitNormalTargetsAndAiming() {
     PlayerRotationState fallFlying =
         new PlayerRotationState(
-            NormalPlayerRotationMode.NONE,
-            false,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true);
+            NormalPlayerRotationMode.NONE, false, true, true, true, true, true, true, true);
     PlayerRotationState aiming =
         new PlayerRotationState(
-            NormalPlayerRotationMode.NONE,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true);
+            NormalPlayerRotationMode.NONE, true, true, true, true, true, true, true, true);
 
     assertEquals(
-        PlayerRotationTarget.CURRENT_ROTATION,
+        PlayerRotationTarget.CAMERA_HIT_RESULT,
         PlayerRotationStrategy.resolve(fallFlying).target());
     assertEquals(
-        PlayerRotationTarget.PREDICTED_TARGET_ENTITY,
-        PlayerRotationStrategy.resolve(aiming).target());
+        PlayerRotationTarget.CAMERA_HIT_RESULT, PlayerRotationStrategy.resolve(aiming).target());
   }
 
   @Test
   void passengerBehaviorDependsOnTheVehicleType() {
-    PlayerRotationDecision nonLiving =
-        resolve(false, false, false, false, false, true, false);
-    PlayerRotationDecision living =
-        resolve(false, false, false, false, false, true, true);
+    PlayerRotationDecision nonLiving = resolve(false, false, false, false, false, true, false);
+    PlayerRotationDecision living = resolve(false, false, false, false, false, true, true);
 
     assertEquals(PlayerRotationTarget.INTEREST_POINT, nonLiving.target());
     assertEquals(0.15, nonLiving.halfLifeSeconds());
@@ -99,7 +78,7 @@ class PlayerRotationStrategyTest {
   }
 
   @Test
-  void exceptionalStatesUseTheLegacyPriority() {
+  void interactionOverridesOtherAutomaticRotationStates() {
     assertEquals(
         PlayerRotationTarget.HORIZONTAL_IMPULSE_DIRECTION,
         resolve(false, false, true, false, false, true, false).target());
@@ -109,14 +88,25 @@ class PlayerRotationStrategyTest {
     assertEquals(
         PlayerRotationTarget.CAMERA_HIT_RESULT,
         resolve(false, true, true, false, true, true, false).target());
-    assertFalse(resolve(false, true, true, false, true, true, false).immediate());
+    assertTrue(resolve(false, true, true, false, true, true, false).immediate());
     assertEquals(
-        PlayerRotationTarget.CAMERA_ROTATION,
+        PlayerRotationTarget.CAMERA_HIT_RESULT,
         resolve(false, true, true, true, true, true, false).target());
 
     PlayerRotationDecision aiming = resolve(true, true, true, true, true, true, true);
-    assertEquals(PlayerRotationTarget.PREDICTED_TARGET_ENTITY, aiming.target());
+    assertEquals(PlayerRotationTarget.CAMERA_HIT_RESULT, aiming.target());
     assertTrue(aiming.immediate());
+  }
+
+  @Test
+  void interactionOverridesEveryNormalRotationMode() {
+    for (NormalPlayerRotationMode mode : NormalPlayerRotationMode.values()) {
+      PlayerRotationDecision decision =
+          PlayerRotationStrategy.resolve(
+              new PlayerRotationState(mode, false, false, false, false, true, false, false, false));
+      assertEquals(PlayerRotationTarget.CAMERA_HIT_RESULT, decision.target());
+      assertTrue(decision.immediate());
+    }
   }
 
   private static PlayerRotationDecision resolve(
@@ -143,7 +133,6 @@ class PlayerRotationStrategyTest {
   private static PlayerRotationDecision resolveNormal(
       NormalPlayerRotationMode mode, boolean moving) {
     return PlayerRotationStrategy.resolve(
-        new PlayerRotationState(
-            mode, false, false, false, false, false, false, false, moving));
+        new PlayerRotationState(mode, false, false, false, false, false, false, false, moving));
   }
 }

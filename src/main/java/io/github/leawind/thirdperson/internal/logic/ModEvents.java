@@ -43,7 +43,7 @@ public final class ModEvents {
     LocalPlayerSprintImpulseEvent.register(MinecraftInputIntegration::modifySprintImpulseCondition);
     MouseScrollEvent.register(MinecraftCameraAdjustmentIntegration::onScroll);
     CrosshairGateEvent.register(MinecraftHudIntegration::shouldRenderCrosshair);
-    BeforeInteractionEvent.register(MinecraftInteractionIntegration::prepareInteractionRaycast);
+    BeforeInteractionEvent.register(ModEvents::beforeInteraction);
     SoundSourcePositionEvent.register(MinecraftSoundIntegration::adjustCameraEntitySoundPosition);
   }
 
@@ -59,6 +59,11 @@ public final class ModEvents {
   private static void beforeRenderFrame(float partialTick) {
     MinecraftSchedulingIntegration.beforeRenderFrame();
     MinecraftClientIntegration.beforeRenderFrame(partialTick);
+  }
+
+  private static void beforeInteraction() {
+    var rotation = MinecraftInteractionIntegration.prepareInteractionRaycast();
+    MinecraftSchedulingIntegration.beforeInteraction(rotation);
   }
 
   private static boolean onLocalPlayerTurn(LocalPlayer player, double rawYaw, double rawPitch) {

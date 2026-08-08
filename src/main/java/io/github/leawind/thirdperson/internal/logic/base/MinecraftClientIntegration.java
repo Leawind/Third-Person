@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import java.util.Optional;
@@ -82,6 +83,20 @@ public final class MinecraftClientIntegration {
                   .map(target -> controller.updateFrame(target, frameDeltaSeconds));
         };
     rotation.ifPresent(value -> setPlayerRotation(player, value));
+  }
+
+  static void commitInteractionRotation(BaseRuntime runtime, LookRotation rotation) {
+    Minecraft minecraft = Minecraft.getInstance();
+    LocalPlayer player = minecraft.player;
+    if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()
+        || player == null
+        || !runtime.isCameraControlEnabled()) {
+      return;
+    }
+
+    runtime.session().playerRotationController().reset();
+    setPlayerRotation(player, rotation);
+    Bridge.sendPlayerRotation(player);
   }
 
   private static Optional<LookRotation> resolveTarget(

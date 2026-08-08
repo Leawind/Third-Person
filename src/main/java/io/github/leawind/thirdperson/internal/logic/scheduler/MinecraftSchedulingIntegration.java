@@ -8,6 +8,7 @@ import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotation
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationDecision;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationState;
 import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationStrategy;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -103,6 +104,28 @@ public final class MinecraftSchedulingIntegration {
             base.resolvePredictedCameraTargetRotation(),
             rotation.halfLifeSeconds(),
             rotation.smoothing()));
+  }
+
+  public static void beforeInteraction(Optional<LookRotation> rotation) {
+    Objects.requireNonNull(rotation, "rotation");
+    if (rotation.isEmpty()) {
+      return;
+    }
+    Minecraft minecraft = Minecraft.getInstance();
+    LocalPlayer player = minecraft.player;
+    SchedulerRuntime runtime = SchedulerRuntime.getInstance();
+    var settings = runtime.playerSettings();
+    if (player == null
+        || !runtime.base().isControllingLocalPlayer()
+        || !settings.autoRotateInteracting()
+        || (settings.doNotRotateWhenEating() && Bridge.isEating(player))) {
+      return;
+    }
+
+    LookRotation target = rotation.orElseThrow();
+    runtime.applyPlayerRotation(
+        custom(Optional.of(target), 0.0, PlayerRotationSmoothing.IMMEDIATE));
+    runtime.base().commitInteractionRotation(target);
   }
 
   private static PlayerRotationParameters mode(

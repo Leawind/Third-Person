@@ -75,6 +75,9 @@ class SchedulerRuntimeTest {
     }
 
     @Override
+    public void commitInteractionRotation(LookRotation rotation) {}
+
+    @Override
     public boolean isCameraControlEnabled() {
       return true;
     }

@@ -4,6 +4,8 @@ import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.LookGeometry;
+import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,12 +19,17 @@ import org.joml.Vector3dc;
 public final class MinecraftInteractionIntegration {
   private MinecraftInteractionIntegration() {}
 
-  public static void prepareInteractionRaycast() {
-    refreshRaycast(1.0f);
+  /// Refreshes the final interaction hit and returns the matching player-eye rotation.
+  public static Optional<LookRotation> prepareInteractionRaycast() {
+    return refreshRaycastInternal(1.0f).flatMap(PreparedInteractionRaycast::playerRotation);
   }
 
   /// Replaces vanilla's current hit result with the configured camera-directed raycast.
   public static boolean refreshRaycast(float partialTick) {
+    return refreshRaycastInternal(partialTick).isPresent();
+  }
+
+  private static Optional<PreparedInteractionRaycast> refreshRaycastInternal(float partialTick) {
     BaseRuntime runtime = BaseRuntime.getInstance();
     Minecraft minecraft = Minecraft.getInstance();
     var player = minecraft.player;
@@ -31,12 +38,12 @@ public final class MinecraftInteractionIntegration {
         || player == null
         || minecraft.level == null
         || !Float.isFinite(partialTick)) {
-      return false;
+      return Optional.empty();
     }
 
     WorldRay cameraRay = MinecraftCameraRaycasting.cameraRay(runtime.session()).orElse(null);
     if (cameraRay == null) {
-      return false;
+      return Optional.empty();
     }
     Vec3 eye = SableCompatibility.getEyePositionInterpolated(player, partialTick);
     Vector3d playerEye = toVector(eye);
@@ -45,7 +52,7 @@ public final class MinecraftInteractionIntegration {
     MinecraftSpatialQuerying.SpatialHit cameraIntent =
         pickAlongRay(player, eye, cameraRay, blockRange, entityRange).orElse(null);
     if (cameraIntent == null) {
-      return false;
+      return Optional.empty();
     }
 
     WorldRay interactionRay =
@@ -56,14 +63,14 @@ public final class MinecraftInteractionIntegration {
                 toVector(cameraIntent.worldLocation()))
             .orElse(null);
     if (interactionRay == null) {
-      return false;
+      return Optional.empty();
     }
     MinecraftSpatialQuerying.SpatialHit selected =
         interactionRay == cameraRay
             ? cameraIntent
             : pickAlongRay(player, eye, interactionRay, blockRange, entityRange).orElse(null);
     if (selected == null) {
-      return false;
+      return Optional.empty();
     }
 
     HitResult filtered =
@@ -71,7 +78,9 @@ public final class MinecraftInteractionIntegration {
     minecraft.hitResult = filtered;
     minecraft.crosshairPickEntity =
         filtered instanceof EntityHitResult entityHit ? entityHit.getEntity() : null;
-    return true;
+    Optional<LookRotation> playerRotation =
+        LookGeometry.lookAt(playerEye, toVector(selected.worldLocation()));
+    return Optional.of(new PreparedInteractionRaycast(playerRotation));
   }
 
   private static Optional<MinecraftSpatialQuerying.SpatialHit> pickAlongRay(
@@ -171,4 +180,6 @@ public final class MinecraftInteractionIntegration {
   private static Vector3d toVector(Vec3 vector) {
     return new Vector3d(vector.x, vector.y, vector.z);
   }
+
+  private record PreparedInteractionRaycast(Optional<LookRotation> playerRotation) {}
 }

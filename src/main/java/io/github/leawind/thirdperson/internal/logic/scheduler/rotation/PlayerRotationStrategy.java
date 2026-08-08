@@ -9,6 +9,9 @@ public final class PlayerRotationStrategy {
 
   public static PlayerRotationDecision resolve(PlayerRotationState state) {
     Objects.requireNonNull(state, "state");
+    if (state.interacting()) {
+      return immediate(PlayerRotationTarget.CAMERA_HIT_RESULT);
+    }
     if (state.aiming()) {
       return immediate(PlayerRotationTarget.PREDICTED_TARGET_ENTITY);
     }
@@ -26,9 +29,6 @@ public final class PlayerRotationStrategy {
     }
     if (state.fallFlying()) {
       return immediate(PlayerRotationTarget.CAMERA_ROTATION);
-    }
-    if (state.interacting()) {
-      return smooth(PlayerRotationTarget.CAMERA_HIT_RESULT, 0.0);
     }
     if (state.swimming()) {
       return smooth(PlayerRotationTarget.IMPULSE_DIRECTION, 0.01);
