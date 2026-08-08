@@ -3,6 +3,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
+import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -37,7 +38,7 @@ public final class MinecraftInteractionIntegration {
     if (cameraRay == null) {
       return false;
     }
-    Vec3 eye = player.getEyePosition(partialTick);
+    Vec3 eye = SableCompatibility.getEyePositionInterpolated(player, partialTick);
     Vector3d playerEye = toVector(eye);
     double blockRange = Bridge.blockInteractionRange(minecraft);
     double entityRange = Bridge.entityInteractionRange(minecraft);

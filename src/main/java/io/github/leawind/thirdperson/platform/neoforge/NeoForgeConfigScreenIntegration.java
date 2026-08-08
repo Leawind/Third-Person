@@ -13,15 +13,15 @@ final class NeoForgeConfigScreenIntegration {
       return;
     }
     /^? if >=1.20.6 {^/
-    /^ModList.get()
+    ModList.get()
         .getModContainerById(ThirdPerson.MOD_ID)
         .ifPresent(
             container ->
                 container.registerExtensionPoint(
                     net.neoforged.neoforge.client.gui.IConfigScreenFactory.class,
                     (ignored, screen) -> ConfigScreenManager.build(screen)));
-    ^//^? } else {^/
-    ModList.get()
+    /^? } else {^/
+    /^ModList.get()
         .getModContainerById(ThirdPerson.MOD_ID)
         .ifPresent(
             container ->
@@ -30,7 +30,7 @@ final class NeoForgeConfigScreenIntegration {
                     () ->
                         new net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory(
                             (minecraft, screen) -> ConfigScreenManager.build(screen))));
-    /^? }^/
+    ^//^? }^/
   }
 }
 *//*?}*/

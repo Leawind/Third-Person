@@ -7,6 +7,7 @@ import io.github.leawind.perspectiveapi.api.PerspectiveInfo;
 import io.github.leawind.perspectiveapi.api.PerspectiveState;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.logic.base.camera.MinecraftCameraCollision;
@@ -75,7 +76,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
 
-    var eyePosition = entity.getEyePosition(context.partialTicks());
+    var eyePosition = SableCompatibility.getEyePositionInterpolated(entity, context.partialTicks());
     var interpolatedPivot = new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z);
     var pivot =
         runtime

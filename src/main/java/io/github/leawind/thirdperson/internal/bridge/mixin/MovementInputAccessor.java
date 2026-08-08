@@ -4,7 +4,7 @@ package io.github.leawind.thirdperson.internal.bridge.mixin;
 import net.minecraft.client.player.ClientInput;
 import net.minecraft.world.phys.Vec2;
 /*? } else {*/
-/*import net.minecraft.client.player.Input;
+/*import net.minecraft.client.player.ClientInput;
 *//*? }*/
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;

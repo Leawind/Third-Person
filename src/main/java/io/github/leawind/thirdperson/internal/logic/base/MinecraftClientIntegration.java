@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public final class MinecraftClientIntegration {
     if (currentPerspective && runtime.isCameraControlEnabled()) {
       var cameraEntity = minecraft.getCameraEntity();
       if (cameraEntity != null) {
-        var eyePosition = cameraEntity.getEyePosition(1.0f);
+        var eyePosition = SableCompatibility.getEyePositionInterpolated(cameraEntity, 1.0f);
         runtime
             .session()
             .cameraPivotSmoother()

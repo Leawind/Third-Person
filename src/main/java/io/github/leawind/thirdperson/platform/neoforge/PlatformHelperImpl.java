@@ -13,8 +13,8 @@ public class PlatformHelperImpl implements PlatformHelper {
 /^?   if >=1.21.11 {^/
     return !FMLLoader.getCurrent().isProduction();
 /^?   } else {^/
-/^return !FMLLoader.isProduction();^/
-/^?   }^/
+/^return !FMLLoader.isProduction();
+^//^?   }^/
   }
 
   @Override
