@@ -2,15 +2,11 @@ package io.github.leawind.thirdperson.internal.logic.base.camera;
 
 /// Independent exponential half-lives used before the camera rig is evaluated.
 public record CameraSmoothingParameters(
-    double horizontalPivotHalfLife,
-    double verticalPivotHalfLife,
     double rotationHalfLife,
     double offsetHalfLife,
     double distanceHalfLife,
     double fovHalfLife) {
   public CameraSmoothingParameters {
-    requireHalfLife(horizontalPivotHalfLife);
-    requireHalfLife(verticalPivotHalfLife);
     requireHalfLife(rotationHalfLife);
     requireHalfLife(offsetHalfLife);
     requireHalfLife(distanceHalfLife);

@@ -4,6 +4,7 @@ import io.github.leawind.thirdperson.internal.logic.base.camera.CameraCollisionP
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraController;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.CameraPivotSmoothing;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,6 +35,10 @@ public final class BaseRuntime implements ThirdPersonBase {
 
   BaseParameters parameters() {
     return parameters;
+  }
+
+  public CameraPivotSmoothing cameraPivotSmoothing() {
+    return parameters.cameraPivotSmoothing();
   }
 
   @Override

@@ -19,6 +19,7 @@ val checkArchitecture by tasks.registering {
         val apiPrefix = "io/github/leawind/thirdperson/api/"
         val logicPrefix = "io/github/leawind/thirdperson/internal/logic/"
         val basePrefix = "${logicPrefix}base/"
+        val pivotPrefix = "${basePrefix}pivot/"
         val schedulerPrefix = "${logicPrefix}scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
         val utilsPrefix = "io/github/leawind/thirdperson/internal/utils/"
@@ -28,7 +29,7 @@ val checkArchitecture by tasks.registering {
         val internalPackage = "io.github.leawind.thirdperson.internal."
         val platformPackage = "io.github.leawind.thirdperson.platform."
         val platformApiPackage = "${platformPackage}api."
-        val baseCategories = setOf("camera", "math", "rotation")
+        val baseCategories = setOf("camera", "math", "pivot", "rotation")
         val schedulerCategories =
             setOf("aiming", "camera", "config", "hud", "input", "rotation", "sound", "state")
         val allowedBaseImports = setOf(
@@ -37,6 +38,7 @@ val checkArchitecture by tasks.registering {
             "${basePackage}ThirdPersonBase",
             "${basePackage}camera.CameraProfile",
             "${basePackage}camera.CameraSmoothingParameters",
+            "${basePackage}pivot.CameraPivotSmoothing",
             "${basePackage}rotation.LookRotation",
             "${basePackage}rotation.PlayerRotationMode",
             "${basePackage}rotation.PlayerRotationParameters",
@@ -67,6 +69,7 @@ val checkArchitecture by tasks.registering {
             val isApi = relativePath.startsWith(apiPrefix)
             val isLogic = relativePath.startsWith(logicPrefix)
             val isBase = relativePath.startsWith(basePrefix)
+            val isPivot = relativePath.startsWith(pivotPrefix)
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
             val isUtils = relativePath.startsWith(utilsPrefix)
@@ -125,6 +128,11 @@ val checkArchitecture by tasks.registering {
                 if (isBase && line.contains(schedulerPackage)) {
                     violations.add(
                         "$relativePath:${index + 1}: base must not reference the scheduling layer"
+                    )
+                }
+                if (isPivot && line.contains("${basePackage}camera.")) {
+                    violations.add(
+                        "$relativePath:${index + 1}: pivot tracking must not depend on the camera pipeline"
                     )
                 }
                 if (mustIgnoreInteractionOrigin && line.contains("raycastOrigin(")) {

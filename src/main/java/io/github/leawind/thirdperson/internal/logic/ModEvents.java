@@ -14,6 +14,7 @@ import io.github.leawind.thirdperson.internal.logic.base.MinecraftClientIntegrat
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInputIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftInteractionIntegration;
 import io.github.leawind.thirdperson.internal.logic.base.MinecraftSoundIntegration;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.MinecraftCameraPivotIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftCameraAdjustmentIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftHudIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftSchedulingIntegration;
@@ -52,6 +53,7 @@ public final class ModEvents {
     MinecraftKeyIntegration.onClientTick();
     MinecraftSchedulingIntegration.onClientTick();
     MinecraftClientIntegration.onClientTick();
+    MinecraftCameraPivotIntegration.onClientTick();
   }
 
   private static void beforeRenderFrame(float partialTick) {

@@ -2,6 +2,7 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoothingParameters;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.CameraPivotSmoothing;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import java.util.Optional;
 /// Complete instantaneous input from the scheduling layer to the base layer.
 public record BaseParameters(
     CameraProfile camera,
+    CameraPivotSmoothing cameraPivotSmoothing,
     CameraSmoothingParameters cameraSmoothing,
     RaycastOrigin raycastOrigin,
     boolean centerCameraEntitySounds,
@@ -17,7 +19,8 @@ public record BaseParameters(
   private static final BaseParameters DEFAULTS =
       new BaseParameters(
           new CameraProfile(1.5, -0.25, -0.25, -0.25, 1.0, false),
-          new CameraSmoothingParameters(0.064, 0.08, 0.0, 0.06, 0.08, 0.04),
+          new CameraPivotSmoothing(0.064, 0.08),
+          new CameraSmoothingParameters(0.0, 0.06, 0.08, 0.04),
           RaycastOrigin.CAMERA,
           false,
           PlayerRotationParameters.custom(
@@ -25,6 +28,7 @@ public record BaseParameters(
 
   public BaseParameters {
     Objects.requireNonNull(camera, "camera");
+    Objects.requireNonNull(cameraPivotSmoothing, "cameraPivotSmoothing");
     Objects.requireNonNull(cameraSmoothing, "cameraSmoothing");
     Objects.requireNonNull(raycastOrigin, "raycastOrigin");
     Objects.requireNonNull(playerRotation, "playerRotation");
@@ -36,6 +40,11 @@ public record BaseParameters(
 
   public BaseParameters withPlayerRotation(PlayerRotationParameters value) {
     return new BaseParameters(
-        camera, cameraSmoothing, raycastOrigin, centerCameraEntitySounds, value);
+        camera,
+        cameraPivotSmoothing,
+        cameraSmoothing,
+        raycastOrigin,
+        centerCameraEntitySounds,
+        value);
   }
 }

@@ -7,16 +7,15 @@ import io.github.leawind.perspectiveapi.api.PerspectiveInfo;
 import io.github.leawind.perspectiveapi.api.PerspectiveState;
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
-import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.logic.base.camera.MinecraftCameraCollision;
 import io.github.leawind.thirdperson.internal.logic.base.camera.MinecraftCameraSubjectDimensions;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.MinecraftCameraPivotIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
 import org.joml.Quaternionf;
-import org.joml.Vector3d;
 import org.jspecify.annotations.NonNull;
 
 /// The single manually selectable perspective provided by this mod.
@@ -76,15 +75,8 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
 
-    var eyePosition = SableCompatibility.getEyePositionInterpolated(entity, context.partialTicks());
-    var interpolatedPivot = new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z);
     var pivot =
-        runtime
-            .session()
-            .cameraPivotSmoother()
-            .sample(
-                interpolatedPivot, context.partialTicks(), runtime.parameters().cameraSmoothing())
-            .orElse(null);
+        MinecraftCameraPivotIntegration.sample(entity, context.partialTicks()).orElse(null);
     if (pivot == null) {
       return;
     }

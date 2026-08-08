@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class CameraSmootherTest {
   private static final CameraSmoothingParameters BALANCED =
-      new CameraSmoothingParameters(0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+      new CameraSmoothingParameters(0.1, 0.1, 0.1, 0.1);
 
   @Test
   void independentSmoothingIsFrameRateIndependent() {
@@ -56,7 +56,7 @@ class CameraSmootherTest {
     var smoother = new CameraSmoother();
     smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
     var targetRotation = new Quaternionf().rotationYXZ(0.8f, -0.3f, 0.0f);
-    var immediateRotation = new CameraSmoothingParameters(0.25, 0.25, 0.0, 0.25, 0.25, 0.25);
+    var immediateRotation = new CameraSmoothingParameters(0.0, 0.25, 0.25, 0.25);
 
     CameraInput result =
         smoother
@@ -117,7 +117,7 @@ class CameraSmootherTest {
   void zeroHalfLivesApplyEveryTargetImmediately() {
     var smoother = new CameraSmoother();
     smoother.update(input(0.0, new Quaternionf(), 2.0, 0.0, 0.0, 70.0f), 0.0, BALANCED);
-    var immediate = new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    var immediate = new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0);
 
     CameraInput result =
         smoother

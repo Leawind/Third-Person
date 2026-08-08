@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
-/// Smooths frame-updated camera-rig inputs; the world-space pivot is smoothed on client ticks.
+/// Smooths the frame-updated rotation and composition inputs of the camera rig.
 public final class CameraSmoother {
   private final Quaternionf rotation = new Quaternionf();
   private boolean initialized;

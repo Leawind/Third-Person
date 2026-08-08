@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 class CameraControllerTest {
   private static final CameraProfile PROFILE = new CameraProfile(4.0, 0.0, 0.0, 0.0, 1.0, false);
   private static final CameraSmoothingParameters IMMEDIATE =
-      new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+      new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0);
   private static final CameraSmoothingParameters SMOOTH_FOV =
-      new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.08, 0.08, 0.08);
+      new CameraSmoothingParameters(0.0, 0.08, 0.08, 0.08);
 
   @Test
   void resolvesTheIdealCameraPose() {

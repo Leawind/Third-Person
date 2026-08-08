@@ -1,13 +1,11 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import org.joml.Vector3d;
 
 /// Owns client identity and executes the current mode-independent base parameters.
 public final class MinecraftClientIntegration {
@@ -33,20 +31,6 @@ public final class MinecraftClientIntegration {
       runtime.onClientIdentityChanged(currentPerspective && player != null && level != null);
     } else if (currentPerspective && player != null && !runtime.session().isPerspectiveActive()) {
       runtime.onPerspectiveActivated();
-    }
-
-    if (currentPerspective && runtime.isCameraControlEnabled()) {
-      var cameraEntity = minecraft.getCameraEntity();
-      if (cameraEntity != null) {
-        var eyePosition = SableCompatibility.getEyePositionInterpolated(cameraEntity, 1.0f);
-        runtime
-            .session()
-            .cameraPivotSmoother()
-            .updateTick(
-                new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z),
-                CLIENT_TICK_SECONDS,
-                runtime.parameters().cameraSmoothing());
-      }
     }
 
     if (!PerspectiveGuard.isThirdPersonCurrentForLocalPlayer()

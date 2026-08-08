@@ -1,18 +1,18 @@
-package io.github.leawind.thirdperson.internal.logic.base.camera;
+package io.github.leawind.thirdperson.internal.logic.base.pivot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
-class CameraPivotSmootherTest {
+class CameraPivotTrackerTest {
   private static final double TICK_SECONDS = 0.05;
-  private static final CameraSmoothingParameters SMOOTH = smoothing(0.05, 0.05);
+  private static final CameraPivotSmoothing SMOOTH = smoothing(0.05, 0.05);
 
   @Test
   void renderSamplingDoesNotChangeMovingTargetTickStates() {
-    var fewSamples = new CameraPivotSmoother();
-    var manySamples = new CameraPivotSmoother();
+    var fewSamples = new CameraPivotTracker();
+    var manySamples = new CameraPivotTracker();
     fewSamples.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
     manySamples.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
 
@@ -40,52 +40,52 @@ class CameraPivotSmootherTest {
 
   @Test
   void interpolatesSmoothedTickStatesAlongsideTheMovingEntity() {
-    var smoother = new CameraPivotSmoother();
-    smoother.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
-    smoother.updateTick(new Vector3d(10.0, 4.0, -2.0), TICK_SECONDS, SMOOTH).orElseThrow();
+    var tracker = new CameraPivotTracker();
+    tracker.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
+    tracker.updateTick(new Vector3d(10.0, 4.0, -2.0), TICK_SECONDS, SMOOTH).orElseThrow();
 
     assertEquals(
         new Vector3d(1.25, 0.5, -0.25),
-        smoother.sample(new Vector3d(2.5, 1.0, -0.5), 0.25, SMOOTH).orElseThrow());
+        tracker.sample(new Vector3d(2.5, 1.0, -0.5), 0.25, SMOOTH).orElseThrow());
     assertEquals(
         new Vector3d(2.5, 1.0, -0.5),
-        smoother.sample(new Vector3d(5.0, 2.0, -1.0), 0.5, SMOOTH).orElseThrow());
+        tracker.sample(new Vector3d(5.0, 2.0, -1.0), 0.5, SMOOTH).orElseThrow());
     assertEquals(
         new Vector3d(3.75, 1.5, -0.75),
-        smoother.sample(new Vector3d(7.5, 3.0, -1.5), 0.75, SMOOTH).orElseThrow());
+        tracker.sample(new Vector3d(7.5, 3.0, -1.5), 0.75, SMOOTH).orElseThrow());
   }
 
   @Test
   void zeroHalfLifeUsesTheCurrentInterpolatedTargetPerAxis() {
-    var smoother = new CameraPivotSmoother();
-    smoother.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
-    smoother.updateTick(new Vector3d(10.0, 10.0, 10.0), TICK_SECONDS, SMOOTH).orElseThrow();
+    var tracker = new CameraPivotTracker();
+    tracker.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
+    tracker.updateTick(new Vector3d(10.0, 10.0, 10.0), TICK_SECONDS, SMOOTH).orElseThrow();
 
     var immediateHorizontal = smoothing(0.0, 0.05);
     assertEquals(
         new Vector3d(4.0, 2.0, -4.0),
-        smoother.sample(new Vector3d(4.0, 8.0, -4.0), 0.4, immediateHorizontal).orElseThrow());
+        tracker.sample(new Vector3d(4.0, 8.0, -4.0), 0.4, immediateHorizontal).orElseThrow());
 
     var immediateVertical = smoothing(0.05, 0.0);
     assertEquals(
         new Vector3d(2.0, 8.0, 2.0),
-        smoother.sample(new Vector3d(8.0, 8.0, 8.0), 0.4, immediateVertical).orElseThrow());
+        tracker.sample(new Vector3d(8.0, 8.0, 8.0), 0.4, immediateVertical).orElseThrow());
   }
 
   @Test
   void resetMakesTheNextRenderSampleSnapToItsTarget() {
-    var smoother = new CameraPivotSmoother();
-    smoother.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
-    smoother.updateTick(new Vector3d(10.0, 10.0, 10.0), TICK_SECONDS, SMOOTH).orElseThrow();
+    var tracker = new CameraPivotTracker();
+    tracker.updateTick(new Vector3d(), TICK_SECONDS, SMOOTH).orElseThrow();
+    tracker.updateTick(new Vector3d(10.0, 10.0, 10.0), TICK_SECONDS, SMOOTH).orElseThrow();
 
-    smoother.reset();
+    tracker.reset();
 
     assertEquals(
         new Vector3d(30.0, 20.0, 10.0),
-        smoother.sample(new Vector3d(30.0, 20.0, 10.0), 0.3, SMOOTH).orElseThrow());
+        tracker.sample(new Vector3d(30.0, 20.0, 10.0), 0.3, SMOOTH).orElseThrow());
   }
 
-  private static CameraSmoothingParameters smoothing(double horizontal, double vertical) {
-    return new CameraSmoothingParameters(horizontal, vertical, 0.0, 0.0, 0.0, 0.0);
+  private static CameraPivotSmoothing smoothing(double horizontal, double vertical) {
+    return new CameraPivotSmoothing(horizontal, vertical);
   }
 }

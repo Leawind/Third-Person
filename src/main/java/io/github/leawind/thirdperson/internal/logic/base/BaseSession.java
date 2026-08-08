@@ -1,8 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
-import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPivotSmoother;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoother;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.CameraPivotTracker;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.LookController;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementIntent;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationController;
@@ -14,7 +14,7 @@ public final class BaseSession {
   private boolean perspectiveActive;
   private final LookController lookController = new LookController();
   private final PlayerRotationController playerRotationController = new PlayerRotationController();
-  private final CameraPivotSmoother cameraPivotSmoother = new CameraPivotSmoother();
+  private final CameraPivotTracker cameraPivotTracker = new CameraPivotTracker();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
   private MovementIntent movementIntent;
   private CameraPose finalCameraPose;
@@ -39,8 +39,8 @@ public final class BaseSession {
     return cameraSmoother;
   }
 
-  public CameraPivotSmoother cameraPivotSmoother() {
-    return cameraPivotSmoother;
+  public CameraPivotTracker cameraPivotTracker() {
+    return cameraPivotTracker;
   }
 
   public Optional<MovementIntent> movementIntent() {
@@ -66,7 +66,7 @@ public final class BaseSession {
   /// Clears state tied to the identity and previous poses of the camera entity.
   public void resetCameraTracking() {
     lookController.reset();
-    cameraPivotSmoother.reset();
+    cameraPivotTracker.reset();
     cameraSmoother.reset();
     clearMovementIntent();
     finalCameraPose = null;

@@ -32,7 +32,7 @@ class SchedulerRuntimeTest {
     assertEquals(scheduler.cameraSettings().normalProfile(), base.parameters.camera());
     assertEquals(
         scheduler.cameraSettings().smoothing().normal().horizontalPivotHalfLife(),
-        base.parameters.cameraSmoothing().horizontalPivotHalfLife());
+        base.parameters.cameraPivotSmoothing().horizontalHalfLife());
     assertEquals(RaycastOrigin.PLAYER_EYE, base.parameters.raycastOrigin());
     assertTrue(base.parameters.centerCameraEntitySounds());
     assertEquals(rotation, base.parameters.playerRotation());
@@ -43,10 +43,10 @@ class SchedulerRuntimeTest {
         scheduler.cameraSettings().aimingProfile().withCentered(true), base.parameters.camera());
     assertEquals(
         scheduler.cameraSettings().smoothing().flyingPivotHalfLife(),
-        base.parameters.cameraSmoothing().horizontalPivotHalfLife());
+        base.parameters.cameraPivotSmoothing().horizontalHalfLife());
     assertEquals(
         scheduler.cameraSettings().smoothing().flyingPivotHalfLife(),
-        base.parameters.cameraSmoothing().verticalPivotHalfLife());
+        base.parameters.cameraPivotSmoothing().verticalHalfLife());
   }
 
   @Test

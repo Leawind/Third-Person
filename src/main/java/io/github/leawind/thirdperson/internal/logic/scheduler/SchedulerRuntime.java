@@ -5,6 +5,7 @@ import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
 import io.github.leawind.thirdperson.internal.logic.base.ThirdPersonBase;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
 import io.github.leawind.thirdperson.internal.logic.base.camera.CameraSmoothingParameters;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.CameraPivotSmoothing;
 import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.AimingSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.CameraMode;
@@ -89,7 +90,7 @@ public final class SchedulerRuntime {
     return centered ? profile.withCentered(true) : profile;
   }
 
-  public CameraSmoothingParameters cameraSmoothing(boolean flyingOrSwimming) {
+  public CameraPivotSmoothing cameraPivotSmoothing(boolean flyingOrSwimming) {
     var smoothing = cameraSettings.smoothing();
     var modeSmoothing =
         session.mode() == CameraMode.AIMING ? smoothing.aiming() : smoothing.normal();
@@ -99,14 +100,19 @@ public final class SchedulerRuntime {
             : modeSmoothing.horizontalPivotHalfLife();
     double verticalPivotHalfLife =
         flyingOrSwimming ? smoothing.flyingPivotHalfLife() : modeSmoothing.verticalPivotHalfLife();
+    return new CameraPivotSmoothing(horizontalPivotHalfLife, verticalPivotHalfLife);
+  }
+
+  public CameraSmoothingParameters cameraSmoothing() {
+    var smoothing = cameraSettings.smoothing();
+    var modeSmoothing =
+        session.mode() == CameraMode.AIMING ? smoothing.aiming() : smoothing.normal();
     boolean adjusting = session.cameraAdjustmentController().isAdjusting();
     double offsetHalfLife =
         adjusting ? smoothing.adjustingOffsetHalfLife() : modeSmoothing.offsetHalfLife();
     double distanceHalfLife =
         adjusting ? smoothing.adjustingDistanceHalfLife() : modeSmoothing.distanceHalfLife();
     return new CameraSmoothingParameters(
-        horizontalPivotHalfLife,
-        verticalPivotHalfLife,
         smoothing.rotationHalfLife(),
         offsetHalfLife,
         distanceHalfLife,
@@ -120,7 +126,8 @@ public final class SchedulerRuntime {
     applyParameters(
         new BaseParameters(
             cameraProfile(flyingOrSwimming),
-            cameraSmoothing(flyingOrSwimming),
+            cameraPivotSmoothing(flyingOrSwimming),
+            cameraSmoothing(),
             cameraRaycastOriginAllowed
                 ? playerSettings.raycastOrigin()
                 : RaycastOrigin.PLAYER_EYE,
