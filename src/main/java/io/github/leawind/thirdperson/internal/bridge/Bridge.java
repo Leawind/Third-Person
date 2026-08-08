@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.bridge;
 
 import io.github.leawind.thirdperson.ThirdPerson;
+import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -104,21 +105,27 @@ public final class Bridge {
     /*? }*/
   }
 
+  public static double getBbSize(Entity entity){
+    return Math.hypot(entity.getBbWidth() * Math.sqrt(2), entity.getBbHeight());
+  }
+
+  @Deprecated
   public static CameraSubjectMeasurements measureCameraSubject(Entity cameraEntity) {
     Entity rootVehicle = cameraEntity.getRootVehicle();
     AABB vehicleBounds =
-        rootVehicle
-            .getPassengersAndSelf()
-            .map(Entity::getBoundingBox)
-            .reduce(AABB::minmax)
-            .orElseGet(rootVehicle::getBoundingBox);
+      rootVehicle
+        .getPassengersAndSelf()
+        .map(SableCompatibility::getWorldBoundingBox)
+        .reduce(AABB::minmax)
+        .orElseGet(() -> SableCompatibility.getWorldBoundingBox(rootVehicle));
     double vehicleTotalSize =
-        Math.hypot(
-            Math.hypot(vehicleBounds.getXsize(), vehicleBounds.getYsize()),
-            vehicleBounds.getZsize());
+      Math.hypot(
+        Math.hypot(vehicleBounds.getXsize(), vehicleBounds.getYsize()),
+        vehicleBounds.getZsize());
     double bodyRadius = cameraEntity.getBbWidth() * 0.5 * Math.sqrt(3.0);
     return new CameraSubjectMeasurements(bodyRadius, vehicleTotalSize);
   }
 
+  @Deprecated
   public record CameraSubjectMeasurements(double bodyRadius, double vehicleTotalSize) {}
 }
