@@ -5,7 +5,7 @@ package io.github.leawind.thirdperson.platform.neoforge;
 import io.github.leawind.thirdperson.internal.logic.ModEntrypoint;
 import io.github.leawind.thirdperson.internal.logic.scheduler.input.MinecraftKeyIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.MinecraftItemPredicateIntegration;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 /^?   if >=1.21.11 {^/
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -28,7 +28,7 @@ public final class Entrypoint {
 
   private static void registerReloadListeners(AddClientReloadListenersEvent event) {
     event.addListener(
-        ResourceLocation.fromNamespaceAndPath(ThirdPerson.MOD_ID, "item_patterns"),
+        Identifier.fromNamespaceAndPath(ThirdPerson.MOD_ID, "item_patterns"),
         MinecraftItemPredicateIntegration.reloadListener());
   }
 }

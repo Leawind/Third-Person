@@ -1,14 +1,9 @@
 package io.github.leawind.thirdperson.internal.bridge.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerSprintImpulseEvent;
-/*? if >1.21 {*/
 import net.minecraft.client.player.ClientInput;
-/*? } else {*/
-/*import net.minecraft.client.player.Input;
-*//*? }*/
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec2;
 import org.spongepowered.asm.mixin.Mixin;
@@ -95,7 +90,7 @@ abstract class LocalPlayerMixin {
         player, vanillaResult, movement.x, movement.y, minimumMagnitude);
   }
   /*? } else {*/
-  /*@ModifyReturnValue(
+  /*@com.llamalad7.mixinextras.injector.ModifyReturnValue(
       method = "hasEnoughImpulseToStartSprinting",
       at = @At("RETURN"))
   private boolean useDirectionalStartingImpulse(boolean vanillaResult) {
