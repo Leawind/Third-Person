@@ -22,6 +22,7 @@ val checkArchitecture by tasks.registering {
         val pivotPrefix = "${basePrefix}pivot/"
         val schedulerPrefix = "${logicPrefix}scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
+        val bridgeCompatPrefix = "${bridgePrefix}compat/"
         val utilsPrefix = "io/github/leawind/thirdperson/internal/utils/"
         val basePackage = "io.github.leawind.thirdperson.internal.logic.base."
         val schedulerPackage = "io.github.leawind.thirdperson.internal.logic.scheduler."
@@ -29,6 +30,7 @@ val checkArchitecture by tasks.registering {
         val internalPackage = "io.github.leawind.thirdperson.internal."
         val platformPackage = "io.github.leawind.thirdperson.platform."
         val platformApiPackage = "${platformPackage}api."
+        val bridgeCompatPackage = "io.github.leawind.thirdperson.internal.bridge.compat."
         val baseCategories = setOf("camera", "math", "pivot", "rotation")
         val schedulerCategories =
             setOf("aiming", "camera", "config", "hud", "input", "rotation", "sound", "state")
@@ -62,6 +64,14 @@ val checkArchitecture by tasks.registering {
             "io/github/leawind/thirdperson/internal/logic/base/MinecraftCameraRaycasting.java",
             "io/github/leawind/thirdperson/internal/logic/base/MinecraftPlayerRotationTargeting.java",
         )
+        val allowedCompatibilityImports = mapOf(
+            "io/github/leawind/thirdperson/internal/bridge/camera/MinecraftCameraSubjectMeasurements.java" to
+                setOf("${bridgeCompatPackage}sable.SableCameraSubjectBoundsResolver"),
+            "io/github/leawind/thirdperson/internal/bridge/entity/MinecraftEntityPose.java" to
+                setOf("${bridgeCompatPackage}sable.SableEntityPoseSampler"),
+            "io/github/leawind/thirdperson/internal/bridge/spatial/SpatialQueryHitLocation.java" to
+                setOf("${bridgeCompatPackage}sable.SableSpatialQueryHitLocationResolver"),
+        )
         val violations = mutableListOf<String>()
 
         fileTree(sourceRoot).matching { include("**/*.java") }.files.sorted().forEach { source ->
@@ -72,6 +82,7 @@ val checkArchitecture by tasks.registering {
             val isPivot = relativePath.startsWith(pivotPrefix)
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
+            val isBridgeCompat = relativePath.startsWith(bridgeCompatPrefix)
             val isUtils = relativePath.startsWith(utilsPrefix)
             val mustIgnoreInteractionOrigin = relativePath in interactionOriginIndependentFiles
 
@@ -178,6 +189,19 @@ val checkArchitecture by tasks.registering {
                 ) {
                     violations.add(
                         "$relativePath:${index + 1}: bridge may only import the platform API, not $imported"
+                    )
+                }
+                if (!isBridgeCompat
+                    && imported.startsWith(bridgeCompatPackage)
+                    && imported !in allowedCompatibilityImports.getOrDefault(relativePath, emptySet())
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: optional compatibility may only be selected by its purpose-specific bridge facade, not $imported"
+                    )
+                }
+                if (!isBridgeCompat && imported.startsWith("dev.ryanhcode.sable.")) {
+                    violations.add(
+                        "$relativePath:${index + 1}: Sable API references must stay inside bridge compatibility adapters"
                     )
                 }
                 if (isUtils && imported.startsWith("io.github.leawind.thirdperson.")) {

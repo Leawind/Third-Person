@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base.pivot;
 
-import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
+import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
 import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;
 import java.util.Optional;
@@ -46,7 +46,7 @@ public final class MinecraftCameraPivotIntegration {
   }
 
   private static Vector3d eyePosition(Entity entity, float partialTick) {
-    var eyePosition = SableCompatibility.getEyePositionInterpolated(entity, partialTick);
+    var eyePosition = MinecraftEntityPose.eyePosition(entity, partialTick);
     return new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z);
   }
 }

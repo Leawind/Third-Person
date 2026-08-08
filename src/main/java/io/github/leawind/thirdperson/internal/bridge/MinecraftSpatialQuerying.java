@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.bridge;
 
-import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableCompatibility;
+import io.github.leawind.thirdperson.internal.bridge.spatial.SpatialQueryHitLocation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +48,7 @@ public final class MinecraftSpatialQuerying {
                     entity));
     return hit.getType() == HitResult.Type.MISS
         ? Optional.empty()
-        : Optional.of(
-            toVector3d(SableCompatibility.projectToWorld(entity.level(), hit.getLocation())));
+        : Optional.of(toVector3d(SpatialQueryHitLocation.resolve(entity.level(), hit)));
   }
 
   public static BlockHit clipBlocks(Entity entity, Vec3 from, Vec3 to, boolean useColliderBlocks) {
@@ -65,10 +64,7 @@ public final class MinecraftSpatialQuerying {
                     ClipContext.Fluid.NONE,
                     entity));
     boolean blocked = hit.getType() == HitResult.Type.BLOCK;
-    Vec3 worldLocation =
-        blocked
-            ? SableCompatibility.projectToWorld(entity.level(), hit.getLocation())
-            : hit.getLocation();
+    Vec3 worldLocation = SpatialQueryHitLocation.resolve(entity.level(), hit);
     return new BlockHit(worldLocation, blocked, hit.getType() == HitResult.Type.MISS);
   }
 
@@ -90,12 +86,12 @@ public final class MinecraftSpatialQuerying {
             effectiveMaxDistanceSquared);
     return hit == null
         ? Optional.empty()
-        : Optional.of(SableCompatibility.projectToWorld(source.level(), hit.getLocation()));
+        : Optional.of(SpatialQueryHitLocation.resolve(source.level(), hit));
   }
 
   /// Runs vanilla-style block/entity candidate selection along an arbitrary world-space ray.
   ///
-  /// The raw hit remains in the coordinate space expected by vanilla/Sable interaction code;
+  /// The raw hit remains in the coordinate space expected by Minecraft interaction code;
   /// [SpatialHit#worldLocation()] is the corresponding point for distance calculations.
   ///
   /// The caller is responsible for validating the selected hit against the player's actual
@@ -109,10 +105,7 @@ public final class MinecraftSpatialQuerying {
             .clip(
                 new ClipContext(
                     from, rayEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, source));
-    Vec3 blockWorldLocation =
-        blockHit.getType() == HitResult.Type.BLOCK
-            ? SableCompatibility.projectToWorld(source.level(), blockHit.getLocation())
-            : blockHit.getLocation();
+    Vec3 blockWorldLocation = SpatialQueryHitLocation.resolve(source.level(), blockHit);
     double blockDistanceSquared = blockWorldLocation.distanceToSqr(from);
     Vec3 entityRayEnd = blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockWorldLocation;
     entityRayEnd = limitRayEnd(from, entityRayEnd);
@@ -127,8 +120,7 @@ public final class MinecraftSpatialQuerying {
     if (entityHit == null) {
       return new SpatialHit(blockHit, blockWorldLocation);
     }
-    Vec3 entityWorldLocation =
-        SableCompatibility.projectToWorld(source.level(), entityHit.getLocation());
+    Vec3 entityWorldLocation = SpatialQueryHitLocation.resolve(source.level(), entityHit);
     return entityWorldLocation.distanceToSqr(from) < blockDistanceSquared
         ? new SpatialHit(entityHit, entityWorldLocation)
         : new SpatialHit(blockHit, blockWorldLocation);
@@ -154,10 +146,7 @@ public final class MinecraftSpatialQuerying {
             .clipIncludingBorder(
                 new ClipContext(
                     from, rayEnd, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-    Vec3 blockWorldLocation =
-        blockHit.getType() == HitResult.Type.BLOCK
-            ? SableCompatibility.projectToWorld(player.level(), blockHit.getLocation())
-            : blockHit.getLocation();
+    Vec3 blockWorldLocation = SpatialQueryHitLocation.resolve(player.level(), blockHit);
     Vec3 entityRayEnd =
         limitRayEnd(
             from, blockHit.getType() == HitResult.Type.MISS ? rayEnd : blockHit.getLocation());
@@ -181,8 +170,7 @@ public final class MinecraftSpatialQuerying {
             (float) hitboxMargin,
             ClipContext.Block.OUTLINE,
             true)) {
-      Vec3 worldLocation =
-          SableCompatibility.projectToWorld(player.level(), candidate.getLocation());
+      Vec3 worldLocation = SpatialQueryHitLocation.resolve(player.level(), candidate);
       entityHits.add(new SpatialHit(candidate, worldLocation));
     }
     return new RaycastCandidates(
@@ -250,7 +238,7 @@ public final class MinecraftSpatialQuerying {
 
   public record BlockHit(Vec3 worldLocation, boolean blocked, boolean missed) {}
 
-  /// A raw vanilla/Sable hit paired with its world-space position for spatial calculations.
+  /// A raw query hit paired with its world-space position for spatial calculations.
   public record SpatialHit(HitResult rawHit, Vec3 worldLocation) {}
 
   /// Block and entity candidates collected along a single attack ray.

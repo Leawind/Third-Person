@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base.camera;
 
-import io.github.leawind.thirdperson.internal.bridge.Bridge;
+import io.github.leawind.thirdperson.internal.bridge.camera.MinecraftCameraSubjectMeasurements;
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
@@ -11,7 +11,7 @@ public final class MinecraftCameraSubjectDimensions {
 
   public static Optional<CameraSubjectDimensions> resolve(Entity cameraEntity) {
     Objects.requireNonNull(cameraEntity, "cameraEntity");
-    var measurements = Bridge.measureCameraSubject(cameraEntity);
+    var measurements = MinecraftCameraSubjectMeasurements.measure(cameraEntity);
     try {
       return Optional.of(
           new CameraSubjectDimensions(measurements.bodyRadius(), measurements.vehicleTotalSize()));
