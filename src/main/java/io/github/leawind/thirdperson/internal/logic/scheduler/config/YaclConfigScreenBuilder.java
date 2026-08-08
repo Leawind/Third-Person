@@ -48,6 +48,18 @@ final class YaclConfigScreenBuilder {
                         .option(
                             booleanOption(
                                 "smart_aiming", true, aiming::smartAiming, aiming::setSmartAiming))
+                        .option(
+                            doubleOption(
+                                "aiming_fov",
+                                CameraSettings.defaultAimingProfile().fovMultiplier(),
+                                () -> camera.aimingProfile().fovMultiplier(),
+                                value1 ->
+                                    camera.updateProfile(
+                                        CameraProfileSlot.AIMING,
+                                        profile -> profile.withFovMultiplier(value1)),
+                                0.25,
+                                2.0,
+                                0.05))
                         .build())
                 .group(
                     group("hud")
@@ -66,16 +78,7 @@ final class YaclConfigScreenBuilder {
                                 hud::setHideCrosshairWhenFallFlyingAndNotAiming))
                         .build())
                 .group(
-                    group("sound")
-                        .option(
-                            booleanOption(
-                                "center_camera_entity_sounds",
-                                false,
-                                sound::centerCameraEntitySounds,
-                                sound::setCenterCameraEntitySounds))
-                        .build())
-                .group(
-                    group("normal_rotation")
+                    group("interaction_rotation")
                         .option(
                             enumOption(
                                 "normal_rotation_mode",
@@ -83,9 +86,6 @@ final class YaclConfigScreenBuilder {
                                 player::normalMode,
                                 player::setNormalMode,
                                 NormalPlayerRotationMode.class))
-                        .build())
-                .group(
-                    group("interaction_rotation")
                         .option(
                             booleanOption(
                                 "auto_rotate_interacting",
@@ -106,53 +106,42 @@ final class YaclConfigScreenBuilder {
                                 player::setRaycastOrigin,
                                 RaycastOrigin.class))
                         .build())
+                .group(
+                    group("sound")
+                        .option(
+                            booleanOption(
+                                "center_camera_entity_sounds",
+                                false,
+                                sound::centerCameraEntitySounds,
+                                sound::setCenterCameraEntitySounds))
+                        .build())
                 .build())
         .category(
             ConfigCategory.createBuilder()
-                .name(text("category.camera"))
-                .tooltip(text("category.camera.desc"))
+                .name(text("category.pivot"))
+                .tooltip(text("category.pivot.desc"))
+                .option(
+                    halfLifeOption(
+                        "flying_pivot_half_life",
+                        defaultSmoothing.flyingPivotHalfLife(),
+                        () -> camera.smoothing().flyingPivotHalfLife(),
+                        value ->
+                            camera.updateSmoothing(
+                                current -> current.withFlyingPivotHalfLife(value))))
                 .group(
-                    group("normal_camera")
-                        .option(
-                            doubleOption(
-                                "normal_distance",
-                                CameraSettings.defaultNormalProfile().distanceFactor(),
-                                () -> camera.normalProfile().distanceFactor(),
-                                value ->
-                                    camera.updateProfile(
-                                        CameraProfileSlot.NORMAL,
-                                        profile -> profile.withDistanceFactor(value)),
-                                0.0,
-                                16.0,
-                                0.05))
-                        .build())
+                    pivotSmoothingGroup(
+                        "normal_camera",
+                        "normal",
+                        CameraProfileSlot.NORMAL,
+                        camera,
+                        defaultSmoothing.normal()))
                 .group(
-                    group("aiming_camera")
-                        .option(
-                            doubleOption(
-                                "aiming_distance",
-                                CameraSettings.defaultAimingProfile().distanceFactor(),
-                                () -> camera.aimingProfile().distanceFactor(),
-                                value ->
-                                    camera.updateProfile(
-                                        CameraProfileSlot.AIMING,
-                                        profile -> profile.withDistanceFactor(value)),
-                                0.0,
-                                16.0,
-                                0.05))
-                        .option(
-                            doubleOption(
-                                "aiming_fov",
-                                CameraSettings.defaultAimingProfile().fovMultiplier(),
-                                () -> camera.aimingProfile().fovMultiplier(),
-                                value ->
-                                    camera.updateProfile(
-                                        CameraProfileSlot.AIMING,
-                                        profile -> profile.withFovMultiplier(value)),
-                                0.25,
-                                2.0,
-                                0.05))
-                        .build())
+                    pivotSmoothingGroup(
+                        "aiming_camera",
+                        "aiming",
+                        CameraProfileSlot.AIMING,
+                        camera,
+                        defaultSmoothing.aiming()))
                 .build())
         .category(
             ConfigCategory.createBuilder()
@@ -168,14 +157,6 @@ final class YaclConfigScreenBuilder {
                                 value ->
                                     camera.updateSmoothing(
                                         current -> current.withRotationHalfLife(value))))
-                        .option(
-                            halfLifeOption(
-                                "flying_pivot_half_life",
-                                defaultSmoothing.flyingPivotHalfLife(),
-                                () -> camera.smoothing().flyingPivotHalfLife(),
-                                value ->
-                                    camera.updateSmoothing(
-                                        current -> current.withFlyingPivotHalfLife(value))))
                         .build())
                 .group(
                     group("camera_adjustment")
@@ -197,14 +178,14 @@ final class YaclConfigScreenBuilder {
                                         current -> current.withAdjustingDistanceHalfLife(value))))
                         .build())
                 .group(
-                    smoothingGroup(
+                    compositionSmoothingGroup(
                         "normal_camera",
                         "normal",
                         CameraProfileSlot.NORMAL,
                         camera,
                         defaultSmoothing.normal()))
                 .group(
-                    smoothingGroup(
+                    compositionSmoothingGroup(
                         "aiming_camera",
                         "aiming",
                         CameraProfileSlot.AIMING,
@@ -232,7 +213,7 @@ final class YaclConfigScreenBuilder {
         .generateScreen(parent);
   }
 
-  private static OptionGroup smoothingGroup(
+  private static OptionGroup pivotSmoothingGroup(
       String groupKey,
       String optionPrefix,
       CameraProfileSlot slot,
@@ -255,6 +236,16 @@ final class YaclConfigScreenBuilder {
                 value ->
                     camera.updateModeSmoothing(
                         slot, current -> current.withVerticalPivotHalfLife(value))))
+        .build();
+  }
+
+  private static OptionGroup compositionSmoothingGroup(
+      String groupKey,
+      String optionPrefix,
+      CameraProfileSlot slot,
+      CameraSettings camera,
+      io.github.leawind.thirdperson.internal.logic.scheduler.camera.ModeSmoothing defaults) {
+    return group(groupKey)
         .option(
             halfLifeOption(
                 optionPrefix + "_offset_half_life",
