@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.perspectiveapi.api.PerspectiveMath;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
 import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
 import io.github.leawind.thirdperson.internal.bridge.input.MinecraftMovementInputMapping;
@@ -28,14 +29,18 @@ public final class MinecraftInputIntegration {
       return vanillaInput;
     }
     var lookController = runtime.session().lookController();
-    if (!lookController.isInitialized()) {
-      lookController.initialize(player.getXRot(), player.getYRot());
-    }
     var pivotPose =
         runtime
             .session()
             .pivotPose()
             .orElseGet(() -> MinecraftEntityPose.pivotPose(player, 1.0f));
+    if (!lookController.isInitialized()) {
+      var worldFromCamera =
+          PerspectiveMath.eulerDegToQuat(
+              player.getXRot(), player.getYRot(), 0.0f, new Quaternionf());
+      lookController.initializeFromWorldRotation(
+          worldFromCamera, pivotPose.copyWorldFromPivot(new Quaternionf()));
+    }
     var pivotFromCamera = new Quaternionf();
     if (!lookController.copyRotation(pivotFromCamera)) {
       runtime.session().clearMovementIntent();

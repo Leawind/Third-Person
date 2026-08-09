@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import com.google.auto.service.AutoService;
+import io.github.leawind.perspectiveapi.api.PerspectiveMath;
 import io.github.leawind.perspectiveapi.api.PerspectiveBehavior;
 import io.github.leawind.perspectiveapi.api.PerspectiveContext;
 import io.github.leawind.perspectiveapi.api.PerspectiveInfo;
@@ -65,19 +66,22 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       runtime.session().resetCameraTracking();
     }
 
+    var pivot = MinecraftCameraPivotIntegration.sample(entity, context.partialTicks()).orElse(null);
+    if (pivot == null) {
+      return;
+    }
     Vec2 entityRotation = entity.getRotationVector();
     var lookController = runtime.session().lookController();
     if (!lookController.isInitialized()) {
-      lookController.initialize(entityRotation.x, entityRotation.y);
+      var worldFromCamera =
+          PerspectiveMath.eulerDegToQuat(
+              entityRotation.x, entityRotation.y, 0.0f, new Quaternionf());
+      lookController.initializeFromWorldRotation(
+          worldFromCamera, pivot.copyWorldFromPivot(new Quaternionf()));
     }
 
     var rotation = new Quaternionf();
     if (!lookController.copyRotation(rotation)) {
-      return;
-    }
-
-    var pivot = MinecraftCameraPivotIntegration.sample(entity, context.partialTicks()).orElse(null);
-    if (pivot == null) {
       return;
     }
     int windowHeight = minecraft.getWindow().getHeight();

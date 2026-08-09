@@ -107,7 +107,12 @@ public final class MinecraftPlayerRotationTargeting {
     if (cameraRay == null) {
       return Optional.empty();
     }
-    float cameraYaw = runtime.session().lookController().yawDegrees();
+    float cameraYaw =
+        runtime
+            .session()
+            .cameraFacingRotation()
+            .map(LookRotation::yawDegrees)
+            .orElse(player.getYRot());
     boolean cameraBehindPlayer =
         Math.abs(PlayerRotationGeometry.shortestDifference(cameraYaw, player.yBodyRot)) < 90.0f;
     Optional<Vector3dc> point =
@@ -145,9 +150,7 @@ public final class MinecraftPlayerRotationTargeting {
                 return lookAtPlayerEye(player, predicted.orElseThrow());
               }
               if (hit.missed()) {
-                var lookController = runtime.session().lookController();
-                return Optional.of(
-                    new LookRotation(lookController.yawDegrees(), lookController.pitchDegrees()));
+                return runtime.session().cameraFacingRotation();
               }
               return lookAtPlayerEye(player, hit.location());
             });

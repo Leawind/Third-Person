@@ -4,6 +4,7 @@ package io.github.leawind.thirdperson.internal.bridge.compat.sable;
 /*import dev.ryanhcode.sable.companion.SableCompanion;
 *//*? }*/
 import io.github.leawind.thirdperson.internal.bridge.camera.CameraSubjectBoundsResolver;
+import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -25,15 +26,16 @@ public final class SableCameraSubjectBoundsResolver {
     INSTANCE;
 
     @Override
-    public AABB resolveBounds(Entity entity) {
+    public ExtensionResult<AABB> resolveBounds(Entity entity) {
       org.joml.Vector3d feetPosition = SableCompanion.INSTANCE.getFeetPos(entity, 0.0f);
       SableCompanion.INSTANCE.projectOutOfSubLevel(entity.level(), feetPosition);
-      return entity
-          .getBoundingBox()
-          .move(
-              feetPosition.x - entity.getX(),
-              feetPosition.y - entity.getY(),
-              feetPosition.z - entity.getZ());
+      return ExtensionResult.handled(
+          entity
+              .getBoundingBox()
+              .move(
+                  feetPosition.x - entity.getX(),
+                  feetPosition.y - entity.getY(),
+                  feetPosition.z - entity.getZ()));
     }
   }
   *//*? }*/

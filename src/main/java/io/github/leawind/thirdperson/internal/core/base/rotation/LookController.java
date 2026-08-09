@@ -1,7 +1,13 @@
 package io.github.leawind.thirdperson.internal.core.base.rotation;
 
 import io.github.leawind.perspectiveapi.api.PerspectiveMath;
+import io.github.leawind.thirdperson.internal.core.base.math.FiniteMath;
+import java.util.Objects;
+import java.util.Optional;
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 /// Stores two-axis look input and exposes it as a Perspective API-convention quaternion.
 public final class LookController {
@@ -25,6 +31,25 @@ public final class LookController {
     initialized = true;
   }
 
+  /// Initializes the local look direction while preserving a world-space camera direction.
+  public void initializeFromWorldRotation(
+      Quaternionfc worldFromCamera, Quaternionfc worldFromPivot) {
+    Objects.requireNonNull(worldFromCamera, "worldFromCamera");
+    Objects.requireNonNull(worldFromPivot, "worldFromPivot");
+    if (!FiniteMath.isFinite(worldFromCamera) || !FiniteMath.isFinite(worldFromPivot)) {
+      reset();
+      return;
+    }
+    var directionWorld = PerspectiveMath.getForward(worldFromCamera, new Vector3f());
+    var directionPivot =
+        new Quaternionf(worldFromPivot)
+            .normalize()
+            .conjugate()
+            .transform(directionWorld, new Vector3f());
+    Vector2f pitchYaw = PerspectiveMath.directionToEulerDeg(directionPivot, new Vector2f());
+    initialize(pitchYaw.x, pitchYaw.y);
+  }
+
   /// Applies the raw arguments received by `Entity.turn`.
   ///
   /// Returns false when the controller is not initialized or the input is invalid, allowing the
@@ -44,6 +69,20 @@ public final class LookController {
     }
     PerspectiveMath.eulerDegToQuat(pitchDegrees, yawDegrees, 0.0f, destination);
     return true;
+  }
+
+  /// Returns the world-space facing direction after composing the pivot and local rotations.
+  public Optional<LookRotation> facingRotation(Quaternionfc worldFromPivot) {
+    Objects.requireNonNull(worldFromPivot, "worldFromPivot");
+    if (!initialized || !FiniteMath.isFinite(worldFromPivot)) {
+      return Optional.empty();
+    }
+    var pivotFromCamera = new Quaternionf();
+    copyRotation(pivotFromCamera);
+    var worldFromCamera =
+        new Quaternionf(worldFromPivot).normalize().mul(pivotFromCamera).normalize();
+    return MovementDirection.facingRotation(
+        PerspectiveMath.getForward(worldFromCamera, new Vector3f()));
   }
 
   public float pitchDegrees() {

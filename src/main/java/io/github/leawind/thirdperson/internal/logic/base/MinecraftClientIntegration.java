@@ -103,8 +103,7 @@ public final class MinecraftClientIntegration {
     var lookController = runtime.session().lookController();
     return switch (parameters.mode()) {
       case CUSTOM -> parameters.customRotation();
-      case PARALLEL_WITH_CAMERA ->
-          Optional.of(new LookRotation(lookController.yawDegrees(), lookController.pitchDegrees()));
+      case PARALLEL_WITH_CAMERA -> runtime.session().cameraFacingRotation();
       case LOOK_AT_CAMERA_RAY_HIT -> MinecraftPlayerRotationTargeting.cameraRayHitRotation(runtime);
       case MOVEMENT_DIRECTION ->
           runtime

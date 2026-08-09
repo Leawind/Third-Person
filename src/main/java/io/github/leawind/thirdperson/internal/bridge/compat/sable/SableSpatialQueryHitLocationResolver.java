@@ -4,6 +4,7 @@ package io.github.leawind.thirdperson.internal.bridge.compat.sable;
 /*import dev.ryanhcode.sable.companion.SableCompanion;
 *//*? }*/
 import io.github.leawind.thirdperson.internal.bridge.spatial.SpatialQueryHitLocationResolver;
+import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import java.util.Optional;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -26,12 +27,13 @@ public final class SableSpatialQueryHitLocationResolver {
     INSTANCE;
 
     @Override
-    public Vec3 resolveWorldLocation(Level level, HitResult hit) {
+    public ExtensionResult<Vec3> resolveWorldLocation(Level level, HitResult hit) {
       if (hit.getType() == HitResult.Type.MISS) {
-        return hit.getLocation();
+        return ExtensionResult.handled(hit.getLocation());
       }
-      return SableCompanion.INSTANCE.projectOutOfSubLevel(
-          level, (net.minecraft.core.Position) hit.getLocation());
+      return ExtensionResult.handled(
+          SableCompanion.INSTANCE.projectOutOfSubLevel(
+              level, (net.minecraft.core.Position) hit.getLocation()));
     }
   }
   *//*? }*/

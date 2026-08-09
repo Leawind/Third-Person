@@ -5,10 +5,12 @@ import io.github.leawind.thirdperson.internal.core.base.camera.CameraSmoother;
 import io.github.leawind.thirdperson.internal.core.base.pivot.CameraPivotTracker;
 import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookController;
+import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementIntent;
 import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationController;
 import java.util.Objects;
 import java.util.Optional;
+import org.joml.Quaternionf;
 
 /// Minecraft-independent mutable state for one active client session.
 public final class BaseSession {
@@ -51,6 +53,13 @@ public final class BaseSession {
 
   public Optional<PivotPose> pivotPose() {
     return Optional.ofNullable(pivotPose);
+  }
+
+  public Optional<LookRotation> cameraFacingRotation() {
+    if (pivotPose == null) {
+      return Optional.empty();
+    }
+    return lookController.facingRotation(pivotPose.copyWorldFromPivot(new Quaternionf()));
   }
 
   public void recordPivotPose(PivotPose value) {
