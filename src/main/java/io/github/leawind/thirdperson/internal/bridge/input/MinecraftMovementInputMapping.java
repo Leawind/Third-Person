@@ -31,12 +31,16 @@ public final class MinecraftMovementInputMapping {
     }
   }
 
-  public static MovementInput map(
+  public static MappingResult map(
       LocalPlayer player, MovementIntent intent, MovementInput unmodifiedInput) {
     freezeRegistry();
     return resolvers
         .resolve(new Context(Objects.requireNonNull(player, "player"), intent))
-        .orElse(Objects.requireNonNull(unmodifiedInput, "unmodifiedInput"));
+        .map(input -> new MappingResult(input, true))
+        .orElseGet(
+            () ->
+                new MappingResult(
+                    Objects.requireNonNull(unmodifiedInput, "unmodifiedInput"), false));
   }
 
   private static PriorityResolverRegistry.Builder<Context, MovementInput> createBuilder() {
@@ -85,6 +89,12 @@ public final class MinecraftMovementInputMapping {
   private record Context(LocalPlayer player, MovementIntent intent) {
     private Context {
       Objects.requireNonNull(intent, "intent");
+    }
+  }
+
+  public record MappingResult(MovementInput input, boolean handled) {
+    public MappingResult {
+      Objects.requireNonNull(input, "input");
     }
   }
 }

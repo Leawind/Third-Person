@@ -58,8 +58,13 @@ public final class MinecraftInputIntegration {
       runtime.session().clearMovementIntent();
       return vanillaInput;
     }
+    var mapping = MinecraftMovementInputMapping.map(player, intent, vanillaInput);
+    if (!mapping.handled()) {
+      runtime.session().clearMovementIntent();
+      return mapping.input();
+    }
     runtime.session().recordMovementIntent(intent);
-    return MinecraftMovementInputMapping.map(player, intent, vanillaInput);
+    return mapping.input();
   }
 
   public static boolean modifySprintImpulseCondition(
