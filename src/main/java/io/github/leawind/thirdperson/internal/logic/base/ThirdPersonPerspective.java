@@ -24,7 +24,8 @@ import org.jspecify.annotations.NonNull;
     id = ThirdPerson.PERSPECTIVE_ID,
     icon = ThirdPerson.MOD_ID + ":textures/perspective/third_person.png",
     priority = 10,
-    baseType = PerspectiveBehavior.BaseType.THIRD_PERSON_BACK)
+    baseType = PerspectiveBehavior.BaseType.THIRD_PERSON_BACK,
+    traits = {"third_person", "controllable"})
 @SuppressWarnings("unused")
 public final class ThirdPersonPerspective implements PerspectiveBehavior {
   private long lastFrameNanos;
@@ -75,8 +76,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
       return;
     }
 
-    var pivot =
-        MinecraftCameraPivotIntegration.sample(entity, context.partialTicks()).orElse(null);
+    var pivot = MinecraftCameraPivotIntegration.sample(entity, context.partialTicks()).orElse(null);
     if (pivot == null) {
       return;
     }
