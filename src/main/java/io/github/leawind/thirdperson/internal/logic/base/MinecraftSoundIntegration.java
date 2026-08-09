@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.core.base.SoundSourceGeometry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;

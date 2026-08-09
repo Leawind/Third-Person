@@ -1,13 +1,14 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationMode;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationSmoothing;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationDecision;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationState;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.PlayerRotationStrategy;
+import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationMode;
+import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationParameters;
+import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationSmoothing;
+import io.github.leawind.thirdperson.internal.core.schedule.rotation.PlayerRotationDecision;
+import io.github.leawind.thirdperson.internal.core.schedule.rotation.PlayerRotationState;
+import io.github.leawind.thirdperson.internal.core.schedule.rotation.PlayerRotationStrategy;
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;

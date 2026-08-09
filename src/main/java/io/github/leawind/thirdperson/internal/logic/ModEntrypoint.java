@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.internal.logic;
 
 import io.github.leawind.thirdperson.ThirdPerson;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
 
 /// Outermost composition root installed by loader entrypoints.
 public final class ModEntrypoint {

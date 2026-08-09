@@ -1,12 +1,12 @@
 package io.github.leawind.thirdperson.internal.logic.base.pivot;
 
 import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
+import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
 import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
-import org.joml.Vector3d;
 
 /// Adapts the active camera entity's eye position to the independent pivot tracker.
 public final class MinecraftCameraPivotIntegration {
@@ -31,22 +31,25 @@ public final class MinecraftCameraPivotIntegration {
         .updateTick(
             eyePosition(entity, 1.0f),
             CLIENT_TICK_SECONDS,
-            runtime.cameraPivotSmoothing());
+            runtime.cameraPivotSmoothing())
+        .ifPresent(runtime.session()::recordPivotPose);
   }
 
-  public static Optional<Vector3d> sample(Entity entity, float partialTick) {
+  public static Optional<PivotPose> sample(Entity entity, float partialTick) {
     BaseRuntime runtime = BaseRuntime.getInstance();
-    return runtime
+    var pose =
+        runtime
         .session()
         .cameraPivotTracker()
         .sample(
             eyePosition(entity, partialTick),
             partialTick,
             runtime.cameraPivotSmoothing());
+    pose.ifPresent(runtime.session()::recordPivotPose);
+    return pose;
   }
 
-  private static Vector3d eyePosition(Entity entity, float partialTick) {
-    var eyePosition = MinecraftEntityPose.eyePosition(entity, partialTick);
-    return new Vector3d(eyePosition.x, eyePosition.y, eyePosition.z);
+  private static PivotPose eyePosition(Entity entity, float partialTick) {
+    return MinecraftEntityPose.pivotPose(entity, partialTick);
   }
 }

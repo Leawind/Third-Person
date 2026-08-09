@@ -1,5 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.aiming;
 
+import io.github.leawind.thirdperson.internal.core.schedule.aiming.AimingSettings;
+import io.github.leawind.thirdperson.internal.core.schedule.aiming.ItemPatternSet;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.leawind.thirdperson.ThirdPerson;

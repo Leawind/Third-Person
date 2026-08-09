@@ -1,10 +1,13 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementDirection;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.MovementIntent;
+import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
+import io.github.leawind.thirdperson.internal.bridge.input.MinecraftMovementInputMapping;
+import io.github.leawind.thirdperson.internal.core.base.rotation.MovementDirection;
+import io.github.leawind.thirdperson.internal.core.base.rotation.MovementIntent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import org.joml.Quaternionf;
 
 /// Connects neutral input events to the Minecraft-independent session state.
 public final class MinecraftInputIntegration {
@@ -25,23 +28,33 @@ public final class MinecraftInputIntegration {
       return vanillaInput;
     }
     var lookController = runtime.session().lookController();
-    float cameraYaw =
-        lookController.isInitialized() ? lookController.yawDegrees() : player.getYRot();
-    float cameraPitch =
-        lookController.isInitialized() ? lookController.pitchDegrees() : player.getXRot();
+    if (!lookController.isInitialized()) {
+      lookController.initialize(player.getXRot(), player.getYRot());
+    }
+    var pivotPose =
+        runtime
+            .session()
+            .pivotPose()
+            .orElseGet(() -> MinecraftEntityPose.pivotPose(player, 1.0f));
+    var pivotFromCamera = new Quaternionf();
+    if (!lookController.copyRotation(pivotFromCamera)) {
+      runtime.session().clearMovementIntent();
+      return vanillaInput;
+    }
     var intent =
         MovementIntent.tryCreate(
-                vanillaInput.leftImpulse(), vanillaInput.forwardImpulse(), cameraYaw, cameraPitch)
+                vanillaInput.leftImpulse(),
+                vanillaInput.forwardImpulse(),
+                lookController.yawDegrees(),
+                pivotFromCamera,
+                pivotPose)
             .orElse(null);
     if (intent == null) {
       runtime.session().clearMovementIntent();
       return vanillaInput;
     }
     runtime.session().recordMovementIntent(intent);
-    return intent
-        .relativeToPlayerYaw(player.getYRot())
-        .map(input -> new MovementInput(input.leftImpulse(), input.forwardImpulse()))
-        .orElse(vanillaInput);
+    return MinecraftMovementInputMapping.map(player, intent, vanillaInput);
   }
 
   public static boolean modifySprintImpulseCondition(

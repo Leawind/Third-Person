@@ -1,7 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.state;
 
+import io.github.leawind.thirdperson.internal.core.schedule.state.ThirdPersonPersistentState;
 import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

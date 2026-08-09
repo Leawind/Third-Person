@@ -2,9 +2,9 @@ package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.LookGeometry;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationGeometry;
+import io.github.leawind.thirdperson.internal.core.base.rotation.LookGeometry;
+import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationGeometry;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

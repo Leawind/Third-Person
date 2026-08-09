@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.base.camera;
 
+import io.github.leawind.thirdperson.internal.core.base.camera.CameraCollisionResolver;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import java.util.Objects;
 import java.util.Optional;

@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.aiming;
 
+import io.github.leawind.thirdperson.internal.core.schedule.aiming.ItemPatternSet;
 import com.google.gson.JsonParser;
 import io.github.leawind.thirdperson.ThirdPerson;
 import java.io.Reader;

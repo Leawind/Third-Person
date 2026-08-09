@@ -11,12 +11,12 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import io.github.leawind.thirdperson.ThirdPerson;
-import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
+import io.github.leawind.thirdperson.internal.core.base.RaycastOrigin;
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.core.schedule.camera.CameraProfileSlot;
+import io.github.leawind.thirdperson.internal.core.schedule.camera.CameraSettings;
+import io.github.leawind.thirdperson.internal.core.schedule.hud.CrosshairMode;
+import io.github.leawind.thirdperson.internal.core.schedule.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -218,24 +218,24 @@ final class YaclConfigScreenBuilder {
       String optionPrefix,
       CameraProfileSlot slot,
       CameraSettings camera,
-      io.github.leawind.thirdperson.internal.logic.scheduler.camera.ModeSmoothing defaults) {
+      io.github.leawind.thirdperson.internal.core.schedule.camera.ModeSmoothing defaults) {
     return group(groupKey)
         .option(
             halfLifeOption(
-                optionPrefix + "_pivot_horizontal_half_life",
-                defaults.horizontalPivotHalfLife(),
-                () -> camera.smoothingFor(slot).horizontalPivotHalfLife(),
+                optionPrefix + "_pivot_position_half_life",
+                defaults.pivotPositionHalfLife(),
+                () -> camera.smoothingFor(slot).pivotPositionHalfLife(),
                 value ->
                     camera.updateModeSmoothing(
-                        slot, current -> current.withHorizontalPivotHalfLife(value))))
+                        slot, current -> current.withPivotPositionHalfLife(value))))
         .option(
             halfLifeOption(
-                optionPrefix + "_pivot_vertical_half_life",
-                defaults.verticalPivotHalfLife(),
-                () -> camera.smoothingFor(slot).verticalPivotHalfLife(),
+                optionPrefix + "_pivot_rotation_half_life",
+                defaults.pivotRotationHalfLife(),
+                () -> camera.smoothingFor(slot).pivotRotationHalfLife(),
                 value ->
                     camera.updateModeSmoothing(
-                        slot, current -> current.withVerticalPivotHalfLife(value))))
+                        slot, current -> current.withPivotRotationHalfLife(value))))
         .build();
   }
 
@@ -244,7 +244,7 @@ final class YaclConfigScreenBuilder {
       String optionPrefix,
       CameraProfileSlot slot,
       CameraSettings camera,
-      io.github.leawind.thirdperson.internal.logic.scheduler.camera.ModeSmoothing defaults) {
+      io.github.leawind.thirdperson.internal.core.schedule.camera.ModeSmoothing defaults) {
     return group(groupKey)
         .option(
             halfLifeOption(

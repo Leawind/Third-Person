@@ -1,6 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairPolicy;
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.core.schedule.hud.CrosshairPolicy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 

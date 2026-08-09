@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.state;
 
+import io.github.leawind.thirdperson.internal.core.schedule.state.ThirdPersonPersistentState;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 

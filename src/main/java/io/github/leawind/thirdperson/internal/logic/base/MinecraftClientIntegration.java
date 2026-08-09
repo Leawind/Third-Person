@@ -1,8 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.LookRotation;
-import io.github.leawind.thirdperson.internal.logic.base.rotation.PlayerRotationParameters;
+import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationParameters;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -11,7 +11,6 @@ import net.minecraft.client.player.LocalPlayer;
 /// Owns client identity and executes the current mode-independent base parameters.
 public final class MinecraftClientIntegration {
   private static final double CLIENT_TICK_SECONDS = 0.05;
-  private static final float HORIZONTAL_ROTATION_PITCH = 0.1f;
 
   private static ClientLevel previousLevel;
   private static LocalPlayer previousPlayer;
@@ -114,11 +113,8 @@ public final class MinecraftClientIntegration {
               .flatMap(
                   intent ->
                       parameters.threeDimensionalMovement()
-                          ? intent.facingRotation()
-                          : intent.facingYawDegrees().stream()
-                              .mapToObj(
-                                  yaw -> new LookRotation((float) yaw, HORIZONTAL_ROTATION_PITCH))
-                              .findFirst());
+                          ? intent.cameraSpaceFacingRotation()
+                          : intent.pivotPlaneFacingRotation());
     };
   }
 

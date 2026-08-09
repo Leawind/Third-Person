@@ -18,7 +18,7 @@ import io.github.leawind.thirdperson.internal.logic.base.pivot.MinecraftCameraPi
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftCameraAdjustmentIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftHudIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.MinecraftSchedulingIntegration;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.MinecraftItemPredicateIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.input.MinecraftKeyIntegration;
 import io.github.leawind.thirdperson.internal.logic.scheduler.state.MinecraftStatePersistence;

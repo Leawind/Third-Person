@@ -1,5 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
+import io.github.leawind.thirdperson.internal.core.base.BaseSession;
+import io.github.leawind.thirdperson.internal.core.base.InteractionRaycastGeometry;
+import io.github.leawind.thirdperson.internal.core.base.WorldRay;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
 import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
 import java.util.Optional;

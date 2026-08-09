@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.state;
 
+import io.github.leawind.thirdperson.internal.core.schedule.state.ThirdPersonPersistentState;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -7,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
+import io.github.leawind.thirdperson.internal.core.base.RaycastOrigin;
+import io.github.leawind.thirdperson.internal.core.schedule.hud.CrosshairMode;
+import io.github.leawind.thirdperson.internal.core.schedule.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler;
 
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 

@@ -1,13 +1,13 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.input;
 
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
-import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.scheduler.SchedulerRuntime;
-import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.AimModeResolver;
-import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.CameraMode;
+import io.github.leawind.thirdperson.internal.core.base.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.core.schedule.SchedulerRuntime;
+import io.github.leawind.thirdperson.internal.core.schedule.aiming.AimModeResolver;
+import io.github.leawind.thirdperson.internal.core.schedule.aiming.CameraMode;
 import io.github.leawind.thirdperson.internal.logic.scheduler.aiming.MinecraftItemPredicateIntegration;
-import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraProfileSlot;
-import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSettings;
+import io.github.leawind.thirdperson.internal.core.schedule.camera.CameraProfileSlot;
+import io.github.leawind.thirdperson.internal.core.schedule.camera.CameraSettings;
 import io.github.leawind.thirdperson.internal.logic.scheduler.state.MinecraftStatePersistence;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;

@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.state;
 
+import io.github.leawind.thirdperson.internal.core.schedule.state.ThirdPersonPersistentState;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;

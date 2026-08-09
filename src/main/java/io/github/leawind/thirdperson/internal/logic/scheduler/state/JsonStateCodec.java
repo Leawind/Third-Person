@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.logic.scheduler.state;
 
+import io.github.leawind.thirdperson.internal.core.schedule.state.ThirdPersonPersistentState;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -9,12 +10,12 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.leawind.thirdperson.internal.logic.base.RaycastOrigin;
-import io.github.leawind.thirdperson.internal.logic.base.camera.CameraProfile;
-import io.github.leawind.thirdperson.internal.logic.scheduler.camera.CameraSmoothing;
-import io.github.leawind.thirdperson.internal.logic.scheduler.camera.ModeSmoothing;
-import io.github.leawind.thirdperson.internal.logic.scheduler.hud.CrosshairMode;
-import io.github.leawind.thirdperson.internal.logic.scheduler.rotation.NormalPlayerRotationMode;
+import io.github.leawind.thirdperson.internal.core.base.RaycastOrigin;
+import io.github.leawind.thirdperson.internal.core.base.camera.CameraProfile;
+import io.github.leawind.thirdperson.internal.core.schedule.camera.CameraSmoothing;
+import io.github.leawind.thirdperson.internal.core.schedule.camera.ModeSmoothing;
+import io.github.leawind.thirdperson.internal.core.schedule.hud.CrosshairMode;
+import io.github.leawind.thirdperson.internal.core.schedule.rotation.NormalPlayerRotationMode;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -51,11 +52,11 @@ final class JsonStateCodec {
               instance
                   .group(
                       HALF_LIFE_CODEC
-                          .fieldOf("horizontalPivotHalfLife")
-                          .forGetter(ModeSmoothing::horizontalPivotHalfLife),
+                          .fieldOf("pivotPositionHalfLife")
+                          .forGetter(ModeSmoothing::pivotPositionHalfLife),
                       HALF_LIFE_CODEC
-                          .fieldOf("verticalPivotHalfLife")
-                          .forGetter(ModeSmoothing::verticalPivotHalfLife),
+                          .fieldOf("pivotRotationHalfLife")
+                          .forGetter(ModeSmoothing::pivotRotationHalfLife),
                       HALF_LIFE_CODEC
                           .fieldOf("offsetHalfLife")
                           .forGetter(ModeSmoothing::offsetHalfLife),
