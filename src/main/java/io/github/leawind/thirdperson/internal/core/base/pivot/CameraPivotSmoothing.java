@@ -1,10 +1,9 @@
 package io.github.leawind.thirdperson.internal.core.base.pivot;
 
-/// Exponential half-lives for following a complete pivot pose.
-public record CameraPivotSmoothing(double positionHalfLife, double rotationHalfLife) {
+/// Exponential half-life for following the pivot position in world space.
+public record CameraPivotSmoothing(double positionHalfLife) {
   public CameraPivotSmoothing {
     requireHalfLife(positionHalfLife);
-    requireHalfLife(rotationHalfLife);
   }
 
   private static void requireHalfLife(double value) {

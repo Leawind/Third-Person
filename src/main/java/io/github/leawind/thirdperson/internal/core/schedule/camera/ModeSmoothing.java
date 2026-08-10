@@ -2,41 +2,30 @@ package io.github.leawind.thirdperson.internal.core.schedule.camera;
 
 public record ModeSmoothing(
     double pivotPositionHalfLife,
-    double pivotRotationHalfLife,
     double offsetHalfLife,
     double distanceHalfLife,
     double fovHalfLife) {
   public ModeSmoothing {
     requireHalfLife(pivotPositionHalfLife);
-    requireHalfLife(pivotRotationHalfLife);
     requireHalfLife(offsetHalfLife);
     requireHalfLife(distanceHalfLife);
     requireHalfLife(fovHalfLife);
   }
 
   public ModeSmoothing withPivotPositionHalfLife(double value) {
-    return new ModeSmoothing(
-        value, pivotRotationHalfLife, offsetHalfLife, distanceHalfLife, fovHalfLife);
-  }
-
-  public ModeSmoothing withPivotRotationHalfLife(double value) {
-    return new ModeSmoothing(
-        pivotPositionHalfLife, value, offsetHalfLife, distanceHalfLife, fovHalfLife);
+    return new ModeSmoothing(value, offsetHalfLife, distanceHalfLife, fovHalfLife);
   }
 
   public ModeSmoothing withOffsetHalfLife(double value) {
-    return new ModeSmoothing(
-        pivotPositionHalfLife, pivotRotationHalfLife, value, distanceHalfLife, fovHalfLife);
+    return new ModeSmoothing(pivotPositionHalfLife, value, distanceHalfLife, fovHalfLife);
   }
 
   public ModeSmoothing withDistanceHalfLife(double value) {
-    return new ModeSmoothing(
-        pivotPositionHalfLife, pivotRotationHalfLife, offsetHalfLife, value, fovHalfLife);
+    return new ModeSmoothing(pivotPositionHalfLife, offsetHalfLife, value, fovHalfLife);
   }
 
   public ModeSmoothing withFovHalfLife(double value) {
-    return new ModeSmoothing(
-        pivotPositionHalfLife, pivotRotationHalfLife, offsetHalfLife, distanceHalfLife, value);
+    return new ModeSmoothing(pivotPositionHalfLife, offsetHalfLife, distanceHalfLife, value);
   }
 
   private static void requireHalfLife(double value) {

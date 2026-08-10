@@ -55,9 +55,6 @@ final class JsonStateCodec {
                           .fieldOf("pivotPositionHalfLife")
                           .forGetter(ModeSmoothing::pivotPositionHalfLife),
                       HALF_LIFE_CODEC
-                          .fieldOf("pivotRotationHalfLife")
-                          .forGetter(ModeSmoothing::pivotRotationHalfLife),
-                      HALF_LIFE_CODEC
                           .fieldOf("offsetHalfLife")
                           .forGetter(ModeSmoothing::offsetHalfLife),
                       HALF_LIFE_CODEC
@@ -75,8 +72,8 @@ final class JsonStateCodec {
                           .fieldOf("rotationHalfLife")
                           .forGetter(CameraSmoothing::rotationHalfLife),
                       HALF_LIFE_CODEC
-                          .fieldOf("flyingPivotHalfLife")
-                          .forGetter(CameraSmoothing::flyingPivotHalfLife),
+                          .fieldOf("flyingPivotPositionHalfLife")
+                          .forGetter(CameraSmoothing::flyingPivotPositionHalfLife),
                       HALF_LIFE_CODEC
                           .fieldOf("adjustingOffsetHalfLife")
                           .forGetter(CameraSmoothing::adjustingOffsetHalfLife),

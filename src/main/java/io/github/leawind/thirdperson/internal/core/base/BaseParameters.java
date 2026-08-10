@@ -19,7 +19,7 @@ public record BaseParameters(
   private static final BaseParameters DEFAULTS =
       new BaseParameters(
           new CameraProfile(1.5, -0.25, -0.25, -0.25, 1.0, false),
-          new CameraPivotSmoothing(0.064, 0.08),
+          new CameraPivotSmoothing(0.064),
           new CameraSmoothingParameters(0.0, 0.06, 0.08, 0.04),
           RaycastOrigin.CAMERA,
           false,

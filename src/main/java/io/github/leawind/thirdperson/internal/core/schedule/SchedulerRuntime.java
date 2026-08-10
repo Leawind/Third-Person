@@ -96,13 +96,9 @@ public final class SchedulerRuntime {
         session.mode() == CameraMode.AIMING ? smoothing.aiming() : smoothing.normal();
     double pivotPositionHalfLife =
         flyingOrSwimming
-            ? smoothing.flyingPivotHalfLife()
+            ? smoothing.flyingPivotPositionHalfLife()
             : modeSmoothing.pivotPositionHalfLife();
-    double pivotRotationHalfLife =
-        flyingOrSwimming
-            ? smoothing.flyingPivotHalfLife()
-            : modeSmoothing.pivotRotationHalfLife();
-    return new CameraPivotSmoothing(pivotPositionHalfLife, pivotRotationHalfLife);
+    return new CameraPivotSmoothing(pivotPositionHalfLife);
   }
 
   public CameraSmoothingParameters cameraSmoothing() {

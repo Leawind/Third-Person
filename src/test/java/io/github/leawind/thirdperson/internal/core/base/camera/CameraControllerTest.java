@@ -15,6 +15,8 @@ class CameraControllerTest {
       new CameraSmoothingParameters(0.0, 0.0, 0.0, 0.0);
   private static final CameraSmoothingParameters SMOOTH_FOV =
       new CameraSmoothingParameters(0.0, 0.08, 0.08, 0.08);
+  private static final CameraSmoothingParameters SMOOTH_CAMERA_ROTATION =
+      new CameraSmoothingParameters(0.2, 0.0, 0.0, 0.0);
 
   @Test
   void resolvesTheIdealCameraPose() {
@@ -44,6 +46,31 @@ class CameraControllerTest {
                 PROFILE,
                 IMMEDIATE,
                 (collisionPivot, desired) -> Optional.of(new Vector3d(desired)))
+            .orElseThrow();
+
+    assertEquals(new Vector3d(4.0, 0.0, 0.0), pose.copyPosition(new Vector3d()));
+  }
+
+  @Test
+  void cameraRotationSmoothingDoesNotDelayExternalPivotRotation() {
+    var controller = new CameraController(new CameraSmoother());
+    CameraCollisionPort noCollision =
+        (collisionPivot, desired) -> Optional.of(new Vector3d(desired));
+    controller
+        .update(frameAt(0.0), PROFILE, SMOOTH_CAMERA_ROTATION, noCollision)
+        .orElseThrow();
+    PivotPose rotatedPivot =
+        PivotPose.tryCreate(
+                new Vector3d(), new Quaternionf().rotationY((float) Math.toRadians(-90.0)))
+            .orElseThrow();
+
+    CameraPose pose =
+        controller
+            .update(
+                frameAt(rotatedPivot, new Quaternionf(), 0.05),
+                PROFILE,
+                SMOOTH_CAMERA_ROTATION,
+                noCollision)
             .orElseThrow();
 
     assertEquals(new Vector3d(4.0, 0.0, 0.0), pose.copyPosition(new Vector3d()));
@@ -129,13 +156,18 @@ class CameraControllerTest {
   }
 
   private static CameraFrameInput frameAt(PivotPose pivot, Quaternionf rotation) {
+    return frameAt(pivot, rotation, 0.0);
+  }
+
+  private static CameraFrameInput frameAt(
+      PivotPose pivot, Quaternionf rotation, double deltaSeconds) {
     return CameraFrameInput.tryCreate(
             pivot,
             rotation,
             70.0f,
             16.0 / 9.0,
             new CameraSubjectDimensions(0.0, 1.0),
-            0.0)
+            deltaSeconds)
         .orElseThrow();
   }
 }

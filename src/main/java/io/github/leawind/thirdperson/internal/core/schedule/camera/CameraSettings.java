@@ -16,8 +16,8 @@ public final class CameraSettings {
           0.07,
           0.05,
           0.05,
-          new ModeSmoothing(0.064, 0.08, 0.04, 0.08, 0.08),
-          new ModeSmoothing(0.02, 0.025, 0.025, 0.025, 0.036));
+          new ModeSmoothing(0.064, 0.04, 0.08, 0.08),
+          new ModeSmoothing(0.02, 0.025, 0.025, 0.036));
 
   private CameraProfile normalProfile = DEFAULT_NORMAL_PROFILE;
   private CameraProfile aimingProfile = DEFAULT_AIMING_PROFILE;
@@ -79,7 +79,7 @@ public final class CameraSettings {
         current ->
             new CameraSmoothing(
                 current.rotationHalfLife(),
-                current.flyingPivotHalfLife(),
+                current.flyingPivotPositionHalfLife(),
                 current.adjustingOffsetHalfLife(),
                 current.adjustingDistanceHalfLife(),
                 slot == CameraProfileSlot.NORMAL

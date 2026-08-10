@@ -25,6 +25,19 @@ class JsonStateCodecTest {
   }
 
   @Test
+  void storesOnlyPositionSmoothingForThePivot() {
+    JsonObject smoothing =
+        encodedDefaultsObject().getAsJsonObject("camera").getAsJsonObject("smoothing");
+
+    assertTrue(smoothing.has("flyingPivotPositionHalfLife"));
+    assertFalse(smoothing.has("flyingPivotHalfLife"));
+    assertTrue(smoothing.getAsJsonObject("normal").has("pivotPositionHalfLife"));
+    assertFalse(smoothing.getAsJsonObject("normal").has("pivotRotationHalfLife"));
+    assertTrue(smoothing.getAsJsonObject("aiming").has("pivotPositionHalfLife"));
+    assertFalse(smoothing.getAsJsonObject("aiming").has("pivotRotationHalfLife"));
+  }
+
+  @Test
   void decodesValidEnumAndNumericValues() {
     JsonObject json = encodedDefaultsObject();
     json.getAsJsonObject("camera").getAsJsonObject("normal").addProperty("distance", 3.0);

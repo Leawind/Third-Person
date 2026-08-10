@@ -23,7 +23,7 @@ class CameraSettingsTest {
         () -> new CameraProfile(Double.NaN, 0.0, 0.0, 0.0, 1.0, false));
     assertThrows(
         IllegalArgumentException.class, () -> new CameraProfile(4.0, 2.0, 0.0, 0.0, 1.0, false));
-    assertThrows(IllegalArgumentException.class, () -> new ModeSmoothing(-0.1, 0.0, 0.0, 0.0, 0.0));
-    assertThrows(IllegalArgumentException.class, () -> new ModeSmoothing(0.3, 0.0, 0.0, 0.0, 0.0));
+    assertThrows(IllegalArgumentException.class, () -> new ModeSmoothing(-0.1, 0.0, 0.0, 0.0));
+    assertThrows(IllegalArgumentException.class, () -> new ModeSmoothing(0.3, 0.0, 0.0, 0.0));
   }
 }

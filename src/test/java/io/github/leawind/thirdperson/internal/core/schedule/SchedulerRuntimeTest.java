@@ -42,11 +42,8 @@ class SchedulerRuntimeTest {
     assertEquals(
         scheduler.cameraSettings().aimingProfile().withCentered(true), base.parameters.camera());
     assertEquals(
-        scheduler.cameraSettings().smoothing().flyingPivotHalfLife(),
+        scheduler.cameraSettings().smoothing().flyingPivotPositionHalfLife(),
         base.parameters.cameraPivotSmoothing().positionHalfLife());
-    assertEquals(
-        scheduler.cameraSettings().smoothing().flyingPivotHalfLife(),
-        base.parameters.cameraPivotSmoothing().rotationHalfLife());
   }
 
   @Test

@@ -122,12 +122,12 @@ final class YaclConfigScreenBuilder {
                 .tooltip(text("category.pivot.desc"))
                 .option(
                     halfLifeOption(
-                        "flying_pivot_half_life",
-                        defaultSmoothing.flyingPivotHalfLife(),
-                        () -> camera.smoothing().flyingPivotHalfLife(),
+                        "flying_pivot_position_half_life",
+                        defaultSmoothing.flyingPivotPositionHalfLife(),
+                        () -> camera.smoothing().flyingPivotPositionHalfLife(),
                         value ->
                             camera.updateSmoothing(
-                                current -> current.withFlyingPivotHalfLife(value))))
+                                current -> current.withFlyingPivotPositionHalfLife(value))))
                 .group(
                     pivotSmoothingGroup(
                         "normal_camera",
@@ -228,14 +228,6 @@ final class YaclConfigScreenBuilder {
                 value ->
                     camera.updateModeSmoothing(
                         slot, current -> current.withPivotPositionHalfLife(value))))
-        .option(
-            halfLifeOption(
-                optionPrefix + "_pivot_rotation_half_life",
-                defaults.pivotRotationHalfLife(),
-                () -> camera.smoothingFor(slot).pivotRotationHalfLife(),
-                value ->
-                    camera.updateModeSmoothing(
-                        slot, current -> current.withPivotRotationHalfLife(value))))
         .build();
   }
 

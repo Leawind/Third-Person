@@ -18,7 +18,7 @@ public record ThirdPersonPersistentState(
     PlayerState player,
     SoundState sound,
     HudState hud) {
-  public static final int CURRENT_SCHEMA_VERSION = 3;
+  public static final int CURRENT_SCHEMA_VERSION = 4;
 
   public ThirdPersonPersistentState {
     if (schemaVersion != CURRENT_SCHEMA_VERSION) {

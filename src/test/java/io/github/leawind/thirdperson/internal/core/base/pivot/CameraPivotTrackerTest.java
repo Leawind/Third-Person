@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class CameraPivotTrackerTest {
   private static final double TICK_SECONDS = 0.05;
-  private static final CameraPivotSmoothing SMOOTH = new CameraPivotSmoothing(0.05, 0.05);
+  private static final CameraPivotSmoothing SMOOTH = new CameraPivotSmoothing(0.05);
 
   @Test
   void renderSamplingDoesNotChangeTickStates() {
@@ -45,7 +45,7 @@ class CameraPivotTrackerTest {
   }
 
   @Test
-  void rotationFollowsTheShortestPivotLocalDelta() {
+  void rotationAlwaysUsesTheExternallyControlledTarget() {
     var tracker = new CameraPivotTracker();
     tracker.updateTick(poseWithYaw(0.0f), TICK_SECONDS, SMOOTH).orElseThrow();
     PivotPose result =
@@ -53,12 +53,12 @@ class CameraPivotTrackerTest {
 
     Vector3f forward =
         result.copyWorldFromPivot(new Quaternionf()).transform(new Vector3f(0.0f, 0.0f, 1.0f));
-    assertEquals(-Math.sqrt(0.5), forward.x, 1.0e-5);
-    assertEquals(Math.sqrt(0.5), forward.z, 1.0e-5);
+    assertEquals(-1.0f, forward.x, 1.0e-5f);
+    assertEquals(0.0f, forward.z, 1.0e-5f);
   }
 
   @Test
-  void zeroHalfLivesUseTheRenderTimeTargetPose() {
+  void renderSamplingUsesTheExternalRotationWithoutTickInterpolation() {
     var tracker = new CameraPivotTracker();
     tracker.updateTick(poseWithYaw(0.0f), TICK_SECONDS, SMOOTH).orElseThrow();
     tracker.updateTick(poseWithYaw(90.0f), TICK_SECONDS, SMOOTH).orElseThrow();
@@ -68,10 +68,8 @@ class CameraPivotTrackerTest {
                 new Vector3d(8.0, -3.0, 4.0),
                 new Quaternionf().rotationY((float) Math.toRadians(-135.0)))
             .orElseThrow();
-    PivotPose result =
-        tracker.sample(target, 0.4, new CameraPivotSmoothing(0.0, 0.0)).orElseThrow();
+    PivotPose result = tracker.sample(target, 0.4, SMOOTH).orElseThrow();
 
-    assertPositionEquals(new Vector3d(8.0, -3.0, 4.0), result);
     assertEquals(
         1.0f,
         Math.abs(
@@ -79,6 +77,19 @@ class CameraPivotTrackerTest {
                 .copyWorldFromPivot(new Quaternionf())
                 .dot(result.copyWorldFromPivot(new Quaternionf()))),
         1.0e-6f);
+  }
+
+  @Test
+  void zeroPositionHalfLifeUsesTheRenderTimeTargetPosition() {
+    var tracker = new CameraPivotTracker();
+    tracker.updateTick(pose(0.0, 0.0, 0.0), TICK_SECONDS, SMOOTH).orElseThrow();
+
+    PivotPose result =
+        tracker
+            .sample(pose(8.0, -3.0, 4.0), 0.4, new CameraPivotSmoothing(0.0))
+            .orElseThrow();
+
+    assertPositionEquals(new Vector3d(8.0, -3.0, 4.0), result);
   }
 
   @Test

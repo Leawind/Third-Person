@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public record CameraSmoothing(
     double rotationHalfLife,
-    double flyingPivotHalfLife,
+    double flyingPivotPositionHalfLife,
     double adjustingOffsetHalfLife,
     double adjustingDistanceHalfLife,
     ModeSmoothing normal,
     ModeSmoothing aiming) {
   public CameraSmoothing {
     requireHalfLife(rotationHalfLife);
-    requireHalfLife(flyingPivotHalfLife);
+    requireHalfLife(flyingPivotPositionHalfLife);
     requireHalfLife(adjustingOffsetHalfLife);
     requireHalfLife(adjustingDistanceHalfLife);
     Objects.requireNonNull(normal, "normal");
@@ -21,14 +21,14 @@ public record CameraSmoothing(
   public CameraSmoothing withRotationHalfLife(double value) {
     return new CameraSmoothing(
         value,
-        flyingPivotHalfLife,
+        flyingPivotPositionHalfLife,
         adjustingOffsetHalfLife,
         adjustingDistanceHalfLife,
         normal,
         aiming);
   }
 
-  public CameraSmoothing withFlyingPivotHalfLife(double value) {
+  public CameraSmoothing withFlyingPivotPositionHalfLife(double value) {
     return new CameraSmoothing(
         rotationHalfLife,
         value,
@@ -40,12 +40,22 @@ public record CameraSmoothing(
 
   public CameraSmoothing withAdjustingOffsetHalfLife(double value) {
     return new CameraSmoothing(
-        rotationHalfLife, flyingPivotHalfLife, value, adjustingDistanceHalfLife, normal, aiming);
+        rotationHalfLife,
+        flyingPivotPositionHalfLife,
+        value,
+        adjustingDistanceHalfLife,
+        normal,
+        aiming);
   }
 
   public CameraSmoothing withAdjustingDistanceHalfLife(double value) {
     return new CameraSmoothing(
-        rotationHalfLife, flyingPivotHalfLife, adjustingOffsetHalfLife, value, normal, aiming);
+        rotationHalfLife,
+        flyingPivotPositionHalfLife,
+        adjustingOffsetHalfLife,
+        value,
+        normal,
+        aiming);
   }
 
   private static void requireHalfLife(double value) {
