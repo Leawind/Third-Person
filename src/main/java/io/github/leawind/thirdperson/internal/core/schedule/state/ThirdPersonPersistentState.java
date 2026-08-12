@@ -18,7 +18,8 @@ public record ThirdPersonPersistentState(
     PlayerState player,
     SoundState sound,
     HudState hud) {
-  public static final int CURRENT_SCHEMA_VERSION = 4;
+  /// Fixed development-state schema identifier. Do not increment this value.
+  public static final int CURRENT_SCHEMA_VERSION = 2;
 
   public ThirdPersonPersistentState {
     if (schemaVersion != CURRENT_SCHEMA_VERSION) {

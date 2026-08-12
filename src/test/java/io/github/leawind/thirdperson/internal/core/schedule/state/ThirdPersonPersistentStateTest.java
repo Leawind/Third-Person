@@ -9,6 +9,11 @@ import org.junit.jupiter.api.Test;
 
 class ThirdPersonPersistentStateTest {
   @Test
+  void keepsTheDevelopmentSchemaFixedAtTwo() {
+    assertEquals(2, ThirdPersonPersistentState.CURRENT_SCHEMA_VERSION);
+  }
+
+  @Test
   void ownsDefaultHudState() {
     ThirdPersonPersistentState defaults = ThirdPersonPersistentState.defaults();
 
