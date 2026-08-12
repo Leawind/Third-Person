@@ -1,7 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
+import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationGeometry;
@@ -54,7 +54,7 @@ public final class MinecraftPlayerRotationTargeting {
                             candidatePosition.x,
                             candidate.getBoundingBox().minY,
                             candidatePosition.z)
-                        .sub(toVector(MinecraftEntityPose.eyePosition(player, 1.0f)));
+                        .sub(toVector(MinecraftEntityReferencePose.eyePosition(player, 1.0f)));
                 double bottomPitch =
                     Math.toDegrees(
                         Math.atan2(-eyeToBottom.y, Math.hypot(eyeToBottom.x, eyeToBottom.z)));

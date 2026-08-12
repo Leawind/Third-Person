@@ -71,8 +71,8 @@ val checkArchitecture by tasks.registering {
         val allowedCompatibilityImports = mapOf(
             "io/github/leawind/thirdperson/internal/bridge/camera/MinecraftCameraSubjectMeasurements.java" to
                 setOf("${bridgeCompatPackage}sable.SableCameraSubjectBoundsResolver"),
-            "io/github/leawind/thirdperson/internal/bridge/entity/MinecraftEntityPose.java" to
-                setOf("${bridgeCompatPackage}sable.SableEntityPoseSampler"),
+            "io/github/leawind/thirdperson/internal/bridge/entity/MinecraftEntityReferencePose.java" to
+                setOf("${bridgeCompatPackage}sable.SableEntityReferencePoseResolver"),
             "io/github/leawind/thirdperson/internal/bridge/spatial/SpatialQueryHitLocation.java" to
                 setOf("${bridgeCompatPackage}sable.SableSpatialQueryHitLocationResolver"),
             "io/github/leawind/thirdperson/internal/bridge/input/MinecraftMovementInputMapping.java" to

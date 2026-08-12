@@ -4,7 +4,7 @@ import io.github.leawind.thirdperson.internal.core.base.BaseSession;
 import io.github.leawind.thirdperson.internal.core.base.InteractionRaycastGeometry;
 import io.github.leawind.thirdperson.internal.core.base.WorldRay;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
+import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,7 +46,7 @@ public final class MinecraftCameraRaycasting {
             ray -> {
               Vector3dc origin = ray.origin();
               Vector3dc direction = ray.direction();
-              Vec3 eye = MinecraftEntityPose.eyePosition(player, 1.0f);
+              Vec3 eye = MinecraftEntityReferencePose.eyePosition(player, 1.0f);
               Vec3 from = toVec3(origin);
               double cameraToPlayerEyeDistance =
                   InteractionRaycastGeometry.capCameraOriginExtension(

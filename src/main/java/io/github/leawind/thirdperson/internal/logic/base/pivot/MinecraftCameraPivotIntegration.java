@@ -1,12 +1,14 @@
 package io.github.leawind.thirdperson.internal.logic.base.pivot;
 
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityPose;
+import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
 import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
 import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import org.joml.Quaternionf;
+import org.joml.Vector3d;
 
 /// Adapts the active camera entity's eye position to the independent pivot tracker.
 public final class MinecraftCameraPivotIntegration {
@@ -50,6 +52,10 @@ public final class MinecraftCameraPivotIntegration {
   }
 
   private static PivotPose eyePosition(Entity entity, float partialTick) {
-    return MinecraftEntityPose.pivotPose(entity, partialTick);
+    var reference = MinecraftEntityReferencePose.resolve(entity, partialTick);
+    return PivotPose.tryCreate(
+            reference.copyEyePositionWorld(new Vector3d()),
+            reference.copyWorldFromReference(new Quaternionf()))
+        .orElseThrow();
   }
 }
