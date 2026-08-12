@@ -1,5 +1,8 @@
 package io.github.leawind.thirdperson.internal.logic.base.pivot;
 
+import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotFrameContext;
+import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotTickContext;
+import io.github.leawind.thirdperson.internal.bridge.camera.pivot.MinecraftCameraPivotPosition;
 import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
 import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
@@ -8,13 +11,22 @@ import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import org.joml.Quaternionf;
-import org.joml.Vector3d;
 
-/// Adapts the active camera entity's eye position to the independent pivot tracker.
+/// Drives the selected pivot-position strategy and combines it with external reference rotation.
 public final class MinecraftCameraPivotIntegration {
   private static final double CLIENT_TICK_SECONDS = 0.05;
+  private static boolean initialized;
 
   private MinecraftCameraPivotIntegration() {}
+
+  public static void initialize() {
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+    MinecraftCameraPivotPosition.registerProvider(
+        "eye_following", 0, new EyeFollowingCameraPivotProvider());
+  }
 
   public static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();
@@ -27,35 +39,34 @@ public final class MinecraftCameraPivotIntegration {
     if (entity == null) {
       return;
     }
-    runtime
-        .session()
-        .cameraPivotTracker()
-        .updateTick(
-            eyePosition(entity, 1.0f),
-            CLIENT_TICK_SECONDS,
-            runtime.cameraPivotSmoothing())
-        .ifPresent(runtime.session()::recordPivotPose);
+    var reference = MinecraftEntityReferencePose.resolve(entity, 1.0f);
+    MinecraftCameraPivotPosition.onClientTick(
+        new CameraPivotTickContext(
+            entity, reference, runtime.cameraPivotSmoothing(), CLIENT_TICK_SECONDS));
   }
 
-  public static Optional<PivotPose> sample(Entity entity, float partialTick) {
+  public static Optional<PivotPose> sample(
+      Entity entity, float partialTick, double frameDeltaSeconds) {
     BaseRuntime runtime = BaseRuntime.getInstance();
+    var reference = MinecraftEntityReferencePose.resolve(entity, partialTick);
     var pose =
-        runtime
-        .session()
-        .cameraPivotTracker()
-        .sample(
-            eyePosition(entity, partialTick),
-            partialTick,
-            runtime.cameraPivotSmoothing());
+        MinecraftCameraPivotPosition.sample(
+                new CameraPivotFrameContext(
+                    entity,
+                    reference,
+                    runtime.cameraPivotSmoothing(),
+                    partialTick,
+                    frameDeltaSeconds))
+            .flatMap(
+                position ->
+                    PivotPose.tryCreate(
+                        position,
+                        reference.copyWorldFromReference(new Quaternionf())));
     pose.ifPresent(runtime.session()::recordPivotPose);
     return pose;
   }
 
-  private static PivotPose eyePosition(Entity entity, float partialTick) {
-    var reference = MinecraftEntityReferencePose.resolve(entity, partialTick);
-    return PivotPose.tryCreate(
-            reference.copyEyePositionWorld(new Vector3d()),
-            reference.copyWorldFromReference(new Quaternionf()))
-        .orElseThrow();
+  public static void reset() {
+    MinecraftCameraPivotPosition.reset();
   }
 }

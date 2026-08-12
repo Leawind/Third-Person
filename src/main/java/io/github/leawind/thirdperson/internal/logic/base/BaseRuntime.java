@@ -9,6 +9,7 @@ import io.github.leawind.thirdperson.internal.core.base.camera.CameraFrameInput;
 import io.github.leawind.thirdperson.internal.core.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.base.pivot.CameraPivotSmoothing;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
+import io.github.leawind.thirdperson.internal.logic.base.pivot.MinecraftCameraPivotIntegration;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -100,10 +101,17 @@ public final class BaseRuntime implements ThirdPersonBase {
   }
 
   public void onPerspectiveDeactivated() {
+    MinecraftCameraPivotIntegration.reset();
     session.reset();
   }
 
+  public void resetCameraTracking() {
+    MinecraftCameraPivotIntegration.reset();
+    session.resetCameraTracking();
+  }
+
   public void onClientIdentityChanged(boolean perspectiveCurrent) {
+    MinecraftCameraPivotIntegration.reset();
     session.reset();
     if (perspectiveCurrent) {
       onPerspectiveActivated();

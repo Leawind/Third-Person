@@ -40,6 +40,7 @@ class BaseSessionTest {
         MovementIntent.tryCreate(
                 1.0f, 0.0f, 30.0f, new Quaternionf(), PivotPose.identity(new Vector3d()))
             .orElseThrow());
+    session.recordPivotPose(PivotPose.identity(new Vector3d(1.0, 2.0, 3.0)));
     session.recordFinalCameraPose(
         CameraPose.tryCreate(new Vector3d(), new Quaternionf(), 70.0f).orElseThrow());
 
@@ -48,6 +49,7 @@ class BaseSessionTest {
     assertTrue(session.isPerspectiveActive());
     assertFalse(session.lookController().isInitialized());
     assertTrue(session.movementIntent().isEmpty());
+    assertTrue(session.pivotPose().isEmpty());
     assertTrue(session.finalCameraPose().isEmpty());
   }
 }

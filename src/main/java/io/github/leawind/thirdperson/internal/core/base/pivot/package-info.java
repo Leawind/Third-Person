@@ -1,2 +1,2 @@
-/// World-space pivot poses and space-aware pose smoothing.
+/// World-space pivot poses and optional Minecraft-independent position-motion mechanisms.
 package io.github.leawind.thirdperson.internal.core.base.pivot;

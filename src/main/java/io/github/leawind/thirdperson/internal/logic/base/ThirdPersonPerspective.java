@@ -63,10 +63,14 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
     if (entity != previousCameraEntity) {
       previousCameraEntity = entity;
       lastFrameNanos = 0L;
-      runtime.session().resetCameraTracking();
+      runtime.resetCameraTracking();
     }
 
-    var pivot = MinecraftCameraPivotIntegration.sample(entity, context.partialTicks()).orElse(null);
+    double frameDeltaSeconds = frameDeltaSeconds();
+    var pivot =
+        MinecraftCameraPivotIntegration.sample(
+                entity, context.partialTicks(), frameDeltaSeconds)
+            .orElse(null);
     if (pivot == null) {
       return;
     }
@@ -99,7 +103,7 @@ public final class ThirdPersonPerspective implements PerspectiveBehavior {
                 state.getFovDeg(),
                 aspectRatio,
                 subjectDimensions,
-                frameDeltaSeconds())
+                frameDeltaSeconds)
             .orElse(null);
     if (frame == null) {
       return;
