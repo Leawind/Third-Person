@@ -184,9 +184,12 @@ val checkArchitecture by tasks.registering {
                         "$relativePath:${index + 1}: core must not depend on Minecraft, bridge, logic, or platform"
                     )
                 }
-                if (isPivot && line.contains("${basePackage}camera.")) {
+                if (isPivot
+                    && line.contains("${basePackage}camera.")
+                    && !line.contains("${basePackage}camera.MinecraftCameraCollision")
+                ) {
                     violations.add(
-                        "$relativePath:${index + 1}: pivot tracking must not depend on the camera pipeline"
+                        "$relativePath:${index + 1}: pivot strategies may query camera collision but must not depend on the rest of the camera pipeline"
                     )
                 }
                 if (mustIgnoreInteractionOrigin && line.contains("raycastOrigin(")) {

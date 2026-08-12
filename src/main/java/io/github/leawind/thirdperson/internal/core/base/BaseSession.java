@@ -2,7 +2,7 @@ package io.github.leawind.thirdperson.internal.core.base;
 
 import io.github.leawind.thirdperson.internal.core.base.camera.CameraPose;
 import io.github.leawind.thirdperson.internal.core.base.camera.CameraSmoother;
-import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
+import io.github.leawind.thirdperson.internal.core.base.math.FiniteMath;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookController;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementIntent;
@@ -10,15 +10,18 @@ import io.github.leawind.thirdperson.internal.core.base.rotation.PlayerRotationC
 import java.util.Objects;
 import java.util.Optional;
 import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
 
 /// Minecraft-independent mutable state for one active client session.
 public final class BaseSession {
+  private static final float MIN_QUATERNION_LENGTH_SQUARED = 1.0e-12f;
+
   private boolean perspectiveActive;
   private final LookController lookController = new LookController();
   private final PlayerRotationController playerRotationController = new PlayerRotationController();
   private final CameraSmoother cameraSmoother = new CameraSmoother();
   private MovementIntent movementIntent;
-  private PivotPose pivotPose;
+  private Quaternionf worldFromPivot;
   private CameraPose finalCameraPose;
 
   public boolean isPerspectiveActive() {
@@ -45,19 +48,37 @@ public final class BaseSession {
     return Optional.ofNullable(movementIntent);
   }
 
-  public Optional<PivotPose> pivotPose() {
-    return Optional.ofNullable(pivotPose);
+  public boolean copyWorldFromPivot(Quaternionf destination) {
+    Objects.requireNonNull(destination, "destination");
+    if (worldFromPivot == null) {
+      return false;
+    }
+    destination.set(worldFromPivot);
+    return true;
   }
 
   public Optional<LookRotation> cameraFacingRotation() {
-    if (pivotPose == null) {
+    if (worldFromPivot == null) {
       return Optional.empty();
     }
-    return lookController.facingRotation(pivotPose.copyWorldFromPivot(new Quaternionf()));
+    return lookController.facingRotation(worldFromPivot);
   }
 
-  public void recordPivotPose(PivotPose value) {
-    pivotPose = Objects.requireNonNull(value, "value");
+  /// Records the externally supplied pivot frame without coupling it to a position strategy.
+  public boolean recordPivotRotation(Quaternionfc value) {
+    Objects.requireNonNull(value, "value");
+    float lengthSquared = value.lengthSquared();
+    if (!FiniteMath.isFinite(value)
+        || !Float.isFinite(lengthSquared)
+        || lengthSquared <= MIN_QUATERNION_LENGTH_SQUARED) {
+      worldFromPivot = null;
+      return false;
+    }
+    if (worldFromPivot == null) {
+      worldFromPivot = new Quaternionf();
+    }
+    worldFromPivot.set(value).normalize();
+    return true;
   }
 
   public void recordMovementIntent(MovementIntent value) {
@@ -81,7 +102,7 @@ public final class BaseSession {
     lookController.reset();
     cameraSmoother.reset();
     clearMovementIntent();
-    pivotPose = null;
+    worldFromPivot = null;
     finalCameraPose = null;
   }
 

@@ -4,22 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import org.joml.Quaternionf;
-import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
 class MovementIntentTest {
   @Test
   void planarAndCameraSpaceDirectionsShareThePivotFrame() {
-    PivotPose pivot =
-        PivotPose.tryCreate(
-                new Vector3d(), new Quaternionf().rotationY((float) Math.toRadians(-90.0)))
-            .orElseThrow();
+    Quaternionf worldFromPivot = new Quaternionf().rotationY((float) Math.toRadians(-90.0));
     Quaternionf pivotFromCamera =
         new Quaternionf().rotationX((float) Math.toRadians(45.0));
     MovementIntent intent =
-        MovementIntent.tryCreate(0.0f, 1.0f, 0.0f, pivotFromCamera, pivot).orElseThrow();
+        MovementIntent.tryCreate(0.0f, 1.0f, 0.0f, pivotFromCamera, worldFromPivot).orElseThrow();
 
     var planar = intent.pivotPlaneFacingRotation().orElseThrow();
     var spatial = intent.cameraSpaceFacingRotation().orElseThrow();
@@ -36,7 +31,7 @@ class MovementIntentTest {
                 0.0f,
                 0.0f,
                 new Quaternionf(),
-                PivotPose.identity(new Vector3d()))
+                new Quaternionf())
             .orElseThrow();
 
     assertFalse(zero.hasDirectionalImpulse(0.0));
@@ -47,7 +42,11 @@ class MovementIntentTest {
                 0.0f,
                 0.0f,
                 new Quaternionf(),
-                PivotPose.identity(new Vector3d()))
+                new Quaternionf())
+            .isEmpty());
+    assertTrue(
+        MovementIntent.tryCreate(
+                0.0f, 1.0f, 0.0f, new Quaternionf(), new Quaternionf(0.0f, 0.0f, 0.0f, 0.0f))
             .isEmpty());
   }
 }

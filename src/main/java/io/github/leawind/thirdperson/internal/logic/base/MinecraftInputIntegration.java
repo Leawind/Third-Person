@@ -3,14 +3,12 @@ package io.github.leawind.thirdperson.internal.logic.base;
 import io.github.leawind.perspectiveapi.api.PerspectiveMath;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
 import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
-import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import io.github.leawind.thirdperson.internal.bridge.input.MinecraftMovementInputMapping;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementDirection;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementIntent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import org.joml.Quaternionf;
-import org.joml.Vector3d;
 
 /// Connects neutral input events to the Minecraft-independent session state.
 public final class MinecraftInputIntegration {
@@ -31,17 +29,17 @@ public final class MinecraftInputIntegration {
       return vanillaInput;
     }
     var lookController = runtime.session().lookController();
-    var pivotPose =
-        runtime
-            .session()
-            .pivotPose()
-            .orElseGet(() -> referencePivotPose(player));
+    var worldFromPivot = new Quaternionf();
+    if (!runtime.session().copyWorldFromPivot(worldFromPivot)) {
+      MinecraftEntityReferencePose.resolve(player, 1.0f)
+          .copyWorldFromReference(worldFromPivot);
+      runtime.session().recordPivotRotation(worldFromPivot);
+    }
     if (!lookController.isInitialized()) {
       var worldFromCamera =
           PerspectiveMath.eulerDegToQuat(
               player.getXRot(), player.getYRot(), 0.0f, new Quaternionf());
-      lookController.initializeFromWorldRotation(
-          worldFromCamera, pivotPose.copyWorldFromPivot(new Quaternionf()));
+      lookController.initializeFromWorldRotation(worldFromCamera, worldFromPivot);
     }
     var pivotFromCamera = new Quaternionf();
     if (!lookController.copyRotation(pivotFromCamera)) {
@@ -54,7 +52,7 @@ public final class MinecraftInputIntegration {
                 vanillaInput.forwardImpulse(),
                 lookController.yawDegrees(),
                 pivotFromCamera,
-                pivotPose)
+                worldFromPivot)
             .orElse(null);
     if (intent == null) {
       runtime.session().clearMovementIntent();
@@ -84,14 +82,6 @@ public final class MinecraftInputIntegration {
 
   private static boolean canControlCamera(LocalPlayer player) {
     return player == Minecraft.getInstance().player && PerspectiveGuard.isThirdPersonCurrent();
-  }
-
-  private static PivotPose referencePivotPose(LocalPlayer player) {
-    var reference = MinecraftEntityReferencePose.resolve(player, 1.0f);
-    return PivotPose.tryCreate(
-            reference.copyEyePositionWorld(new Vector3d()),
-            reference.copyWorldFromReference(new Quaternionf()))
-        .orElseThrow();
   }
 
   private static boolean canModifyPlayerMovement(LocalPlayer player) {

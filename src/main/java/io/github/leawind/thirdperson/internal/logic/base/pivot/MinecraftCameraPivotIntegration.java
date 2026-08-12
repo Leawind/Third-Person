@@ -40,6 +40,9 @@ public final class MinecraftCameraPivotIntegration {
       return;
     }
     var reference = MinecraftEntityReferencePose.resolve(entity, 1.0f);
+    runtime
+        .session()
+        .recordPivotRotation(reference.copyWorldFromReference(new Quaternionf()));
     MinecraftCameraPivotPosition.onClientTick(
         new CameraPivotTickContext(
             entity, reference, runtime.cameraPivotSmoothing(), CLIENT_TICK_SECONDS));
@@ -49,21 +52,18 @@ public final class MinecraftCameraPivotIntegration {
       Entity entity, float partialTick, double frameDeltaSeconds) {
     BaseRuntime runtime = BaseRuntime.getInstance();
     var reference = MinecraftEntityReferencePose.resolve(entity, partialTick);
-    var pose =
-        MinecraftCameraPivotPosition.sample(
-                new CameraPivotFrameContext(
-                    entity,
-                    reference,
-                    runtime.cameraPivotSmoothing(),
-                    partialTick,
-                    frameDeltaSeconds))
-            .flatMap(
-                position ->
-                    PivotPose.tryCreate(
-                        position,
-                        reference.copyWorldFromReference(new Quaternionf())));
-    pose.ifPresent(runtime.session()::recordPivotPose);
-    return pose;
+    var worldFromPivot = reference.copyWorldFromReference(new Quaternionf());
+    if (!runtime.session().recordPivotRotation(worldFromPivot)) {
+      return Optional.empty();
+    }
+    return MinecraftCameraPivotPosition.sample(
+            new CameraPivotFrameContext(
+                entity,
+                reference,
+                runtime.cameraPivotSmoothing(),
+                partialTick,
+                frameDeltaSeconds))
+        .flatMap(position -> PivotPose.tryCreate(position, worldFromPivot));
   }
 
   public static void reset() {

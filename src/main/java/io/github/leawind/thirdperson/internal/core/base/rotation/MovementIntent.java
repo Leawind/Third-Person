@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.core.base.rotation;
 
-import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
+import io.github.leawind.thirdperson.internal.core.base.math.FiniteMath;
 import java.util.Objects;
 import java.util.Optional;
 import org.joml.Quaternionf;
@@ -9,6 +9,8 @@ import org.joml.Vector3f;
 
 /// One raw movement input with both pivot-plane and full-camera world-space interpretations.
 public final class MovementIntent {
+  private static final float MIN_QUATERNION_LENGTH_SQUARED = 1.0e-12f;
+
   private final float leftImpulse;
   private final float forwardImpulse;
   private final Vector3f pivotPlaneDirectionWorld;
@@ -30,14 +32,25 @@ public final class MovementIntent {
       float forwardImpulse,
       float localYawDegrees,
       Quaternionfc pivotFromCamera,
-      PivotPose pivotPose) {
+      Quaternionfc worldFromPivot) {
     Objects.requireNonNull(pivotFromCamera, "pivotFromCamera");
-    Objects.requireNonNull(pivotPose, "pivotPose");
-    var worldFromPivot = pivotPose.copyWorldFromPivot(new Quaternionf());
-    var worldFromCamera = new Quaternionf(worldFromPivot).mul(pivotFromCamera).normalize();
+    Objects.requireNonNull(worldFromPivot, "worldFromPivot");
+    float pivotFromCameraLengthSquared = pivotFromCamera.lengthSquared();
+    float worldFromPivotLengthSquared = worldFromPivot.lengthSquared();
+    if (!FiniteMath.isFinite(pivotFromCamera)
+        || !FiniteMath.isFinite(worldFromPivot)
+        || !Float.isFinite(pivotFromCameraLengthSquared)
+        || !Float.isFinite(worldFromPivotLengthSquared)
+        || pivotFromCameraLengthSquared <= MIN_QUATERNION_LENGTH_SQUARED
+        || worldFromPivotLengthSquared <= MIN_QUATERNION_LENGTH_SQUARED) {
+      return Optional.empty();
+    }
+    var normalizedWorldFromPivot = new Quaternionf(worldFromPivot).normalize();
+    var worldFromCamera =
+        new Quaternionf(normalizedWorldFromPivot).mul(pivotFromCamera).normalize();
     var pivotPlane =
         MovementDirection.pivotPlaneWorld(
-                leftImpulse, forwardImpulse, localYawDegrees, worldFromPivot)
+                leftImpulse, forwardImpulse, localYawDegrees, normalizedWorldFromPivot)
             .orElse(null);
     var cameraSpace =
         MovementDirection.cameraSpaceWorld(leftImpulse, forwardImpulse, worldFromCamera)
