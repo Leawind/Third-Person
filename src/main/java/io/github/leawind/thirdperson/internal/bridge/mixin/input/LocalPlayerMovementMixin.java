@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.mixin;
+package io.github.leawind.thirdperson.internal.bridge.mixin.input;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /// Adapts vanilla's forward-only sprint input check to camera-relative movement.
 @Mixin(LocalPlayer.class)
-abstract class LocalPlayerMixin {
+abstract class LocalPlayerMovementMixin {
   private static final double MOVING_THRESHOLD = 1.0e-5;
 
   /*? if >1.21 {*/

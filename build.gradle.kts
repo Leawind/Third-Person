@@ -103,9 +103,6 @@ modstitch {
     mixin {
         addMixinsToModManifest = true
         configs.register("leawind_third_person")
-        if (isFabric) configs.register("leawind_third_person.fabric")
-        if (isForge) configs.register("leawind_third_person.forge")
-        if (isNeoforge) configs.register("leawind_third_person.neoforge")
     }
 
     if (supportsUnitTesting) {

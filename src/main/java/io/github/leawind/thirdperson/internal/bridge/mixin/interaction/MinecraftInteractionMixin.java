@@ -1,8 +1,7 @@
-package io.github.leawind.thirdperson.internal.bridge.mixin;
+package io.github.leawind.thirdperson.internal.bridge.mixin.interaction;
 
 import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.BeforeInteractionEvent;
-import io.github.leawind.thirdperson.internal.bridge.events.ClientTickEvent;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -12,12 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Minecraft.class)
-abstract class MinecraftMixin {
-  @Inject(method = "tick", at = @At("TAIL"))
-  private void afterClientTick(CallbackInfo ci) {
-    ClientTickEvent.emit();
-  }
-
+abstract class MinecraftInteractionMixin {
   /*? if >=26.1 {*/
   @Inject(method = "pick", at = @At("RETURN"))
   private void afterVanillaPick(float partialTick, CallbackInfo ci) {

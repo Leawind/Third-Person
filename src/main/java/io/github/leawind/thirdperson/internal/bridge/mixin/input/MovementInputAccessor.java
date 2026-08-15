@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.mixin;
+package io.github.leawind.thirdperson.internal.bridge.mixin.input;
 
 /*? if >1.21 {*/
 import net.minecraft.client.player.ClientInput;

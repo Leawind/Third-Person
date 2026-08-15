@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.mixin;
+package io.github.leawind.thirdperson.internal.bridge.mixin.hud;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import io.github.leawind.thirdperson.internal.bridge.events.CrosshairGateEvent;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 /*? } else {*/
 /*@Mixin(Gui.class)
 *//*? }*/
-abstract class GuiMixin {
+abstract class CrosshairMixin {
   @ModifyExpressionValue(
       /*? if >=26.1 {*/
       method = "extractCrosshair",

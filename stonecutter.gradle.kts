@@ -13,7 +13,9 @@ val checkArchitecture by tasks.registering {
     description = "Checks source architecture and Mixin compatibility constraints."
 
     val sourceRoot = layout.projectDirectory.dir("src/main/java")
+    val resourceRoot = layout.projectDirectory.dir("src/main/resources")
     inputs.dir(sourceRoot)
+    inputs.dir(resourceRoot)
 
     doLast {
         val apiPrefix = "io/github/leawind/thirdperson/api/"
@@ -25,6 +27,7 @@ val checkArchitecture by tasks.registering {
         val pivotPrefix = "${basePrefix}pivot/"
         val schedulerPrefix = "${logicPrefix}scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
+        val mixinPrefix = "${bridgePrefix}mixin/"
         val extensionPrefix = "io/github/leawind/thirdperson/internal/extension/"
         val minecraftExtensionPrefix = "${extensionPrefix}minecraft/"
         val sableExtensionPrefix = "${extensionPrefix}sable/"
@@ -43,6 +46,8 @@ val checkArchitecture by tasks.registering {
         val baseCategories = setOf("camera", "math", "pivot", "rotation")
         val schedulerCategories =
             setOf("aiming", "camera", "config", "hud", "input", "rotation", "sound", "state")
+        val mixinCategories =
+            setOf("hud", "input", "interaction", "lifecycle", "render", "sound")
         val allowedBaseImports = setOf(
             "${coreBasePackage}BaseParameters",
             "${coreBasePackage}RaycastOrigin",
@@ -76,6 +81,18 @@ val checkArchitecture by tasks.registering {
             "io/github/leawind/thirdperson/internal/logic/ModEntrypoint.java"
         val violations = mutableListOf<String>()
 
+        val mixinConfigs =
+            fileTree(resourceRoot)
+                .matching { include("**/*.mixins.json") }
+                .files
+                .map { resourceRoot.asFile.toPath().relativize(it.toPath()).toString() }
+                .sorted()
+        if (mixinConfigs != listOf("leawind_third_person.mixins.json")) {
+            violations.add(
+                "src/main/resources: expected only leawind_third_person.mixins.json, found $mixinConfigs"
+            )
+        }
+
         fileTree(sourceRoot).matching { include("**/*.java") }.files.sorted().forEach { source ->
             val relativePath = sourceRoot.asFile.toPath().relativize(source.toPath()).toString()
             val isApi = relativePath.startsWith(apiPrefix)
@@ -87,6 +104,7 @@ val checkArchitecture by tasks.registering {
             val isPivot = relativePath.startsWith(pivotPrefix)
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
+            val isMixin = relativePath.startsWith(mixinPrefix)
             val isExtension = relativePath.startsWith(extensionPrefix)
             val isMinecraftExtension = relativePath.startsWith(minecraftExtensionPrefix)
             val isSableExtension = relativePath.startsWith(sableExtensionPrefix)
@@ -145,6 +163,19 @@ val checkArchitecture by tasks.registering {
                     }
                 }
             }
+            if (isMixin) {
+                val pathWithinMixin = relativePath.removePrefix(mixinPrefix)
+                val category = pathWithinMixin.substringBefore('/')
+                val pathWithinCategory = pathWithinMixin.substringAfter('/', "")
+                if (category !in mixinCategories
+                    || pathWithinCategory.isEmpty()
+                    || pathWithinCategory.contains('/'))
+                {
+                    violations.add(
+                        "$relativePath: mixins must be placed directly in an approved purpose package"
+                    )
+                }
+            }
             source.readLines().forEachIndexed { index, line ->
                 if (line.contains("@Redirect") || line.contains(".injection.Redirect")) {
                     violations.add(
@@ -164,7 +195,7 @@ val checkArchitecture by tasks.registering {
                     && (line.contains("/*?") || line.contains("/^?"))
                 ) {
                     violations.add(
-                        "$relativePath:${index + 1}: api/logic must not use Stonecutter macros"
+                        "$relativePath:${index + 1}: api/core/logic/extension points must not use Stonecutter macros"
                     )
                 }
 

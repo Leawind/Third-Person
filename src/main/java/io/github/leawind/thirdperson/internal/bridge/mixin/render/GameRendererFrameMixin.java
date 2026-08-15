@@ -1,6 +1,5 @@
-package io.github.leawind.thirdperson.internal.bridge.mixin;
+package io.github.leawind.thirdperson.internal.bridge.mixin.render;
 
-import io.github.leawind.thirdperson.internal.bridge.events.AfterVanillaPickEvent;
 import io.github.leawind.thirdperson.internal.bridge.events.RenderFrameEvent;
 /*? if >=1.21 {*/
 import net.minecraft.client.DeltaTracker;
@@ -12,14 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
-abstract class GameRendererMixin {
-  /*? if <26.1 {*/
-  /*@Inject(method = "pick", at = @At("RETURN"))
-  private void afterVanillaPick(float partialTick, CallbackInfo ci) {
-    AfterVanillaPickEvent.emit(partialTick);
-  }
-  *//*? }*/
-
+abstract class GameRendererFrameMixin {
   /*? if >=26.2 {*/
   @Inject(method = "update", at = @At("HEAD"))
   private void beforeFrameExtraction(DeltaTracker deltaTracker, CallbackInfo ci) {
