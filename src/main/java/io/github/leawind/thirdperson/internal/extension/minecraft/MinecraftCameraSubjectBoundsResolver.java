@@ -1,7 +1,7 @@
 package io.github.leawind.thirdperson.internal.extension.minecraft;
 
-import io.github.leawind.thirdperson.internal.bridge.camera.CameraSubjectBoundsResolver;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
+import io.github.leawind.thirdperson.internal.extension.camera.CameraSubjectBoundsResolver;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 

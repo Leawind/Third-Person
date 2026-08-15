@@ -1,7 +1,7 @@
 package io.github.leawind.thirdperson.internal.extension.minecraft;
 
-import io.github.leawind.thirdperson.internal.bridge.spatial.SpatialQueryHitLocationResolver;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
+import io.github.leawind.thirdperson.internal.extension.spatial.SpatialQueryHitLocationResolver;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;

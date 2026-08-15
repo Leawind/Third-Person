@@ -1,9 +1,9 @@
 package io.github.leawind.thirdperson.internal.logic.base;
 
 import io.github.leawind.perspectiveapi.api.PerspectiveMath;
-import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
-import io.github.leawind.thirdperson.internal.bridge.input.MinecraftMovementInputMapping;
+import io.github.leawind.thirdperson.internal.extension.entity.MinecraftEntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.input.MinecraftMovementInputMapping;
+import io.github.leawind.thirdperson.internal.extension.input.MovementInput;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementDirection;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementIntent;
 import net.minecraft.client.Minecraft;

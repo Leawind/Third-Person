@@ -1,6 +1,6 @@
-package io.github.leawind.thirdperson.internal.bridge.camera.pivot;
+package io.github.leawind.thirdperson.internal.extension.camera.pivot;
 
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePose;
 import io.github.leawind.thirdperson.internal.core.base.pivot.CameraPivotSmoothing;
 import java.util.Objects;
 import net.minecraft.world.entity.Entity;

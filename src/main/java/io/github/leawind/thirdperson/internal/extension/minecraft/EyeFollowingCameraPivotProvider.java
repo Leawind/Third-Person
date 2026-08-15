@@ -1,10 +1,10 @@
 package io.github.leawind.thirdperson.internal.extension.minecraft;
 
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotFrameContext;
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotPositionProvider;
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotTickContext;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import io.github.leawind.thirdperson.internal.core.base.pivot.TickInterpolatedPivotPosition;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.CameraPivotFrameContext;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.CameraPivotPositionProvider;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.CameraPivotTickContext;
 import org.joml.Vector3d;
 
 /// Default pivot strategy: smooth the entity eye position on ticks and interpolate tick endpoints.

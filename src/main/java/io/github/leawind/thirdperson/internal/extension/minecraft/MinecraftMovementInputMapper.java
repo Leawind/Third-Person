@@ -1,11 +1,11 @@
 package io.github.leawind.thirdperson.internal.extension.minecraft;
 
 import io.github.leawind.perspectiveapi.api.PerspectiveMath;
-import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
-import io.github.leawind.thirdperson.internal.bridge.input.MinecraftMovementInputMapping;
-import io.github.leawind.thirdperson.internal.bridge.input.MovementInputMapper;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementIntent;
+import io.github.leawind.thirdperson.internal.extension.input.MinecraftMovementInputMapping;
+import io.github.leawind.thirdperson.internal.extension.input.MovementInput;
+import io.github.leawind.thirdperson.internal.extension.input.MovementInputMapper;
 import net.minecraft.client.player.LocalPlayer;
 import org.joml.Quaternionf;
 

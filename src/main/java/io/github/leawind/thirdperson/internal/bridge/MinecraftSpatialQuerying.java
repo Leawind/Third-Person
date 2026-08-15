@@ -1,6 +1,6 @@
 package io.github.leawind.thirdperson.internal.bridge;
 
-import io.github.leawind.thirdperson.internal.bridge.spatial.SpatialQueryHitLocation;
+import io.github.leawind.thirdperson.internal.extension.spatial.SpatialQueryHitLocation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

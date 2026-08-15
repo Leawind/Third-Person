@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.camera.pivot;
+package io.github.leawind.thirdperson.internal.extension.camera.pivot;
 
 import io.github.leawind.thirdperson.internal.core.api.PriorityProviderRegistry;
 import java.util.Objects;

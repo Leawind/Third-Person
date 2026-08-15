@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.entity;
+package io.github.leawind.thirdperson.internal.extension.entity;
 
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 

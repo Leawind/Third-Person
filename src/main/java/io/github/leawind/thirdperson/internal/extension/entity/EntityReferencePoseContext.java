@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.entity;
+package io.github.leawind.thirdperson.internal.extension.entity;
 
 import java.util.Objects;
 import net.minecraft.world.entity.Entity;

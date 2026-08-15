@@ -1,10 +1,10 @@
 package io.github.leawind.thirdperson.internal.extension.minecraft;
 
-import io.github.leawind.thirdperson.internal.bridge.camera.MinecraftCameraSubjectMeasurements;
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.MinecraftCameraPivotPosition;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
-import io.github.leawind.thirdperson.internal.bridge.input.MinecraftMovementInputMapping;
-import io.github.leawind.thirdperson.internal.bridge.spatial.SpatialQueryHitLocation;
+import io.github.leawind.thirdperson.internal.extension.camera.MinecraftCameraSubjectMeasurements;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.MinecraftCameraPivotPosition;
+import io.github.leawind.thirdperson.internal.extension.entity.MinecraftEntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.input.MinecraftMovementInputMapping;
+import io.github.leawind.thirdperson.internal.extension.spatial.SpatialQueryHitLocation;
 
 /// Installs the baseline extensions that connect the mod's features to Minecraft.
 public final class MinecraftExtensions {

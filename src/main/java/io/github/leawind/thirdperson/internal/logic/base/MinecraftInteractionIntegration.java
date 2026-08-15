@@ -5,7 +5,7 @@ import io.github.leawind.thirdperson.internal.core.base.WorldRay;
 import io.github.leawind.thirdperson.internal.bridge.Bridge;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftAttackRangePicking;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.entity.MinecraftEntityReferencePose;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookGeometry;
 import io.github.leawind.thirdperson.internal.core.base.rotation.LookRotation;
 import java.util.Optional;

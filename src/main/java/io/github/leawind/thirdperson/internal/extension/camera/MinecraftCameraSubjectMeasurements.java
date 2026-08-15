@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.camera;
+package io.github.leawind.thirdperson.internal.extension.camera;
 
 import io.github.leawind.thirdperson.internal.core.api.PriorityResolverRegistry;
 import java.util.Objects;

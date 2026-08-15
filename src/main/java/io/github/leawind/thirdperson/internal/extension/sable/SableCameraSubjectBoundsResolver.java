@@ -3,8 +3,8 @@ package io.github.leawind.thirdperson.internal.extension.sable;
 /*? if >=1.21 && <1.21.11 {*/
 /*import dev.ryanhcode.sable.companion.SableCompanion;
 *//*? }*/
-import io.github.leawind.thirdperson.internal.bridge.camera.CameraSubjectBoundsResolver;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
+import io.github.leawind.thirdperson.internal.extension.camera.CameraSubjectBoundsResolver;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;

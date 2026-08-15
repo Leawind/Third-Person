@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.spatial;
+package io.github.leawind.thirdperson.internal.extension.spatial;
 
 import io.github.leawind.thirdperson.internal.core.api.PriorityResolverRegistry;
 import java.util.Objects;

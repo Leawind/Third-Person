@@ -26,6 +26,7 @@ val checkArchitecture by tasks.registering {
         val schedulerPrefix = "${logicPrefix}scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
         val extensionPrefix = "io/github/leawind/thirdperson/internal/extension/"
+        val minecraftExtensionPrefix = "${extensionPrefix}minecraft/"
         val sableExtensionPrefix = "${extensionPrefix}sable/"
         val utilsPrefix = "io/github/leawind/thirdperson/internal/utils/"
         val corePackage = "io.github.leawind.thirdperson.internal.core."
@@ -86,7 +87,10 @@ val checkArchitecture by tasks.registering {
             val isPivot = relativePath.startsWith(pivotPrefix)
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
+            val isExtension = relativePath.startsWith(extensionPrefix)
+            val isMinecraftExtension = relativePath.startsWith(minecraftExtensionPrefix)
             val isSableExtension = relativePath.startsWith(sableExtensionPrefix)
+            val isExtensionPoint = isExtension && !isMinecraftExtension && !isSableExtension
             val isUtils = relativePath.startsWith(utilsPrefix)
             val mustIgnoreInteractionOrigin = relativePath in interactionOriginIndependentFiles
 
@@ -156,7 +160,7 @@ val checkArchitecture by tasks.registering {
                     )
                 }
 
-                if ((isApi || isCore || isLogic)
+                if ((isApi || isCore || isLogic || isExtensionPoint)
                     && (line.contains("/*?") || line.contains("/^?"))
                 ) {
                     violations.add(
@@ -172,6 +176,7 @@ val checkArchitecture by tasks.registering {
                 if (isCore
                     && (line.contains("net.minecraft.")
                         || line.contains("io.github.leawind.thirdperson.internal.bridge.")
+                        || line.contains("io.github.leawind.thirdperson.internal.extension.")
                         || line.contains("io.github.leawind.thirdperson.internal.logic.")
                         || line.contains("io.github.leawind.thirdperson.platform."))
                 ) {
@@ -230,6 +235,23 @@ val checkArchitecture by tasks.registering {
                 ) {
                     violations.add(
                         "$relativePath:${index + 1}: bridge may only import the platform API, not $imported"
+                    )
+                }
+                if (isExtensionPoint
+                    && (imported.startsWith("io.github.leawind.thirdperson.internal.bridge.")
+                        || imported.startsWith(logicPackage)
+                        || imported.startsWith(platformPackage))
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: extension points must not depend on bridge, logic, or platform implementation $imported"
+                    )
+                }
+                if ((isMinecraftExtension || isSableExtension)
+                    && (imported.startsWith("io.github.leawind.thirdperson.internal.bridge.")
+                        || imported.startsWith(logicPackage))
+                ) {
+                    violations.add(
+                        "$relativePath:${index + 1}: extension implementations must not depend on bridge or logic $imported"
                     )
                 }
                 if (relativePath != extensionEntrypoint

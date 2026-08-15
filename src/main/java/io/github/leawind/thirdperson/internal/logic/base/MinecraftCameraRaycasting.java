@@ -4,7 +4,7 @@ import io.github.leawind.thirdperson.internal.core.base.BaseSession;
 import io.github.leawind.thirdperson.internal.core.base.InteractionRaycastGeometry;
 import io.github.leawind.thirdperson.internal.core.base.WorldRay;
 import io.github.leawind.thirdperson.internal.bridge.MinecraftSpatialQuerying;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.entity.MinecraftEntityReferencePose;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

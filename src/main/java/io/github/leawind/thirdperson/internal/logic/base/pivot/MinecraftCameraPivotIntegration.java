@@ -1,9 +1,9 @@
 package io.github.leawind.thirdperson.internal.logic.base.pivot;
 
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotFrameContext;
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotTickContext;
-import io.github.leawind.thirdperson.internal.bridge.camera.pivot.MinecraftCameraPivotPosition;
-import io.github.leawind.thirdperson.internal.bridge.entity.MinecraftEntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.CameraPivotFrameContext;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.CameraPivotTickContext;
+import io.github.leawind.thirdperson.internal.extension.camera.pivot.MinecraftCameraPivotPosition;
+import io.github.leawind.thirdperson.internal.extension.entity.MinecraftEntityReferencePose;
 import io.github.leawind.thirdperson.internal.core.base.pivot.PivotPose;
 import io.github.leawind.thirdperson.internal.logic.base.BaseRuntime;
 import io.github.leawind.thirdperson.internal.logic.base.PerspectiveGuard;

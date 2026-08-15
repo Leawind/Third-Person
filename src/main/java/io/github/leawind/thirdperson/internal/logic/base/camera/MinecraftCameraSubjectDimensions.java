@@ -1,7 +1,7 @@
 package io.github.leawind.thirdperson.internal.logic.base.camera;
 
 import io.github.leawind.thirdperson.internal.core.base.camera.CameraSubjectDimensions;
-import io.github.leawind.thirdperson.internal.bridge.camera.MinecraftCameraSubjectMeasurements;
+import io.github.leawind.thirdperson.internal.extension.camera.MinecraftCameraSubjectMeasurements;
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;

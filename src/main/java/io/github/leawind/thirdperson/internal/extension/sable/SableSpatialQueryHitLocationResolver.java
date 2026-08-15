@@ -3,8 +3,8 @@ package io.github.leawind.thirdperson.internal.extension.sable;
 /*? if >=1.21 && <1.21.11 {*/
 /*import dev.ryanhcode.sable.companion.SableCompanion;
 *//*? }*/
-import io.github.leawind.thirdperson.internal.bridge.spatial.SpatialQueryHitLocationResolver;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
+import io.github.leawind.thirdperson.internal.extension.spatial.SpatialQueryHitLocationResolver;
 import java.util.Optional;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;

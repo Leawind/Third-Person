@@ -1,6 +1,5 @@
-package io.github.leawind.thirdperson.internal.bridge.input;
+package io.github.leawind.thirdperson.internal.extension.input;
 
-import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import io.github.leawind.thirdperson.internal.core.api.PriorityResolverRegistry;
 import io.github.leawind.thirdperson.internal.core.base.rotation.MovementInputProjector;

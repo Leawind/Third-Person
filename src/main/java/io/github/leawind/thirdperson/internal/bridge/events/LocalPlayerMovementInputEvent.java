@@ -1,5 +1,6 @@
 package io.github.leawind.thirdperson.internal.bridge.events;
 
+import io.github.leawind.thirdperson.internal.extension.input.MovementInput;
 import java.util.Objects;
 import net.minecraft.client.player.LocalPlayer;
 
@@ -23,8 +24,6 @@ public final class LocalPlayerMovementInputEvent {
     }
     return Objects.requireNonNull(listener.modifyInput(player, input), "modifiedInput");
   }
-
-  public record MovementInput(float leftImpulse, float forwardImpulse) {}
 
   @FunctionalInterface
   public interface Listener {

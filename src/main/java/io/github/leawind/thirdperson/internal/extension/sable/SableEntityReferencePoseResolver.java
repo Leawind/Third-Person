@@ -4,10 +4,10 @@ package io.github.leawind.thirdperson.internal.extension.sable;
 /*import dev.ryanhcode.sable.companion.ClientSubLevelAccess;
 import dev.ryanhcode.sable.companion.SableCompanion;
 *//*? }*/
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePose;
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePoseContext;
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePoseResolver;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePoseContext;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePoseResolver;
 import java.util.Optional;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;

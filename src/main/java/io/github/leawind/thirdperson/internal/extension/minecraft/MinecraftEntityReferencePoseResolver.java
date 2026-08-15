@@ -1,9 +1,9 @@
 package io.github.leawind.thirdperson.internal.extension.minecraft;
 
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePose;
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePoseContext;
-import io.github.leawind.thirdperson.internal.bridge.entity.EntityReferencePoseResolver;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePose;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePoseContext;
+import io.github.leawind.thirdperson.internal.extension.entity.EntityReferencePoseResolver;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
