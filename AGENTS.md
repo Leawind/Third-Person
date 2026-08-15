@@ -6,8 +6,18 @@
 - 尽量不要重新实现复杂的 Minecraft 原版逻辑；应在原调用路径上进行最小、可组合的注入。
 - 不要使用 google-java-formatter 执行格式化。
 
+## 内部扩展
+
+- 扩展机制位于 `io.github.leawind.thirdperson.internal.extension`，仅用于项目内部组合，不属于公共 API。
+- 扩展点按功能领域放在 `internal.extension` 的子包中；扩展点定义、上下文和调用入口不得包含具体 Minecraft 或兼容实现的注册。
+- Minecraft 基线实现位于 `internal.extension.minecraft`，Sable 兼容实现位于与其平行的 `internal.extension.sable`。每组实现只在本组的注册入口中注册。
+- 组合根先安装 Minecraft 基线扩展，再安装可用的 Sable 扩展。Sable 实现以更高优先级覆盖适用的扩展点；除组合根外，其他代码不得直接依赖这两个具体实现包。
+- 扩展点定义不得依赖 bridge、logic 或 platform 实现；Minecraft 与 Sable 扩展实现不得依赖 bridge 或 logic。
+
 ## Mixin 兼容性
 
+- 本模组只维护 `leawind_third_person.mixins.json` 一份 Mixin 元数据；各加载器共用该配置。
+- 所有 Mixin 类位于 `io.github.leawind.thirdperson.internal.bridge.mixin` 包树，并直接按 `hud`、`input`、`interaction`、`lifecycle`、`render`、`sound` 用途分类。一个类同时涉及多个用途时，应按职责拆分。
 - 不要使用 `@Redirect`。它会排他地占用调用点，容易与其他模组冲突；优先使用可组合的 Mixin 或 MixinExtras 注入器。
 - 需要支持 Forge 1.20.1 的共享 Mixin 不要使用 `@ModifyArgs`。Mixin 0.8.5 会在 `org.spongepowered.asm.synthetic.args` 动态生成 `Args$N`，而 Forge 1.20.1 的 ModLauncher 10 无法加载该包，造成目标类链接时的 `NoClassDefFoundError`。
 - 出现 `org.spongepowered.asm.synthetic.args.Args$N` 缺失时，优先排查新引入的 `@ModifyArgs`；不要把它当作普通依赖或打包问题，也不要尝试将动态生成类放入模组 JAR。
