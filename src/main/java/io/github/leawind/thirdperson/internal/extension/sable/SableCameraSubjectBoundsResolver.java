@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.compat.sable;
+package io.github.leawind.thirdperson.internal.extension.sable;
 
 /*? if >=1.21 && <1.21.11 {*/
 /*import dev.ryanhcode.sable.companion.SableCompanion;
@@ -10,10 +10,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
 /// Supplies Sable-aware bounds for camera-subject measurement.
-public final class SableCameraSubjectBoundsResolver {
+final class SableCameraSubjectBoundsResolver {
   private SableCameraSubjectBoundsResolver() {}
 
-  public static Optional<CameraSubjectBoundsResolver> createIfAvailable() {
+  static Optional<CameraSubjectBoundsResolver> createIfAvailable() {
     /*? if >=1.21 && <1.21.11 {*/
     /*return SableAvailability.isAvailable() ? Optional.of(Active.INSTANCE) : Optional.empty();
     *//*? } else {*/

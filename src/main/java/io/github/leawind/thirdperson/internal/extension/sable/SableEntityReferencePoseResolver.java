@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.compat.sable;
+package io.github.leawind.thirdperson.internal.extension.sable;
 
 /*? if >=1.21 && <1.21.11 {*/
 /*import dev.ryanhcode.sable.companion.ClientSubLevelAccess;
@@ -15,10 +15,10 @@ import org.joml.Quaternionf;
 import org.joml.Vector3d;
 
 /// Supplies Sable-aware entity reference-pose sampling.
-public final class SableEntityReferencePoseResolver {
+final class SableEntityReferencePoseResolver {
   private SableEntityReferencePoseResolver() {}
 
-  public static Optional<EntityReferencePoseResolver> createIfAvailable() {
+  static Optional<EntityReferencePoseResolver> createIfAvailable() {
     /*? if >=1.21 && <1.21.11 {*/
     /*return SableAvailability.isAvailable() ? Optional.of(Active.INSTANCE) : Optional.empty();
     *//*? } else {*/

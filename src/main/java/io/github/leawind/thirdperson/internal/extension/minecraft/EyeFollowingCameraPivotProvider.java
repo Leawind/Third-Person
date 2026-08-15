@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.logic.base.pivot;
+package io.github.leawind.thirdperson.internal.extension.minecraft;
 
 import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotFrameContext;
 import io.github.leawind.thirdperson.internal.bridge.camera.pivot.CameraPivotPositionProvider;

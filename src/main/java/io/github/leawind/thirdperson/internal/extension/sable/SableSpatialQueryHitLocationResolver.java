@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.compat.sable;
+package io.github.leawind.thirdperson.internal.extension.sable;
 
 /*? if >=1.21 && <1.21.11 {*/
 /*import dev.ryanhcode.sable.companion.SableCompanion;
@@ -11,10 +11,10 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /// Supplies Sable-aware interpretation of raw spatial-query hit locations.
-public final class SableSpatialQueryHitLocationResolver {
+final class SableSpatialQueryHitLocationResolver {
   private SableSpatialQueryHitLocationResolver() {}
 
-  public static Optional<SpatialQueryHitLocationResolver> createIfAvailable() {
+  static Optional<SpatialQueryHitLocationResolver> createIfAvailable() {
     /*? if >=1.21 && <1.21.11 {*/
     /*return SableAvailability.isAvailable() ? Optional.of(Active.INSTANCE) : Optional.empty();
     *//*? } else {*/

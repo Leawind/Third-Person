@@ -15,18 +15,8 @@ import org.joml.Quaternionf;
 /// Drives the selected pivot-position strategy and combines it with external reference rotation.
 public final class MinecraftCameraPivotIntegration {
   private static final double CLIENT_TICK_SECONDS = 0.05;
-  private static boolean initialized;
 
   private MinecraftCameraPivotIntegration() {}
-
-  public static void initialize() {
-    if (initialized) {
-      return;
-    }
-    initialized = true;
-    MinecraftCameraPivotPosition.registerProvider(
-        "eye_following", 0, new EyeFollowingCameraPivotProvider());
-  }
 
   public static void onClientTick() {
     Minecraft minecraft = Minecraft.getInstance();

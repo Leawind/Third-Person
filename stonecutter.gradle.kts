@@ -25,7 +25,8 @@ val checkArchitecture by tasks.registering {
         val pivotPrefix = "${basePrefix}pivot/"
         val schedulerPrefix = "${logicPrefix}scheduler/"
         val bridgePrefix = "io/github/leawind/thirdperson/internal/bridge/"
-        val bridgeCompatPrefix = "${bridgePrefix}compat/"
+        val extensionPrefix = "io/github/leawind/thirdperson/internal/extension/"
+        val sableExtensionPrefix = "${extensionPrefix}sable/"
         val utilsPrefix = "io/github/leawind/thirdperson/internal/utils/"
         val corePackage = "io.github.leawind.thirdperson.internal.core."
         val coreBasePackage = "${corePackage}base."
@@ -35,7 +36,9 @@ val checkArchitecture by tasks.registering {
         val internalPackage = "io.github.leawind.thirdperson.internal."
         val platformPackage = "io.github.leawind.thirdperson.platform."
         val platformApiPackage = "${platformPackage}api."
-        val bridgeCompatPackage = "io.github.leawind.thirdperson.internal.bridge.compat."
+        val minecraftExtensionPackage =
+            "io.github.leawind.thirdperson.internal.extension.minecraft."
+        val sableExtensionPackage = "io.github.leawind.thirdperson.internal.extension.sable."
         val baseCategories = setOf("camera", "math", "pivot", "rotation")
         val schedulerCategories =
             setOf("aiming", "camera", "config", "hud", "input", "rotation", "sound", "state")
@@ -68,16 +71,8 @@ val checkArchitecture by tasks.registering {
             "io/github/leawind/thirdperson/internal/logic/base/MinecraftCameraRaycasting.java",
             "io/github/leawind/thirdperson/internal/logic/base/MinecraftPlayerRotationTargeting.java",
         )
-        val allowedCompatibilityImports = mapOf(
-            "io/github/leawind/thirdperson/internal/bridge/camera/MinecraftCameraSubjectMeasurements.java" to
-                setOf("${bridgeCompatPackage}sable.SableCameraSubjectBoundsResolver"),
-            "io/github/leawind/thirdperson/internal/bridge/entity/MinecraftEntityReferencePose.java" to
-                setOf("${bridgeCompatPackage}sable.SableEntityReferencePoseResolver"),
-            "io/github/leawind/thirdperson/internal/bridge/spatial/SpatialQueryHitLocation.java" to
-                setOf("${bridgeCompatPackage}sable.SableSpatialQueryHitLocationResolver"),
-            "io/github/leawind/thirdperson/internal/bridge/input/MinecraftMovementInputMapping.java" to
-                setOf("${bridgeCompatPackage}sable.SableMovementInputMapper"),
-        )
+        val extensionEntrypoint =
+            "io/github/leawind/thirdperson/internal/logic/ModEntrypoint.java"
         val violations = mutableListOf<String>()
 
         fileTree(sourceRoot).matching { include("**/*.java") }.files.sorted().forEach { source ->
@@ -91,7 +86,7 @@ val checkArchitecture by tasks.registering {
             val isPivot = relativePath.startsWith(pivotPrefix)
             val isScheduler = relativePath.startsWith(schedulerPrefix)
             val isBridge = relativePath.startsWith(bridgePrefix)
-            val isBridgeCompat = relativePath.startsWith(bridgeCompatPrefix)
+            val isSableExtension = relativePath.startsWith(sableExtensionPrefix)
             val isUtils = relativePath.startsWith(utilsPrefix)
             val mustIgnoreInteractionOrigin = relativePath in interactionOriginIndependentFiles
 
@@ -237,17 +232,17 @@ val checkArchitecture by tasks.registering {
                         "$relativePath:${index + 1}: bridge may only import the platform API, not $imported"
                     )
                 }
-                if (!isBridgeCompat
-                    && imported.startsWith(bridgeCompatPackage)
-                    && imported !in allowedCompatibilityImports.getOrDefault(relativePath, emptySet())
+                if (relativePath != extensionEntrypoint
+                    && (imported.startsWith(minecraftExtensionPackage)
+                        || imported.startsWith(sableExtensionPackage))
                 ) {
                     violations.add(
-                        "$relativePath:${index + 1}: optional compatibility may only be selected by its purpose-specific bridge facade, not $imported"
+                        "$relativePath:${index + 1}: concrete extension groups may only be installed by the composition root, not $imported"
                     )
                 }
-                if (!isBridgeCompat && imported.startsWith("dev.ryanhcode.sable.")) {
+                if (!isSableExtension && imported.startsWith("dev.ryanhcode.sable.")) {
                     violations.add(
-                        "$relativePath:${index + 1}: Sable API references must stay inside bridge compatibility adapters"
+                        "$relativePath:${index + 1}: Sable API references must stay inside Sable extensions"
                     )
                 }
                 if (isUtils && imported.startsWith("io.github.leawind.thirdperson.")) {

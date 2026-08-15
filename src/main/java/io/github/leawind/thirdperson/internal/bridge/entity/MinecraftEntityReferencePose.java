@@ -1,7 +1,5 @@
 package io.github.leawind.thirdperson.internal.bridge.entity;
 
-import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableEntityReferencePoseResolver;
-import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import io.github.leawind.thirdperson.internal.core.api.OrderedModifierRegistry;
 import io.github.leawind.thirdperson.internal.core.api.PriorityResolverRegistry;
 import java.util.Objects;
@@ -14,7 +12,7 @@ public final class MinecraftEntityReferencePose {
   private static final Object REGISTRY_LOCK = new Object();
   private static final PriorityResolverRegistry.Builder<
           EntityReferencePoseContext, EntityReferencePose>
-      SOURCE_BUILDER = createSourceBuilder();
+      SOURCE_BUILDER = PriorityResolverRegistry.builder();
   private static final OrderedModifierRegistry.Builder<
           EntityReferencePoseContext, EntityReferencePose>
       MODIFIER_BUILDER = OrderedModifierRegistry.builder();
@@ -69,17 +67,6 @@ public final class MinecraftEntityReferencePose {
     return new Vec3(position.x, position.y, position.z);
   }
 
-  private static PriorityResolverRegistry.Builder<
-          EntityReferencePoseContext, EntityReferencePose>
-      createSourceBuilder() {
-    var builder =
-        PriorityResolverRegistry.<EntityReferencePoseContext, EntityReferencePose>builder();
-    SableEntityReferencePoseResolver.createIfAvailable()
-        .ifPresent(resolver -> builder.register("sable", 100, resolver::resolve));
-    builder.register("vanilla", 0, VanillaResolver.INSTANCE::resolve);
-    return builder;
-  }
-
   private static void freezeRegistries() {
     if (sources != null) {
       return;
@@ -98,14 +85,4 @@ public final class MinecraftEntityReferencePose {
     }
   }
 
-  private enum VanillaResolver implements EntityReferencePoseResolver {
-    INSTANCE;
-
-    @Override
-    public ExtensionResult<EntityReferencePose> resolve(EntityReferencePoseContext context) {
-      Vec3 eye = context.entity().getEyePosition(context.partialTick());
-      return ExtensionResult.handled(
-          EntityReferencePose.identity(new Vector3d(eye.x, eye.y, eye.z)));
-    }
-  }
 }

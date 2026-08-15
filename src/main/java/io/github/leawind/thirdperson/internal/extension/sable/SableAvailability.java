@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.compat.sable;
+package io.github.leawind.thirdperson.internal.extension.sable;
 
 import io.github.leawind.thirdperson.platform.api.Services;
 

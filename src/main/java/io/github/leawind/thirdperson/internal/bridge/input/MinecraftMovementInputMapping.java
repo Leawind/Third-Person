@@ -1,7 +1,5 @@
 package io.github.leawind.thirdperson.internal.bridge.input;
 
-import io.github.leawind.perspectiveapi.api.PerspectiveMath;
-import io.github.leawind.thirdperson.internal.bridge.compat.sable.SableMovementInputMapper;
 import io.github.leawind.thirdperson.internal.bridge.events.LocalPlayerMovementInputEvent.MovementInput;
 import io.github.leawind.thirdperson.internal.core.api.ExtensionResult;
 import io.github.leawind.thirdperson.internal.core.api.PriorityResolverRegistry;
@@ -16,7 +14,7 @@ import org.joml.Vector3f;
 public final class MinecraftMovementInputMapping {
   private static final Object REGISTRY_LOCK = new Object();
   private static final PriorityResolverRegistry.Builder<Context, MovementInput> BUILDER =
-      createBuilder();
+      PriorityResolverRegistry.builder();
   private static volatile PriorityResolverRegistry<Context, MovementInput> resolvers;
 
   private MinecraftMovementInputMapping() {}
@@ -43,18 +41,6 @@ public final class MinecraftMovementInputMapping {
                     Objects.requireNonNull(unmodifiedInput, "unmodifiedInput"), false));
   }
 
-  private static PriorityResolverRegistry.Builder<Context, MovementInput> createBuilder() {
-    var builder = PriorityResolverRegistry.<Context, MovementInput>builder();
-    SableMovementInputMapper.createIfAvailable()
-        .ifPresent(
-            mapper ->
-                builder.register(
-                    "sable", 100, context -> mapper.map(context.player(), context.intent())));
-    builder.register(
-        "vanilla", 0, context -> VanillaMapper.INSTANCE.map(context.player(), context.intent()));
-    return builder;
-  }
-
   private static void freezeRegistry() {
     if (resolvers != null) {
       return;
@@ -63,17 +49,6 @@ public final class MinecraftMovementInputMapping {
       if (resolvers == null) {
         resolvers = BUILDER.freeze();
       }
-    }
-  }
-
-  private enum VanillaMapper implements MovementInputMapper {
-    INSTANCE;
-
-    @Override
-    public ExtensionResult<MovementInput> map(LocalPlayer player, MovementIntent intent) {
-      var worldFromInput =
-          PerspectiveMath.eulerDegToQuat(0.0f, player.getYRot(), 0.0f, new Quaternionf());
-      return mapToBasis(intent, worldFromInput);
     }
   }
 

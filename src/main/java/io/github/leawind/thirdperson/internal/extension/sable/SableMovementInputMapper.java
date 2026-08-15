@@ -1,4 +1,4 @@
-package io.github.leawind.thirdperson.internal.bridge.compat.sable;
+package io.github.leawind.thirdperson.internal.extension.sable;
 
 /*? if >=1.21 && <1.21.11 {*/
 /*import dev.ryanhcode.sable.companion.ClientSubLevelAccess;
@@ -15,10 +15,10 @@ import net.minecraft.client.player.LocalPlayer;
 import org.joml.Quaternionf;
 
 /// Supplies a movement basis that follows the current Sable render pose.
-public final class SableMovementInputMapper {
+final class SableMovementInputMapper {
   private SableMovementInputMapper() {}
 
-  public static Optional<MovementInputMapper> createIfAvailable() {
+  static Optional<MovementInputMapper> createIfAvailable() {
     /*? if >=1.21 && <1.21.11 {*/
     /*return SableAvailability.isAvailable() ? Optional.of(Active.INSTANCE) : Optional.empty();
     *//*? } else {*/
