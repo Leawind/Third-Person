@@ -117,6 +117,13 @@ stonecutter {
         put("forge", isForge)
     }
 
+    replacements.string(current.parsed >= "26.1") {
+        replace(
+            "net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper::registerKeyBinding",
+            "net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper::registerKeyMapping"
+        )
+    }
+
     // ResourceLocation -> Identifier
     replacements.string(current.parsed >= "1.21.11") {
         replace("net.minecraft.resources.ResourceLocation", "net.minecraft.resources.Identifier")
@@ -302,7 +309,7 @@ afterEvaluate {
             projectId = System.getenv("MODRINTH_ID")
             minecraftVersions.addAll(publishedMinecraftVersions)
             environment = CLIENT_ONLY
-            
+
             requires("perspective-api")
             if (isFabric) {
                 requires("fabric-api")
