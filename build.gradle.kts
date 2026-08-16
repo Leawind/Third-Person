@@ -188,6 +188,10 @@ dependencies {
 
     // Test
     testCompileOnly("org.jspecify:jspecify:1.0.0")
+    testImplementation("com.tngtech.archunit:archunit:1.5.0") {
+        // Minecraft already supplies SLF4J, with versions strictly constrained by NeoForge.
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
     if (!isFabric) {
         testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
     }
