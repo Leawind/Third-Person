@@ -15,7 +15,9 @@ final class SableCameraSubjectBoundsResolver {
 
   static Optional<CameraSubjectBoundsResolver> createIfAvailable() {
     /*? if >=1.21 && <1.21.11 {*/
-    /*return SableAvailability.isAvailable() ? Optional.of(Active.INSTANCE) : Optional.empty();
+    /*return SableAvailability.isAvailableAndCompatible()
+        ? Optional.of(Active.INSTANCE)
+        : Optional.empty();
     *//*? } else {*/
     return Optional.empty();
     /*? }*/

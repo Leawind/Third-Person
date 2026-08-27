@@ -16,6 +16,10 @@ public final class SableExtensions {
     if (registered) {
       return;
     }
+    if (!SableAvailability.isAvailableAndCompatible()) {
+      registered = true;
+      return;
+    }
     SableEntityReferencePoseResolver.createIfAvailable()
         .ifPresent(
             resolver ->
