@@ -69,5 +69,3 @@ AGENTS-*.md
 # stonecutter
 /versions/*-*/*
 !/versions/*-*/gradle.properties
-
-docs/
