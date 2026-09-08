@@ -29,8 +29,9 @@ platform → logic.ModEntrypoint / ModEvents
                                v
                              bridge
 
-logic.base / logic.scheduler / bridge → core（纯逻辑层，无 Minecraft 依赖）
-logic.base / logic.scheduler / bridge → extension（内部扩展点，实现仅组合根安装）
+logic.base / logic.scheduler → core（纯逻辑层，无 Minecraft 依赖）
+logic.base / logic.scheduler / bridge → extension（内部扩展点，实现仅组合根安装；
+                                          extension 依赖 core.api，bridge 不直接依赖 core）
 ```
 
 - `core`：纯逻辑层，不依赖 Minecraft；`core.base` 是与模式无关的相机、射线、旋转纯实现，`core.schedule` 是动态状态与设置，`core.api` 是扩展点基础设施。
@@ -39,7 +40,7 @@ logic.base / logic.scheduler / bridge → extension（内部扩展点，实现�
 - `logic.scheduler`：调度层唯一根包树，包含动态状态、配置、持久化、UI、HUD 与参数调度逻辑。
 - `logic` 根包：初始化两个逻辑层与内部扩展，每种 bridge 事件只注册一个监听器，并显式编排执行顺序。
 - `bridge`：Mixin、中立事件、Minecraft 原语和版本差异，不包含业务策略，也不引用 logic。
-- `platform`：Fabric、Forge、NeoForge 的入口、按键与可选配置界面注册。
+- `platform`：Fabric、Forge、NeoForge 的入口、按键、可选配置界面与资源重载注册。
 
 logic 的基础逻辑和调度逻辑各自只能存在于自己的唯一根包树中，不能重新分散到已废弃的
 `internal.base`、`internal.scheduler`、`internal.application`、`internal.integration` 等旧业务
@@ -73,7 +74,7 @@ Perspective 行为激活时基础会话开始控制相机；停用、世界变�
 
 ## 相机
 
-每帧 `ThirdPersonPerspective.applyCameraState` 采样相机实体的眼部位置、实体朝向、原版 FOV、
+每帧 `ThirdPersonPerspective.computeCameraState` 采样相机实体的眼部位置、实体朝向、原版 FOV、
 窗口宽高比和实体尺寸。调度层在客户端 tick 根据游泳、鞘翅等状态选择当前参数。
 `LookController` 保存独立于玩家身体的观察 yaw/pitch；鼠标转动先更新它，再由它生成
 Perspective API 约定的四元数。
@@ -91,7 +92,8 @@ Perspective API 约定的四元数。
 distance = (distanceFactor × vehicleTotalSize + bodyRadius) / fovMultiplier
 ```
 
-`CameraSmoother` 分别对 pivot、旋转、屏幕锚点、距离和 FOV 做指数半衰期平滑。基础层随后根据平滑后
+`CameraSmoother` 分别对旋转、屏幕锚点、距离和 FOV 做指数半衰期平滑；pivot 位置不经它平滑，
+由 pivot 位置策略以 `CameraPivotSmoothing` 单独平滑（见下文）。基础层随后根据平滑后
 的相机旋转对本帧屏幕锚点做极端俯仰修正。静态常量分别指定开始压缩的俯仰角、完全居中的俯仰角和
 归一化 `TRANSITION_FUNCTION`；更换这些常量无需修改相机管线。过渡函数返回值会被限制在
 `[0, 1]`，到达配置的结束角度后水平和垂直锚点直接归零。该修正不写回 profile 或
@@ -109,8 +111,8 @@ distance = (distanceFactor × vehicleTotalSize + bodyRadius) / fovMultiplier
 - 按住 `Z` 调整当前模式的构图：鼠标修改偏移，滚轮以 `1.25` 倍步进修改距离系数。调整期间会截获
   对应的鼠标输入；松开后立即请求保存。
 - 瞄准模式由瞄准按键或智能瞄准触发。智能瞄准启用时，只要自动规则命中，即进入瞄准模式。
-- 移动向量按观察 yaw 计算；冲刺的“向前”条件改为任意达到原版阈值的方向输入。两者只对本地、
-  非乘坐状态且当前为本模组视角的玩家生效。
+- 移动向量按观察 yaw 计算；冲刺的“向前”条件改为任意达到原版阈值的方向输入。两者只对本地
+  且当前为本模组视角的玩家生效；冲刺条件额外要求非乘坐状态。
 
 资源包可在每个命名空间的以下目录提供 JSON 字符串数组：
 
@@ -126,7 +128,8 @@ assets/<namespace>/item_patterns/use_to_aim/*.json
 ## 玩家旋转、交互与 HUD
 
 普通状态的玩家旋转由 `NormalPlayerRotationMode` 选择，默认 `INTEREST_POINT`。瞄准时立即面向预测目标；
-`CAMERA_CROSSHAIR`、`PARALLEL_WITH_CAMERA` 和 `NONE` 分别以相机命中点、相机旋转和当前旋转为目标。
+`CAMERA_CROSSHAIR`、`MOVING_DIRECTION`、`PARALLEL_WITH_CAMERA` 和 `NONE` 分别以相机命中点、
+移动方向、相机旋转和当前旋转为目标。
 在其他普通模式下，飞行时立即面向相机；若开启交互自动旋转（进食时默认不旋转），交互、游泳、疾跑、
 乘坐和移动由 `PlayerRotationStrategy` 选择相机命中点、移动方向或兴趣点，并使用即时、tick 插值或逐帧
 指数平滑。

@@ -15,10 +15,12 @@ logic.ModEntrypoint / ModEvents
    |                         v
    +----------------------> bridge
 
-logic.base / logic.scheduler / bridge ----> core（纯逻辑层，无 Minecraft 依赖）
+logic.base / logic.scheduler ----> core（纯逻辑层，无 Minecraft 依赖）
 logic.base / logic.scheduler / bridge ----> extension（内部扩展点）
                                                   ^
                        extension.minecraft / extension.sable（实现，仅组合根安装）
+
+extension 依赖 core.api 的注册表；bridge 不直接依赖 core。
 ```
 
 ## core
@@ -52,7 +54,7 @@ internal.core
 
 ```text
 internal.logic
-├── base       BaseRuntime/BaseSession、相机与射线 Minecraft 集成、玩家旋转目标、PerspectiveGuard
+├── base       BaseRuntime、相机与射线 Minecraft 集成、玩家旋转目标、PerspectiveGuard
 │   ├── camera
 │   └── pivot
 └── scheduler  调度层 Minecraft 集成：按键、物品谓词、相机调整、HUD、持久化、配置界面
