@@ -1,0 +1,36 @@
+# AI Tools
+/.ai/
+.agents/
+.claude/
+.clinerules/
+.codebuddy/
+.codex/
+.cursorrules/
+.devin/
+.kilo/
+.kilocode/
+.lingma/
+.marscode/
+.mimocode/
+.opencode/
+.qoder/
+.trae/
+.windsurf/
+.zcode/
+
+AGENTS-*.md
+
+# dotenv
+.env
+.env.*
+!.env.example
+
+# Obsidian
+.obsidian/
+
+# node.js
+node_modules/
+dist/
+
+# cargo
+target/
